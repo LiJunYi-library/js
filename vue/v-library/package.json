@@ -1,0 +1,14 @@
+{
+  "name": "@rainbow_ljy/v-library",
+  "version": "1.0.88",
+  "description": "",
+  "private": false,
+  "typings": "index.d.ts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {}
+}

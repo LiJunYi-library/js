@@ -1,0 +1,49 @@
+.r-scroll-refresh {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  --top-space: 0px;
+
+  .refresh-content-top-space {
+    width: 100%;
+    height: var(--top-space);
+  }
+
+  .refresh-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+  }
+
+  .refresh-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    --van-circle-text-font-size: 12px;
+
+    .van-circle__text {
+      line-height: 30px;
+    }
+
+    .refresh-content-space {
+      width: 12px;
+    }
+
+    .refresh-content-loading {
+      display: block;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+}
+
+
+.r-scroll-refresh-transition {
+  transition: 0.15s;
+}

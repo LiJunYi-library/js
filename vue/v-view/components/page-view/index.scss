@@ -1,0 +1,39 @@
+.r-page-view {
+  // scroll-snap-type: x mandatory;
+
+  .r-page-view-win {
+    overflow: clip;
+  }
+
+  .r-page-view-list {
+    // scroll-snap-type: x mandatory;
+  }
+
+  .clearfix::after {
+    content: "";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    height: 0;
+  }
+
+  .r-page-view-list-flex {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  .r-page-view-list-transition {
+    transition: 0.25s;
+  }
+
+  .r-page-view-item {
+    // scroll-snap-align: start end;
+    // scroll-snap-stop: always;
+    min-height: 1px;
+    float: left;
+  }
+
+  .r-page-view-item-same {
+    z-index: 5;
+  }
+}

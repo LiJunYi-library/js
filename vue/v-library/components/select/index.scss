@@ -1,0 +1,17 @@
+.lib-select {
+  display: inline-flex;
+  align-items: center;
+  align-content: center;
+  .lib-select-label {
+    padding-right: 7px;
+    white-space: nowrap;
+  }
+}
+
+.lib-select-stretch {
+  display: flex;
+  flex: 1;
+  .el-select {
+    flex: 1;
+  }
+}

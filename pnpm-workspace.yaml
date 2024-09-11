@@ -1,0 +1,13 @@
+packages:
+  # all packages in subdirs of components/
+  - "rainbow-cli/**"
+  - "rainbow-scss/**"
+  - "rainbow-js/**"
+  - "rainbow-view/**"
+  - "react/r-hooks/**"
+  - "react/r-view/**"
+  - "vue/v-charts/**"
+  - "vue/v-cli/**"
+  - "vue/v-hooks/**"
+  - "vue/v-library/**"
+  - "vue/v-view/**"

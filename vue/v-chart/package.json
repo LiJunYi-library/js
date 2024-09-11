@@ -1,0 +1,14 @@
+{
+  "name": "@rainbow_ljy/v-chart",
+  "version": "1.0.1",
+  "description": "",
+  "main": "index.js",
+  "private": false,
+  "typings": "index.d.ts",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

@@ -1,0 +1,30 @@
+.r-toast {
+  padding: 10px 12px;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 6000000;
+  color: white;
+  border-radius: 10px;
+}
+
+.r-toast-content {
+  max-width: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 400;
+  font-size: 16px;
+  color: #ffffff;
+  line-height: 20px;
+  text-align: left;
+  font-style: normal;
+  .toast-loadingText {
+  }
+  .r-toast-text {
+  }
+}

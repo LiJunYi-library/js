@@ -1,0 +1,19 @@
+{
+  "name": "@rainbow_ljy/rainbow-js",
+  "version": "1.0.90",
+  "description": "增加js的一些 api",
+  "main": "index.js",
+  "typings": "index.d.ts",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lijunyi-library/rainbow-js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "git-checks": false,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

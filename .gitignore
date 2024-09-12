@@ -6,21 +6,7 @@
 
 .DS_Store
 /node_modules
-/element-plus-lib/node_modules/
-/element-ui-lib/node_modules/
-/rainbow-cli/node_modules/
-/rainbow-css/node_modules/
-/rainbow-js/node_modules/
-/rainbow-ui/node_modules/
-/rainbow-utils/node_modules/
-/rainbow-view/node_modules/
-/server/node_modules/
-/socket/node_modules/
-/test/
-/firm/
-/project/
 /vue/doc/node_modules/
-/vue/project/
 /vue/projects/
 /vue/vscode/
 npm-debug.log*

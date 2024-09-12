@@ -102,7 +102,6 @@
     "@element-plus/icons-vue": "^2.1.0",
     "@rainbow_ljy/r-hooks": "workspace:^",
     "@rainbow_ljy/rainbow-js": "workspace:^",
-    "@rainbow_ljy/rainbow-view": "workspace:^",
     "@rainbow_ljy/v-hooks": "workspace:^",
     "@rainbow_ljy/v-library": "workspace:^",
     "@rainbow_ljy/v-view": "workspace:^",

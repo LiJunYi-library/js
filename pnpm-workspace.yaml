@@ -3,7 +3,6 @@ packages:
   - "rainbow-cli/**"
   - "rainbow-scss/**"
   - "rainbow-js/**"
-  - "rainbow-view/**"
   - "react/r-hooks/**"
   - "react/r-view/**"
   - "vue/v-charts/**"

@@ -1,4 +1,4 @@
-import { defineComponent, h, computed, renderSlot, reactive } from "vue";
+import { defineComponent, h, computed, renderSlot, reactive, ref } from "vue";
 import {
   ElTable,
   ElEmpty,
@@ -124,6 +124,9 @@ export const PaginationTableHoc = (option = {}) => {
       ...config.emits,
     ],
     setup(props, context) {
+      const container = ref();
+      const elTable = ref();
+      const pagination = ref();
       const parseOrder = {};
       parseOrder[props.ascendingKey] = "ascending";
       parseOrder[props.descendingKey] = "descending";
@@ -141,35 +144,32 @@ export const PaginationTableHoc = (option = {}) => {
 
       const height = computed(() => {
         if (bool0(props.calcHeight)) return window.innerHeight - props.calcHeight + "px";
-        return props.height;
+        if (bool0(props.height)) return  props.height;
+        return (container.value?.parentElement?.offsetHeight ?? 0) - (pagination.value?.$el?.offsetHeight?? 0);
       });
 
-      // eslint-disable-next-line
-      const { listHook } = props;
 
-      let elTable;
-
-      context.expose(elTable);
+      context.expose({ elTable: elTable.value });
 
       const defaultSort = (() => {
-        const mOrder = listHook.order ? parseOrder?.[listHook?.order] : null;
+        const mOrder = props.listHook.order ? parseOrder?.[props.listHook?.order] : null;
         return reactive({
-          prop: listHook.prop,
+          prop: props.listHook.prop,
           order: mOrder,
         });
       })();
 
       let isElTableSort = false;
-      listHook.elTableSort = (prop, order, ...arg) => {
+      props.listHook.elTableSort = (prop, order, ...arg) => {
         const mOrder = order ? parseOrder[order] : null;
         isElTableSort = true;
-        listHook.prop = prop;
-        listHook.order = order;
-        elTable?.sort?.(prop, mOrder, ...arg);
+        props.listHook.prop = prop;
+        props.listHook.order = order;
+        elTable.value?.sort?.(prop, mOrder, ...arg);
       };
 
       function renderState(VM) {
-        if (listHook.error === true) {
+        if (props.listHook.error === true) {
           return (
             <div class="table-state">
               {context?.slots?.error?.() || config.renderError(props, context, VM)}
@@ -177,7 +177,7 @@ export const PaginationTableHoc = (option = {}) => {
           );
         }
 
-        if (listHook.begin === true) {
+        if (props.listHook.begin === true) {
           return (
             <div class="table-state">
               {context?.slots?.begin?.() || config.renderBegin(props, context, VM)}
@@ -185,7 +185,7 @@ export const PaginationTableHoc = (option = {}) => {
           );
         }
 
-        if (listHook.loading) {
+        if (props.listHook.loading) {
           return (
             <div class={["lib-loading"]}>
               {context?.slots?.loading?.() || config.renderLoading(props, context, VM)}
@@ -198,7 +198,7 @@ export const PaginationTableHoc = (option = {}) => {
 
       return (VM, _cache) => {
         return (
-          <div class={["lib-table", config.class, context.attrs.class]}>
+          <div class={["lib-table", config.class, context.attrs.class]} ref={(el) => { container.value = el; }}>
             <ElTable
               {...config.tableAttrs}
               {...props}
@@ -207,9 +207,9 @@ export const PaginationTableHoc = (option = {}) => {
               maxHeight={maxHeight.value}
               height={height.value}
               ref={(el) => {
-                elTable = el;
+                elTable.value = el;
               }}
-              data={listHook.list}
+              data={props.listHook.list}
               onSelect={(list, ...arg) => {
                 context.emit("select", list, ...arg);
               }}
@@ -218,7 +218,7 @@ export const PaginationTableHoc = (option = {}) => {
               }}
               onSelection-change={(list, ...arg) => {
                 context.emit("selection-change", list, ...arg);
-                listHook?.updateSelect?.(list);
+                props.listHook?.updateSelect?.(list);
               }}
               onSort-change={({ column, prop, order }) => {
                 const mOrder = order ? transformOrder[order] : null;
@@ -226,8 +226,8 @@ export const PaginationTableHoc = (option = {}) => {
                   isElTableSort = false;
                   return;
                 }
-                listHook?.updateProp?.(prop);
-                listHook?.updateOrder?.(mOrder);
+                props.listHook?.updateProp?.(prop);
+                props.listHook?.updateOrder?.(mOrder);
                 context.emit("sort-change", { column, prop, order: mOrder });
               }}
             >
@@ -247,14 +247,17 @@ export const PaginationTableHoc = (option = {}) => {
                 layout: "total, sizes, prev, pager, next, jumper",
                 ...config.paginationAttrs,
                 ...context.attrs,
-                total: listHook.total,
-                "current-page": listHook.currentPage,
-                "page-size": listHook.pageSize,
+                ref: (el) => {
+                  pagination.value = el;
+                },
+                total: props.listHook.total,
+                "current-page": props.listHook.currentPage,
+                "page-size": props.listHook.pageSize,
                 "onUpdate:current-page": (page, size) => {
-                  listHook?.updatePage?.(page);
+                  props.listHook?.updatePage?.(page);
                 },
                 "onUpdate:page-size": (size, page) => {
-                  listHook?.updatePageSize?.(size);
+                  props.listHook?.updatePageSize?.(size);
                 },
                 onSizeChange: (...v) => {
                   context.emit("size-change", ...v);

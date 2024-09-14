@@ -314,9 +314,11 @@ export const RScroll = defineComponent({
                     onTouchend={onTouchend}
                     onScroll={onScroll}
                     onScrollend={onScrollend}>
+                    {renderSlot(context.slots, "top")}
                     <div class="r-scroll-content" ref={onContentRef}>
                         {renderSlot(context.slots, "default")}
                     </div>
+                    {renderSlot(context.slots, "bottom")}
                 </div>
             );
         };

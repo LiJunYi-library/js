@@ -28,3 +28,4 @@ export * from "./message";
 export * from "./top";
 export * from "./fixed";
 export * from "./refresh";
+export * from "./virtual-grid-list";

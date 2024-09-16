@@ -147,6 +147,30 @@ export const RLoadingMask = RLoadingHoc((mSuper) => ({
 }));
 
 export const RLoadingLoad = RLoadingHoc((mSuper) => ({
+    renderLoading(props, context, asyncHooks) {
+        const loadingVnode = renderSlot(context.slots, "loading", props.listHook, () => [
+            <div class={["r-c-loading r-loading"]}>
+                <RILoading class="r-c-loading-icon r-loading-icon" />
+                <div class={["r-c-loading-text r-loading-text"]}>{props.loadingText}</div>
+            </div>,
+        ]);
+
+        if (!props.loadText) {
+            return loadingVnode;
+        }
+
+        if (asyncHooks.loading) {
+            return loadingVnode;
+        }
+
+        return renderSlot(context.slots, "load", props.listHook, () => [
+            <div class={["r-c-load r-load"]}>
+                <div onClick={() => context.emit("loadClick")} class={["r-c-load-text r-load-text"]}>
+                    {props.loadText}
+                </div>
+            </div>,
+        ]);
+    },
     renderState(props, context, asyncHooks) {
         if (asyncHooks.error) return mSuper.renderError(props, context, asyncHooks);
         if (asyncHooks.begin) return mSuper.renderBegin(props, context, asyncHooks);
@@ -154,8 +178,7 @@ export const RLoadingLoad = RLoadingHoc((mSuper) => ({
             if (asyncHooks.empty) return mSuper.renderEmpty(props, context, asyncHooks);
             return mSuper.renderfinished(props, context, asyncHooks);
         }
-        if (asyncHooks.finished === false) return mSuper.renderLoading(props, context, asyncHooks);
-        if (asyncHooks.finished === false) return mSuper.renderLoad(props, context, asyncHooks);
+        if (asyncHooks.finished === false) return this.renderLoading(props, context, asyncHooks);
         return null;
     },
     render(props, context, asyncHooks, { setIntersectionHtml }) {

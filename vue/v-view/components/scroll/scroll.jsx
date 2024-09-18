@@ -97,7 +97,7 @@ export function useScrollController(props = {}) {
     }
 
     function destroy() {
-        arrayRemove(RScrollContext?.children, this);
+        arrayRemove(RScrollContext?.children, controller);
     }
 
     onBeforeUnmount(() => {

@@ -21,6 +21,7 @@ const mProps = {
   minWidth: Number,
   listHook: Object,
   list: Array,
+  openAnimationFrame: Boolean,
   //
   behavior: { type: String, default: "smooth" }, // smooth  instant
   scrollOffsetTop: { type: Number, default: 0 }, // 更换list时候的滚动偏移量
@@ -152,7 +153,7 @@ export const RScrollVirtualGridList = defineComponent({
       return pList;
     }
 
-    function layout(isCache = true) {
+    function doLayout(isCache = true) {
       if (!scrollController.context.element) return;
       const sTop = scrollController.context.element.scrollTop;
       const offsetTop = scrollController.getOffsetTop(contentHtml);
@@ -169,6 +170,15 @@ export const RScrollVirtualGridList = defineComponent({
       // console.log(`index : ${index}`);
       // console.log(mCtx.renderList);
       // console.log('  ');
+    }
+
+    let time;
+    function layout(isCache = true) {
+      if (!props.openAnimationFrame) return doLayout(isCache)
+      cancelAnimationFrame(time)
+      time = requestAnimationFrame(() => {
+        doLayout(isCache)
+      })
     }
 
     return () => {

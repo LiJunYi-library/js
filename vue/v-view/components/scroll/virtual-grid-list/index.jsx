@@ -36,6 +36,7 @@ const Context = defineComponent({
     const mCtx = inject("RScrollVirtualGridListContext") || {};
 
     function handleMark(item) {
+      if (typeof item.item !== 'object') return;
       if (item.item.__markCount !== mCtx.markCount) {
         item.item.__markCount = mCtx.markCount;
         mCtx.context.emit("itemMarkrender", item);
@@ -46,7 +47,7 @@ const Context = defineComponent({
       return renderList(mCtx.renderList, (item, index) => {
         handleMark(item);
         return (
-          <div class="r-scroll-virtual-grid-list-item" style={item.style} key={props.keyExtractor(item)}>
+          <div data-index={item.index} class="r-scroll-virtual-grid-list-item" style={item.style} key={props.keyExtractor(item)}>
             {renderSlot(mCtx.slots, "default", item)}
           </div>
         );
@@ -60,8 +61,11 @@ export const RScrollVirtualGridList = defineComponent({
     ...mProps,
   },
   setup(props, context) {
+    let cache = {
+      index: undefined,
+    }
     let contentHtml;
-    const recycleHeight = () => window.innerHeight * 2; // 有些浏览器初始拿innerHeight有时为0;
+    const recycleHeight = () => window.innerHeight;  //window.innerHeight; // 有些浏览器初始拿innerHeight有时为0;
     const itemWidth = computed(() => `calc( ${100 / props.columns}% - ${((props.columns - 1) * props.gap) / props.columns}px )`);
     const LIST = computed(() => (props.listHook ? props.listHook.list : props.list) || []);
     const HEIGHT = computed(() => {
@@ -72,6 +76,8 @@ export const RScrollVirtualGridList = defineComponent({
         props.bothEndsHeight * 2
       );
     });
+
+
 
 
     const scrollController = useScrollController({
@@ -117,42 +123,57 @@ export const RScrollVirtualGridList = defineComponent({
         }px + ${i * props.gap}px )`;
     }
 
-    function renderItems(index, addH = 0, pList = []) {
+
+
+    function getRenderList(index, addH = 0, pList = []) {
       const sTop = scrollController.context.element.scrollTop;
-      if (index < 0) return pList;
-      if (index >= props.listHook.list.length) return pList;
-      if (scrollController.getOffsetTop(contentHtml) - sTop + addH > recycleHeight()) return pList;
+      const offsetTop = scrollController.getOffsetTop(contentHtml);
+      if (index >= LIST.value.length) return pList;
+
       arrayLoop(props.columns, (i) => {
-        if (index >= props.listHook.list.length) return pList;
-        const nth = Math.floor(index / props.columns);
-        let top = nth * (props.avgHeight + props.gap) + props.bothEndsHeight + "px";
-        if (nth === 0) top = props.bothEndsHeight + "px";
-        const left = getLeft(i);
-        const width = itemWidth.value;
-        const height = props.avgHeight + "px";
-        pList.push({
-          index,
-          style: { top, left, width, height },
-          item: props.listHook.list[index],
-        });
+        if (index >= 0) {
+          const nth = Math.floor(index / props.columns);
+          let top = nth * (props.avgHeight + props.gap) + props.bothEndsHeight + "px";
+          if (nth === 0) top = props.bothEndsHeight + "px";
+          const left = getLeft(i);
+          const width = itemWidth.value;
+          const height = props.avgHeight + "px";
+          pList.push({
+            index,
+            style: { top, left, width, height },
+            item: LIST.value[index],
+          });
+        }
+
         index++;
       });
       addH = addH + props.avgHeight + props.gap;
-      if (addH < recycleHeight()) return renderItems(index++, addH, pList);
+      if (addH < window.innerHeight + recycleHeight() * 2) return getRenderList(index, addH, pList);
       return pList;
     }
 
-    function layout() {
+    function layout(isCache = true) {
       if (!scrollController.context.element) return;
       const sTop = scrollController.context.element.scrollTop;
       const offsetTop = scrollController.getOffsetTop(contentHtml);
-      let index = Math.floor((sTop - offsetTop) / (props.avgHeight + props.gap)) * props.columns;
-      if (index < 0) index = 0;
-      mCtx.renderList = renderItems(index);
+      const renderTop = offsetTop - sTop - window.innerHeight - recycleHeight();
+      if (renderTop > 0) return;
+      let aaa = Math.floor(recycleHeight() / (props.avgHeight + props.gap)) * props.columns
+      let bbb = Math.floor((sTop - offsetTop) / (props.avgHeight + props.gap)) * props.columns;
+      let index = bbb - aaa
+      if (cache.index === index && isCache) return;
+      cache.index = index;
+      mCtx.renderList = getRenderList(index);
+      // console.log('---------layout ---------');
+      // console.log(`renderTop : ${renderTop}`);
+      // console.log(`index : ${index}`);
+      // console.log(mCtx.renderList);
+      // console.log('  ');
     }
 
     return () => {
-      layout();
+      // console.log('---------render ---------');
+      layout(false);
       return (
         <div
           data-length={LIST.value.length}

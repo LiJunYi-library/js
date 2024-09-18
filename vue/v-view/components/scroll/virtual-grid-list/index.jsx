@@ -6,6 +6,8 @@ import {
   inject,
   reactive,
   provide,
+  onBeforeMount,
+  onMounted
 } from "vue";
 import { useScrollController } from "../scroll";
 import { arrayLoop } from "@rainbow_ljy/rainbow-js";
@@ -29,6 +31,47 @@ const mProps = {
 };
 
 
+const RScrollVirtualGridListItem = defineComponent({
+  props: {
+    item: [Object, Array, String, Number],
+    index: Number,
+  },
+  setup(props, context) {
+    const mCtx = inject("RScrollVirtualGridListContext") || {};
+    let html;
+
+    const obs = new IntersectionObserver(([entries]) => {
+      if (!entries.isIntersecting) return
+      mCtx.context.emit("itemVisible", props);
+      handleMarkVisible();
+    });
+
+    function handleMarkVisible() {
+      if (typeof props.item !== 'object') return;
+      if (props.item.__markVisible !== mCtx.markVisible) {
+        props.item.__markVisible = mCtx.markVisible;
+        mCtx.context.emit("itemMarkVisible", props);
+      }
+    }
+
+    onMounted(() => {
+      obs.observe(html);
+    })
+
+    onBeforeMount(() => {
+      obs.disconnect();
+    })
+
+
+    return () => {
+      return <div ref={(el) => html = el}   >
+        {renderSlot(context.slots, "default", props)}
+      </div>
+    }
+  }
+})
+
+
 const Context = defineComponent({
   props: {
     ...mProps,
@@ -40,18 +83,28 @@ const Context = defineComponent({
       if (typeof item.item !== 'object') return;
       if (item.item.__markCount !== mCtx.markCount) {
         item.item.__markCount = mCtx.markCount;
-        mCtx.context.emit("itemMarkrender", item);
+        mCtx.context.emit("itemMarkRender", item);
       }
     }
 
     return () => {
       return renderList(mCtx.renderList, (item, index) => {
         handleMark(item);
-        return (
-          <div data-index={item.index} class="r-scroll-virtual-grid-list-item" style={item.style} key={props.keyExtractor(item)}>
-            {renderSlot(mCtx.slots, "default", item)}
-          </div>
-        );
+        return <RScrollVirtualGridListItem
+          data-index={item.index}
+          class="r-scroll-virtual-grid-list-item"
+          style={item.style}
+          item={item.item}
+          index={item.index}
+          key={props.keyExtractor(item)}
+        >
+          {renderSlot(mCtx.slots, "default", item)}
+        </RScrollVirtualGridListItem>
+        // return (
+        //   <div ref={(el) => onRef(el, item)} data-index={item.index} class="r-scroll-virtual-grid-list-item" style={item.style} key={props.keyExtractor(item)}>
+        //     {renderSlot(mCtx.slots, "default", item)}
+        //   </div>
+        // );
       });
     };
   },
@@ -61,6 +114,7 @@ export const RScrollVirtualGridList = defineComponent({
   props: {
     ...mProps,
   },
+  emits: ["itemMarkRender", "itemMarkVisible", "itemVisible"],
   setup(props, context) {
     let cache = {
       index: undefined,
@@ -78,9 +132,7 @@ export const RScrollVirtualGridList = defineComponent({
       );
     });
 
-
-
-
+    
     const scrollController = useScrollController({
       onScroll(event, sTop) {
         layout();
@@ -100,6 +152,7 @@ export const RScrollVirtualGridList = defineComponent({
       renderList: [],
 
       markCount: 0,
+      markVisible: 0,
       // onRender: () => undefined,
       // addMarkCount() {
       //   mCtx.markCount++;

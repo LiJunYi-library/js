@@ -4,6 +4,10 @@ import { useLoading } from "@rainbow_ljy/v-hooks";
 import { RILoading } from "../icon";
 
 export const loadingProps = {
+  skelectonCount: {
+    type: Number,
+    default: 5,
+  },
   finishedText: {
     type: [Number, String],
     default: "没有更多了",

@@ -13,3 +13,4 @@ export * from "./message";
 export * from "./top";
 export * from "./refresh";
 export * from "./virtual-grid-list";
+export * from "./virtual-falls-list";

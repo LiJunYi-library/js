@@ -29,6 +29,8 @@ const Context = defineComponent({
     let containerHtml = null;
     const actItemHtml = null;
     const RViewPageContext = inject("RViewPageContext") || {};
+    RViewPageContext.getParentHtml = () => parentHtml;
+    RViewPageContext.getContainerHtml = () => containerHtml;
     const compatibility = {
       className: "r-view-page-compatibility",
       getTranslateX() {
@@ -158,7 +160,10 @@ export const RViewPage = defineComponent({
       children: [],
       element: null,
     });
+
     provide("RViewPageContext", RViewPageContext);
+
+    ctx.expose(RViewPageContext)
 
     return () => {
       return [renderSlot(ctx.slots, "default"), <Context {...ctx.attrs} {...props}></Context>];

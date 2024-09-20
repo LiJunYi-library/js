@@ -85,6 +85,7 @@ export const RScrollVirtualList2 = defineComponent({
     const mCtx = reactive({
       context,
       markCount: 0,
+      getOffsetTop: () => scrollController.getOffsetTop(virtualListHtml),
       // first
       onRender: () => undefined,
       renderList: [],
@@ -117,9 +118,8 @@ export const RScrollVirtualList2 = defineComponent({
     context.expose(mCtx);
 
     function getLeft(i) {
-      return `calc( ${(100 / columnNum) * i}% - ${
-        (((columnNum - 1) * space) / columnNum) * i
-      }px + ${i * space}px )`;
+      return `calc( ${(100 / columnNum) * i}% - ${(((columnNum - 1) * space) / columnNum) * i
+        }px + ${i * space}px )`;
     }
 
     function renderItems(index, addH = 0, pList = []) {

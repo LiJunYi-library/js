@@ -111,6 +111,7 @@ export const RScroll = defineComponent({
     props: {
         scrollController: Object,
         popupDisableScroll: { type: Boolean, default: false },
+        contentStyle: [Object, String, Array]
     },
     emits: ["scrollDown", "scrollUp", "scrollChange", "scrollBottom", "scrollRefresh"],
     setup(props, context) {
@@ -315,7 +316,7 @@ export const RScroll = defineComponent({
                     onScroll={onScroll}
                     onScrollend={onScrollend}>
                     {renderSlot(context.slots, "top")}
-                    <div class="r-scroll-content" ref={onContentRef}>
+                    <div class="r-scroll-content" ref={onContentRef} style={props.contentStyle}>
                         {renderSlot(context.slots, "default")}
                     </div>
                     {renderSlot(context.slots, "bottom")}

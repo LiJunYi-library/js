@@ -1,4 +1,4 @@
-import { defineComponent, renderSlot, onBeforeUnmount, ref, inject, onMounted } from "vue";
+import { defineComponent, renderSlot, onBeforeUnmount, ref, reactive, onMounted } from "vue";
 import { useScrollController } from "./";
 
 export const RScrollSticky = defineComponent({
@@ -47,6 +47,11 @@ export const RScrollSticky = defineComponent({
       const sTop = scrollController?.context?.element?.scrollTop ?? 0;
       layoutTop(sTop);
     });
+
+    const expose =reactive({ isChangeTop, isSticky, unStickyTop, unStickyBottom, scrollTop } )
+
+    context.expose(expose)
+
 
     return (vm) => {
       const positionStyle = {

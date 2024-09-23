@@ -8,11 +8,6 @@
   flex-direction: row-reverse;
 }
 
-.r-row-fill {
-  flex: 1;
-  width: 1px;
-}
-
 //
 .r-column {
   display: flex;
@@ -24,12 +19,21 @@
   flex-direction: column-reverse;
 }
 
-.r-column-fill {
+//
+.r-flex-fill {
+  flex: 1;
+  width: 1px;
+}
+
+.r-flex-fill-true {
+  flex: 1;
+  width: 1px;
+}
+
+.r-flex-fill-vertical {
   flex: 1;
   height: 1px;
 }
-
-//
 
 //
 

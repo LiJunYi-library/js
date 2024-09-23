@@ -4,7 +4,6 @@ export const RFlexHoc = (optinos = {}) => {
     const config = {
         className: "r-row",
         reverseClassName: "r-row-reverse",
-        fillClassName: "r-row-fill",
         props:{},
         ...optinos
     }
@@ -17,7 +16,7 @@ export const RFlexHoc = (optinos = {}) => {
             align: { type: String, default: "" },
             alignSelf: { type: String, default: "" },
             auto: { type: [String, Boolean], default: "" },
-            fill: Boolean,
+            fill:  { type: [String, Boolean], default: false },
             ...config.props,
         },
 
@@ -33,7 +32,7 @@ export const RFlexHoc = (optinos = {}) => {
                             props.align && `r-flex-align-${props.align}`,
                             props.auto && `r-flex-justify-auto-${props.auto}`,
                             props.alignSelf && `r-flex-align-self-${props.alignSelf}`,
-                            props.fill && config.fillClassName,
+                            props.fill && `r-flex-fill-${props.fill}`,
                         ]}
                     >
                         {context.slots?.default?.()}

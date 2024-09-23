@@ -10,7 +10,7 @@ import {
 } from "vue";
 import "./tab.scss";
 import { useResizeObserver } from "@rainbow_ljy/v-hooks";
-import { RLoading } from "../loading";
+
 
 const Active = defineComponent({
   props: {

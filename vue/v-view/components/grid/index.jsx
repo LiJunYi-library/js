@@ -1,5 +1,5 @@
 import { RResize } from "../resize";
-import { defineComponent, computed, renderSlot, renderList } from "vue";
+import { defineComponent, computed, renderSlot, renderList, ref } from "vue";
 import "./index.scss";
 
 export const RGridProps = {
@@ -12,16 +12,24 @@ export const RGridProps = {
 export const RGrid = defineComponent({
   props: RGridProps,
   setup(props, context) {
-    function changeWidth(offset) {
-      if (!props.minWidth) return;
-      const newColumns = Math.floor(offset.width / props.minWidth);
-      style["grid-template-columns"] = ` repeat(${newColumns}, 1fr)`;
+    const offset = ref();
+
+    function changeWidth(off) {
+      offset.value = off;
     }
 
-    const style = computed(()=> ({
-      "grid-template-columns": ` repeat(${props.columns}, 1fr)`,
-      "grid-gap": props.gap + "px",
-    }));
+    const style = computed(() => {
+      let newColumns = props.columns;
+
+      if (props.minWidth && offset.value) {
+        newColumns = Math.floor(offset.value.width / props.minWidth);
+      }
+
+      return {
+        "grid-template-columns": ` repeat(${newColumns}, 1fr)`,
+        "grid-gap": props.gap + "px",
+      }
+    });
 
     return () => {
       return (

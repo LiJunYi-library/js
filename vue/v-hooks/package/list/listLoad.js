@@ -26,6 +26,9 @@ function getListLoadProps(options) {
     setCurrentPage: (res, hooks) => {
       return hooks.currentPage + 1;
     },
+    setEmpty: (res, hooks) => {
+      return hooks.list.length === 0;
+    },
     fetchCB: () => undefined, // 异步的回调 返回异步数据
     fetchBeginCB: () => undefined,
     fetchConcatCB: () => undefined,
@@ -71,82 +74,94 @@ function useListLoad2(props = {}) {
     finished,
     total,
     empty,
-    nextBeginSend,
-    awaitConcatSend,
-    beginNextSend,
     reset,
+    resetState,
+    emptyReset,
+    thenFun,
+    errorFun,
+    resetStateNextSend,
+    resetStateNextBeginSend,
+    resetNextSend,
+    resetNextBeginSend,
+    awaitConcatSend,
+    beginNextSend: resetNextBeginSend, // 废弃
+    nextBeginSend: resetStateNextBeginSend, // 废弃
   });
 
   function reset() {
     list.value = [];
     listData.value = [];
+    resetState();
+  }
+
+  function resetState() {
     currentPage.value = 1;
     finished.value = false;
     empty.value = false;
     total.value = 0;
   }
 
-  function beginNextSend(...arg) {
-    currentPage.value = 1;
-    finished.value = false;
-    empty.value = false;
-    total.value = 0;
-    config.beforeBegin(params);
-    return asyncHooks.nextBeginSend(...arg).then((res) => {
-      listData.value = config.setList(res, params) || [];
-      list.value = listData.value;
-      currentPage.value = config.setCurrentPage(res, params);
-      total.value = config.setTotal(res, params);
-      finished.value = config.setFinished(res, params);
-      empty.value = list.value.length === 0;
-      config.fetchBeginCB(params);
-      if (listData.value.length === 0) return res;
-      if (list.value.length < pageSize.value) {
-        return awaitConcatSend(...arg);
-      }
-      return res;
-    });
+  function emptyReset() {
+    list.value.splice(0);
+    listData.value.splice(0);
+    resetState();
   }
 
-  function nextBeginSend(...arg) {
-    if (config.isBeginSendResetList) list.value = [];
+  function thenFun(isConcat = false, res) {
+    listData.value = config.setList(res, params) || [];
+    if (isConcat) list.value.push(...listData.value);
+    else list.value = listData.value;
+    currentPage.value = config.setCurrentPage(res, params);
+    total.value = config.setTotal(res, params);
+    finished.value = config.setFinished(res, params);
+    empty.value = config.setEmpty(res, params);
+    if (listData.value.length === 0) return res;
+    if (list.value.length < pageSize.value) {
+      return awaitConcatSend(...arg);
+    }
+    return res;
+  }
+
+  function errorFun(err) {
     listData.value = [];
-    currentPage.value = 1;
-    finished.value = false;
-    empty.value = false;
-    total.value = 0;
-    config.beforeBegin(params);
-    return asyncHooks.nextBeginSend(...arg).then((res) => {
-      listData.value = config.setList(res, params) || [];
-      list.value = listData.value;
-      currentPage.value = config.setCurrentPage(res, params);
-      total.value = config.setTotal(res, params);
-      finished.value = config.setFinished(res, params);
-      empty.value = list.value.length === 0;
-      config.fetchBeginCB(params);
-      if (listData.value.length === 0) return res;
-      if (list.value.length < pageSize.value) {
-        return awaitConcatSend(...arg);
-      }
-      return res;
-    });
+    list.value = listData.value;
+    total.value = list.value.length;
+    finished.value = true;
+    empty.value = list.value.length === 0;
+    return Promise.reject(err)
+  }
+
+  function resetStateNextSend(...arg) {
+    resetState();
+    return asyncHooks.nextSend(...arg).then((res) => thenFun(false, res)).catch(errorFun);
+  }
+
+  async function resetStateNextBeginSend(...arg) {
+    params.begin = true;
+    try {
+      return await resetStateNextSend(...arg);
+    } finally {
+      params.begin = false;
+    }
+  }
+
+  function resetNextSend(...arg) {
+    reset();
+    return asyncHooks.nextSend(...arg).then((res) => thenFun(false, res)).catch(errorFun);
+  }
+
+  async function resetNextBeginSend(...arg) {
+    params.begin = true;
+    try {
+      return await resetNextSend(...arg);
+    } finally {
+      params.begin = false;
+    }
   }
 
   function awaitConcatSend(...arg) {
     if (finished.value === true) return;
-    return asyncHooks.awaitSend(...arg).then((res) => {
-      listData.value = config.setList(res, params) || [];
-      list.value.push(...listData.value);
-      currentPage.value = config.setCurrentPage(res, params);
-      total.value = config.setTotal(res, params);
-      finished.value = config.setFinished(res, params);
-      config.fetchConcatCB(params);
-      if (listData.value.length === 0) return res;
-      if (list.value.length < pageSize.value) {
-        return awaitConcatSend(...arg);
-      }
-      return res;
-    });
+    return asyncHooks.awaitSend(...arg).then((res) => thenFun(true, res));
   }
 
   return params;
@@ -271,7 +286,7 @@ function useAsyncListLoad(props = {}) {
     total.value = 0;
     config.beforeBegin(params.proxy);
     return asyncHooks.nextBeginSend(...arg).then((res) => {
-      listData.value = config.setList(res, params.proxy)  || [];
+      listData.value = config.setList(res, params.proxy) || [];
       list.value = listData.value;
       currentPage.value = config.setCurrentPage(res, params.proxy);
       total.value = config.setTotal(res, params.proxy);

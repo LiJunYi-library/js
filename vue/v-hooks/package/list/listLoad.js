@@ -107,7 +107,7 @@ function useListLoad2(props = {}) {
     resetState();
   }
 
-  function thenFun(isConcat = false, res) {
+  function thenFun(isConcat = false, res, ...arg) {
     listData.value = config.setList(res, params) || [];
     if (isConcat) list.value.push(...listData.value);
     else list.value = listData.value;
@@ -133,7 +133,7 @@ function useListLoad2(props = {}) {
 
   function resetStateNextSend(...arg) {
     resetState();
-    return asyncHooks.nextSend(...arg).then((res) => thenFun(false, res)).catch(errorFun);
+    return asyncHooks.nextSend(...arg).then((res) => thenFun(false, res, ...arg)).catch(errorFun);
   }
 
   async function resetStateNextBeginSend(...arg) {
@@ -147,7 +147,7 @@ function useListLoad2(props = {}) {
 
   function resetNextSend(...arg) {
     reset();
-    return asyncHooks.nextSend(...arg).then((res) => thenFun(false, res)).catch(errorFun);
+    return asyncHooks.nextSend(...arg).then((res) => thenFun(false, res, ...arg)).catch(errorFun);
   }
 
   async function resetNextBeginSend(...arg) {
@@ -161,7 +161,7 @@ function useListLoad2(props = {}) {
 
   function awaitConcatSend(...arg) {
     if (finished.value === true) return;
-    return asyncHooks.awaitSend(...arg).then((res) => thenFun(true, res));
+    return asyncHooks.awaitSend(...arg).then((res) => thenFun(true, res, ...arg));
   }
 
   return params;

@@ -132,6 +132,49 @@ export const RScroll = defineComponent({
         let stratTouche;
         let refreshLock = false;
         let scrollLock = false;
+        const docEvent = {
+            startEvent: undefined,
+            moveEvent: undefined,
+            onTouchstart: (event) => {
+                docEvent.startEvent = event;
+            },
+            onTouchmove: (event) => {
+                docEvent.moveEvent = event;
+                let move = docEvent.moveEvent.touches[0].pageY - docEvent.startEvent.touches[0].pageY;
+                const scrollTop = RScrollContext.element?.scrollTop;
+                const maxTop = RScrollContext.element?.scrollHeight - RScrollContext.element?.offsetHeight;
+                if (move < 0) {
+                    if (scrollTop >= maxTop) {
+                        docEvent.startEvent?.preventDefault?.();
+                        docEvent.moveEvent?.preventDefault?.();
+                        scrollEvent.startEvent?.preventDefault?.();
+                        scrollEvent.moveEvent?.preventDefault?.();
+                    }
+                }
+            },
+        }
+        const scrollEvent = {
+            startEvent: undefined,
+            moveEvent: undefined,
+            onTouchstart: (event) => {
+                scrollEvent.startEvent = event;
+            },
+            onTouchmove: (event) => {
+                scrollEvent.moveEvent = event;
+                let move = scrollEvent.moveEvent.touches[0].pageY - scrollEvent.startEvent.touches[0].pageY;
+                const scrollTop = RScrollContext.element?.scrollTop;
+                const maxTop = RScrollContext.element?.scrollHeight - RScrollContext.element?.offsetHeight;
+                if (move < 0) {
+                    if (scrollTop >= maxTop) {
+                        RScrollContext.element.scrollTop = maxTop
+                        scrollEvent.startEvent?.preventDefault?.();
+                        scrollEvent.moveEvent?.preventDefault?.();
+                        docEvent.startEvent?.preventDefault?.();
+                        docEvent.moveEvent?.preventDefault?.();
+                    }
+                }
+            },
+        }
 
         try {
             resizeObserver = new ResizeObserver(([entries]) => {
@@ -161,7 +204,10 @@ export const RScroll = defineComponent({
 
             if (scrollTop < 0) scrollTop = 0;
 
-            if (scrollTop > maxTop) scrollTop = maxTop;
+            if (scrollTop > maxTop) {
+                scrollTop = maxTop;
+                RScrollContext.element.scrollTop = maxTop
+            }
 
             const space = scrollTop - prveTop;
 
@@ -253,12 +299,22 @@ export const RScroll = defineComponent({
                 el.onMounted(RScrollContext.element.scrollTop);
             });
             resizeObserver?.observe?.(RScrollContext.contentElement);
+
+            RScrollContext.element.addEventListener('touchstart', scrollEvent.onTouchstart, { passive: false });
+            RScrollContext.element.addEventListener('touchmove', scrollEvent.onTouchmove, { passive: false });
+            document.addEventListener('touchstart', docEvent.onTouchstart, { passive: false });
+            document.addEventListener('touchmove', docEvent.onTouchmove, { passive: false });
         });
 
         onBeforeUnmount(() => {
             arrayRemove(RGlobal.scrolls, RScrollContext);
             if (SC) SC.removeElement(RScrollContext);
             resizeObserver?.disconnect?.();
+
+            RScrollContext.element.removeEventListener('touchstart', scrollEvent.onTouchstart, { passive: false });
+            RScrollContext.element.removeEventListener('touchmove', scrollEvent.onTouchmove, { passive: false });
+            document.removeEventListener('touchstart', docEvent.onTouchstart, { passive: false });
+            document.removeEventListener('touchmove', docEvent.onTouchmove, { passive: false });
         });
 
         function onRef(el) {

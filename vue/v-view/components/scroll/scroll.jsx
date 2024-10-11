@@ -140,7 +140,7 @@ export const RScroll = defineComponent({
             },
             onTouchmove: (event) => {
                 docEvent.moveEvent = event;
-                let move = docEvent.moveEvent.touches[0].pageY - docEvent.startEvent.touches[0].pageY;
+                let move = docEvent.moveEvent?.touches?.[0]?.pageY ?? 0 - docEvent.startEvent?.touches?.[0]?.pageY ?? 0;
                 const scrollTop = RScrollContext.element?.scrollTop;
                 const maxTop = RScrollContext.element?.scrollHeight - RScrollContext.element?.offsetHeight;
                 if (move < 0) {
@@ -161,7 +161,7 @@ export const RScroll = defineComponent({
             },
             onTouchmove: (event) => {
                 scrollEvent.moveEvent = event;
-                let move = scrollEvent.moveEvent.touches[0].pageY - scrollEvent.startEvent.touches[0].pageY;
+                let move = scrollEvent.moveEvent?.touches?.[0]?.pageY ?? 0 - scrollEvent.startEvent?.touches?.[0]?.pageY ?? 0;
                 const scrollTop = RScrollContext.element?.scrollTop;
                 const maxTop = RScrollContext.element?.scrollHeight - RScrollContext.element?.offsetHeight;
                 if (move < 0) {

@@ -190,6 +190,19 @@ export function arrayExtractSame(list = [], formatter) {
   }
   return arr.flat();
 }
+
+// 数组排序  根据属性倒序
+export function arrayReverseSort(list = [], formatter) {
+  list.sort((a, b) => formatter(b) - formatter(a))
+  return list;
+}
+
+// 数组排序 根据属性正序
+export function arraySort(list = [], formatter) {
+  list.sort((a, b) => formatter(a) - formatter(b))
+  return list;
+}
+
 /**
  * 数组排序 根据另一个数组的属性
  * @param {*} list

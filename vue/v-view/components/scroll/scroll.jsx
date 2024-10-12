@@ -111,7 +111,8 @@ export const RScroll = defineComponent({
     props: {
         scrollController: Object,
         popupDisableScroll: { type: Boolean, default: false },
-        contentStyle: [Object, String, Array]
+        contentStyle: [Object, String, Array],
+        triggerScrollBottomHeight: { type: [Number, String], default: 2 },
     },
     emits: ["scrollDown", "scrollUp", "scrollChange", "scrollBottom", "scrollRefresh"],
     setup(props, context) {
@@ -251,7 +252,7 @@ export const RScroll = defineComponent({
         function handleScrollBottom(event, STop) {
             if (
                 RScrollContext.element.offsetHeight + STop >=
-                RScrollContext.contentElement.offsetHeight
+                RScrollContext.contentElement.offsetHeight - props.triggerScrollBottomHeight
             ) {
                 RScrollContext.children.forEach((el) => {
                     el.onScrollBottom(event, scrollTop);

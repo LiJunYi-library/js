@@ -64,6 +64,7 @@ export const RScrollVirtualList2 = defineComponent({
   props: {
     ...mProps,
   },
+  emits: ['itemMarkrender', 'scrollEnd', 'scrollBottom'],
   setup(props, context) {
     // eslint-disable-next-line
     const { bothEndsHeight, space, avgHeight, columnNum } = props;
@@ -81,6 +82,9 @@ export const RScrollVirtualList2 = defineComponent({
       onResize(entries, sTop) {
         layout();
       },
+      onScrollBottom(...arg) {
+        context.emit("scrollBottom", ...arg);
+      }
     });
 
     const mCtx = reactive({

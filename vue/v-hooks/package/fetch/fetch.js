@@ -104,7 +104,6 @@ export function fetchQueue(props = {}) {
 
 export function useFetchHOC(props = {}) {
   const options = {
-    fetch: fetch,
     formatterFile: async (res, config) => {
       const file = await res.blob();
       return file;
@@ -212,6 +211,7 @@ export function useFetchHOC(props = {}) {
       const headers = getHeaders(config);
       const body = revBody(headers["Content-Type"], config);
       const fetchConfig = {
+        ...config,
         url,
         headers,
         method: config.method,
@@ -220,7 +220,6 @@ export function useFetchHOC(props = {}) {
       };
       config?.interceptRequest?.(fetchConfig, config);
       const URL = fetchConfig.url;
-      delete fetchConfig.url;
       const current = { timer: undefined, controller: curController };
       fetchEvents.push(current);
       let fetchPromise;
@@ -261,7 +260,8 @@ export function useFetchHOC(props = {}) {
         loading.value = true;
         config.onRequest(fetchConfig, config);
         events.invoke(params);
-        fetchPromise = config.fetch(URL, fetchConfig);
+        if (config.fetch) fetchPromise = config.fetch(URL, fetchConfig);
+        else fetchPromise = fetch(URL, fetchConfig);
         if (config.isPushQueue) options.fetchQueue?.push?.(fetchPromise, config, params);
         const res = await fetchPromise;
         const d = await config.formatterResponse(res, config);

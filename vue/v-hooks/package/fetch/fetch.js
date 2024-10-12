@@ -2,6 +2,10 @@ import { isRef, ref } from "vue";
 import { useReactive } from "../../other";
 import { downloadFile, arrayEvents, arrayRemove, createOverload } from "@rainbow_ljy/rainbow-js";
 
+const errLoading = { message: "loading", code: 41 };
+const errTimeout = { message: "Request Timeout", code: 48 };
+const errAbout = { message: "about", code: 20 };
+
 function getBody(config) {
   if (!config.body) return undefined;
   if (config.body instanceof Function) return config.body();
@@ -100,6 +104,7 @@ export function fetchQueue(props = {}) {
 
 export function useFetchHOC(props = {}) {
   const options = {
+    fetch: fetch,
     formatterFile: async (res, config) => {
       const file = await res.blob();
       return file;
@@ -148,10 +153,6 @@ export function useFetchHOC(props = {}) {
     fetchQueue: undefined,
     ...props,
   };
-
-  const errLoading = { message: "loading", code: 41 };
-  const errTimeout = { message: "Request Timeout", code: 48 };
-  const errAbout = { message: "about", code: 20 };
 
   function useFetch(props2 = {}) {
     const configs = assign(options, props2);
@@ -226,7 +227,6 @@ export function useFetchHOC(props = {}) {
 
       if (config.time) {
         current.timer = setTimeout(() => {
-          console.log("setTimeout");
           curController.abort(errTimeout);
         }, config.time);
         timer = current.timer;
@@ -259,10 +259,9 @@ export function useFetchHOC(props = {}) {
         error.value = false;
         errorData.value = undefined;
         loading.value = true;
-        console.log(fetchConfig.headers);
         config.onRequest(fetchConfig, config);
         events.invoke(params);
-        fetchPromise = fetch(URL, fetchConfig);
+        fetchPromise = config.fetch(URL, fetchConfig);
         if (config.isPushQueue) options.fetchQueue?.push?.(fetchPromise, config, params);
         const res = await fetchPromise;
         const d = await config.formatterResponse(res, config);
@@ -292,6 +291,7 @@ export function useFetchHOC(props = {}) {
         success(d);
         return data.value;
       } catch (err) {
+        console.error(err.code, "errorRes", err);
         config.onResponse(err, config);
         fetchEvents.remove(current);
 
@@ -304,7 +304,6 @@ export function useFetchHOC(props = {}) {
         }
 
         if (!interceptCode.some((num) => num === errorRes.code)) {
-          console.error(errorRes.code, "errorRes", errorRes);
           const errReset = config.interceptResponseError(errorRes, config);
           fail(errorRes);
           if (errReset) throw errReset;
@@ -394,3 +393,37 @@ export function createFetchApi(useFetch) {
 
   return { post, get };
 }
+
+export function transformFetch(fun) {
+  return (...args) => {
+    const [url, config] = args;
+    const { signal } = config;
+    return new Promise((resolve, reject) => {
+      signal.addEventListener("abort", () => {
+        console.log('****abort*****');
+        console.log(signal?.reason);
+        reject(signal?.reason);
+      });
+      fun(resolve, reject, ...args)
+    })
+  }
+}
+
+export function promiseTransformFetch(fun) {
+  return transformFetch((resolve, reject, ...args) => {
+    const mPromise = fun(...args)
+    if (mPromise instanceof Promise) {
+      mPromise.then((success) => {
+        try {
+          success.ok = 1;
+        } catch (error) {
+          console.error("success is not object");
+        }
+        resolve(success)
+      }).catch((...error) => {
+        reject(...error)
+      })
+    }
+  })
+}
+

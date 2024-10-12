@@ -84,6 +84,7 @@ function useListLoad2(props = {}) {
     resetNextSend,
     resetNextBeginSend,
     awaitConcatSend,
+    awaitPatchPageConcatSend,
     beginNextSend: resetNextBeginSend, // 废弃
     nextBeginSend: resetStateNextBeginSend, // 废弃
   });
@@ -108,6 +109,15 @@ function useListLoad2(props = {}) {
   }
 
   function thenFun(isConcat = false, res, ...arg) {
+    handleThen(isConcat, res, ...arg)
+    if (listData.value.length === 0) return res;
+    if (list.value.length < pageSize.value) {
+      return awaitConcatSend(...arg);
+    }
+    return res;
+  }
+
+  function handleThen(isConcat = false, res, ...arg) {
     listData.value = config.setList(res, params) || [];
     if (isConcat) list.value.push(...listData.value);
     else list.value = listData.value;
@@ -115,11 +125,6 @@ function useListLoad2(props = {}) {
     total.value = config.setTotal(res, params);
     finished.value = config.setFinished(res, params);
     empty.value = config.setEmpty(res, params);
-    if (listData.value.length === 0) return res;
-    if (list.value.length < pageSize.value) {
-      return awaitConcatSend(...arg);
-    }
-    return res;
   }
 
   function errorFun(err) {
@@ -164,6 +169,24 @@ function useListLoad2(props = {}) {
     return asyncHooks.awaitSend(...arg).then((res) => thenFun(true, res, ...arg));
   }
 
+  // 适用于下拉加载补足页码
+  function awaitPatchPageConcatSend(...arg) {
+    if (finished.value === true) return;
+    if (asyncHooks.loading === true) return;
+    const patchList = [];
+    async function mSend(...arg) {
+      return asyncHooks.awaitSend(...arg).then(async (res) => {
+        handleThen(true, res, ...arg);
+        patchList.push(...listData.value);
+        if (listData.value.length === 0) return res;
+        if (patchList.length < pageSize.value) {
+          return mSend(...arg);
+        }
+        return res;
+      });
+    }
+    return mSend(...arg)
+  }
   return params;
 }
 

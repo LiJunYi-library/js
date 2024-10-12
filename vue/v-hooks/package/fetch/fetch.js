@@ -126,6 +126,11 @@ export function useFetchHOC(props = {}) {
       d = await res.text();
       return d;
     },
+    formatterEmpty: ({ data }) => {
+      if (typeof data !== 'object') return Boolean(data);
+      if (data instanceof Array) return Boolean(data.length);
+      return Boolean(Object.keys(data).length);
+    },
     formatterData: (d) => d,
     interceptRequest: () => undefined,
     interceptResponseSuccess: () => undefined,
@@ -142,6 +147,7 @@ export function useFetchHOC(props = {}) {
     loading: false,
     begin: false,
     error: false,
+    empty: false,
     data: undefined,
     errorData: undefined,
     isPushQueue: true,
@@ -163,6 +169,7 @@ export function useFetchHOC(props = {}) {
     const fetchEvents = arrayEvents();
     const loading = ref(configs.loading);
     const data = ref(configs.data);
+    const empty = ref(configs.empty);
     const begin = ref(configs.begin);
     const error = ref(configs.error);
     const errorData = ref(configs.errorData);
@@ -170,6 +177,7 @@ export function useFetchHOC(props = {}) {
     const params = useReactive({
       loading,
       data,
+      empty,
       begin,
       error,
       errorData,
@@ -235,6 +243,7 @@ export function useFetchHOC(props = {}) {
       const success = (successData) => {
         loading.value = false;
         data.value = successData;
+        empty.value = config.formatterEmpty(params, config)
         error.value = false;
         errorData.value = undefined;
         fetchEvents.remove(current);
@@ -259,7 +268,6 @@ export function useFetchHOC(props = {}) {
         error.value = false;
         errorData.value = undefined;
         loading.value = true;
-        console.log(fetchConfig.headers);
         config.onRequest(fetchConfig, config);
         events.invoke(params);
         fetchPromise = fetch(URL, fetchConfig);

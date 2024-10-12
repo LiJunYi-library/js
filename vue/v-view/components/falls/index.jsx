@@ -54,7 +54,7 @@ function useFallsLayout(options = {}) {
 
   function getColumns(width) {
     if (!config.minAutoWidth) return config.columns;
-    return Math.floor(width / config.minAutoWidth);
+    return Math.floor(width / config.minAutoWidth) || 1;
   }
 
   function setColumns(width) {

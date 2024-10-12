@@ -25,6 +25,7 @@ const configProps = {
   behavior: { type: String, default: "smooth" }, // smooth  instant
   scrollOffsetTop: { type: Number, default: 0 }, // 更换list时候的滚动偏移量
   isScrollTop: { type: Boolean, default: false }, // 更换list时候是否滚动滚动
+  rootMargin: String, // 根周围的边距。其值可以类似于 CSS margin 属性，例如 "10px 20px 30px 40px"（上、右、下、左）。这些值可以是百分比。在计算交叉点之前，这组值用于增大或缩小根元素边框的每一侧。默认值为全零。
 };
 
 const mProps = {
@@ -156,12 +157,14 @@ export const RScrollVirtualList2 = defineComponent({
       mCtx.renderList = renderItems(index);
     }
 
+    const observerBottomConfig = props.rootMargin ? { root: scrollController.context.element, rootMargin: props.rootMargin } : undefined
+
     const observerBottom = new IntersectionObserver(([entries]) => {
       if (entries.isIntersecting && isobserver) {
         context.emit("scrollEnd");
       }
       isobserver = true;
-    });
+    }, observerBottomConfig);
 
     onBeforeUnmount(() => {
       observerBottom.disconnect();

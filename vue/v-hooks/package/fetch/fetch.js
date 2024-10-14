@@ -13,8 +13,8 @@ function getBody(config) {
   return config.body;
 }
 
-function revBody(contentType, config) {
-  const _body = getBody(config);
+function revBody(contentType, config, body) {
+  const _body = body || getBody(config);
   if (!_body) return undefined;
   if (typeof _body !== "object") return _body;
   const jsonBody = JSON.stringify(_body);
@@ -137,7 +137,7 @@ export function useFetchHOC(props = {}) {
       return d;
     },
     formatterData: (d) => d,
-    formatterBody: (contentType, config) => revBody(contentType, config),
+    formatterBody: (contentType, body, config) => revBody(contentType, config),
     interceptRequest: () => undefined,
     interceptResponseSuccess: () => undefined,
     interceptResponseError: () => undefined,
@@ -216,7 +216,7 @@ export function useFetchHOC(props = {}) {
       controller = curController;
       const url = config.baseUrl + config.url + parseParams(config.url, getParams(config));
       const headers = getHeaders(config);
-      const body = config.formatterBody(headers["Content-Type"], config);
+      const body = config.formatterBody(headers["Content-Type"], getBody(config), config);
       const fetchConfig = {
         ...config,
         url,
@@ -320,7 +320,7 @@ export function useFetchHOC(props = {}) {
     }
 
     function nextSend(...arg) {
-      controller.abort();
+      controller.abort(errAbout);
       clearTimeout(timer);
       return send(...arg);
     }
@@ -354,7 +354,7 @@ export function useFetchHOC(props = {}) {
     }
 
     function abort() {
-      controller.abort();
+      controller.abort(errAbout);
       clearTimeout(timer);
       loading.value = false;
       begin.value = false;
@@ -362,7 +362,7 @@ export function useFetchHOC(props = {}) {
 
     function abortAll() {
       fetchEvents.invokes((item) => {
-        item.controller.abort();
+        item.controller.abort(errAbout);
         clearTimeout(item.timer);
       });
       loading.value = false;

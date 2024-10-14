@@ -17,16 +17,22 @@ function revBody(contentType, config) {
   const _body = getBody(config);
   if (!_body) return undefined;
   if (typeof _body !== "object") return _body;
-  const formDataType = "form";
-  const formData = new FormData();
-  for (const key in _body) {
-    if (Object.prototype.hasOwnProperty.call(_body, key)) {
-      formData.append(key, _body[key]);
+  const jsonBody = JSON.stringify(_body);
+  const formBody = (() => {
+    const formData = new FormData();
+    for (const key in _body) {
+      if (Object.prototype.hasOwnProperty.call(_body, key)) {
+        formData.append(key, _body[key]);
+      }
     }
-  }
-  if (config.isFormData) return formData;
-  if (!contentType.includes(formDataType)) return JSON.stringify(_body);
-  return formData;
+    return formData;
+  })()
+  if (config.isFormData) return formBody;
+  if (config.isFormBody) return formBody;
+  if (config.isJsonBody) return jsonBody;
+  if (contentType.includes("application/json")) return jsonBody;
+  if (contentType.includes("form")) return formBody;
+  return formBody;
 }
 
 function getHeaders(config) {
@@ -400,8 +406,6 @@ export function transformFetch(fun) {
     const { signal } = config;
     return new Promise((resolve, reject) => {
       signal.addEventListener("abort", () => {
-        console.log('****abort*****');
-        console.log(signal?.reason);
         reject(signal?.reason);
       });
       fun(resolve, reject, ...args)

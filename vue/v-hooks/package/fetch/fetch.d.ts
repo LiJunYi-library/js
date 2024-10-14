@@ -98,3 +98,23 @@ export declare function fetchQueue<C extends FetchHOCConfig>(
 export declare function createFetchApi<C extends FetchHOCConfig>(
   useFetch: UseFetch<C>
 ): FetchApi<C>;
+
+export type TransformFetchCB<T = any> = (
+  resolve: (value: any) => void,
+  reject: (reason?: any) => void,
+  url: string,
+  config: T,
+  ...args: any
+) => void
+
+export declare function transformFetch<C>(fun: TransformFetchCB<C>): void;
+
+export type PromiseTransformFetchCB<T = any, D = any> = (
+  resolve: (value: any) => void,
+  reject: (reason?: any) => void,
+  url: string,
+  config: T,
+  ...args: any
+) => Promise<D>
+
+export declare function promiseTransformFetch<C, D>(fun: PromiseTransformFetchCB<C, D>): void;

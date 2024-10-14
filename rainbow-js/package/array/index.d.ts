@@ -69,6 +69,18 @@ export declare function arrayExtractSame<T>(
   formatter: (item: T, index: number) => unknown
 ): T[];
 
+export function arraySort<T>(
+  list: T[],
+  formatter: (item: T, index: number) => unknown,
+  formatter2?: (item: T, index: number) => unknown
+): T[];
+
+export declare function arrayReverseSort<T>(
+  list: T[],
+  formatter: (item: T, index: number) => unknown,
+  formatter2?: (item: T, index: number) => unknown
+): T[];
+
 export declare function arraySortByList<T, H>(
   list: T[],
   arr: H[],
@@ -94,6 +106,14 @@ export declare type ArrayEvents<T> = {
 };
 
 export declare function arrayEvents<T>(): ArrayEvents<T>;
+
+export declare function arrayBinaryFindIndex<T>(list: T[], formatter: (item: T) => boolean, compare: (item: T) => boolean): number;
+
+export declare function arrayBinaryFind<T>(list: T[], formatter: (item: T) => boolean, compare: (item: T) => boolean): T;
+
+export declare function arrayBinaryFindLastIndex<T>(list: T[], formatter: (item: T) => boolean, compare: (item: T) => boolean): number;
+
+export declare function rrayBinaryFindLast<T>(list: T[], formatter: (item: T) => boolean, compare: (item: T) => boolean): T;
 
 // 模仿sql查询  //
 export declare function WHERE(compare: any, val: any): boolean;

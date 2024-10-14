@@ -191,15 +191,17 @@ export function arrayExtractSame(list = [], formatter) {
   return arr.flat();
 }
 
-// 数组排序  根据属性倒序
-export function arrayReverseSort(list = [], formatter) {
-  list.sort((a, b) => formatter(b) - formatter(a))
+// 数组排序 根据属性正序
+export function arraySort(list = [], formatter, formatter2) {
+  let fmt = formatter2 || formatter
+  list.sort((a, b) => formatter(a) - fmt(b))
   return list;
 }
 
-// 数组排序 根据属性正序
-export function arraySort(list = [], formatter) {
-  list.sort((a, b) => formatter(a) - formatter(b))
+// 数组排序  根据属性倒序
+export function arrayReverseSort(list = [], formatter, formatter2) {
+  let fmt = formatter2 || formatter
+  list.sort((a, b) => fmt(b) - formatter(a))
   return list;
 }
 
@@ -267,21 +269,49 @@ export function arrayEvents() {
   return { events, push, remove, invoke, invokes };
 }
 
-export function arrayBinaryFind(list, value) {
-  let start = 0;
-  let end = list.length - 1;
-
-  while (start <= end) {
-    let index = Math.floor((start + end) / 2);
-    if (list[index] === value) {
-      return index;
-    } else if (list[index] < value) {
-      start = index + 1;
+/* 二分查找 */
+export function arrayBinarySearch(setPointer = (args, index) => (args.right = index - 1), arr = [], formatter, compare) {
+  const fg = {
+    left: 0,
+    right: arr.length - 1,
+    result: -1,
+  }
+  while (fg.left <= fg.right) {
+    const index = Math.floor((fg.left + fg.right) / 2);
+    const item = arr[index]
+    if (formatter(item)) {
+      fg.result = index;
+      setPointer(fg, index, item)
+    } else if (compare(item)) {
+      fg.left = index + 1;
     } else {
-      end = index - 1;
+      fg.right = index - 1;
     }
   }
-
-  return -1;
+  return fg.result;
 }
+/* 二分查找到符合条件的第一个元素的下标 没有找到返回-1 compare<*/
+export function arrayBinaryFindIndex(arr = [], formatter, compare) {
+  return arrayBinarySearch((args, index) => {
+    args.right = index - 1
+  }, arr, formatter, compare);
+}
+/* 二分查找到符合条件的第一个元素 没有找到返回undefined compare<*/
+export function arrayBinaryFind(arr = [], formatter, compare) {
+  const index = arrayBinaryFindIndex(arr, formatter, compare);
+  return index === -1 ? undefined : arr[index]
+}
+/* 二分查找到符合条件的最后一个元素的下标 没有找到返回-1 compare<*/
+export function arrayBinaryFindLastIndex(arr = [], formatter, compare) {
+  return arrayBinarySearch((args, index) => {
+    args.left = index + 1;
+  }, arr, formatter, compare);
+}
+/* 二分查找到符合条件的最后一个元素 没有找到返回undefined compare<*/
+export function arrayBinaryFindLast(arr = [], formatter, compare) {
+  const index = arrayBinaryFindLastIndex(arr, formatter, compare);
+  return index === -1 ? undefined : arr[index]
+}
+
+
 

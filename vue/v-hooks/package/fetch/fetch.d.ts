@@ -36,6 +36,8 @@ export declare interface FetchHOCConfig<D = ANY> extends RequestInit {
   begin?: boolean = false;
   error?: boolean = false;
   isFormData?: boolean;
+  isFormBody?: boolean;
+  isJsonBody?: boolean;
   data?: ANY;
   errorData?: ANY;
   contentType?: string;
@@ -45,6 +47,7 @@ export declare interface FetchHOCConfig<D = ANY> extends RequestInit {
   formatterFileName?: (res: Response, config: this) => string;
   formatterResponse?: (res: Response, config: this) => ANY;
   formatterData?: (mRes: ANY, d: ANY, res: Response) => ANY;
+  formatterBody?: (headers: ANY,headers: ANY, config: this) => ANY;
   interceptRequest?: (fetchConfig: FetchConfig, config: this) => ANY;
   interceptResponseSuccess?: (res: Response, data: D, config: this) => Promise<ANY>;
   interceptResponseError?: (errorRes: ANY, config: this) => ANY;

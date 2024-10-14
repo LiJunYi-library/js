@@ -137,6 +137,7 @@ export function useFetchHOC(props = {}) {
       return d;
     },
     formatterData: (d) => d,
+    formatterBody: (contentType, config) => revBody(contentType, config),
     interceptRequest: () => undefined,
     interceptResponseSuccess: () => undefined,
     interceptResponseError: () => undefined,
@@ -215,7 +216,7 @@ export function useFetchHOC(props = {}) {
       controller = curController;
       const url = config.baseUrl + config.url + parseParams(config.url, getParams(config));
       const headers = getHeaders(config);
-      const body = revBody(headers["Content-Type"], config);
+      const body = config.formatterBody(headers["Content-Type"], config);
       const fetchConfig = {
         ...config,
         url,

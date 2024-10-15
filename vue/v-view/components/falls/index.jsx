@@ -1,6 +1,6 @@
 import { RResize } from "../resize";
 import { useResizeObserver } from "@rainbow_ljy/v-hooks";
-import { defineComponent, computed, renderSlot, renderList, watch, onMounted, onBeforeUnmount } from "vue";
+import { defineComponent, render, computed, renderSlot, renderList, watch, onMounted, onBeforeUnmount } from "vue";
 import "./index.scss";
 import { timerDebounced, animationDebounced, arrayLoopMap } from "@rainbow_ljy/rainbow-js";
 
@@ -18,7 +18,7 @@ export const RFallsListProps = {
   renderCount: Number,
 };
 
-function useFallsLayout(options = {}) {
+export function useFallsLayout(options = {}) {
   const config = { ...options }
 
   const args = {
@@ -32,6 +32,7 @@ function useFallsLayout(options = {}) {
     setWidth,
     afreshLayout,
     getMaxHeightItem,
+    getMinHeightItem,
   }
 
   setList();
@@ -49,7 +50,7 @@ function useFallsLayout(options = {}) {
   }
 
   function getList() {
-    return arrayLoopMap(config.columns, (i) => ({ height: 0, width: args.width, left: getLeft(i), top: 0, children: [] }));
+    return arrayLoopMap(config.columns, (i) => ({ height: 0, width: args.width, left: getLeft(i), top: 0, children: [], index: i }));
   }
 
   function getColumns(width) {
@@ -69,7 +70,8 @@ function useFallsLayout(options = {}) {
     return item;
   }
 
-  function getMinHeightItem() {
+  function getMinHeightItem(index) {
+    if (typeof index === 'number') return args.list[index];
     let item = args.list[0];
     args.list.forEach((el) => { if (el.height < item.height) item = el });
     return item;
@@ -219,21 +221,21 @@ export const RFalls = defineComponent({
   },
 });
 
-// export const RFallsList = defineComponent({
-//   props: RGridListProps,
-//   setup(props, context) {
-//     return () => {
-//       const LIST = (props.listHook ? props.listHook.list : props.list) || [];
-//       return (
-//         <RGrid {...props}>
-//           {renderList(props.renderCount || LIST, (item, index) => {
-//             return context.slots?.default?.({ item, index });
-//           })}
-//         </RGrid>
-//       );
-//     };
-//   },
-// });
+export const RFallsList = defineComponent({
+  props: RFallsListProps,
+  setup(props, context) {
+    return () => {
+      const LIST = (props.listHook ? props.listHook.list : props.list) || [];
+      return (
+        <RFalls {...props}>
+          {renderList(props.renderCount || LIST, (item, index) => {
+            return context.slots?.default?.({ item, index });
+          })}
+        </RFalls>
+      );
+    };
+  },
+});
 
 // export const RFallsListSelect = defineComponent({
 //   props: RGridListProps,

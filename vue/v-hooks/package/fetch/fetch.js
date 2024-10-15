@@ -2,6 +2,17 @@ import { isRef, ref } from "vue";
 import { useReactive } from "../../other";
 import { downloadFile, arrayEvents, arrayRemove, createOverload } from "@rainbow_ljy/rainbow-js";
 
+// todo AbortController 有兼容问题需要手动实现
+function AbortController(...arg) {
+  if (window.AbortController) return new window.AbortController(...arg);
+  return {
+    signal: {
+      addEventListener() { }
+    },
+    abort() { }
+  };
+}
+
 const errLoading = { message: "loading", code: 41 };
 const errTimeout = { message: "Request Timeout", code: 48 };
 const errAbout = { message: "about", code: 20 };
@@ -298,19 +309,19 @@ export function useFetchHOC(props = {}) {
         success(d);
         return data.value;
       } catch (err) {
-        console.error(err.code, "errorRes", err);
+        console.error(err?.code, "errorRes", err);
         config.onResponse(err, config);
         fetchEvents.remove(current);
 
         let errorRes = err;
         const interceptCode = [20];
 
-        if (err.code === 20) {
+        if (err?.code === 20) {
           options.fetchQueue?.del?.(fetchPromise, config, params);
           errorRes = await signalPromise;
         }
 
-        if (!interceptCode.some((num) => num === errorRes.code)) {
+        if (!interceptCode.some((num) => num === errorRes?.code)) {
           const errReset = config.interceptResponseError(errorRes, config);
           fail(errorRes);
           if (errReset) throw errReset;

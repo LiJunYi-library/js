@@ -50,9 +50,6 @@ export const RGrid = defineComponent({
     function setGridColumn() {
       let children = Array.from(container.value.children)
       let clumnList = children.map(el => el.getAttribute('grid-column') * 1 || 1)
-      console.log(newColumns.value);
-      console.log(clumnList);
-
       let start = 1;
       let gridColumns = [];
       let maxColumn = newColumns.value + 1;
@@ -78,7 +75,6 @@ export const RGrid = defineComponent({
         start = start + num
         if (start > newColumns.value) start = 1
       });
-      console.log(gridColumns);
       children.forEach((el, index) => {
         el.style['grid-column-start'] = gridColumns[index].start
         el.style['grid-column-end'] = gridColumns[index].end

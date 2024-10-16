@@ -1,9 +1,11 @@
 import { defineComponent, computed } from "vue";
 import './index.scss';
 
+
 export const RAbsolute = defineComponent({
   props: {
     center: [Boolean, String],
+    position: [Boolean, String],
     left: [Number, String],
     right: [Number, String],
     bottom: [Number, String],
@@ -14,7 +16,7 @@ export const RAbsolute = defineComponent({
     function px(num) {
       if (num === undefined) return '';
       if (typeof num === 'number') return num + 'px';
-      if (!num.includes('px')) return num;
+      return num;
     }
 
     const className = computed(() => {
@@ -23,8 +25,13 @@ export const RAbsolute = defineComponent({
       return 'r-absolute-' + props.center;
     })
 
+    const positionClass = computed(() => {
+      if (!props.position) return ''
+      return 'r-absolute-' + props.position;
+    })
+
     return (vm) => {
-      return <div class={['r-absolute', className.value]} style={{
+      return <div class={['r-absolute', className.value, positionClass.value]} style={{
         left: px(props.left),
         right: px(props.right),
         top: px(props.top),

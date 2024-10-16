@@ -3,7 +3,7 @@ import { DefineComponent, ComponentPropsOptions, ExtractPublicPropTypes, EmitsOp
 export interface RRowProps {
   reverse: boolean;
   wrap: boolean;
-  fill: boolean;
+  fill: true | "vertical" | false;   
   justify: "start" | "end" | "around" | "between" | "evenly" | "center" | "stretch" | "";
   align: "start" | "end" | "center" | "stretch" | "baseline" | "";
   alignSelf: "start" | "end" | "center" | "stretch" | "baseline" | "";

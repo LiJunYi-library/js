@@ -145,6 +145,7 @@ export const RScrollVirtualFallsList = defineComponent({
       ele.__cache__.bottom = node.height;
       ele.__cache__.vTop = ele.__cache__.top - window.innerHeight
       ele.__cache__.vBottom = ele.__cache__.bottom + window.innerHeight
+      ele.__cache__.columns2 = falls.list.map(el => ({ ...el }))
       INDEX++;
       COLUMN = falls.getMinHeightItem();
     }
@@ -205,8 +206,6 @@ export const RScrollVirtualFallsList = defineComponent({
       ele.__cache__.bottom = node.height;
       ele.__cache__.vTop = ele.__cache__.top - window.innerHeight
       ele.__cache__.vBottom = ele.__cache__.bottom + window.innerHeight
-      console.log('preLoad',ele);
-      
       INDEX++;
       COLUMN = falls.getMinHeightItem();
     }
@@ -317,7 +316,7 @@ export const RScrollVirtualFallsList = defineComponent({
     })
 
     function getHeight() {
-      const columns = LIST.value.at(-1)?.__cache__?.columns;
+      const columns = LIST.value.at(-1)?.__cache__?.columns2;
       if (!columns) return minHeight.value;
       console.log(columns);
       

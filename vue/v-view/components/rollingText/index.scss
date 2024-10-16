@@ -8,11 +8,9 @@
     transform-style: preserve-3d;
     // transition: 0.5s;
     // animation: RollingTextNumAni 10s linear infinite;
-
     .measure {
         visibility: hidden;
     }
-
 
     .num {
         position: absolute;
@@ -22,7 +20,6 @@
         top: 0;
         background-color: rgb(255, 255, 255);
     }
-
 }
 
 // @keyframes RollingTextNumAni {

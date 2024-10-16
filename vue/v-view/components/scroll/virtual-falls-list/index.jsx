@@ -15,7 +15,7 @@ import {
 import { useScrollController } from "../scroll";
 import { useFallsLayout } from "../../falls";
 import { useResizeObserver } from "@rainbow_ljy/v-hooks";
-import { arrayBinaryFind, arrayLoop, arrayLoopMap } from "@rainbow_ljy/rainbow-js";
+import { arrayBinaryFind, arrayBinaryFindIndex, arrayLoop, arrayLoopMap, animationDebounced } from "@rainbow_ljy/rainbow-js";
 import './index.scss'
 
 const mProps = {
@@ -27,6 +27,7 @@ const mProps = {
   minWidth: Number,
   listHook: Object,
   list: Array,
+  renderCount: { type: Number, default: 30 },
   //
   behavior: { type: String, default: "smooth" }, // smooth  instant
   scrollOffsetTop: { type: Number, default: 0 }, // 更换list时候的滚动偏移量
@@ -44,7 +45,7 @@ const Item = defineComponent({
   },
   setup(props, context) {
     let vm;
-    const rObserver = useResizeObserver(() => vm.$el, onSizeChange, true);
+    const rObserver = useResizeObserver(() => vm.$el, onSizeChange);
 
     onBeforeMount(() => {
       // console.log('item onBeforeMount');
@@ -80,11 +81,17 @@ export const RScrollVirtualFallsList = defineComponent({
     ...mProps,
   },
   setup(props, context) {
+    const falls = useFallsLayout(props);
     const LIST = computed(() => (props.listHook ? props.listHook.list : props.list) || []);
     let contentHtml;
-    let cacheitem;
     let INDEX = 0;
-    const falls = useFallsLayout(props);
+    let COLUMN = falls.getMinHeightItem();
+    let CACHE = {
+      list: [],
+      item: undefined,
+    }
+    const backstageTask = createBackstage();
+    const docs = createHtmlTask();
     const mCtx = reactive({ context, slots: context.slots });
     const scrollController = useScrollController({ onScroll, onResize, onTouchstart, onTouchend });
     const scrollTop = () => scrollController?.context?.element?.scrollTop ?? 0;
@@ -95,19 +102,8 @@ export const RScrollVirtualFallsList = defineComponent({
 
 
 
-    //  4,5,6,7,8,9
-    //  6,7,8,9,10
-
-    function each(nth, list, formater) {
-      for (let index = nth; index < list.length; index++) {
-        const ele = list[index];
-        if (formater(list[index], index)) return { index, ele }
-      }
-    }
-
-
-    function find(sTop) {
-      return arrayBinaryFind(LIST.value,
+    function findIndex(sTop) {
+      return arrayBinaryFindIndex(LIST.value,
         (item) => {
           if (!item.__cache__) return false;
           return item.__cache__.vTop <= sTop && sTop <= item.__cache__.vBottom
@@ -119,10 +115,16 @@ export const RScrollVirtualFallsList = defineComponent({
       )
     }
 
+    function find(sTop) {
+      const nth = findIndex(sTop);
+      return LIST.value[nth]
+    }
 
-    function cacheRender() {
+    function renderItem() {
       const ele = LIST.value[INDEX];
-      let node = falls.getMinHeightItem(columnIndex);
+      if (!ele) return;
+      let node = COLUMN;
+      if (!ele.__cache__) ele.__cache__ = {};
       ele.__cache__.columns = falls.list.map(el => ({ ...el }))
       if (node.height) node.height = node.height + props.gap;
       ele.__cache__.top = node.height;
@@ -130,7 +132,8 @@ export const RScrollVirtualFallsList = defineComponent({
       ele.__cache__.width = node.width;
       ele.__cache__.columnIndex = node.index;
       ele.__cache__.index = INDEX;
-      let div = document.createElement('div');
+      let div = docs.getDiv();
+      div.setAttribute('data-index', INDEX)
       div.classList.add('r-scroll-virtual-falls-list-item');
       render(<Item item={ele} index={INDEX} slots={context.slots} key={ele.id} onHeightChange={onHeightChange}></Item>, div);
       contentHtml.appendChild(div);
@@ -142,110 +145,144 @@ export const RScrollVirtualFallsList = defineComponent({
       ele.__cache__.bottom = node.height;
       ele.__cache__.vTop = ele.__cache__.top - window.innerHeight
       ele.__cache__.vBottom = ele.__cache__.bottom + window.innerHeight
+      INDEX++;
+      COLUMN = falls.getMinHeightItem();
     }
 
-    // const divs = arrayLoopMap(100, () => document.createElement('div'));
-    // const cachedivs = [];
-    // function getDiv() {
-    //   let divEle = divs[0];
-    //   divEle.style.top = ''
-    //   divEle.style.left = ''
-    //   divEle.style.width = ''
-    //   divEle.style.height = ''
-    //   divs.shift();
-    //   cachedivs.push(divEle)
-    //   return divEle
-    // }
-
-    // function resetDiv() {
-    //   divs.push(...cachedivs)
-    // }
-
-
-    function handleRender(columnIndex, begin = 0) {
+    function renderItems() {
+      let n = 0;
       contentHtml.innerHTML = ''
-      // resetDiv();
-      let count = 0;
-      each(begin, LIST.value, (ele, index) => {
-        if (!ele.__cache__) ele.__cache__ = {};
-        let node = falls.getMinHeightItem(columnIndex);
-        columnIndex = undefined;
-        ele.__cache__.columns = falls.list.map(el => ({ ...el }))
-
-        if (node.height) node.height = node.height + props.gap;
-        ele.__cache__.top = node.height;
-        ele.__cache__.left = node.left;
-        ele.__cache__.width = node.width;
-        ele.__cache__.columnIndex = node.index;
-        ele.__cache__.index = index;
-
-        let div = document.createElement('div');
-        div.classList.add('r-scroll-virtual-falls-list-item');
-        render(<Item item={ele} index={index} slots={context.slots} key={ele.id} onHeightChange={onHeightChange}></Item>, div);
-        contentHtml.appendChild(div);
-        div.style.top = ele?.__cache__?.top + 'px';
-        div.style.left = ele?.__cache__?.left;
-        div.style.width = ele?.__cache__?.width;
-        if (ele.__cache__.height) div.style.height = ele?.__cache__?.height + 'px';
-        // console.log(div.offsetHeight);
-
-        ele.__cache__.height = div.offsetHeight;
-        node.height = node.height + div.offsetHeight;
-        ele.__cache__.bottom = node.height;
-        ele.__cache__.vTop = ele.__cache__.top - window.innerHeight
-        ele.__cache__.vBottom = ele.__cache__.bottom + window.innerHeight
-
-        count++;
-        if (count > 30) return true;
-      });
+      docs.resetDiv();
+      backstageTask.stop();
+      while (n < 30) {
+        renderItem();
+        n++;
+      }
+      preLoads();
+      backstageTask.start();
     }
 
     function layout() {
       let item = find(scrollTop());
       if (!item) return;
-      if (cacheitem === item) return;
+      if (CACHE.item === item) return;
       let cache = item.__cache__;
+      // console.log('--', cache.index);
       falls.list = cache.columns;
-      handleRender(cache.columnIndex, cache.index)
-      cacheitem = item;
+      INDEX = cache.index;
+      COLUMN = falls.getMinHeightItem(cache.columnIndex);
+      CACHE.item = item;
+      renderItems()
     }
 
     function resize() {
       let item = find(scrollTop());
+      if (!item) return;
       let cache = item.__cache__;
+      // console.log('--', cache.index);
       falls.list = cache.columns;
-      handleRender(cache.columnIndex, cache.index)
-      cacheitem = item;
+      INDEX = cache.index;
+      COLUMN = falls.getMinHeightItem(cache.columnIndex);
+      CACHE.item = item;
+      renderItems()
     }
 
-    function idleCallback(deadline) {
-      var timeRemaining = deadline.timeRemaining();
+    function preLoad() {
+      const ele = LIST.value[INDEX];
+      if (!ele) return;
+      // console.log(ele);
+      let node = COLUMN;
+      if (!ele.__cache__) ele.__cache__ = {};
+      ele.__cache__.columns = falls.list.map(el => ({ ...el }))
+      if (node.height) node.height = node.height + props.gap;
+      ele.__cache__.top = node.height;
+      ele.__cache__.left = node.left;
+      ele.__cache__.width = node.width;
+      ele.__cache__.columnIndex = node.index;
+      ele.__cache__.index = INDEX;
+      ele.__cache__.height = props.avgHeight;
+      node.height = node.height + props.avgHeight;
+      ele.__cache__.bottom = node.height;
+      ele.__cache__.vTop = ele.__cache__.top - window.innerHeight
+      ele.__cache__.vBottom = ele.__cache__.bottom + window.innerHeight
+      console.log('preLoad',ele);
+      
+      INDEX++;
+      COLUMN = falls.getMinHeightItem();
+    }
 
-      if (timeRemaining > 0) {
-        // 在剩余时间内执行尽可能多的工作
-        console.log('空闲欲加载');
-
-        // let div = document.createElement('div')
-        // div.classList.add('r-scroll-virtual-falls-list-item');
-        // render(<Item item={ele} index={index} slots={context.slots} key={ele.id} onHeightChange={onHeightChange}></Item>, div);
-        // contentHtml.appendChild(div);
-
-        // if (!deadline.didTimeout) {
-        //   requestIdleCallback(idleCallback);
-        // }
-      } else {
-        // 如果没有足够的时间，则放弃执行
-        // console.log('Not enough time remaining to execute task.');
+    function preLoads() {
+      let n = 0;
+      while (n < 100) {
+        preLoad();
+        n++;
       }
     }
 
-    // 注册回调
-    requestIdleCallback(idleCallback);
+    function createBackstage() {
+      let timer;
 
+      function idleCallback(deadline) {
+        if (INDEX >= LIST.value.length) {
+          stop()
+          return
+        }
+        const timeRemaining = deadline.timeRemaining();
+        if (timeRemaining > 0) {
+          preLoad()
+          if (!deadline.didTimeout) {
+            timer = requestIdleCallback(idleCallback);
+          }
+        } else {
+          // 如果没有足够的时间，则放弃执行
+          // console.log('Not enough time remaining to execute task.');
+        }
+      }
+
+      function start() {
+        // console.log('start');
+        timer = requestIdleCallback(idleCallback);
+      }
+
+      function stop() {
+        // console.log('stop');
+        cancelIdleCallback(timer)
+      }
+
+      function trigger() {
+        requestIdleCallback(idleCallback);
+      }
+
+      return { start, stop, trigger }
+    }
+
+    function createHtmlTask(params) {
+      const divs = arrayLoopMap(31, () => document.createElement('div'));
+
+      const cachedivs = [];
+
+      function getDiv() {
+        // let divEle = divs[0];
+        // divEle.style.top = ''
+        // divEle.style.left = ''
+        // divEle.style.width = ''
+        // divEle.style.height = ''
+        // divs.shift();
+        // cachedivs.push(divEle)
+        // return divEle
+        return document.createElement('div')
+      }
+
+      function resetDiv() {
+        // divs.push(...cachedivs)
+      }
+
+      return { getDiv, resetDiv }
+    }
 
     onMounted(() => {
-      console.log('onMounted', scrollTop());
-      handleRender()
+      // console.log('onMounted', scrollTop());
+      renderItems();
     })
 
     function onHeightChange() {
@@ -254,43 +291,50 @@ export const RScrollVirtualFallsList = defineComponent({
     }
 
     function onTouchstart(params) {
-      console.log('onTouchstart', scrollTop());
+      // console.log('onTouchstart', scrollTop());
     }
 
     function onTouchend(params) {
-      console.log('onTouchend', scrollTop());
+      // console.log('onTouchend', scrollTop());
     }
 
     function onScroll() {
-      // console.log('onScroll', scrollTop());
+      // console.log('onScroll');
       layout()
-      requestIdleCallback(idleCallback);
     }
 
     function onResize() {
-      console.log('onResize', scrollTop());
+      // console.log('onResize', scrollTop());
       layout()
     }
 
     provide("RScrollVirtualFallsListContext", mCtx);
+
     context.expose(mCtx);
 
     watch(() => LIST.value.length, (...arg) => {
-      console.log('watch LIST', ...arg);
+      resize()
     })
 
+    function getHeight() {
+      const columns = LIST.value.at(-1)?.__cache__?.columns;
+      if (!columns) return minHeight.value;
+      console.log(columns);
+      
+      let col = columns[0];
+      columns.forEach((el) => { if (el.height > col.height) col = el });
+      return col.height;
+    }
+
     return () => {
-      console.log('onRender', scrollTop());
       return (
         <div>
           <div
-            style={{ minHeight: minHeight.value + 'px' }}
+            style={{ height: getHeight() + 'px' }}
             data-length={LIST.value.length}
             ref={(el) => (contentHtml = el)}
             class="r-scroll-virtual-falls-list"
           >
-
-
           </div>
         </div>
       );

@@ -69,7 +69,7 @@ export const RPulldown2 = defineComponent({
     }
 
     function createClass(v) {
-      return [v, actClass(v + '-act'), visible.value && v + '-visible',visible.value+''].filter(Boolean)
+      return [v, actClass(v + '-act'), visible.value && v + '-visible'].filter(Boolean)
     }
 
     function onClick(event) {

@@ -33,7 +33,7 @@ export const RGrid = defineComponent({
 
     return () => {
       return (
-        <RResize class={[props.inline ? "r-grid-inline" : "r-grid"]} style={style.value} onChangeWidth={changeWidth} time={true}>
+        <RResize class={["r-grid", props.inline && "r-grid-inline"]} style={style.value} onChangeWidth={changeWidth} time={true}>
           {renderSlot(context.slots, "default")}
         </RResize>
       );

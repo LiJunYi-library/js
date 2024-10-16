@@ -1,4 +1,4 @@
-export * from "./carousel/carousel";
+export * from "./carousel";
 export * from "./tab/tab";
 export * from "./virtual-list/list";
 export * from "./virtual-list/list-falls";

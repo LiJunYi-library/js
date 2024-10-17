@@ -31,9 +31,6 @@ const mProps = {
   renderCount: { type: Number, default: 30 },
 };
 
-
-// renderer
-
 const Item = defineComponent({
   props: {
     item: Object,
@@ -71,6 +68,22 @@ const Item = defineComponent({
     }
   }
 })
+
+
+const renderer = defineComponent({
+  props: {
+    items: { type: Array, default: () => [] },
+    index: Number,
+    slots: Object
+  },
+  setup(props, context) {
+    return (el) => {
+      return renderList(props.items, (item, index) => <Item index={index} item={item}></Item>)
+    }
+  }
+})
+
+
 
 export const RScrollVirtualFallsList = defineComponent({
   props: {
@@ -140,7 +153,7 @@ export const RScrollVirtualFallsList = defineComponent({
       let div = docs.getDiv(nth);
       div.setAttribute('data-index', INDEX)
       div.classList.add('r-scroll-virtual-falls-list-item');
-      render(<Item item={ele} index={INDEX} slots={context.slots} key={ele.id} onHeightChange={onHeightChange}></Item>, div);
+      render(<Item item={ele} index={INDEX} slots={context.slots} key={props.keyExtractor({ item: ele, index: INDEX })} onHeightChange={onHeightChange}></Item>, div);
       contentHtml.appendChild(div);
       div.style.top = ele?.__cache__?.top + 'px';
       div.style.left = ele?.__cache__?.left;

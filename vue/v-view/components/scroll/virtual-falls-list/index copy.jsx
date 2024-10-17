@@ -140,7 +140,7 @@ export const RScrollVirtualFallsList = defineComponent({
       let div = docs.getDiv(nth);
       div.setAttribute('data-index', INDEX)
       div.classList.add('r-scroll-virtual-falls-list-item');
-      render(<Item item={ele} index={INDEX} slots={context.slots} key={ele.id} onHeightChange={onHeightChange}></Item>, div);
+      render(<Item item={ele} index={INDEX} slots={context.slots} key={props.keyExtractor({ item: ele, index: INDEX })} onHeightChange={onHeightChange}></Item>, div);
       contentHtml.appendChild(div);
       div.style.top = ele?.__cache__?.top + 'px';
       div.style.left = ele?.__cache__?.left;

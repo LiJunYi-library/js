@@ -32,8 +32,6 @@ const mProps = {
 };
 
 
-// renderer
-
 const Item = defineComponent({
   props: {
     item: Object,
@@ -44,10 +42,6 @@ const Item = defineComponent({
     let vm;
     const rObserver = useResizeObserver(() => vm.$el, onSizeChange);
 
-    onBeforeMount(() => {
-      // console.log('item onBeforeMount');
-    })
-
     function onSizeChange(events) {
       const height = events?.[0]?.target?.offsetHeight ?? 0;
       const oldHeight = props.item?.__cache__?.height ?? 0;
@@ -57,14 +51,9 @@ const Item = defineComponent({
           props.item.__cache__.height = height;
           props.item.__cache__.isResize = true;
         };
-        // console.log('高度发生变化', oldHeight, height);
-        // context.emit('heightChange', height, oldHeight, events)
       }
     }
-    // parentCtx?.slots?.default?.(props)
-    // top: props.item?.__cache__?.top + 'px',
-    // left: props.item?.__cache__?.left,
-    // width: props.item?.__cache__?.width,
+
     return (el) => {
       vm = el
       return <div class="r-scroll-virtual-falls-list-item-content" >{props?.slots?.default?.(props)}</div>
@@ -198,10 +187,8 @@ export const RScrollVirtualFallsList = defineComponent({
     function preLoad() {
       const ele = LIST.value[INDEX];
       if (!ele) return;
-      // console.log(ele);
       let node = COLUMN;
       if (!ele.__cache__) ele.__cache__ = {};
-      // console.log(' ele.__cache__.height', ele.__cache__.height);
       const cache__height = ele.__cache__.height || props.avgHeight
       ele.__cache__.columns = falls.list.map(el => ({ ...el }))
       if (node.height) node.height = node.height + props.gap;
@@ -249,19 +236,14 @@ export const RScrollVirtualFallsList = defineComponent({
           if (!deadline.didTimeout) {
             timer = requestIdleCallback(idleCallback);
           }
-        } else {
-          // 如果没有足够的时间，则放弃执行
-          // console.log('Not enough time remaining to execute task.');
-        }
+        } 
       }
 
       function start() {
-        // console.log('start');
         timer = requestIdleCallback(idleCallback);
       }
 
       function stop() {
-        // console.log('stop');
         cancelIdleCallback(timer)
       }
 
@@ -281,13 +263,10 @@ export const RScrollVirtualFallsList = defineComponent({
         divEle.style.left = ''
         divEle.style.width = ''
         divEle.style.height = ''
-        // divs.shift();
-        // cachedivs.push(divEle)
         return divEle
-        // return document.createElement('div')
       }
       function resetDiv() {
-        // divs.push(...cachedivs)
+
       }
       return { getDiv, resetDiv }
     }

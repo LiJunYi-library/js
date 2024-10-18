@@ -1,22 +1,8 @@
-import {
-  defineComponent,
-  renderSlot,
-  renderList,
-  computed,
-  inject,
-  reactive,
-  provide,
-  render,
-  ref,
-  watch,
-  onMounted,
-  onBeforeMount
-} from "vue";
+import { defineComponent, computed, reactive, provide, render, watch, onMounted } from "vue";
 import { useScrollController } from "../scroll";
 import { useFallsLayout } from "../../falls";
 import { useResizeObserver } from "@rainbow_ljy/v-hooks";
-import { arrayBinaryFindIndex, arrayLoopMap, animationDebounced } from "@rainbow_ljy/rainbow-js";
-import './index.scss'
+import { arrayBinaryFindIndex } from "@rainbow_ljy/rainbow-js";
 
 const mProps = {
   avgHeight: { type: Number, default: 400 }, // 每个item高度
@@ -62,7 +48,7 @@ const Item = defineComponent({
   }
 })
 
-export const RScrollVirtualFallsList = defineComponent({
+export const RScrollVirtualFallsListV2 = defineComponent({
   props: {
     ...mProps,
   },

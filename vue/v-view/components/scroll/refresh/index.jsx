@@ -1,4 +1,4 @@
-import { defineComponent, ref, onBeforeUnmount, computed, nextTick } from 'vue';
+import { defineComponent, ref, onBeforeUnmount, computed, renderSlot, reactive } from 'vue';
 import { Circle } from 'vant';
 import { useScrollController } from "../scroll";
 import { RILoading } from '../../icon'
@@ -49,7 +49,7 @@ export const RScrollRefresh = defineComponent({
 
     async function onRefresh() {
       if (loading.value) return
-      if (!context.attrs.onRefresh) return;
+      if (!context.attrs.onRefresh) return height.value = 0;
       const res = context.attrs.onRefresh();
       if (res instanceof Promise) {
         loading.value = true;
@@ -57,12 +57,21 @@ export const RScrollRefresh = defineComponent({
           loading.value = false;
           height.value = 0;
         });
+      } else {
+        await minTimer();
+        height.value = 0;
       }
+
     }
 
     function onTransitionEnd() {
       isTransition.value = false
     }
+
+    const ctx = reactive({
+      loading,
+      isRelease
+    })
 
     function renderState() {
       if (loading.value) return <span>正在刷新</span>;
@@ -82,9 +91,13 @@ export const RScrollRefresh = defineComponent({
           <div class="refresh-content-top-space"> </div>
           <div class="refresh-container">
             <div class="refresh-content">
-              {renderIcon()}
-              <div class="refresh-content-space"> </div>
-              {renderState()}
+              {
+                renderSlot(context.slots, 'default', ctx, () => [
+                  renderIcon(),
+                  <div class="refresh-content-space"> </div>,
+                  renderState()
+                ])
+              }
             </div>
           </div>
         </div>

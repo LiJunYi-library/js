@@ -50,6 +50,7 @@ const Item = defineComponent({
         if (props.item?.__cache__) {
           props.item.__cache__.height = height;
           props.item.__cache__.isResize = true;
+          context.emit('heightChange', height, oldHeight, events)
         };
       }
     }
@@ -72,16 +73,17 @@ export const RScrollVirtualFallsList = defineComponent({
     let INDEX = 0;
     let COLUMN = falls.getMinHeightItem();
     let CACHE = {
+      nodeMap: new Map(),
       list: [],
       item: undefined,
     }
     const CURRENT = reactive({
+      nodeMap: new Map(),
       index: 0,
       list: [],
     })
     const backstageTask = createBackstage();
-    const docs = createHtmlTask();
-    const mCtx = reactive({ context, slots: context.slots });
+    const mCtx = reactive({ context, slots: context.slots, renderItems, layout });
     provide("RScrollVirtualFallsListContext", mCtx);
     context.expose(mCtx);
     watch(() => LIST.value.length, onListChange)
@@ -91,10 +93,8 @@ export const RScrollVirtualFallsList = defineComponent({
       if (!LIST.value.length) return 0;
       return ((props.avgHeight + props.gap) * Math.ceil(LIST.value.length / props.columns) - props.gap);
     });
-    const recycleTop = () => -window.innerHeight + scrollController.getOffsetTop(contentHtml);
-    const recycleBottom = () => window.innerHeight + scrollController.getOffsetTop(contentHtml);
-
-
+    const recycleTop = () => - window.innerHeight + scrollController.getOffsetTop(contentHtml);
+    const recycleBottom = () => window.innerHeight * 2 + scrollController.getOffsetTop(contentHtml);
 
     function findIndex(sTop) {
       return arrayBinaryFindIndex(LIST.value,
@@ -126,11 +126,22 @@ export const RScrollVirtualFallsList = defineComponent({
       ele.__cache__.width = node.width;
       ele.__cache__.columnIndex = node.index;
       ele.__cache__.index = INDEX;
-      let div = docs.getDiv(nth);
-      div.setAttribute('data-index', INDEX)
-      div.classList.add('r-scroll-virtual-falls-list-item');
-      render(<Item item={ele} index={INDEX} slots={context.slots} key={props.keyExtractor({ item: ele, index: INDEX })} onHeightChange={onHeightChange}></Item>, div);
-      contentHtml.appendChild(div);
+      // console.log(CACHE.nodeMap.has(ele));
+      let div;
+      if (CACHE.nodeMap.has(ele)) {
+        div = CACHE.nodeMap.get(ele);
+        render(<Item item={ele} index={INDEX} slots={context.slots} key={props.keyExtractor({ item: ele, index: INDEX })} onHeightChange={onHeightChange}></Item>, div);
+        // console.log('缓存有', div);
+        CACHE.nodeMap.delete(ele);
+        // console.log('删除', CACHE.nodeMap.size);
+      } else {
+        // console.log('没有则创建', div);
+        div = document.createElement('div')
+        div.setAttribute('data-index', INDEX)
+        div.classList.add('r-scroll-virtual-falls-list-item');
+        render(<Item item={ele} index={INDEX} slots={context.slots} key={props.keyExtractor({ item: ele, index: INDEX })} onHeightChange={onHeightChange}></Item>, div);
+        contentHtml.appendChild(div);
+      }
       div.style.top = ele?.__cache__?.top + 'px';
       div.style.left = ele?.__cache__?.left;
       div.style.width = ele?.__cache__?.width;
@@ -140,21 +151,26 @@ export const RScrollVirtualFallsList = defineComponent({
       ele.__cache__.vTop = ele.__cache__.top + recycleTop();
       ele.__cache__.vBottom = ele.__cache__.bottom + recycleBottom();
       ele.__cache__.columns2 = falls.list.map(el => ({ ...el }))
+      //
       INDEX++;
       COLUMN = falls.getMinHeightItem();
+      CURRENT.nodeMap.set(ele, div)
     }
 
     function renderItems() {
       let n = 0;
-      contentHtml.innerHTML = ''
-      docs.resetDiv();
+      CURRENT.nodeMap = new Map();
       backstageTask.stop();
       while (n < props.renderCount) {
         renderItem(n);
         n++;
       }
+      CACHE.nodeMap.forEach((div) => {
+        div.remove();
+      })
       preLoads();
       backstageTask.start();
+      CACHE.nodeMap = CURRENT.nodeMap;
     }
 
     function layout() {
@@ -236,7 +252,7 @@ export const RScrollVirtualFallsList = defineComponent({
           if (!deadline.didTimeout) {
             timer = requestIdleCallback(idleCallback);
           }
-        } 
+        }
       }
 
       function start() {
@@ -254,30 +270,13 @@ export const RScrollVirtualFallsList = defineComponent({
       return { start, stop, trigger }
     }
 
-    function createHtmlTask(params) {
-      const divs = arrayLoopMap(props.renderCount + 1, () => document.createElement('div'));
-      const cachedivs = [];
-      function getDiv(nth) {
-        let divEle = divs[nth];
-        divEle.style.top = ''
-        divEle.style.left = ''
-        divEle.style.width = ''
-        divEle.style.height = ''
-        return divEle
-      }
-      function resetDiv() {
-
-      }
-      return { getDiv, resetDiv }
-    }
-
     onMounted(() => {
       // console.log('onMounted', scrollTop());
       renderItems();
     })
 
     function onHeightChange() {
-      console.log('onHeightChange');
+      // console.log('onHeightChange');
       resize()
     }
 
@@ -300,6 +299,7 @@ export const RScrollVirtualFallsList = defineComponent({
     }
 
     function onListChange() {
+      // console.log('onListChange', scrollTop());
       resize()
     }
 

@@ -409,12 +409,11 @@ export const RScrollVirtualFallsList = defineComponent({
 
     return () => {
       console.log(mCtx.renderDatas);
-
       return (
         <div>
           <div
             style={{ height: getHeight() + 'px' }}
-            data-length={LIST.value.length}
+            data-length={LIST.value.slice(0,30)}
             ref={(el) => (contentHtml = el)}
             class="r-scroll-virtual-falls-list"
           >

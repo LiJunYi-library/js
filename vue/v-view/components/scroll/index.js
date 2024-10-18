@@ -11,5 +11,7 @@ export * from "./top";
 export * from "./refresh";
 export * from "./virtual-grid-list";
 export * from "./virtual-falls-list";
+export * from "./floatingBubble";
+export * from "./memoryBubble";
 export * from "./virtual-list";  // 废弃
 export * from "./virtual-list2"; // 废弃

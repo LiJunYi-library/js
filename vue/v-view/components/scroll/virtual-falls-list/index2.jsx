@@ -109,11 +109,6 @@ export const RScrollVirtualFallsList = defineComponent({
       )
     }
 
-    function find(sTop) {
-      const nth = findIndex(sTop);
-      return LIST.value[nth]
-    }
-
     function renderItem(nth) {
       const ele = LIST.value[INDEX];
       if (!ele) return;
@@ -126,7 +121,7 @@ export const RScrollVirtualFallsList = defineComponent({
       ele.__cache__.width = node.width;
       ele.__cache__.columnIndex = node.index;
       ele.__cache__.index = INDEX;
-      // console.log(CACHE.nodeMap.has(ele));
+      // console.log(CACHE.nodeMap.has(ele), ele);
       let div;
       if (CACHE.nodeMap.has(ele)) {
         div = CACHE.nodeMap.get(ele);
@@ -135,7 +130,7 @@ export const RScrollVirtualFallsList = defineComponent({
         CACHE.nodeMap.delete(ele);
         // console.log('删除', CACHE.nodeMap.size);
       } else {
-        // console.log('没有则创建', div);
+        // console.log('没有则创建', INDEX, ele);
         div = document.createElement('div')
         div.setAttribute('data-index', INDEX)
         div.classList.add('r-scroll-virtual-falls-list-item');
@@ -165,6 +160,7 @@ export const RScrollVirtualFallsList = defineComponent({
         renderItem(n);
         n++;
       }
+      // console.log('需要删除的', CACHE.nodeMap);
       CACHE.nodeMap.forEach((div) => {
         div.remove();
       })
@@ -173,31 +169,28 @@ export const RScrollVirtualFallsList = defineComponent({
       CACHE.nodeMap = CURRENT.nodeMap;
     }
 
-    function layout() {
-      let item = find(scrollTop());
+    function layout(isForce) {
+      let index = findIndex(scrollTop())
+      let item = LIST.value[index];
       if (!item) return;
-      if (CACHE.item === item) return;
-      let cache = item.__cache__;
-      // console.log('--', cache.index);
-      falls.list = cache.columns;
-      INDEX = cache.index;
+      if (!isForce && CACHE.item === item) return;
+      // console.log('layout');
+      INDEX = index;
       CURRENT.index = INDEX;
-      COLUMN = falls.getMinHeightItem(cache.columnIndex);
+      let cache = item.__cache__;
+      if (index === 0) {
+        falls.setList();
+        COLUMN = falls.getMinHeightItem();
+      } else {
+        falls.list = cache.columns;
+        COLUMN = falls.getMinHeightItem(cache.columnIndex);
+      }
       CACHE.item = item;
       renderItems()
     }
 
     function resize() {
-      let item = find(scrollTop());
-      if (!item) return;
-      let cache = item.__cache__;
-      // console.log('--', cache.index);
-      falls.list = cache.columns;
-      INDEX = cache.index;
-      CURRENT.index = INDEX;
-      COLUMN = falls.getMinHeightItem(cache.columnIndex);
-      CACHE.item = item;
-      renderItems()
+      layout(true)
     }
 
     function preLoad() {
@@ -256,10 +249,12 @@ export const RScrollVirtualFallsList = defineComponent({
       }
 
       function start() {
+        // console.log('backstageTask start',);
         timer = requestIdleCallback(idleCallback);
       }
 
       function stop() {
+        // console.log('backstageTask stop',);
         cancelIdleCallback(timer)
       }
 

@@ -33,6 +33,7 @@ export function useFallsLayout(options = {}) {
     afreshLayout,
     getMaxHeightItem,
     getMinHeightItem,
+    setList,
   }
 
   setList();
@@ -237,38 +238,38 @@ export const RFallsList = defineComponent({
   },
 });
 
-// export const RFallsListSelect = defineComponent({
-//   props: RGridListProps,
-//   emits: ["change"],
-//   setup(props, context) {
-//     return () => {
-//       return (
-//         <RFallsList  {...props}>
-//           {{
-//             default: ({ item, index }) => {
-//               return (
-//                 <div
-//                   class={[
-//                     "r-grid-item",
-//                     props.listHook.formatterDisabled(item, index) && "r-grid-item-disabled",
-//                     props.listHook.same(item) && "r-grid-item-same",
-//                   ]}
-//                   key={index}
-//                   onClick={(event) => {
-//                     if (props.listHook.formatterDisabled(item, index)) return;
-//                     if (props.listHook.onSelect(item, index)) return;
-//                     context.emit("change", item, index);
-//                   }}
-//                 >
-//                   {renderSlot(context.slots, "default", { index, item }, () => [
-//                     <div> {props.listHook.formatterLabel(item)} </div>,
-//                   ])}
-//                 </div>
-//               );
-//             },
-//           }}
-//         </RFallsList>
-//       );
-//     };
-//   },
-// });
+export const RFallsListSelect = defineComponent({
+  props: RFallsListProps,
+  emits: ["change"],
+  setup(props, context) {
+    return () => {
+      return (
+        <RFallsList  {...props}>
+          {{
+            default: ({ item, index }) => {
+              return (
+                <div
+                  class={[
+                    "r-falls-item",
+                    props.listHook.formatterDisabled(item, index) && "r-falls-item-disabled",
+                    props.listHook.same(item) && "r-falls-item-same",
+                  ]}
+                  key={index}
+                  onClick={(event) => {
+                    if (props.listHook.formatterDisabled(item, index)) return;
+                    if (props.listHook.onSelect(item, index)) return;
+                    context.emit("change", item, index);
+                  }}
+                >
+                  {renderSlot(context.slots, "default", { index, item }, () => [
+                    <div> {props.listHook.formatterLabel(item)} </div>,
+                  ])}
+                </div>
+              );
+            },
+          }}
+        </RFallsList>
+      );
+    };
+  },
+});

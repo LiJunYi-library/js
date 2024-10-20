@@ -14,6 +14,7 @@ const mProps = {
   listHook: Object,
   list: Array,
   preLoadsCount: { type: Number, default: 100 },
+  preLoadCount: { type: Number, default: 50 },
   renderCount: { type: Number, default: 30 },
 };
 
@@ -236,9 +237,9 @@ export const RScrollVirtualFallsListV2 = defineComponent({
       COLUMN = falls.getMinHeightItem();
     }
 
-    function preLoads() {
+    function preLoads(count = props.preLoadsCount) {
       let n = 0;
-      while (n < props.preLoadsCount) {
+      while (n < count) {
         preLoad();
         n++;
       }
@@ -262,7 +263,7 @@ export const RScrollVirtualFallsListV2 = defineComponent({
         }
         const timeRemaining = deadline.timeRemaining();
         if (timeRemaining > 0) {
-          preLoad()
+          preLoads(props.preLoadCount)
           if (!deadline.didTimeout) {
             timer = requestIdleCallback(idleCallback);
           }

@@ -93,6 +93,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       context,
       slots: context.slots,
       index: 0,
+      endIndex: 0,
       column: falls.getMinHeightItem(),
       nodeMap: new Map(),
       renderList: [],
@@ -167,10 +168,11 @@ export const RScrollVirtualFallsListV3 = defineComponent({
         __cache__.vBottom = __cache__.bottom + recycleBottom();
         __cache__.columns2 = falls.list.map(el => ({ ...el }))
 
+        mCtx.endIndex = index + 1;
         node = falls.getMinHeightItem();
         mCtx.nodeMap.set(ele, div);
       })
-      // console.log(CACHE.nodeMap);
+      console.log('renderItems', mCtx);
       CACHE.nodeMap.forEach((div) => div.remove())
       CACHE.DivPointer = undefined;
       CACHE.nodeMap = mCtx.nodeMap;
@@ -221,11 +223,45 @@ export const RScrollVirtualFallsListV3 = defineComponent({
     }
 
     function preLoads() {
-      let n = 0;
-      while (n < props.preLoadsCount) {
+      let index = 0;
+      while (index < props.preLoadsCount) {
         preLoad();
-        n++;
+        index++;
       }
+    }
+
+    function createBackstage() {
+      let timer;
+
+      function idleCallback(deadline) {
+        if (INDEX >= LIST.value.length) {
+          stop()
+          return
+        }
+        const timeRemaining = deadline.timeRemaining();
+        if (timeRemaining > 0) {
+          preLoad()
+          if (!deadline.didTimeout) {
+            timer = requestIdleCallback(idleCallback);
+          }
+        }
+      }
+
+      function start() {
+        // console.log('backstageTask start',);
+        timer = requestIdleCallback(idleCallback);
+      }
+
+      function stop() {
+        // console.log('backstageTask stop',);
+        cancelIdleCallback(timer)
+      }
+
+      function trigger() {
+        requestIdleCallback(idleCallback);
+      }
+
+      return { start, stop, trigger }
     }
 
     function findIndex(sTop) {
@@ -253,7 +289,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
     onMounted(() => { })
 
     function onHeightChange() {
-      console.log('onHeightChange');
+      // console.log('onHeightChange');
       layout(true);
     }
 
@@ -263,7 +299,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
     }
 
     function onResize() {
-      console.log('onResize', scrollTop());
+      // console.log('onResize', scrollTop());
       layout(true);
     }
 

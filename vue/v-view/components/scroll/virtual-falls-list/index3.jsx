@@ -186,7 +186,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       backstage.start();
     }
 
-    function layout2(isForce) {
+    function layout(isForce) {
       let index = findIndex(scrollTop());
       if (index === -1) index = 0;
       let item = LIST.value[index];
@@ -208,7 +208,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       renderItems();
     }
 
-    const layout = animationDebounced(layout2)
+    // const layout = animationDebounced(layout2)
 
     function findIndex(sTop) {
       return arrayBinaryFindIndex(LIST.value,
@@ -320,7 +320,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
     }
 
     function onResize() {
-      console.log('onResize', LIST.value);
+      // console.log('onResize', LIST.value);
       layout(true);
     }
 

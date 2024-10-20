@@ -31,7 +31,7 @@ const CONTEXT = defineComponent({
 
     onUpdated(() => {
       console.log("onUpdated render");
-      mCtx.renderItems();
+      // mCtx.renderItems();
     })
 
     return () => {
@@ -105,7 +105,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
     const mCtx = reactive({
       context,
       slots: context.slots,
-      index: undefined,
+      index: 0,
       column: falls.getMinHeightItem(),
       nodeMap: new Map(),
       renderList: [],
@@ -142,66 +142,6 @@ export const RScrollVirtualFallsListV3 = defineComponent({
     const recycleBottom = () => window.innerHeight * 2 + scrollController.getOffsetTop(contentHtml);
 
 
-    function renderItem(nth) {
-      if (!contentHtml) return;
-      // const ele = LIST.value[INDEX];
-      // if (!ele) return;
-      // let node = COLUMN;
-      // if (!ele.__cache__) ele.__cache__ = {};
-      // ele.__cache__.columns = falls.list.map(el => ({ ...el }))
-      // if (node.height) node.height = node.height + props.gap;
-      // ele.__cache__.top = node.height;
-      // ele.__cache__.left = node.left;
-      // ele.__cache__.width = node.width;
-      // ele.__cache__.columnIndex = node.index;
-      // ele.__cache__.index = INDEX;
-      // // console.log(CACHE.nodeMap.has(ele), ele);
-      // let div;
-      // if (CACHE.nodeMap.has(ele)) {
-      //   div = CACHE.nodeMap.get(ele);
-      //   div.setAttribute('data-index', INDEX)
-      //   render(<Item item={ele} index={INDEX} slots={context.slots} key={props.keyExtractor({ item: ele, index: INDEX })} onHeightChange={onHeightChange}></Item>, div);
-      //   // console.log('缓存有', div);
-      //   if (CACHE.currentDivNode) {
-      //     if (CACHE.currentDivNode.nextSibling === div) { // 当 当前指针的下一个和要渲染的div相同
-
-      //     } else {
-      //       contentHtml.insertBefore(div, CACHE.currentDivNode.nextSibling);
-      //     }
-      //   }
-
-      //   CACHE.currentDivNode = div;
-      //   CACHE.nodeMap.delete(ele);
-      //   // console.log('删除', CACHE.nodeMap.size);
-      // } else {
-      //   // console.log('没有则创建', INDEX);
-      //   div = document.createElement('div')
-      //   div.setAttribute('data-index', INDEX)
-      //   div.classList.add('r-scroll-virtual-falls-list-item');
-      //   render(<Item item={ele} index={INDEX} slots={context.slots} key={props.keyExtractor({ item: ele, index: INDEX })} onHeightChange={onHeightChange}></Item>, div);
-      //   if (!CACHE.currentDivNode) {
-      //     contentHtml.insertBefore(div, contentHtml.firstChild);
-      //     CACHE.currentDivNode = div;
-      //   } else {
-      //     contentHtml.insertBefore(div, CACHE.currentDivNode.nextSibling);
-      //     CACHE.currentDivNode = div;
-      //   }
-      // }
-      // div.style.top = ele?.__cache__?.top + 'px';
-      // div.style.left = ele?.__cache__?.left;
-      // div.style.width = ele?.__cache__?.width;
-      // ele.__cache__.height = div.offsetHeight;
-      // node.height = node.height + div.offsetHeight;
-      // ele.__cache__.bottom = node.height;
-      // ele.__cache__.vTop = ele.__cache__.top + recycleTop();
-      // ele.__cache__.vBottom = ele.__cache__.bottom + recycleBottom();
-      // ele.__cache__.columns2 = falls.list.map(el => ({ ...el }))
-      // //
-      // INDEX++;
-      // COLUMN = falls.getMinHeightItem();
-      // CURRENT.nodeMap.set(ele, div)
-    }
-
     function renderItems() {
       if (!contentHtml) return;
       let node = mCtx.column;
@@ -224,7 +164,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
           div = CACHE.nodeMap.get(ele);
           div.setAttribute('data-index', index)
           render(<Item item={ele} index={index} slots={context.slots} key={props.keyExtractor({ item: ele, index })} onHeightChange={onHeightChange}></Item>, div);
-          console.log('缓存有', div);
+          // console.log('缓存有', div);
           if (CACHE.DivPointer) {
             if (CACHE.DivPointer.nextSibling === div) { // 当 当前指针的下一个和要渲染的div相同
             } else {
@@ -234,7 +174,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
           CACHE.DivPointer = div;
           CACHE.nodeMap.delete(ele);
         } else {
-          console.log('没有则创建', index);
+          // console.log('没有则创建', index);
           div = document.createElement('div')
           div.setAttribute('data-index', index)
           div.classList.add('r-scroll-virtual-falls-list-item');
@@ -286,15 +226,6 @@ export const RScrollVirtualFallsListV3 = defineComponent({
 
     }
 
-
-
-
-
-
-
-
-
-
     function layout(isForce) {
       let index = findIndex(scrollTop());
       if (index === -1) index = 0;
@@ -312,6 +243,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       }
       mCtx.renderList = LIST.value.slice(mCtx.index, mCtx.index + props.renderCount)
       CACHE.item = item;
+      renderItems()
     }
 
     function findIndex(sTop) {
@@ -353,10 +285,10 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       layout(true);
     }
 
-    watch(() => LIST.value.slice(mCtx.index, mCtx.index + props.renderCount), () => {
-     console.log('list watch');
-     
-    })
+    // watch(() => LIST.value.slice(mCtx.index, mCtx.index + props.renderCount), () => {
+    //   console.log('list ------ watch');
+    //   layout(true);
+    // })
 
     return () => {
       return (

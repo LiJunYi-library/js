@@ -5,7 +5,7 @@ import { useResizeObserver } from "@rainbow_ljy/v-hooks";
 import { arrayBinaryFindIndex } from "@rainbow_ljy/rainbow-js";
 
 const mProps = {
-  avgHeight: { type: Number, default: 200 }, // 每个item高度
+  avgHeight: { type: Number, default: 300 }, // 每个item高度
   keyExtractor: { type: Function, default: ({ index }) => index },
   columns: { type: Number, default: 1 }, // 一行几个item
   gap: { type: Number, default: 10 }, // 列表之间空格的间距
@@ -85,7 +85,7 @@ export const RScrollVirtualFallsListV2 = defineComponent({
     const mCtx = reactive({ context, slots: context.slots, renderItems, layout });
     provide("RScrollVirtualFallsListContext", mCtx);
     context.expose(mCtx);
-    watch(() => LIST.value.slice(CURRENT.index, CURRENT.index + props.renderCount), onListChange)
+    watch(() => LIST.value.length, onListChange)
     const scrollController = useScrollController({ onScroll, onResize, onTouchstart, onTouchend });
     const scrollTop = () => scrollController?.context?.element?.scrollTop ?? 0;
     const minHeight = computed(() => {

@@ -2,7 +2,7 @@ import { defineComponent, computed, reactive, provide, render, watch, onMounted,
 import { useScrollController } from "../scroll";
 import { useFallsLayout } from "../../falls";
 import { useResizeObserver } from "@rainbow_ljy/v-hooks";
-import { arrayBinaryFindIndex } from "@rainbow_ljy/rainbow-js";
+import { arrayBinaryFindIndex, animationDebounced } from "@rainbow_ljy/rainbow-js";
 
 const mProps = {
   avgHeight: { type: Number, default: 200 }, // 每个item高度
@@ -186,10 +186,11 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       backstage.start();
     }
 
-    function layout(isForce) {
+    function layout2(isForce) {
       let index = findIndex(scrollTop());
       if (index === -1) index = 0;
       let item = LIST.value[index];
+      if (!item) return;
       if (!isForce && CACHE.item === item) return;
       watchLock = true;
       mCtx.index = index;
@@ -206,6 +207,8 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       CACHE.item = item;
       renderItems();
     }
+
+    const layout = animationDebounced(layout2)
 
     function findIndex(sTop) {
       return arrayBinaryFindIndex(LIST.value,
@@ -255,6 +258,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
         ele.__cache__.height = cache__height;
         node.height = node.height + cache__height;
         ele.__cache__.bottom = node.height;
+        ele.__cache__.columns2 = falls.list.map(el => ({ ...el }))
         ele.__cache__.vTop = ele.__cache__.top + recycleTop();
         ele.__cache__.vBottom = ele.__cache__.bottom + recycleBottom();
         index++;
@@ -316,7 +320,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
     }
 
     function onResize() {
-      // console.log('onResize', scrollTop());
+      console.log('onResize', LIST.value);
       layout(true);
     }
 

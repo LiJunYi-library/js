@@ -231,6 +231,7 @@ export const RScrollVirtualFallsListV2 = defineComponent({
       ele.__cache__.height = cache__height;
       node.height = node.height + cache__height;
       ele.__cache__.bottom = node.height;
+      ele.__cache__.columns2 = falls.list.map(el => ({ ...el }))
       ele.__cache__.vTop = ele.__cache__.top + recycleTop();
       ele.__cache__.vBottom = ele.__cache__.bottom + recycleBottom();
       INDEX++;

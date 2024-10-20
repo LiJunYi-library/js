@@ -23,7 +23,6 @@ const ListenerList = defineComponent({
   },
   setup(props, context) {
     return () => {
-      console.log("ListenerList render");
       return renderList(props.list || [], () => null)
     }
   }
@@ -86,7 +85,7 @@ export const RScrollVirtualFallsListV2 = defineComponent({
     const mCtx = reactive({ context, slots: context.slots, renderItems, layout });
     provide("RScrollVirtualFallsListContext", mCtx);
     context.expose(mCtx);
-    watch(() => LIST.value.length, onListChange)
+    watch(() => LIST.value.slice(CURRENT.index, CURRENT.index + props.renderCount), onListChange)
     const scrollController = useScrollController({ onScroll, onResize, onTouchstart, onTouchend });
     const scrollTop = () => scrollController?.context?.element?.scrollTop ?? 0;
     const minHeight = computed(() => {
@@ -319,8 +318,6 @@ export const RScrollVirtualFallsListV2 = defineComponent({
 
 
     return () => {
-      console.log("render");
-
       return (
         <div >
           <ListenerList list={LIST.value.slice(CURRENT.index, CURRENT.index + props.renderCount)}></ListenerList>

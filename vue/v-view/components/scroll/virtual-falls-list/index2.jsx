@@ -323,7 +323,7 @@ export const RScrollVirtualFallsListV2 = defineComponent({
 
       return (
         <div >
-          {/* <ListenerList list={LIST.value.slice(CURRENT.index, CURRENT.index + props.renderCount)}></ListenerList> */}
+          <ListenerList list={LIST.value.slice(CURRENT.index, CURRENT.index + props.renderCount)}></ListenerList>
           <div
             style={{ height: getHeight() + 'px' }}
             data-length={LIST.value.length}

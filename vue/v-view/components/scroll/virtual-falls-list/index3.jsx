@@ -81,6 +81,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
     let watchLock = false
     const falls = useFallsLayout(props);
     const LIST = computed(() => (props.listHook ? props.listHook.list : props.list) || []);
+    const backstage = createBackstage();
 
     const CACHE = {
       nodeMap: new Map(),
@@ -95,6 +96,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       index: 0,
       endIndex: 0,
       column: falls.getMinHeightItem(),
+      endColumn: falls.getMinHeightItem(),
       nodeMap: new Map(),
       renderList: [],
       renderItems,
@@ -114,6 +116,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
 
     function renderItems() {
       if (!contentHtml) return;
+      backstage.stop();
       let node = mCtx.column;
       mCtx.nodeMap = new Map();
       CACHE.DivPointer = undefined;
@@ -170,12 +173,17 @@ export const RScrollVirtualFallsListV3 = defineComponent({
 
         mCtx.endIndex = index + 1;
         node = falls.getMinHeightItem();
+        mCtx.endColumn = node;
         mCtx.nodeMap.set(ele, div);
       })
-      console.log('renderItems', mCtx);
+      // console.log('renderItems', mCtx);
       CACHE.nodeMap.forEach((div) => div.remove())
       CACHE.DivPointer = undefined;
       CACHE.nodeMap = mCtx.nodeMap;
+      watchLock = false;
+
+      backstage.rePreLoads();
+      backstage.start();
     }
 
     function layout(isForce) {
@@ -197,71 +205,6 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       mCtx.renderList = LIST.value.slice(mCtx.index, mCtx.index + props.renderCount)
       CACHE.item = item;
       renderItems();
-      watchLock = false;
-    }
-
-    function preLoad() {
-      const ele = LIST.value[INDEX];
-      if (!ele) return;
-      let node = COLUMN;
-      if (!ele.__cache__) ele.__cache__ = {};
-      const cache__height = ele.__cache__.height || props.avgHeight
-      ele.__cache__.columns = falls.list.map(el => ({ ...el }))
-      if (node.height) node.height = node.height + props.gap;
-      ele.__cache__.top = node.height;
-      ele.__cache__.left = node.left;
-      ele.__cache__.width = node.width;
-      ele.__cache__.columnIndex = node.index;
-      ele.__cache__.index = INDEX;
-      ele.__cache__.height = cache__height;
-      node.height = node.height + cache__height;
-      ele.__cache__.bottom = node.height;
-      ele.__cache__.vTop = ele.__cache__.top + recycleTop();
-      ele.__cache__.vBottom = ele.__cache__.bottom + recycleBottom();
-      INDEX++;
-      COLUMN = falls.getMinHeightItem();
-    }
-
-    function preLoads() {
-      let index = 0;
-      while (index < props.preLoadsCount) {
-        preLoad();
-        index++;
-      }
-    }
-
-    function createBackstage() {
-      let timer;
-
-      function idleCallback(deadline) {
-        if (INDEX >= LIST.value.length) {
-          stop()
-          return
-        }
-        const timeRemaining = deadline.timeRemaining();
-        if (timeRemaining > 0) {
-          preLoad()
-          if (!deadline.didTimeout) {
-            timer = requestIdleCallback(idleCallback);
-          }
-        }
-      }
-
-      function start() {
-        // console.log('backstageTask start',);
-        timer = requestIdleCallback(idleCallback);
-      }
-
-      function stop() {
-        // console.log('backstageTask stop',);
-        cancelIdleCallback(timer)
-      }
-
-      function trigger() {
-        requestIdleCallback(idleCallback);
-      }
-
-      return { start, stop, trigger }
     }
 
     function findIndex(sTop) {
@@ -283,6 +226,80 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       let col = columns[0];
       columns.forEach((el) => { if (el.height > col.height) col = el });
       return col.height;
+    }
+
+
+    function createBackstage() {
+      let timer;
+      let index = 0;
+      let column;
+
+      function rePreLoads() {
+        index = mCtx.endIndex;
+        column = mCtx.endColumn;
+        preLoads();
+      }
+
+      function preLoad() {
+        const ele = LIST.value[index];
+        if (!ele) return;
+        let node = column;
+        if (!ele.__cache__) ele.__cache__ = {};
+        const cache__height = ele.__cache__.height || props.avgHeight
+        ele.__cache__.columns = falls.list.map(el => ({ ...el }))
+        if (node.height) node.height = node.height + props.gap;
+        ele.__cache__.top = node.height;
+        ele.__cache__.left = node.left;
+        ele.__cache__.width = node.width;
+        ele.__cache__.columnIndex = node.index;
+        ele.__cache__.height = cache__height;
+        node.height = node.height + cache__height;
+        ele.__cache__.bottom = node.height;
+        ele.__cache__.vTop = ele.__cache__.top + recycleTop();
+        ele.__cache__.vBottom = ele.__cache__.bottom + recycleBottom();
+        index++;
+        column = falls.getMinHeightItem();
+      }
+
+
+      function preLoads(count = props.preLoadsCount) {
+        let nth = 0;
+        while (nth < props.preLoadsCount) {
+          preLoad();
+          nth++;
+        }
+      }
+
+      function idleCallback(deadline) {
+        // console.log(index);
+        if (index >= LIST.value.length) {
+          stop()
+          return
+        }
+        const timeRemaining = deadline.timeRemaining();
+        if (timeRemaining > 0) {
+          preLoads(10)
+          if (!deadline.didTimeout) {
+            timer = requestIdleCallback(idleCallback);
+          }
+        }
+      }
+
+      function start() {
+        // console.log('backstageTask start',);
+        timer = requestIdleCallback(idleCallback);
+      }
+
+      function stop() {
+        // console.log('backstageTask stop',);
+        cancelIdleCallback(timer)
+      }
+
+      function trigger() {
+        requestIdleCallback(idleCallback);
+      }
+
+      return { start, stop, trigger, preLoads, preLoad, rePreLoads }
     }
 
 

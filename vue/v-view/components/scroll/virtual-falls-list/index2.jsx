@@ -88,7 +88,7 @@ export const RScrollVirtualFallsListV2 = defineComponent({
     provide("RScrollVirtualFallsListContext", mCtx);
     context.expose(mCtx);
     watch(() => LIST.value.slice(CURRENT.index, CURRENT.index + props.renderCount), onListChange)
-    const scrollController = useScrollController({ onScroll, onResize, onTouchstart, onTouchend });
+    const scrollController = useScrollController({ onScroll, onResize });
     const scrollTop = () => scrollController?.context?.element?.scrollTop ?? 0;
     const minHeight = computed(() => {
       if (!LIST.value.length) return 0;
@@ -295,14 +295,6 @@ export const RScrollVirtualFallsListV2 = defineComponent({
     function onHeightChange() {
       // console.log('onHeightChange');
       resize()
-    }
-
-    function onTouchstart(params) {
-      // console.log('onTouchstart', scrollTop());
-    }
-
-    function onTouchend(params) {
-      // console.log('onTouchend', scrollTop());
     }
 
     function onScroll() {

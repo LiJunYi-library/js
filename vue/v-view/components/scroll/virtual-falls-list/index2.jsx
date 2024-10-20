@@ -67,6 +67,7 @@ export const RScrollVirtualFallsListV2 = defineComponent({
   setup(props, context) {
     const falls = useFallsLayout(props);
     const LIST = computed(() => (props.listHook ? props.listHook.list : props.list) || []);
+    let watchLock = false
     let contentHtml;
     let INDEX = 0;
     let COLUMN = falls.getMinHeightItem();
@@ -85,7 +86,7 @@ export const RScrollVirtualFallsListV2 = defineComponent({
     const mCtx = reactive({ context, slots: context.slots, renderItems, layout });
     provide("RScrollVirtualFallsListContext", mCtx);
     context.expose(mCtx);
-    watch(() => LIST.value.length, onListChange)
+    watch(() => LIST.value.slice(CURRENT.index, CURRENT.index + props.renderCount), onListChange)
     const scrollController = useScrollController({ onScroll, onResize, onTouchstart, onTouchend });
     const scrollTop = () => scrollController?.context?.element?.scrollTop ?? 0;
     const minHeight = computed(() => {
@@ -194,6 +195,7 @@ export const RScrollVirtualFallsListV2 = defineComponent({
       if (!isForce && CACHE.item === item) return;
       // console.log('layout');
       INDEX = index;
+      watchLock = true;
       CURRENT.index = INDEX;
       let cache = item.__cache__;
       if (index === 0) {
@@ -204,7 +206,8 @@ export const RScrollVirtualFallsListV2 = defineComponent({
         COLUMN = falls.getMinHeightItem(cache.columnIndex);
       }
       CACHE.item = item;
-      renderItems()
+      renderItems();
+      watchLock = false;
     }
 
     function resize() {
@@ -313,6 +316,7 @@ export const RScrollVirtualFallsListV2 = defineComponent({
 
     function onListChange() {
       // console.log('onListChange', scrollTop());
+      if (watchLock) return
       resize()
     }
 

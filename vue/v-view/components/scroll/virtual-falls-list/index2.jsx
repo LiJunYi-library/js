@@ -1,11 +1,11 @@
-import { defineComponent, computed, reactive, provide, render, watch, onMounted } from "vue";
+import { defineComponent, computed, reactive, provide, render, watch, onMounted, renderList } from "vue";
 import { useScrollController } from "../scroll";
 import { useFallsLayout } from "../../falls";
 import { useResizeObserver } from "@rainbow_ljy/v-hooks";
 import { arrayBinaryFindIndex } from "@rainbow_ljy/rainbow-js";
 
 const mProps = {
-  avgHeight: { type: Number, default: 400 }, // 每个item高度
+  avgHeight: { type: Number, default: 200 }, // 每个item高度
   keyExtractor: { type: Function, default: ({ index }) => index },
   columns: { type: Number, default: 1 }, // 一行几个item
   gap: { type: Number, default: 10 }, // 列表之间空格的间距
@@ -16,6 +16,18 @@ const mProps = {
   preLoadsCount: { type: Number, default: 100 },
   renderCount: { type: Number, default: 30 },
 };
+
+const ListenerList = defineComponent({
+  props: {
+    list: Array,
+  },
+  setup(props, context) {
+    return () => {
+      console.log("ListenerList render");
+      return renderList(props.list || [], () => null)
+    }
+  }
+})
 
 
 const Item = defineComponent({
@@ -61,6 +73,7 @@ export const RScrollVirtualFallsListV2 = defineComponent({
     let COLUMN = falls.getMinHeightItem();
     let CACHE = {
       nodeMap: new Map(),
+      currentDivNode: undefined,
       list: [],
       item: undefined,
     }
@@ -112,8 +125,18 @@ export const RScrollVirtualFallsListV2 = defineComponent({
       let div;
       if (CACHE.nodeMap.has(ele)) {
         div = CACHE.nodeMap.get(ele);
+        div.setAttribute('data-index', INDEX)
         render(<Item item={ele} index={INDEX} slots={context.slots} key={props.keyExtractor({ item: ele, index: INDEX })} onHeightChange={onHeightChange}></Item>, div);
         // console.log('缓存有', div);
+        if (CACHE.currentDivNode) {
+          if (CACHE.currentDivNode.nextSibling === div) { // 当 当前指针的下一个和要渲染的div相同
+
+          } else {
+            contentHtml.insertBefore(div, CACHE.currentDivNode.nextSibling);
+          }
+        }
+
+        CACHE.currentDivNode = div;
         CACHE.nodeMap.delete(ele);
         // console.log('删除', CACHE.nodeMap.size);
       } else {
@@ -122,7 +145,13 @@ export const RScrollVirtualFallsListV2 = defineComponent({
         div.setAttribute('data-index', INDEX)
         div.classList.add('r-scroll-virtual-falls-list-item');
         render(<Item item={ele} index={INDEX} slots={context.slots} key={props.keyExtractor({ item: ele, index: INDEX })} onHeightChange={onHeightChange}></Item>, div);
-        contentHtml.appendChild(div);
+        if (!CACHE.currentDivNode) {
+          contentHtml.insertBefore(div, contentHtml.firstChild);
+          CACHE.currentDivNode = div;
+        } else {
+          contentHtml.insertBefore(div, CACHE.currentDivNode.nextSibling);
+          CACHE.currentDivNode = div;
+        }
       }
       div.style.top = ele?.__cache__?.top + 'px';
       div.style.left = ele?.__cache__?.left;
@@ -142,6 +171,7 @@ export const RScrollVirtualFallsListV2 = defineComponent({
     function renderItems() {
       let n = 0;
       CURRENT.nodeMap = new Map();
+      CACHE.currentDivNode = undefined;
       backstageTask.stop();
       while (n < props.renderCount) {
         renderItem(n);
@@ -151,9 +181,11 @@ export const RScrollVirtualFallsListV2 = defineComponent({
       CACHE.nodeMap.forEach((div) => {
         div.remove();
       })
+      CACHE.currentDivNode = undefined;
+      CACHE.nodeMap = CURRENT.nodeMap;
       preLoads();
       backstageTask.start();
-      CACHE.nodeMap = CURRENT.nodeMap;
+
     }
 
     function layout(isForce) {
@@ -287,8 +319,11 @@ export const RScrollVirtualFallsListV2 = defineComponent({
 
 
     return () => {
+      console.log("render");
+
       return (
-        <div>
+        <div >
+          {/* <ListenerList list={LIST.value.slice(CURRENT.index, CURRENT.index + props.renderCount)}></ListenerList> */}
           <div
             style={{ height: getHeight() + 'px' }}
             data-length={LIST.value.length}

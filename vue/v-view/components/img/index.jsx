@@ -55,42 +55,67 @@ export const RImageHoc = (options = {}) => {
       const isSrcChange = ref(true);
       watch(() => props.src, onChange);
       watch(isVisible, onRecycle, { flush: 'post' });
+      const createClass = (name) => [name, loading.value && name + '-loading', error.value && name + '-error'].filter(Boolean);
       const expose = reactive({ createClass });
       context.expose(expose)
       const CStyle = reactive({ width: undefined, height: undefined });
+      const iObserver = useIntersectionObserver({ el: () => html, callback: obser })
 
-
-
-      function obser() {
-        const intersectionObserver = new IntersectionObserver((entries) => {
-          isVisible.value = entries[0].isIntersecting;
-          console.log('intersectionObserver', isVisible.value);
-          if( props.lazy && !props.recycle) loadImg();
-        });
-        intersectionObserver.observe(html);
+      const lazy = {
+        onInter() {
+          if (!isVisible.value) return;
+          loadImg();
+        },
+        onChange: () => lazy.onInter(),
       }
 
-      function createClass(name) {
-        return [name, loading.value && name + '-loading', error.value && name + '-error'].filter(Boolean)
+      const recycle = {
+        onBeforeInter(visible) {
+          if (visible) return;
+          if (error.value === true) return;
+          let offset = imgHtml?.getBoundingClientRect?.();
+          if (!offset) return;
+          CStyle.width = offset.width + 'px';
+          CStyle.height = offset.height + 'px';
+        },
+        onChange() {
+          CStyle.width = '';
+          CStyle.height = '';
+          if (!isVisible.value) return;
+          loadImg();
+        },
       }
 
-      console.log(context.attrs);
+      const def = { onInter: loadImg, onChange: loadImg }
 
+      const adapter = (() => {
+        if (props.lazy) return lazy;
+        if (props.recycle) return recycle;
+        return def;
+      })()
+
+      function obser(entries) {
+        console.log(entries);
+
+        adapter?.onBeforeInter?.(entries[0].isIntersecting);
+        isVisible.value = entries[0].isIntersecting;
+        // console.log('intersectionObserver', isVisible.value);
+        adapter?.onInter?.();
+      }
 
       function loadImg() {
         if (!isSrcChange.value) return;
-        if ((props.lazy || props.recycle) && !isVisible.value) return;
-        console.log('loadImg');
+        // console.log('loadImg');
         loading.value = true;
         error.value = false;
+        if (imgHtml) {
+          imgHtml.style.width = 0;
+          imgHtml.style.height = 0;
+        }
         src.value = props.src;
-        if (!imgHtml) return
-        imgHtml.style.width = 0;
-        imgHtml.style.height = 0;
       }
 
       //
-      onMounted(obser);
 
       function onload(event) {
         imgHtml.style.width = '';
@@ -104,7 +129,7 @@ export const RImageHoc = (options = {}) => {
         cache.height = el.height;
         cache.naturalWidth = el.naturalWidth;
         cache.naturalHeight = el.naturalHeight;
-        console.log('onload', cache);
+        // console.log('onload', cache);
         error.value = false;
         loading.value = false;
         isSrcChange.value = false;
@@ -131,23 +156,12 @@ export const RImageHoc = (options = {}) => {
 
       function onChange() {
         isSrcChange.value = true;
-        if (props.recycle) {
-          CStyle.width = '';
-          CStyle.height = '';
-        }
-        loadImg();
+        adapter?.onChange?.();
       }
 
       function onRecycle() {
         if (!props.recycle) return
-        if (isVisible.value) {
-          loadImg()
-        }
-        if (!isVisible.value && error.value === false) {
-          CStyle.width = cache.width + 'px';
-          CStyle.height = cache.height + 'px';
-        }
-
+        if (isVisible.value) loadImg()
       }
 
       //

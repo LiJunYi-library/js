@@ -1,4 +1,4 @@
-import { defineComponent, computed, reactive, provide, render, watch, onMounted, renderList, inject, onUpdated } from "vue";
+import { defineComponent, computed, reactive, provide, render, watch, onMounted, renderList } from "vue";
 import { useScrollController } from "../scroll";
 import { useFallsLayout } from "../../falls";
 import { useResizeObserver } from "@rainbow_ljy/v-hooks";

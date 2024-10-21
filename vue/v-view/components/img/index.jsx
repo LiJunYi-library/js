@@ -20,10 +20,10 @@ export const RImageHoc = (options = {}) => {
   const config = {
     props: {},
     renderError: (props, context, expose) => (
-      <img class={expose.createClass('r-picture-error')} src={props.errorSrc}></img>
+      <img class={expose.createClass('r-img-error')} src={props.errorSrc}></img>
     ),
     renderLoading: (props, context, expose) => (
-      <img class={expose.createClass('r-picture-loading')} src={props.loadingSrc}></img>
+      <img class={expose.createClass('r-img-loading')} src={props.loadingSrc}></img>
     ),
 
     ...options,
@@ -74,7 +74,7 @@ export const RImageHoc = (options = {}) => {
           if (visible) return;
           let offset = html?.firstElementChild?.getBoundingClientRect?.();
           if (error.value === true) offset = html?.firstElementChild?.nextElementSibling?.getBoundingClientRect?.();
-          console.log(offset);
+          // console.log(offset);
           if (!offset) return;
           CStyle.width = offset.width + 'px';
           CStyle.height = offset.height + 'px';

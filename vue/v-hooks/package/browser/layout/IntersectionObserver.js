@@ -16,7 +16,6 @@ export function useIntersectionObserver(props = {}) {
   const { el, intersectionConfig = {} } = props;
 
   const options = {
-    threshold: 0.4,
     ...intersectionConfig,
   };
 
@@ -24,11 +23,13 @@ export function useIntersectionObserver(props = {}) {
   let isFirstVisible = true;
 
   function observerCB(entries) {
+    props?.callback?.(entries);
     entries.forEach((entrie) => {
       props?.cb?.(entrie);
       if (entrie.isIntersecting) {
         props?.onIsIntersect?.(entrie);
         if (isFirstVisible) props?.onFirstIsIntersect?.(entrie);
+        else props?.onUnFirstIsIntersect?.(entrie);
         isFirstVisible = false;
       }
       if (!entrie.isIntersecting) props?.onUnIsIntersect?.(entrie);

@@ -72,8 +72,9 @@ export const RImageHoc = (options = {}) => {
       const recycle = {
         onBeforeInter(visible) {
           if (visible) return;
-          if (error.value === true) return;
-          let offset = imgHtml?.getBoundingClientRect?.();
+          let offset = html?.firstElementChild?.getBoundingClientRect?.();
+          if (error.value === true) offset = html?.firstElementChild?.nextElementSibling?.getBoundingClientRect?.();
+          console.log(offset);
           if (!offset) return;
           CStyle.width = offset.width + 'px';
           CStyle.height = offset.height + 'px';
@@ -95,8 +96,6 @@ export const RImageHoc = (options = {}) => {
       })()
 
       function obser(entries) {
-        console.log(entries);
-
         adapter?.onBeforeInter?.(entries[0].isIntersecting);
         isVisible.value = entries[0].isIntersecting;
         // console.log('intersectionObserver', isVisible.value);

@@ -54,8 +54,10 @@ export const RImageHoc = (options = {}) => {
       const src = ref();
       const isSrcChange = ref(true);
       watch(() => props.src, onChange);
+      watch(isVisible, onRecycle, { flush: 'post' });
       const expose = reactive({ createClass });
       context.expose(expose)
+      const CStyle = reactive({ width: undefined, height: undefined });
 
 
 
@@ -63,8 +65,7 @@ export const RImageHoc = (options = {}) => {
         const intersectionObserver = new IntersectionObserver((entries) => {
           isVisible.value = entries[0].isIntersecting;
           console.log('intersectionObserver', isVisible.value);
-          loadImg();
-          recycle();
+          if( props.lazy && !props.recycle) loadImg();
         });
         intersectionObserver.observe(html);
       }
@@ -73,22 +74,12 @@ export const RImageHoc = (options = {}) => {
         return [name, loading.value && name + '-loading', error.value && name + '-error'].filter(Boolean)
       }
 
-      function recycle() {
-        if (!props.recycle) return
-        if (isVisible.value) {
-          html.style.width = '';
-          html.style.height = '';
-        } else {
-          html.style.width = cache.width + 'px';
-          html.style.height = cache.height + 'px';
-        }
-      }
+      console.log(context.attrs);
+
 
       function loadImg() {
-        console.log('loadImg', isSrcChange.value);
-
         if (!isSrcChange.value) return;
-        if (props.lazy && !isVisible.value) return;
+        if ((props.lazy || props.recycle) && !isVisible.value) return;
         console.log('loadImg');
         loading.value = true;
         error.value = false;
@@ -117,6 +108,9 @@ export const RImageHoc = (options = {}) => {
         error.value = false;
         loading.value = false;
         isSrcChange.value = false;
+
+        CStyle.width = '';
+        CStyle.height = '';
       }
 
       function onerror() {
@@ -130,13 +124,33 @@ export const RImageHoc = (options = {}) => {
         error.value = true;
         loading.value = false;
         isSrcChange.value = false;
+
+        CStyle.width = '';
+        CStyle.height = '';
       }
 
       function onChange() {
         isSrcChange.value = true;
+        if (props.recycle) {
+          CStyle.width = '';
+          CStyle.height = '';
+        }
         loadImg();
       }
 
+      function onRecycle() {
+        if (!props.recycle) return
+        if (isVisible.value) {
+          loadImg()
+        }
+        if (!isVisible.value && error.value === false) {
+          CStyle.width = cache.width + 'px';
+          CStyle.height = cache.height + 'px';
+        }
+
+      }
+
+      //
       function renderContent() {
         const nodes = [<img
           class={createClass("r-picture")}
@@ -155,7 +169,7 @@ export const RImageHoc = (options = {}) => {
 
       return () => {
         return (
-          <div ref={(el) => (html = el)} class={createClass("r-image")}  >
+          <div ref={(el) => (html = el)} class={createClass("r-image")} style={CStyle} >
             {renderContent()}
           </div>
         );

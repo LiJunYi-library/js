@@ -104,7 +104,9 @@ export const RScrollVirtualFallsListV3 = defineComponent({
 
     provide("RScrollVirtualFallsListContext", mCtx);
     context.expose(mCtx);
-    const scrollController = useScrollController({ onScroll, onResize });
+    const onResizeDebounced = animationDebounced(onResize);
+    const onHeightChange = animationDebounced(onChangeHeight);
+    const scrollController = useScrollController({ onScroll, onResize: onResizeDebounced });
     const scrollTop = () => scrollController?.context?.element?.scrollTop ?? 0;
     const minHeight = computed(() => {
       if (!LIST.value.length) return 0;
@@ -208,8 +210,6 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       renderItems();
     }
 
-    // const layout = animationDebounced(layout2)
-
     function findIndex(sTop) {
       return arrayBinaryFindIndex(LIST.value,
         (item) => {
@@ -309,8 +309,8 @@ export const RScrollVirtualFallsListV3 = defineComponent({
 
     onMounted(() => { })
 
-    function onHeightChange() {
-      // console.log('onHeightChange');
+    function onChangeHeight() {
+      // console.log('onChangeHeight');
       layout(true);
     }
 

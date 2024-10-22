@@ -4,6 +4,7 @@
   max-height: 100vh;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -16,22 +17,7 @@
 
 
 
-.r-scroll-flotage {
-  position: sticky;
-  z-index: 11;
-}
 
-.r-scroll-flotage-sticky {
-}
-
-.r-scroll-flotage-un-sticky {
-}
-
-.r-scroll-flotage-un-sticky-top {
-}
-
-.r-scroll-flotage-un-sticky-bottom {
-}
 
 
 .r-scroll-absolute {
@@ -48,6 +34,7 @@
 }
 
 .r-scroll-list {
+
   .list-finished,
   .list-loading {
     display: flex;
@@ -85,6 +72,7 @@
     min-height: 286px;
     color: red;
   }
+
   .r-list-skelecton {
     height: 140px;
     background: url("./skelecton.png");
@@ -102,11 +90,13 @@
     flex-direction: row;
     min-height: 50px;
   }
+
   .r-finished {
     display: flex;
     flex-direction: row;
     min-height: 50px;
   }
+
   .r-load {
     display: flex;
     flex-direction: row;

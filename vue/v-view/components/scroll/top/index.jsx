@@ -162,7 +162,7 @@ export const RScrollTop = defineComponent({
           class="scroll-top"
         >
           {renderSlot(context.slots, "default", { onOff: onOff.value }, () => [
-            renderSlot(context.slots, "default", { onOff: onOff.value }, () => [
+            renderSlot(context.slots, "icon", { onOff: onOff.value }, () => [
               <img
                 src={props.src}
                 class={["scroll-top-icon", onOff.value && "scroll-top-icon-act"]}

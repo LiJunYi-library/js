@@ -16,7 +16,7 @@ export const RPulldown2 = defineComponent({
     const pulldownHtml = ref('');
     const visibility  = ref(false);
 
-    const offset = computed(()=>{
+    const offset = (()=>{
       if(!pulldownHtml.value) return {};
       return pulldownHtml.value.getBoundingClientRect();
     })
@@ -47,15 +47,15 @@ export const RPulldown2 = defineComponent({
     function getTop() {
       const position = getPosition(props.popTop);
       if( position !==false  ) return position;
-      if (props.teleport === "body") return offset.value.bottom + "px";
-      return offset.value.height + "px";
+      if (props.teleport === "body") return offset().bottom + "px";
+      return offset().height + "px";
     }
 
     function getLeft() {
       const position = getPosition(props.popLeft);
       if( position !==false  ) return position;
       if (props.teleport === "body") return 0;
-      return -offset.value.left + "px";
+      return -offset().left + "px";
     }
 
     function bool0(v) {
@@ -73,12 +73,20 @@ export const RPulldown2 = defineComponent({
     }
 
     function onClick(event) {
-      setVisible(true);
+      setVisible(!visible.value);
       context.emit("labelClick",event);
     }
 
     function onTouchstart(event) {
       event.stopPropagation();
+    }
+
+    
+    function createRPopupAttrs() {
+      const attrs = { ...context.attrs };
+      delete attrs.class;
+      delete attrs.style;
+      return  attrs
     }
 
     return () => {
@@ -105,7 +113,7 @@ export const RPulldown2 = defineComponent({
             ])}
           </div>
           <RPopup
-            {...context.attrs}
+            {...createRPopupAttrs()}
             teleport={props.teleport}
             left={getLeft()}
             top={getTop()}

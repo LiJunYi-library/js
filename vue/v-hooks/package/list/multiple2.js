@@ -1,4 +1,4 @@
-import { ref, reactive, watch, computed } from "vue";
+import { ref, watch, computed } from "vue";
 import { usePromise2, useLoading } from "../promise";
 import { getSelectProps } from "./select";
 import { useReactive, createSaveContext } from "../../other";
@@ -67,11 +67,11 @@ function useMultiple2(props = {}) {
   }
 
   const initParms = resolveProps(config);
-  const list = ref(initParms.list);
-  const select = ref(initParms.select);
-  const value = ref(initParms.value);
-  const label = ref(initParms.label);
-  const index = ref(initParms.index);
+  const list = config.listRef(initParms.list);
+  const select = config.selectRef(initParms.select);
+  const value = config.valueRef(initParms.value);
+  const label = config.labelRef(initParms.label);
+  const index = config.indexRef(initParms.index);
   const contextHooks = createSaveContext({ value, select, label, index });
   const isSelect = computed(() => hooks.context.SH.select.length > 0);
   const unDisabledList = computed(() =>

@@ -1,6 +1,6 @@
 import { useRadio2, useAsyncRadio2 } from "./radio2";
 import { useMultiple2, useAsyncMultiple2 } from "./multiple2";
-
+import { ref } from "vue";
 export { useSelect2, useAsyncSelect2 };
 
 function getSelectProps(options = {}) {
@@ -17,6 +17,11 @@ function getSelectProps(options = {}) {
     formatterLabel: (item) => item?.label,
     formatterDisabled: (item) => item?.disabled ?? false,
     formatterList: (list) => list,
+    listRef: ref,
+    selectRef: ref,
+    valueRef: ref,
+    labelRef: ref,
+    indexRef: ref,
     priority: "valueItem", // 优先使用的 valueItem ||   indexItem || labelItem
     ...options,
     list: options.list || [],

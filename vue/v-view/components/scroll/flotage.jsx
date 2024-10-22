@@ -1,4 +1,4 @@
-import { defineComponent, renderSlot, reactive, ref, inject } from "vue";
+import { defineComponent, renderSlot, reactive, ref, inject, onMounted } from "vue";
 import { useScrollController } from ".";
 
 export const RScrollFlotage = defineComponent({
@@ -6,7 +6,8 @@ export const RScrollFlotage = defineComponent({
     zIndex: [Number, String],
     top: { type: Number, default: 0 },
     flotageTop: { type: Number, default: 0 },
-    fluctuate: { type: Number, default: 1 }, // 波动范围
+    fluctuate: { type: Number, default: 0 }, // 波动范围
+    isMeasure: Boolean,
   },
   setup(props, context) {
     const height = props.top;
@@ -22,6 +23,7 @@ export const RScrollFlotage = defineComponent({
     let prveTop = 0;
     let isDispatch = true;
     let html;
+    let measureHtml;
 
     const scrollController = useScrollController({
       onScroll(event, sTop) {
@@ -61,7 +63,26 @@ export const RScrollFlotage = defineComponent({
       },
     });
 
-    const arg = reactive({
+    onMounted(() => {
+      if (props.isMeasure) {
+        measureHtml = document.createElement('div')
+        measureHtml.classList.add('r-scroll-flotage-measure');
+        html.parentElement.insertBefore(measureHtml, html);
+      }
+    })
+
+    function scrollToSticky(arg = {}) {
+      let mtop = getStickyScrollTop();
+      let element = scrollController?.context?.element;
+      if (!element) return
+      scrollController.context.scrollTo({ top: mtop, ...arg })
+    }
+
+    function getStickyScrollTop() {
+      return scrollController.getOffsetTop(measureHtml) - top.value
+    }
+
+    const expose = reactive({
       top,
       isSticky,
       unStickyTop,
@@ -69,14 +90,16 @@ export const RScrollFlotage = defineComponent({
       isFlotage,
       unFlotageTop,
       unFlotageBottom,
+      scrollToSticky,
+      getStickyScrollTop,
     });
+
+    context.expose(expose)
 
     return (vm) => {
       return (
         <div
-          ref={(el) => {
-            html = el;
-          }}
+          ref={(el) => { html = el }}
           style={{
             zIndex: props.zIndex,
             top: top.value + "px",
@@ -93,7 +116,7 @@ export const RScrollFlotage = defineComponent({
             unFlotageBottom.value && "r-scroll-flotage-un-flotage-bottom",
           ]}
         >
-          {renderSlot(context.slots, "default", arg)}
+          {renderSlot(context.slots, "default", expose)}
         </div>
       );
     };

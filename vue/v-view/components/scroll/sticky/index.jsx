@@ -1,7 +1,6 @@
 import { defineComponent, renderSlot, ref, reactive, onMounted, computed } from "vue";
 import { useScrollController } from "../";
 import './index.scss'
-import { id } from "element-plus/es/locale/index.mjs";
 
 export const RScrollSticky = defineComponent({
     props: {

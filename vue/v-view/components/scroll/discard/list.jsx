@@ -1,6 +1,6 @@
 import { defineComponent, renderSlot, renderList, onMounted } from "vue";
 import { useLoading } from "@rainbow_ljy/v-hooks";
-import { RILoading } from "../icon";
+import { RILoading } from "../../icon";
 
 const mProps = {
   skelectonCount: {

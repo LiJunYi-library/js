@@ -1,16 +1,7 @@
-import {
-    defineComponent,
-    renderSlot,
-    computed,
-    onMounted,
-    onBeforeUnmount,
-    inject,
-    reactive,
-    provide,
-} from "vue";
-import "./index.scss";
+import { defineComponent, renderSlot, onMounted, onBeforeUnmount, inject, reactive, provide } from "vue";
 import { arrayRemove } from "@rainbow_ljy/rainbow-js";
 import { RGlobal } from "../../global";
+import "./scroll.scss";
 
 export class ScrollController {
     onScroll = () => 0;

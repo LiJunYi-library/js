@@ -11,9 +11,9 @@ import {
   watch,
   nextTick,
 } from "vue";
-import { useScrollController } from ".";
+import { useScrollController } from "..";
 import { arrayLoop } from "@rainbow_ljy/rainbow-js";
-import { useListLoadingHoc, loadingProps } from "../loading";
+import { useListLoadingHoc, loadingProps } from "../../loading";
 
 const configProps = {
   bothEndsHeight: { type: Number, default: 0 }, //列表 两端的高度

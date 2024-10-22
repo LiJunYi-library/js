@@ -1,40 +1,4 @@
-.r-scroll {
-  position: relative;
-  overflow: auto;
-  max-height: 100vh;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-.r-scroll[data-scroll="false"] {
-  overflow-x: hidden;
-  overflow-y: hidden;
-}
-
-
-
-
-
-
-.r-scroll-absolute {
-  position: absolute;
-  z-index: 11;
-}
-
-.r-scroll-fold {
-  position: relative;
-  width: 100%;
-  left: 0;
-  top: 0;
-  z-index: 12;
-}
-
 .r-scroll-list {
-
   .list-finished,
   .list-loading {
     display: flex;

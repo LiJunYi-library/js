@@ -75,7 +75,7 @@ export const RDropdown = defineComponent({
     }
 
     function onClick(event) {
-      setVisible(true);
+      setVisible(!visible.value);
       context.emit("labelClick",event);
     }
 

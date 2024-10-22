@@ -74,7 +74,7 @@ function useRadio2(props = {}) {
     updateListAndReset,
     updateListToResolveValue,
     updateListResolve,
-
+    formValidation,
   };
 
   const hooks = useReactive({
@@ -88,13 +88,18 @@ function useRadio2(props = {}) {
     ...contextHooks,
   });
 
-  function same(item, i) {
 
+  function formValidation() {
+    if (config.formRequired && hooks.context.SH.value === undefined) return Promise.reject(config.formRequiredErrorMessage);
+    return Promise.resolve(true);
+  }
+
+  function same(item, i) {
     return hooks.context.SH.select === item;
   }
 
   function onSelect(item, i) {
-    if (!config.Validator(hooks)) return true;
+    if (!config.validator(hooks)) return true;
     if (config.cancelSame && same(item, i)) {
       hooks.context.SH.select = undefined;
       hooks.context.SH.index = undefined;

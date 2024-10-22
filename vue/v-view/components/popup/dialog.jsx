@@ -22,6 +22,24 @@ function useDocumentTouchstart(cb) {
 
 const dialogZIndex = 300000;
 
+export const RDialogProps = {
+  visible: Boolean,
+  scrollController: Object,
+  teleport: [Object, String],
+  lazy: { type: Boolean, default: true },
+  destroy: { type: Boolean, default: false },
+  cache: { type: Boolean, default: true },
+  closeOnClickOverlay: { type: Boolean, default: true },
+  closeOnClickEmpty: { type: Boolean, default: true },
+  left: { type: [Number, String], default: "" },
+  right: { type: [Number, String], default: "" },
+  top: { type: [Number, String], default: "" },
+  bottom: { type: [Number, String], default: "" },
+  position: { type: String, default: "bottom" }, // center top bottom right left
+  popClass: { type: String, default: "" },
+  overlayClass: { type: String, default: "" },
+}
+
 export const RDialogHoc = (options = {}) => {
   const config = {
     class: "",
@@ -43,21 +61,7 @@ export const RDialogHoc = (options = {}) => {
   };
   return defineComponent({
     props: {
-      visible: Boolean,
-      scrollController: Object,
-      teleport: [Object, String],
-      lazy: { type: Boolean, default: true },
-      destroy: { type: Boolean, default: false },
-      cache: { type: Boolean, default: true },
-      closeOnClickOverlay: { type: Boolean, default: true },
-      closeOnClickEmpty: { type: Boolean, default: true },
-      left: { type: [Number, String], default: "" },
-      right: { type: [Number, String], default: "" },
-      top: { type: [Number, String], default: "" },
-      bottom: { type: [Number, String], default: "" },
-      position: { type: String, default: "bottom" }, // center top bottom right left
-      popClass: { type: String, default: "" },
-      overlayClass: { type: String, default: "" },
+      ...RDialogProps,
       ...config.props,
     },
     emits: [

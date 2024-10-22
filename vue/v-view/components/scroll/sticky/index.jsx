@@ -60,6 +60,7 @@ export const RScrollSticky = defineComponent({
 
 
         function scrollToSticky(arg = {}) {
+            if (arg.isSticky && !isSticky.value) return;
             let top = getStickyScrollTop();
             let element = scrollController?.context?.element;
             if (!element) return

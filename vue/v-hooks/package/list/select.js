@@ -11,8 +11,10 @@ function getSelectProps(options = {}) {
     index: undefined,
     cancelSame: false, // 是否取消相同的
     isMultiple: false,
+    formRequired: false,
+    formRequiredErrorMessage: '',
     onChange: () => undefined,
-    Validator: () => true,
+    validator: () => true,
     formatterValue: (item) => item?.value,
     formatterLabel: (item) => item?.label,
     formatterDisabled: (item) => item?.disabled ?? false,

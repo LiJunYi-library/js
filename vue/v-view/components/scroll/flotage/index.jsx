@@ -51,7 +51,8 @@ export const RScrollFlotage = defineComponent({
             }
         })
 
-        function scrollTo(arg = {}) {
+        function scrollTo(arg = { pTop: top.value }) {
+            if (arg.isSticky && !isSticky.value) return;
             let mtop = getStickyScrollTop(arg.pTop);
             let element = scrollController?.context?.element;
             if (!element) return

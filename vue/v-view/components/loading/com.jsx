@@ -26,7 +26,7 @@ export const loadingProps = {
   },
   emptySrc: {
     type: [Number, String],
-    default: require("./empty.png"),
+    default: ''/*require("./empty.png")*/,
   },
   emptyText: {
     type: [Number, String],

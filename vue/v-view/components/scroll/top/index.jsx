@@ -4,7 +4,7 @@ import { useScrollController } from "../index";
 
 export const RScrollTop = defineComponent({
   props: {
-    src: { type: [Object, String], default: () => require("./top.png") },
+    src: { type: [Object, String], default: () => ''/*require("./top.png")*/ },
     isBack: { type: Boolean, default: true },
     behavior: { type: String, default: "instant" }, // smooth  instant
     backText: { type: String, default: "返回" },

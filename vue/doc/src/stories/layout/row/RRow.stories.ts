@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
 import { fn } from '@storybook/test';
-import { RRow } from '../../../components/flex';
-
-
+import {
+  RRow
+} from "@rainbow_ljy/v-view";
 
 const meta = {
   title: 'Layout/RRow',
@@ -46,7 +46,7 @@ export const Default: Story = {
     template: `
       <RRow v-bind="args" class="con-h100">
         <div class="con-c"> 11111 </div>
-        <div class="con-c"> 22222222 </div>
+        <RRow class="con-c"> 22222222 </RRow>
         <div class="con-c"> 33 </div>
       </RRow>
     `,
@@ -61,7 +61,7 @@ export const ListTemplate: Story = {
     },
     template: `
       <RRow class="con-h100">
-        <RRow class="con-c"> 11111 </RRow>
+        <RRow class="con-c"> 11111333 </RRow>
         <RRow class="con-c"  v-bind="args"> 22222222 </RRow>
         <RRow class="con-c"> 33 </RRow>
       </RRow>

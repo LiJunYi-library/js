@@ -5,6 +5,8 @@ import { RGridListSelect, RGridListProps } from '../grid';
 
 export const RDropdownGridListSelect = defineComponent({
     props: {
+        resetText: { type: String, default: '重置' },
+        confirmText: { type: String, default: '确认' },
         isChangeUnClose: Boolean,
         secondaryConfirm: { type: Boolean, default: false },
         ...RGridListProps,
@@ -59,18 +61,18 @@ export const RDropdownGridListSelect = defineComponent({
                                 {props.secondaryConfirm &&
                                     renderSlot(context.slots, "footer", { popCtx, reset, confirm, context }, () => [
                                         <div class={"r-dropdown-grid-list-select-footer"}>
-                                            <button
+                                            {props.resetText && <button
                                                 onClick={() => reset(popCtx)}
                                                 class={"r-dropdown-grid-list-select-footer-reset reset"}
                                             >
-                                                重置
-                                            </button>
-                                            <button
+                                                {props.resetText}
+                                            </button>}
+                                            {props.confirmText && <button
                                                 onClick={() => confirm(popCtx)}
                                                 class={"r-dropdown-grid-list-select-footer-confirm confirm"}
                                             >
-                                                确认
-                                            </button>
+                                                {props.confirmText}
+                                            </button>}
                                         </div>,
                                     ])}
                             </div>

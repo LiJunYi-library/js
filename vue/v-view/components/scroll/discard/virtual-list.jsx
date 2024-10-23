@@ -11,57 +11,6 @@ import { useScrollController } from "..";
 import { arrayLoop, arrayLoopMap } from "@rainbow_ljy/rainbow-js";
 import { useListLoadingHoc, loadingProps } from "../../loading";
 
-const mProps = {
-  skelectonCount: {
-    type: Number,
-    default: 5,
-  },
-  showSapce: {
-    type: Boolean,
-    default: true,
-  },
-  sapceBothEnds: {
-    type: Boolean,
-    default: false,
-  },
-  sapceHeight: {
-    type: [Number, String],
-    default: 10,
-  },
-  sapceStyle: [Object],
-  sapceClass: String,
-  finishedText: {
-    type: [Number, String],
-    default: "没有更多了",
-  },
-  loadingText: {
-    type: [Number, String],
-    default: "正在加载中",
-  },
-  errorText: {
-    type: [Number, String],
-    default: "出错了",
-  },
-  emptySrc: {
-    type: [Number, String],
-    // eslint-disable-next-line global-require
-    default: require("./empty.png"),
-  },
-  emptyText: {
-    type: [Number, String],
-    default: "暂无相关数据，试试其他条件吧",
-  },
-
-  accumulationList: {
-    type: Boolean,
-    default: true,
-  },
-
-  listHook: { type: Object, default: () => ({}) },
-
-  loadingHook: [Object, Array],
-};
-
 const ListItem = defineComponent({
   props: {
     item: Object,

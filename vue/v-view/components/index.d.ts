@@ -1,5 +1,5 @@
 export * from "./carousel";
-export * from "./tab/tab";
+export * from "./tab";
 export * from "./view-page";
 export * from "./page-view";
 export * from "./icon";

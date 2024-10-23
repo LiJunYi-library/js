@@ -8,7 +8,7 @@ import {
   nextTick,
   withMemo,
 } from "vue";
-import "./tab.scss";
+import "./index.scss";
 import { useResizeObserver } from "@rainbow_ljy/v-hooks";
 
 

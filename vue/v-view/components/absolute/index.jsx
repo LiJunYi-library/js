@@ -14,9 +14,8 @@ export const RAbsolute = defineComponent({
   setup(props, context) {
 
     function px(num) {
-      num = num + '';
-      if (num.includes('px')) return num
-      return num + 'px'
+      if (typeof (num * 1) === 'number') return num + 'px'
+      return num
     }
 
     const className = computed(() => {

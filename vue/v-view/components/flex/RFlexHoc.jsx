@@ -22,10 +22,9 @@ export const RFlexHoc = (optinos = {}) => {
         },
 
         setup(props, context) {
-            function px(v) {
-                v = v + '';
-                if (v.includes('px')) return v
-                return v + 'px'
+            function px(num) {
+                if (typeof (num * 1) === 'number') return num + 'px'
+                return num
             }
             return () => {
                 return (

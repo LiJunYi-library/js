@@ -58,17 +58,27 @@ export const Default: Story = {
       return { args };
     },
     template: `
-      <RGrid  class="con"  v-bind="{...{...args,fill:false}}"  >
+      <RGrid  class="con"  v-bind="args"  >
         <div class="con-c" grid-column="1" > grid-column=1 </div>
         <div class="con-c" grid-column="2" >  grid-column=2 </div>
         <div class="con-c" grid-column="2"  >  grid-column=2 </div>
         <div class="con-c"  grid-column="3" >  grid-column=3 </div>
-          <div class="con-c" grid-column="1" > grid-column=1 </div>
-            <div class="con-c" grid-column="1" > grid-column=1 </div>
-              <div class="con-c" grid-column="1" > grid-column=1 </div>
+        <div class="con-c" grid-column="1" > grid-column=1 </div>
+        <div class="con-c" grid-column="1" > grid-column=1 </div>
+        <div class="con-c" grid-column="1" > grid-column=1 </div>
       </RGrid>
 
+      <div class="con-h50"> </div>
 
+      <RGrid  class="con"  v-bind="args"  >
+        <div class="con-c" grid-column="1" > grid-column=1 </div>
+        <div class="con-c" grid-column="1" >  grid-column=1 </div>
+        <div class="con-c" grid-column="1"  >  grid-column=1 </div>
+        <div class="con-c"  grid-column="1" >  grid-column=1 </div>
+        <div class="con-c" grid-column="1" > grid-column=1 </div>
+        <div class="con-c" grid-column="1" > grid-column=1 </div>
+        <div class="con-c" grid-column="1" > grid-column=1 </div>
+      </RGrid>
     `,
   }),
 };

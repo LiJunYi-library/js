@@ -26,11 +26,13 @@ export const RListSelect = defineComponent({
                     class={[
                       "r-list-item",
                       "r-list-item-store" + props.listHook?.store?.index,
+                      props.listHook.formatterDisabled(item, index) && "r-list-item-disabled",
                       props.listHook.same(item) && "r-list-item-same",
                     ]}
                     key={index}
-                    onClick={(event) => {
-                      if (props.listHook.onSelect(item, index)) return;
+                    onClick={async (event) => {
+                      if (props.listHook.formatterDisabled(item, index)) return;
+                      if (await props.listHook.onSelect(item, index)) return;
                       context.emit("change", item, index);
                     }}
                   >

@@ -255,9 +255,9 @@ export const RFallsListSelect = defineComponent({
                     props.listHook.same(item) && "r-falls-item-same",
                   ]}
                   key={index}
-                  onClick={(event) => {
+                  onClick={async (event) => {
                     if (props.listHook.formatterDisabled(item, index)) return;
-                    if (props.listHook.onSelect(item, index)) return;
+                    if (await props.listHook.onSelect(item, index)) return;
                     context.emit("change", item, index);
                   }}
                 >

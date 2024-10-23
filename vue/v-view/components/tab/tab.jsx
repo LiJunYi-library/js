@@ -126,14 +126,15 @@ export const RTab = defineComponent({
       );
     }
 
-    function tabItemClick(event, item, index) {
+    async function tabItemClick(event, item, index) {
       if (context.attrs.onItemClick) {
         context.attrs.onItemClick(event, item, index);
         return;
       }
 
       if (props.clickStop) event.stopPropagation();
-      if (props.listHook.onSelect(item, index)) return;
+      if (props.listHook.formatterDisabled(item, index)) return;
+      if (await props.listHook.onSelect(item, index)) return;
       context.emit("change", item, index);
     }
 
@@ -149,6 +150,7 @@ export const RTab = defineComponent({
                     class={[
                       "r-tab-item",
                       "r-tab-item" + props.listHook.formatterValue(item),
+                      props.listHook.formatterDisabled(item, index) && "r-tab-item-disabled",
                       props.listHook.same(item) && "r-tab-item-same",
                     ]}
                     ref={(el) => {
@@ -181,73 +183,3 @@ export const RTab = defineComponent({
   },
 });
 
-function RTabHoc(config = {}) {
-  const options = {
-    renderSkelecton: () => null,
-    ...config,
-  };
-
-  return defineComponent({
-    props: {
-      clickStop: Boolean,
-      listHook: Object,
-    },
-    setup(props, context) {
-      const htmls = {
-        itemsHtml: [],
-        parentHtml: null,
-        scrollHtml: null,
-      };
-
-      const ActiveNode = withMemo(
-        [],
-        () => (
-          <Active listHook={props.listHook} htmls={htmls}>
-            {{
-              default: (...arg) => context.slots?.active?.(...arg),
-            }}
-          </Active>
-        ),
-        [],
-      );
-
-      function tabItemClick(event, item, index) {
-        if (context.attrs.onItemClick) {
-          context.attrs.onItemClick(event, item, index);
-          return;
-        }
-
-        if (props.clickStop) event.stopPropagation();
-        if (props.listHook.onSelect(item, index)) return;
-        context.emit("change", item, index);
-      }
-
-      return (vm) => {
-        return (
-          <div class="r-tab">
-            <div class="r-tab-scroll" ref={(el) => (htmls.scrollHtml = el)}>
-              <div class="r-tab-list" ref={(el) => (htmls.parentHtml = el)}>
-                {renderList(props.listHook.list, (item, index) => {
-                  if (context?.slots?.item) return context?.slots?.item({ index, item });
-                  return (
-                    <div
-                      class={["r-tab-item", props.listHook.same(item) && "r-tab-item-same"]}
-                      ref={(el) => (htmls.itemsHtml[index] = el)}
-                      key={index}
-                      onClick={(event) => tabItemClick(event, item, index)}
-                    >
-                      {renderSlot(context.slots, "default", { index, item }, () => [
-                        <div> {props.listHook.formatterLabel(item)} </div>,
-                      ])}
-                    </div>
-                  );
-                })}
-                {ActiveNode}
-              </div>
-            </div>
-          </div>
-        );
-      };
-    },
-  });
-}

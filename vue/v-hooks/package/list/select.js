@@ -14,7 +14,7 @@ function getSelectProps(options = {}) {
     formRequired: false,
     formRequiredErrorMessage: '',
     onChange: () => undefined,
-    validator: () => true,
+    validator: () => Promise.resolve(true),
     formatterValue: (item) => item?.value,
     formatterLabel: (item) => item?.label,
     formatterDisabled: (item) => item?.disabled ?? false,

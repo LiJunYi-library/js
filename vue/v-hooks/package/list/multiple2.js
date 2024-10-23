@@ -136,10 +136,10 @@ function useMultiple2(props = {}) {
     return hooks.context.SH.select.some((val) => val === item);
   }
 
-  function onSelect(item, i) {
+  async function onSelect(item, i) {
     const val = formatterValue(item);
     const lab = formatterLabel(item);
-    if (!config.validator(hooks)) return true;
+    if (!(await config.validator(hooks))) return true;
     if (same(item)) {
       hooks.context.SH.select = hooks.context.SH.select.filter(
         (v) => v !== item
@@ -157,6 +157,7 @@ function useMultiple2(props = {}) {
       hooks.context.SH.label.push(lab);
       hooks.context.SH.index.push(i);
     }
+    return false;
   }
   // 反选
   function invertSelect() {

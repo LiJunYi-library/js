@@ -5,6 +5,7 @@ import { RGridListSelect, RGridListProps } from '../grid';
 
 export const RDropdownGridListSelect = defineComponent({
     props: {
+        isChangeUnClose: Boolean,
         secondaryConfirm: { type: Boolean, default: false },
         ...RGridListProps,
     },
@@ -14,6 +15,7 @@ export const RDropdownGridListSelect = defineComponent({
         function onChange(item, index, popCtx) {
             if (props.secondaryConfirm) return;
             context.emit("change", props.listHook.value);
+            if (props.isChangeUnClose) return;
             popCtx.setVisible(false);
         }
 

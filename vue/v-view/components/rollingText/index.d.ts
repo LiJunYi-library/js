@@ -1,6 +1,9 @@
-/* eslint-disable import/prefer-default-export */
 import {DefineComponent} from 'vue';
 
-export declare const RollingText: DefineComponent<{
+export declare const RRollingTextNum: DefineComponent<{
+  aniClass: string | string[];
+}>;
+
+export declare const RRollingText: DefineComponent<{
   aniClass: string | string[];
 }>;

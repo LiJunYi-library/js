@@ -1,13 +1,18 @@
+.r-rolling-text {
+    span {
+        display: inline-block;
+    }
+}
+
 .r-rolling-text-num {
     overflow: hidden;
     vertical-align: bottom;
 }
 
-.r-rolling-text-num-con{
+.r-rolling-text-num-con {
     position: relative;
     transform-style: preserve-3d;
-    // transition: 0.5s;
-    // animation: RollingTextNumAni 10s linear infinite;
+
     .measure {
         visibility: hidden;
     }
@@ -22,13 +27,17 @@
     }
 }
 
-// @keyframes RollingTextNumAni {
-//     0% {
-//         transform: rotateX(0);
-//     }
+.r-rolling-text-num-con-ani {
+    animation: RollingTextNumAni 10s linear infinite;
+}
+
+@keyframes RollingTextNumAni {
+    0% {
+        transform: rotateX(0);
+    }
 
 
-//     100% {
-//         transform: rotateX(-360deg);
-//     }
-// }
+    100% {
+        transform: rotateX(-360deg);
+    }
+}

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
-import { RAbsolute } from "@rainbow_ljy/v-view";
+import { RRollingText } from "@rainbow_ljy/v-view";
 
 const meta = {
-    title: 'Layout/RAbsolute',
-    component: RAbsolute,
+    title: 'Data/RRollingText',
+    component: RRollingText,
     tags: ['autodocs'],
     argTypes: {
         position: {
@@ -36,19 +36,15 @@ const meta = {
             description: 'bottom',
             control: { type: 'text' },
         },
-        top: {
+        modelValue: {
             description: 'top',
-            control: { type: 'text' },
+            control: { type: 'number' },
         },
     },
     args: {
-        position: '',
-        left: '',
-        right: '',
-        bottom: '',
-        top: '',
+        modelValue: 100,
     },
-} satisfies Meta<typeof RAbsolute>;
+} satisfies Meta<typeof RRollingText>;
 
 export default meta;
 
@@ -56,13 +52,15 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
     render: (args) => ({
-        components: { RAbsolute },
+        components: { RRollingText },
         setup() {
             return { args };
         },
         template: `
-        <div  class="con-hv100 relative"  >
-           <RAbsolute class="con-b-box"  v-bind="args"  >  我我我我我我我我我我我我我我我我我我我我我我我我我我我 </RAbsolute>
+        <div  class="con-hv100 "  >
+         <div  >
+           <RRollingText class=""  v-bind="args"   ></RRollingText>
+               </div>
         </div>
 
 

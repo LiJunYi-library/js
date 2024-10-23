@@ -26,3 +26,4 @@ export * from "./floatingBubble";
 export * from "./animationFeedback";
 export * from "./fly";
 export * from "./falls";
+export * from "./rollingText";

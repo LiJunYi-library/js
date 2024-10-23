@@ -1,16 +1,14 @@
-/* eslint-disable import/prefer-default-export */
-import {defineComponent, ref, watch, computed, renderList, reactive, onMounted} from 'vue';
-// import {RollingText as Text} from 'vant';
+import { defineComponent, ref, watch, computed, renderList, reactive, onMounted } from 'vue';
 import './index.scss';
-import {arrayLoopMap} from '@rainbow_ljy/rainbow-js';
+import { arrayLoopMap } from '@rainbow_ljy/rainbow-js';
 
-export const RollingTextNum = defineComponent({
+export const RRollingTextNum = defineComponent({
   props: {
-    ani: {type: Number, default: 0},
-    value: {type: Number, default: 0},
-    turn: {type: Number, default: 1},
-    transition: {type: String, default: ''},
-    defAni: {type: Boolean, default: true},
+    ani: { type: Number, default: 0 },
+    value: { type: Number, default: 0 },
+    turn: { type: Number, default: 1 },
+    transition: { type: String, default: '' },
+    defAni: { type: Boolean, default: true },
   },
   emits: ['feedbackend', 'feedbackstart', 'animationend'],
   setup(props, ctx) {
@@ -19,9 +17,9 @@ export const RollingTextNum = defineComponent({
     const num = 10;
     const deg = computed(() => 360 / num);
     const sin = computed(() => Math.sin((Math.PI / 180) * deg.value));
-    const translateZ = computed(() => (sin.value + 1) * node.value?.offsetHeight ?? 1);
+    const translateZ = computed(() => Math.floor((sin.value + 0.94) * node.value?.offsetHeight ?? 1));
     const rotateX = computed(() => -((props.value / num) * 360 + turns.value * 360));
-    const style = reactive({transform: 'rotateX(0deg)'});
+    const style = reactive({ transform: 'rotateX(0deg)' });
 
     if (props.defAni) {
       setTimeout(() => {
@@ -47,9 +45,10 @@ export const RollingTextNum = defineComponent({
       return (
         <span class="r-rolling-text-num">
           <span
-            class="r-rolling-text-num-con"
+            class="r-rolling-text-num-con "
             data-turns={turns.value}
-            style={[{transition: props.transition}, style]}>
+            style={[{ transition: props.transition }, style]}
+          >
             <span class="measure" ref={setNode}>
               8
             </span>
@@ -57,10 +56,10 @@ export const RollingTextNum = defineComponent({
               <span
                 class={['num', `num${index}`]}
                 style={{
-                  transform: ` rotateX(${deg.value * index}deg)  translateZ(${
-                    translateZ.value
-                  }px) `,
-                }}>
+                  transform: ` rotateX(${deg.value * index}deg)  translateZ(${translateZ.value
+                    }px) `,
+                }}
+              >
                 {index}
               </span>
             ))}
@@ -71,15 +70,14 @@ export const RollingTextNum = defineComponent({
   },
 });
 
-export const RollingText = defineComponent({
+export const RRollingText = defineComponent({
   props: {
-    modelValue: {type: Number, default: 0},
-    defAni: {type: Boolean, default: true},
+    modelValue: { type: Number, default: 0 },
+    defAni: { type: Boolean, default: true },
   },
   emits: ['feedbackend', 'feedbackstart', 'animationend'],
   setup(props, ctx) {
-    // eslint-disable-next-line vue/no-setup-props-destructure
-    let {defAni} = props;
+    let { defAni } = props;
     const startNum = ref(props.modelValue);
     const targetNum = ref(props.modelValue);
     const startStr = computed(() => String(startNum.value));
@@ -91,7 +89,6 @@ export const RollingText = defineComponent({
       const mimeStr = String(Math.abs(mime));
       turns.value = arrayLoopMap(mimeStr.length, index => {
         const size = Number([1, ...arrayLoopMap(index + 1, () => 0)].join(''));
-        // return mime / size;
         return Math.floor(mime / size);
       });
     }
@@ -116,7 +113,7 @@ export const RollingText = defineComponent({
           {renderList(targetStr.value.length, (_, index) => {
             const key = targetStr.value.length - index - 1;
             return (
-              <RollingTextNum
+              <RRollingTextNum
                 transition={`0.8s`}
                 data-key={key}
                 ani={Math.random()}

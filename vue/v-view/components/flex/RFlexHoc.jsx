@@ -17,21 +17,20 @@ export const RFlexHoc = (optinos = {}) => {
             alignSelf: { type: String, default: "" },
             auto: { type: [String, Boolean], default: "" },
             fill: [Boolean, String],
-            gap: { type: [String, Number], default: "" },
+            gap: { type: [Number, String], default: "" },
             ...config.props,
         },
 
         setup(props, context) {
             function px(v) {
+                v = v + '';
                 if (v.includes('px')) return v
                 return v + 'px'
             }
             return () => {
                 return (
                     <div
-                        style={{
-                            'grid-gap': px(props.gap)
-                        }}
+                        style={{ 'grid-gap': px(props.gap) }}
                         class={[
                             config.className,
                             props.reverse && config.reverseClassName,

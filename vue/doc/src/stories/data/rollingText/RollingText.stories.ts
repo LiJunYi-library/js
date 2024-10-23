@@ -6,35 +6,25 @@ const meta = {
     component: RRollingText,
     tags: ['autodocs'],
     argTypes: {
-        position: {
-            description: '对齐方式',
-            control: 'select',
-            defaultValue: 'center',
-            options: [
-                "",
-                "vertical",
-                "horizontal",
-                "center",
-                "top-left",
-                "top-center",
-                "top-right",
-                "right-center",
-                "right-bottom",
-                "bottom-center",
-                "bottom-left",
-                "left-center",]
+        isFloor: {
+            description: '计算时是否Math.floor 适用于水表 ',
+            defaultValue: true,
+            control: { type: 'boolean' },
         },
-        left: {
-            description: 'left',
+        transition: {
+            description: '等同 css 的 transition',
+            defaultValue: '0.8s',
             control: { type: 'text' },
         },
-        right: {
-            description: 'right',
-            control: { type: 'text' },
+        initialAnimation: {
+            description: '初始化的时候是否触发动画',
+            defaultValue: true,
+            control: { type: 'boolean' },
         },
-        bottom: {
-            description: 'bottom',
-            control: { type: 'text' },
+        initAnimation: {
+            description: '当位数发生变化的时候是否触发动画',
+            defaultValue: false,
+            control: { type: 'boolean' },
         },
         modelValue: {
             description: 'top',
@@ -42,7 +32,11 @@ const meta = {
         },
     },
     args: {
-        modelValue: 100,
+        initialAnimation: true,
+        initAnimation: false,
+        transition: '0.8s',
+        isFloor: true,
+        modelValue: 0,
     },
 } satisfies Meta<typeof RRollingText>;
 
@@ -57,9 +51,9 @@ export const Default: Story = {
             return { args };
         },
         template: `
-        <div  class="con-hv100 "  >
+        <div  class="con-h30 "  >
          <div  >
-           <RRollingText class=""  v-bind="args"   ></RRollingText>
+           <RRollingText v-bind="args"   ></RRollingText>
                </div>
         </div>
 

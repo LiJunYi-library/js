@@ -1,5 +1,5 @@
 import { RResize } from "../resize";
-import { defineComponent, computed, renderSlot, renderList, ref, onMounted, onBeforeUnmount } from "vue";
+import { defineComponent, watch, computed, renderSlot, renderList, ref, onMounted, onBeforeUnmount } from "vue";
 import "./index.scss";
 
 export const RGridProps = {
@@ -97,14 +97,15 @@ export const RGrid = defineComponent({
     onMounted(() => {
       offset.value = container.value.getBoundingClientRect();
       mObserver.observeChildren(container.value);
-      // setGridColumn()
     })
 
     onBeforeUnmount(() => {
       mObserver.disconnect();
     })
 
-
+    watch(() => [props.columns, props.gap, props.inline, props.minAutoWidth, props.wrap, props.stretch], () => {
+      setGridColumn();
+    })
 
     return (v) => {
       vm = v;

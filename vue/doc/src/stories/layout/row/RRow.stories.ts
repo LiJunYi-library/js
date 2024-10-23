@@ -12,19 +12,22 @@ const meta = {
     justify: {
       description: '对齐方式',
       control: 'select',
-      options: ["start", "end", "around", "between", "evenly", "center", "stretch", ""]
+      options: ["", "start", "end", "around", "between", "evenly", "center", "stretch"]
     },
     align: {
+      description: '对齐方式',
       control: 'select',
-      options: ["start", "end", "center", "stretch", "baseline", ""]
+      options: ["", "start", "end", "center", "stretch", "baseline"]
     },
     auto: {
+      description: '自己的 对齐方式',
       control: 'select',
-      options: ["top", "bottom", "left", "right", "center", "", "horizontal", "vertical"],
+      options: ["", "top", "bottom", "left", "right", "center", "horizontal", "vertical"],
     },
     alignSelf: {
+      description: '自己的 对齐方式',
       control: 'select',
-      options: ["start", "end", "center", "stretch", "baseline", ""]
+      options: ["", "start", "end", "center", "stretch", "baseline",]
     },
 
   },
@@ -44,30 +47,24 @@ export const Default: Story = {
       return { args };
     },
     template: `
-      <RRow v-bind="args" class="con-h100">
+      <RRow  class="con-h100"  v-bind="args"  >
         <div class="con-c"> 11111 </div>
-        <RRow class="con-c"> 22222222 </RRow>
+        <RRow class="con-c"  :auto="args.auto" > 22222222 </RRow>
         <div class="con-c"> 33 </div>
       </RRow>
     `,
   }),
 };
 
-export const ListTemplate: Story = {
-  render: (args) => ({
-    components: { RRow },
-    setup() {
-      return { args };
-    },
-    template: `
-      <RRow class="con-h100">
-        <RRow class="con-c"> 11111333 </RRow>
-        <RRow class="con-c"  v-bind="args"> 22222222 </RRow>
-        <RRow class="con-c"> 33 </RRow>
-      </RRow>
-    `,
-  }),
-};
+// export const Docs = () => ({
+//   template: `
+//      <RRow  class="con-h100"  >
+//         <div class="con-c"> 11111 </div>
+//         <RRow class="con-c" v-bind="args"> 22222222 </RRow>
+//         <div class="con-c"> 33 </div>
+//       </RRow>
+//   `,
+// });
 
 
 

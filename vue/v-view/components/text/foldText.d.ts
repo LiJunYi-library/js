@@ -11,14 +11,14 @@ import { HocOptions } from "../utils";
 
 type Capitalize<S extends string> = intrinsic;
 
-export interface RTextProps {
+export interface RFoldTextProps {
   text: string;
   maxLine: number;
   isFold: boolean;
   animation: boolean;
 }
 
-export type RTextEmits = {
+export type RFoldTextEmits = {
   unfold: () => void;
   fold: () => void;
   click: (event: Event) => void;
@@ -40,22 +40,22 @@ type RevEmits<T extends EmitsOptions> = T extends string[]
   ? { [K in Capitalize<T[number]>]: ((...args: any[]) => any) | null }
   : T;
 
-export type RTextComponent<
+export type RFoldTextComponent<
   P extends Readonly<ComponentPropsOptions>,
   E extends EmitsOptions,
 > = DefineComponent<
-  ExtractPublicPropTypes<RTextProps & P>,
+  ExtractPublicPropTypes<RFoldTextProps & P>,
   {},
   {},
   any,
   {},
   any,
   any,
-  RTextEmits & RevEmits<E>
+  RFoldTextEmits & RevEmits<E>
 >;
 
-export declare const RText: RTextComponent<RTextProps, RTextEmits>;
+export declare const RFoldText: RFoldTextComponent<RFoldTextProps, RFoldTextEmits>;
 
-export declare function RTextHoc<P extends Readonly<ComponentPropsOptions>, E extends EmitsOptions>(
+export declare function RFoldTextHoc<P extends Readonly<ComponentPropsOptions>, E extends EmitsOptions>(
   options: HocOptions<P, E>,
-): RTextComponent<P, E>;
+): RFoldTextComponent<P, E>;

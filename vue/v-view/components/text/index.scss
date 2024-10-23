@@ -1,5 +1,6 @@
 .r-text-fold {
-  line-height: 18px;
+  font-size: 16px;
+  line-height: 22px;
   word-wrap: break-word;
   .r-text-content {
     vertical-align: middle;
@@ -14,5 +15,5 @@
 }
 
 .r-text-fold-transition {
-  transition: 0.2s;
+  transition: 2s;
 }

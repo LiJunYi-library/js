@@ -1,6 +1,6 @@
 import { defineComponent, onMounted, ref, nextTick, watch, computed, renderSlot } from "vue";
 
-export const RTextHoc = (options = {}) => {
+export const RFoldTextHoc = (options = {}) => {
   const config = {
     props: {},
     emits: [],
@@ -66,6 +66,7 @@ export const RTextHoc = (options = {}) => {
       }
 
       function init() {
+        if (!props.text) return null;
         line = 0;
         spanH = 0;
         index = 0;
@@ -113,7 +114,6 @@ export const RTextHoc = (options = {}) => {
       });
 
       return () => {
-        if (!props.text) return null;
         return (
           <div
             ref={getContainer}
@@ -128,8 +128,8 @@ export const RTextHoc = (options = {}) => {
                 (expand.value
                   ? renderSlot(context.slots, "fold", {}, () => [<i class="iconfont">&#xe744;</i>])
                   : renderSlot(context.slots, "unfold", {}, () => [
-                      <i class="iconfont">&#xe745;</i>,
-                    ]))}
+                    <i class="iconfont">&#xe745;</i>,
+                  ]))}
             </span>
           </div>
         );
@@ -138,4 +138,4 @@ export const RTextHoc = (options = {}) => {
   });
 };
 
-export const RText = RTextHoc();
+export const RFoldText = RFoldTextHoc();

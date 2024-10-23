@@ -1,3 +1,3 @@
 import "./index.scss";
 
-export * from "./text";
+export * from "./foldText";

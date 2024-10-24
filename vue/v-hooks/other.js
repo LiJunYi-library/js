@@ -13,8 +13,8 @@ export function useProxy(hooks = {}) {
 export function useReactive(hooks = {}) {
   const proxy = reactive(hooks);
   proxy.getProto = () => hooks;
-  proxy.proto = hooks;
-  hooks.proxy = proxy;
+  // proxy.proto = hooks; // TODO
+  // hooks.proxy = proxy; // TODO
   return proxy;
 }
 

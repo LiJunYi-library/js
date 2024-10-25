@@ -13,9 +13,9 @@ function AbortController(...arg) {
   };
 }
 
-const errLoading = { message: "loading", code: 41 };
-const errTimeout = { message: "Request Timeout", code: 48 };
-const errAbout = { message: "about", code: 20 };
+const errLoading = { error: "loading", message: "loading", code: 41, status: 41, };
+const errTimeout = { error: "Request Timeout", message: "Request Timeout", code: 48, status: 48, };
+const errAbout = { error: "about", message: "about", code: 20, status: 20, };
 
 function getBody(config) {
   if (!config.body) return undefined;

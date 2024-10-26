@@ -108,6 +108,8 @@
     "@rainbow_ljy/v-hooks": "workspace:^",
     "@rainbow_ljy/v-library": "workspace:^",
     "@rainbow_ljy/v-view": "workspace:^",
+    "@storybook/addon-controls": "^8.3.6",
+    "@storybook/addon-docs": "^8.3.6",
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.1.2",
     "@testing-library/user-event": "^14.5.1",

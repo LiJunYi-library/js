@@ -19,15 +19,11 @@ const mProps = {
   keyExtractor: { type: Function, default: ({ index }) => index },
   columns: { type: Number, default: 1 }, // 一行几个item
   gap: { type: Number, default: 10 }, // 列表之间空格的间距
-  inline: Boolean,
-  minWidth: Number,
+  minAutoWidth: Number,
   listHook: Object,
   list: Array,
   openAnimationFrame: Boolean,
   //
-  behavior: { type: String, default: "smooth" }, // smooth  instant
-  scrollOffsetTop: { type: Number, default: 0 }, // 更换list时候的滚动偏移量
-  isScrollTop: { type: Boolean, default: false }, // 更换list时候是否滚动滚动
 };
 
 
@@ -170,6 +166,7 @@ export const RScrollVirtualGridList = defineComponent({
 
 
     provide("RScrollVirtualGridListContext", mCtx);
+    
     context.expose(mCtx);
 
     function getLeft(i) {

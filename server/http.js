@@ -144,6 +144,7 @@ server.post("/serve/page", (req, res) => {
   console.log(req.body);
   const paList = cPage();
   const time = req?.body?.time ?? 3000;
+  const code = req?.body?.code;
   setTimeout(() => {
     if (req.body?.list) {
       paList.list = req.body.list;
@@ -151,7 +152,7 @@ server.post("/serve/page", (req, res) => {
     }
     paList.time = time;
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(response(paList)));
+    res.end(JSON.stringify(response(paList, code)));
   }, time);
 });
 
@@ -176,4 +177,4 @@ server.get("/", (req, res) => {
   }, 1000);
 });
 
-server.listen(5000, () => {});
+server.listen(5000, () => { });

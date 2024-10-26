@@ -1,0 +1,27 @@
+import { Meta, Story, Preview, ArgsTable, Source } from '@storybook/addon-docs';
+import { RTab } from "@rainbow_ljy/v-view";
+import { useRadio2 } from "@rainbow_ljy/v-hooks";
+import { arrayLoopMap } from "@rainbow_ljy/rainbow-js";
+import { ref, watch } from 'vue';
+
+<Meta title="Components/RTab" component={RTab} />
+
+# RTab 组件
+
+## 基本用法
+
+<Preview>
+  <Story name="Default">
+    <template>
+      <div class="con-h100">
+        <RTab :listHook="listHook" :animation="true" :isFold="true" :maxLine="2" :text="text">
+          <span>默认插槽内容</span>
+          <template #item="{ item, index }">
+            <span>具名插槽内容 - {{ item.label }} (索引: {{ index }})</span>
+          </template>
+        </RTab>
+      </div>
+    </template>
+  </Story>
+</Preview>
+

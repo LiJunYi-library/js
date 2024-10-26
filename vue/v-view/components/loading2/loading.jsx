@@ -73,6 +73,7 @@ export function RLoadingHoc(params) {
             props.promiseHook?.nextBeginSend?.();
         },
         renderError({ props, context, states }) {
+            if (!props.errorText && !props.errorSrc) return null
             return renderSlot(context.slots, "error", states, () => [
                 <div class={config.createClass('error')} onClick={() => config.onErrorClick({ props, context, states })}>
                     <img class={config.createClass('error-img')} src={props.errorSrc} />
@@ -85,6 +86,7 @@ export function RLoadingHoc(params) {
             props.promiseHook?.awaitConcatSend?.();
         },
         renderLoadError({ props, context, states }) {
+            if (!props.loadErrorText) return null
             return renderSlot(context.slots, "load-error", states, () => [
                 <div class={config.createClass('load-error')} onClick={() => config.onLoadErrorClick({ props, context, states })}>
                     <div class={config.createClass('load-error-text')} >{props.loadErrorText}</div>
@@ -92,6 +94,7 @@ export function RLoadingHoc(params) {
             ]);
         },
         renderBegin({ props, context, states }) {
+            if (!props.beginText) return null
             return renderSlot(context.slots, "begin", states, () => [
                 <div class={config.createClass('begin')}>
                     <div class={config.createClass('begin-loading')}>
@@ -107,6 +110,7 @@ export function RLoadingHoc(params) {
             props.promiseHook?.awaitConcatSend?.();
         },
         renderLoad({ props, context, states }) {
+            if (!props.loadText) return null
             return renderSlot(context.slots, "load", states, () => [
                 <div class={config.createClass('load')}>
                     <div onClick={() => config.onLoadClick({ props, context, states })} class={config.createClass('load-text')}>
@@ -116,6 +120,7 @@ export function RLoadingHoc(params) {
             ]);
         },
         renderLoading({ props, context, states }) {
+            if (!props.loadingText) return null
             return renderSlot(context.slots, "loading", states, () => [
                 <div class={config.createClass('loading')} >
                     <RILoading class="r-c-loading-icon r-loading-icon" />
@@ -154,7 +159,7 @@ export function RLoadingHoc(params) {
             ...loadingProps,
             ...config.props,
         },
-        emits: [ "intersectBottom", "intersectionBottom", "firstIntersectionBottom", ...config.emits],
+        emits: ["intersectBottom", "intersectionBottom", "firstIntersectionBottom", ...config.emits],
         setup(props, context) {
             let isobserver = false;
             let intersectionHtml;

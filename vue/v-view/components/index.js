@@ -4,6 +4,7 @@ export * from "./view-page";
 export * from "./page-view";
 export * from "./icon";
 export * from "./loading";
+export * from "./loading2";
 export * from "./scroll";
 export * from "./aspectRatio";
 export * from "./dropdown";

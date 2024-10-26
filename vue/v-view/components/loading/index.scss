@@ -1,39 +1,25 @@
 .r-c-error {
-  .r-c-error-img {
-    width: 100%;
-    display: block;
-  }
-
-  .r-c-error-text {
-    text-align: center;
-    color: red;
-  }
-}
-
-.r-c-load-error {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  .r-c-load-error-text {
-    text-align: center;
-    color: red;
-  }
+  min-height: 200px;
 }
 
+.r-c-error-text {
+  color: red;
+}
 
-
+//
 .r-c-begin {
-  .r-c-begin-loading {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    min-height: 200px;
-  }
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
 }
 
-
+//
 
 .r-c-loading {
   display: flex;
@@ -47,6 +33,8 @@
   justify-content: center;
   align-items: center;
 }
+
+//
 
 .r-c-load {
   display: flex;
@@ -77,57 +65,8 @@
   min-height: 200px;
 }
 
-/*******************************/
-.r-loading-mask {
-  position: relative;
-
-  .r-error,
-  .r-begin,
-  .r-loading,
-  .r-empty {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    min-height: auto;
-    background: white;
-  }
-}
-
-/****/
-.r-loading-load {
-  .intersection {
-    min-height: 1px;
-  }
-
-  .skelecton {
-    background-image: url("./skelecton.png");
-    background-size: 100% 100%;
-  }
-
-  .r-c-load-error{
-    min-height: 50px;
-  }
-
-  .r-c-finished {
-    min-height: 50px;
-  }
-
-  .r-c-loading {
-    min-height: 50px;
-  }
-
-  .r-c-load {
-    min-height: 50px;
-  }
-}
-
-/*******************************/
-
 .r-c-begin-skelectons {
   display: grid;
-  width: 100%;
 }
 
 .r-c-begin-skelecton {
@@ -139,24 +78,22 @@
   .intersection {
     min-height: 1px;
   }
-
   .skelecton {
     background-image: url("./skelecton.png");
     background-size: 100% 100%;
   }
-
   .r-c-finished {
     min-height: 50px;
   }
-
   .r-c-loading {
     min-height: 50px;
   }
-
   .r-c-load {
     min-height: 50px;
   }
 }
+
+/*******************************/
 
 .r-loadings {
   width: 100%;
@@ -188,4 +125,3 @@
   left: 0;
   top: 0;
 }
-

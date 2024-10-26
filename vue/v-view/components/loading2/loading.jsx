@@ -154,7 +154,7 @@ export function RLoadingHoc(params) {
             ...loadingProps,
             ...config.props,
         },
-        emits: ["loadClick", "intersectBottom", "intersectionBottom", "firstIntersectionBottom", ...config.emits],
+        emits: [ "intersectBottom", "intersectionBottom", "firstIntersectionBottom", ...config.emits],
         setup(props, context) {
             let isobserver = false;
             let intersectionHtml;

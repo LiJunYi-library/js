@@ -2,7 +2,7 @@ import { defineComponent, renderSlot, onMounted, onBeforeMount } from "vue";
 import { useLoading } from "@rainbow_ljy/v-hooks";
 import { RILoading } from "../icon";
 import { loadingProps } from './com'
-
+import "./loading.scss";
 
 function extendsHoc(params, config = {}) {
     let arg = params;
@@ -15,34 +15,70 @@ export function RLoadingHoc(params) {
     const config = extendsHoc(params, {
         props: {},
         emits: [],
-        renderError(props, context, asyncHooks) {
-            return renderSlot(context.slots, "error", asyncHooks, () => [
-                <div class="r-c-error r-error" onClick={() => context.emit("errorClick")}>
-                    <div class="r-c-error-text r-error-text">{props.errorText}</div>
+        classType: '',
+        createClass(name) {
+            return [`r-c-${name} r-${name}`, this.classType && `r-${this.classType}-${name}`];
+        },
+        onErrorClick({ props, context, states }) {
+            if (context?.attrs?.onErrorClick) return context.attrs.onErrorClick(states);
+            props.promiseHook?.nextBeginSend?.();
+        },
+        renderError({ props, context, states }) {
+            return renderSlot(context.slots, "error", states, () => [
+                <div class={config.createClass('error')} onClick={() => config.onErrorClick({ props, context, states })}>
+                    <img class={config.createClass('error-img')} src={props.errorSrc} />
+                    <div class={config.createClass('error-text')} >{props.errorText}</div>
                 </div>,
             ]);
         },
-        renderBegin(props, context, asyncHooks) {
-            return renderSlot(context.slots, "begin", asyncHooks, () => [
-                <div class="r-c-begin r-begin">
+        onLoadErrorClick({ props, context, states }) {
+            if (context?.attrs?.onLoadErrorClick) return context.attrs.onLoadErrorClick(states);
+            props.promiseHook?.awaitConcatSend?.();
+        },
+        renderLoadError({ props, context, states }) {
+            return renderSlot(context.slots, "load-error", states, () => [
+                <div class={config.createClass('load-error')} onClick={() => config.onLoadErrorClick({ props, context, states })}>
+                    <div class={config.createClass('load-error-text')} >{props.loadErrorText}</div>
+                </div>,
+            ]);
+        },
+        renderBegin({ props, context, states }) {
+            return renderSlot(context.slots, "begin", states, () => [
+                <div class={config.createClass('begin')}>
+                    <div class={config.createClass('begin-loading')}>
+                        <RILoading class="r-c-loading-icon r-loading-icon" />
+                        <div class={config.createClass('begin-text')} >{props.beginText}</div>
+                    </div>
+                    {renderSlot(context.slots, "beginning",)}
+                </div>,
+            ]);
+        },
+        onLoadClick({ props, context, states }) {
+            if (context?.attrs?.onLoadClick) return context.attrs.onLoadClick(states);
+            props.promiseHook?.awaitConcatSend?.();
+        },
+        renderLoad({ props, context, states }) {
+            return renderSlot(context.slots, "load", states, () => [
+                <div class={config.createClass('load')}>
+                    <div onClick={() => config.onLoadClick({ props, context, states })} class={config.createClass('load-text')}>
+                        {props.loadText}
+                    </div>
+                </div>,
+            ]);
+        },
+        renderLoading({ props, context, states }) {
+            return renderSlot(context.slots, "loading", states, () => [
+                <div class={config.createClass('loading')} >
                     <RILoading class="r-c-loading-icon r-loading-icon" />
-                    <div class={["r-c-begin-text r-begin-text"]}>{props.beginText}</div>
+                    <div class={config.createClass('loading-text')} >{props.loadingText}</div>
                 </div>,
             ]);
         },
-        renderLoading(props, context, asyncHooks) {
-            return renderSlot(context.slots, "loading", asyncHooks, () => [
-                <div class={["r-c-loading r-loading"]}>
-                    <RILoading class="r-c-loading-icon r-loading-icon" />
-                    <div class={["r-c-loading-text r-loading-text"]}>{props.loadingText}</div>
-                </div>,
-            ]);
-        },
-        renderEmpty(props, context, asyncHooks) {
+        renderEmpty({ props, context, states }) {
             if (!props.emptySrc && !props.emptyText) return null;
-            return renderSlot(context.slots, "empty", asyncHooks, () => [
+            return renderSlot(context.slots, "empty", states, () => [
                 <div class="r-c-empty r-empty">
-                    {renderSlot(context.slots, "emptyImg", asyncHooks, () => [
+                    {renderSlot(context.slots, "emptyImg", states, () => [
                         props.emptySrc && (
                             <img class={"r-c-empty-img r-empty-img"} fit="contain" src={props.emptySrc} />
                         ),
@@ -51,15 +87,15 @@ export function RLoadingHoc(params) {
                 </div>,
             ]);
         },
-        renderState(props, context, asyncHooks) {
-            if (asyncHooks.error) return this.renderError(props, context, asyncHooks);
-            if (asyncHooks.begin) return this.renderBegin(props, context, asyncHooks);
-            if (asyncHooks.loading) return this.renderLoading(props, context, asyncHooks);
-            if (asyncHooks.empty) return this.renderEmpty(props, context, asyncHooks);
+        renderState({ props, context, states }) {
+            if (states.error) return this.renderError({ props, context, states });
+            if (states.begin) return this.renderBegin({ props, context, states });
+            if (states.loading) return this.renderLoading({ props, context, states });
+            if (states.empty) return this.renderEmpty({ props, context, states });
             return renderSlot(context.slots, "default")
         },
-        render(props, context, asyncHooks) {
-            return this.renderState(props, context, asyncHooks)
+        render({ props, context, states }) {
+            return this.renderState({ props, context, states })
         },
     });
 
@@ -69,7 +105,7 @@ export function RLoadingHoc(params) {
             ...loadingProps,
             ...config.props,
         },
-        emits: ["loadClick", "errorClick", "intersectBottom", "intersectionBottom", "firstIntersectionBottom", ...config.emits],
+        emits: ["loadClick", "intersectBottom", "intersectionBottom", "firstIntersectionBottom", ...config.emits],
         setup(props, context) {
             let isobserver = false;
             let intersectionHtml;
@@ -90,8 +126,9 @@ export function RLoadingHoc(params) {
                 observe.disconnect();
             });
             const ctx = { setIntersectionHtml };
-            const asyncHooks = useLoading(props);
-            return () => config.render(props, context, asyncHooks, ctx);
+            const states = useLoading(props);
+            const args = { props, context, states, ctx };
+            return () => config.render(args);
         },
     });
 }
@@ -99,32 +136,32 @@ export function RLoadingHoc(params) {
 export const RLoading = RLoadingHoc();
 
 export const RLoadingMask = RLoadingHoc((mSuper) => ({
-    renderError(props, context, asyncHooks) {
+    renderError(props, context, states) {
         return (<div class="r-c-error r-error" onClick={() => context.emit("errorClick")}>
-            {renderSlot(context.slots, "error", asyncHooks, () => [<div class="r-c-error-text r-error-text">{props.errorText}</div>])}
+            {renderSlot(context.slots, "error", states, () => [<div class="r-c-error-text r-error-text">{props.errorText}</div>])}
         </div>);
     },
-    renderBegin(props, context, asyncHooks) {
+    renderBegin(props, context, states) {
         return (<div class="r-c-begin r-begin">
-            {renderSlot(context.slots, "begin", asyncHooks, () => [
+            {renderSlot(context.slots, "begin", states, () => [
                 <RILoading class="r-c-loading-icon r-loading-icon" />,
                 <div class={["r-c-begin-text r-begin-text"]}>{props.beginText}</div>
             ])}
         </div>);
     },
-    renderLoading(props, context, asyncHooks) {
+    renderLoading(props, context, states) {
         return (<div class={["r-c-loading r-loading"]}>
-            {renderSlot(context.slots, "loading", asyncHooks, () => [
+            {renderSlot(context.slots, "loading", states, () => [
                 <RILoading class="r-c-loading-icon r-loading-icon" />,
                 <div class={["r-c-loading-text r-loading-text"]}>{props.loadingText}</div>
             ])}
         </div>);
     },
-    renderEmpty(props, context, asyncHooks) {
+    renderEmpty(props, context, states) {
         if (!props.emptySrc && !props.emptyText) return null;
         return <div class="r-c-empty r-empty">
-            {renderSlot(context.slots, "empty", asyncHooks, () => [
-                renderSlot(context.slots, "emptyImg", asyncHooks, () => [
+            {renderSlot(context.slots, "empty", states, () => [
+                renderSlot(context.slots, "emptyImg", states, () => [
                     props.emptySrc && (
                         <img class={"r-c-empty-img r-empty-img"} fit="contain" src={props.emptySrc} />
                     ),
@@ -133,61 +170,38 @@ export const RLoadingMask = RLoadingHoc((mSuper) => ({
             ])}
         </div>
     },
-    renderState(props, context, asyncHooks) {
-        if (asyncHooks.error) return mSuper.renderError(props, context, asyncHooks);
-        if (asyncHooks.begin) return mSuper.renderBegin(props, context, asyncHooks);
-        if (asyncHooks.loading) return mSuper.renderLoading(props, context, asyncHooks);
-        if (asyncHooks.empty) return mSuper.renderEmpty(props, context, asyncHooks);
+    renderState(props, context, states) {
+        if (states.error) return mSuper.renderError(props, context, states);
+        if (states.begin) return mSuper.renderBegin(props, context, states);
+        if (states.loading) return mSuper.renderLoading(props, context, states);
+        if (states.empty) return mSuper.renderEmpty(props, context, states);
     },
-    render(props, context, asyncHooks) {
+    render(props, context, states) {
         return <div class='r-loading-mask'>
             {renderSlot(context.slots, "default")}
-            {this.renderState(props, context, asyncHooks)}
+            {this.renderState(props, context, states)}
         </div>
     },
 }));
 
 export const RLoadingLoad = RLoadingHoc((mSuper) => ({
-    renderLoading(props, context, asyncHooks) {
-        const loadingVnode = renderSlot(context.slots, "loading", props.listHook, () => [
-            <div class={["r-c-loading r-loading"]}>
-                <RILoading class="r-c-loading-icon r-loading-icon" />
-                <div class={["r-c-loading-text r-loading-text"]}>{props.loadingText}</div>
-            </div>,
-        ]);
-
-        if (!props.loadText) {
-            return loadingVnode;
-        }
-
-        if (asyncHooks.loading) {
-            return loadingVnode;
-        }
-
-        return renderSlot(context.slots, "load", props.listHook, () => [
-            <div class={["r-c-load r-load"]}>
-                <div onClick={() => context.emit("loadClick")} class={["r-c-load-text r-load-text"]}>
-                    {props.loadText}
-                </div>
-            </div>,
-        ]);
-    },
-    renderState(props, context, asyncHooks) {
-        if (asyncHooks.error) return mSuper.renderError(props, context, asyncHooks);
-        if (asyncHooks.begin) return mSuper.renderBegin(props, context, asyncHooks);
-        if (asyncHooks.finished) {
-            if (asyncHooks.empty) return mSuper.renderEmpty(props, context, asyncHooks);
-            return mSuper.renderfinished(props, context, asyncHooks);
-        }
-        if (asyncHooks.finished === false) return this.renderLoading(props, context, asyncHooks);
+    renderState({ props, context, states }) {
+        if (states.begin && states.error) return mSuper.renderError({ props, context, states });
+        if (!states.begin && states.error) return mSuper.renderLoadError({ props, context, states });
+        if (states.begin) return mSuper.renderBegin({ props, context, states });
+        if (states.finished && states.empty) return mSuper.renderEmpty({ props, context, states });
+        if (states.finished) return mSuper.renderfinished({ props, context, states });
+        if (states.finished === false && !props.loadText) return mSuper.renderLoading({ props, context, states });
+        if (states.finished === false && props.loadText && states.loading) return mSuper.renderLoading({ props, context, states });
+        if (states.finished === false && props.loadText) return mSuper.renderLoad({ props, context, states });
         return null;
     },
-    render(props, context, asyncHooks, { setIntersectionHtml }) {
+    render({ props, context, states, ctx }) {
         return [
-            !asyncHooks.begin && renderSlot(context.slots, "default"),
+            !states.begin && renderSlot(context.slots, "default"),
             <div class={["r-loading-load", props.className]} >
-                <div ref={setIntersectionHtml} class="intersection"></div>
-                {this.renderState(props, context, asyncHooks)}
+                <div ref={ctx.setIntersectionHtml} class="intersection"></div>
+                {this.renderState({ props, context, states })}
             </div>,
         ]
     },

@@ -4,37 +4,49 @@ import { useLoading } from "@rainbow_ljy/v-hooks";
 import { RILoading } from "../icon";
 
 export const loadingProps = {
-  skelectonCount: {
-    type: Number,
-    default: 5,
-  },
-  finishedText: {
+  errorText: {
     type: [Number, String],
-    default: "没有更多了",
+    default: "出错了",
+  },
+  errorSrc: {
+    type: [Number, String],
+    default: require("./error.png"),
+  },
+  loadErrorText: {
+    type: [Number, String],
+    default: "加载出错了 请点击继续",
   },
   beginText: {
     type: [Number, String],
-    default: "正在加载中",
+    default: "正在加载中...",
+  },
+  beginSrc: {
+    type: [Number, String],
+    default: require("./skelecton.png"),
   },
   loadingText: {
     type: [Number, String],
     default: "正在加载中",
   },
-  errorText: {
+  finishedText: {
     type: [Number, String],
-    default: "出错了",
+    default: "没有更多了",
   },
   emptySrc: {
     type: [Number, String],
-    default: ''/*require("./empty.png")*/,
+    default: require("./empty.png"),
   },
   emptyText: {
     type: [Number, String],
     default: "暂无相关数据，试试其他条件吧",
   },
   loadText: {
-    type: [Number, String],
-    default: "",
+    type: [Boolean, String, Number],
+    default: false,
+  },
+  skelectonCount: {
+    type: Number,
+    default: 5,
   },
   listHook: Object,
   promiseHook: [Object, Array],

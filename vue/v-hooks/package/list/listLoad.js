@@ -86,7 +86,7 @@ function useListLoad2(props = {}) {
     awaitConcatSend,
     awaitPatchPageConcatSend,
     beginNextSend: resetNextBeginSend, // 废弃
-    nextBeginSend: resetStateNextBeginSend, // 废弃
+    nextBeginSend: resetStateNextBeginSend,
   });
 
   function reset() {
@@ -143,11 +143,9 @@ function useListLoad2(props = {}) {
 
   async function resetStateNextBeginSend(...arg) {
     params.begin = true;
-    try {
-      return await resetStateNextSend(...arg);
-    } finally {
-      params.begin = false;
-    }
+    const res = await resetStateNextSend(...arg);
+    params.begin = false;
+    return res
   }
 
   function resetNextSend(...arg) {
@@ -157,11 +155,9 @@ function useListLoad2(props = {}) {
 
   async function resetNextBeginSend(...arg) {
     params.begin = true;
-    try {
-      return await resetNextSend(...arg);
-    } finally {
-      params.begin = false;
-    }
+    const res = await resetNextSend(...arg);
+    params.begin = false;
+    return res
   }
 
   function awaitConcatSend(...arg) {

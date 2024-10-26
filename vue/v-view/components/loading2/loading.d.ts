@@ -13,6 +13,12 @@ export declare type LoadingProps = {
     loadText: boolean | string,
     promiseHook: Object,
     loadingHook: [],
+    onIntersectBottom: () => void,
+    onIntersectionBottom: () => void,
+    onFirstIntersectionBottom: () => void,
+    onErrorClick: () => void,
+    onLoadErrorClick: () => void,
+    onLoadClick: () => void,
 }
 
 export declare const RLoading: DefineComponent<LoadingProps>;

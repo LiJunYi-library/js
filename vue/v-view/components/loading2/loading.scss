@@ -1,3 +1,17 @@
+.r-default-error,
+.r-default-load-error,
+.r-default-begin,
+.r-default-load,
+.r-default-loading,
+.r-default-finished,
+.r-default-empty {
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
 .r-global-error-text,
 .r-global-load-error-text,
 .r-global-begin-text,
@@ -37,6 +51,17 @@
 .r-loading-mask {
   position: relative;
 
+  .r-loading-mask-states {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
   .r-error,
   .r-begin,
   .r-loading,
@@ -47,7 +72,7 @@
     left: 0;
     top: 0;
     min-height: auto;
-    background: white;
+    background: rgba(255, 255, 255, 1);
   }
 }
 

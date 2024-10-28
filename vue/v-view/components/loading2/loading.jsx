@@ -195,58 +195,62 @@ export function RLoadingHoc(params) {
     });
 }
 
-export const RLoading = RLoadingHoc();
+export const RLoading = RLoadingHoc((mSuper) => ({ classType: 'default' }));
 
 export const RLoadingMask = RLoadingHoc((mSuper) => ({
-    renderError(props, context, states) {
-        return (<div class="r-c-error r-error" onClick={() => context.emit("errorClick")}>
-            {renderSlot(context.slots, "error", states, () => [<div class="r-c-error-text r-error-text">{props.errorText}</div>])}
-        </div>);
+    classType: 'mask',
+    // renderError(props, context, states) {
+    //     return (<div class="r-c-error r-error" onClick={() => context.emit("errorClick")}>
+    //         {renderSlot(context.slots, "error", states, () => [<div class="r-c-error-text r-error-text">{props.errorText}</div>])}
+    //     </div>);
+    // },
+    // renderBegin(props, context, states) {
+    //     return (<div class="r-c-begin r-begin">
+    //         {renderSlot(context.slots, "begin", states, () => [
+    //             <RILoading class="r-c-loading-icon r-loading-icon" />,
+    //             <div class={["r-c-begin-text r-begin-text"]}>{props.beginText}</div>
+    //         ])}
+    //     </div>);
+    // },
+    // renderLoading(props, context, states) {
+    //     return (<div class={["r-c-loading r-loading"]}>
+    //         {renderSlot(context.slots, "loading", states, () => [
+    //             <RILoading class="r-c-loading-icon r-loading-icon" />,
+    //             <div class={["r-c-loading-text r-loading-text"]}>{props.loadingText}</div>
+    //         ])}
+    //     </div>);
+    // },
+    // renderEmpty(props, context, states) {
+    //     if (!props.emptySrc && !props.emptyText) return null;
+    //     return <div class="r-c-empty r-empty">
+    //         {renderSlot(context.slots, "empty", states, () => [
+    //             renderSlot(context.slots, "emptyImg", states, () => [
+    //                 props.emptySrc && (
+    //                     <img class={"r-c-empty-img r-empty-img"} fit="contain" src={props.emptySrc} />
+    //                 ),
+    //             ]),
+    //             props.emptyText && <div class={"r-c-empty-text r-empty-text"}>{props.emptyText}</div>
+    //         ])}
+    //     </div>
+    // },
+    renderState({ props, context, states }) {
+        if (states.error) return mSuper.renderError({ props, context, states });
+        if (states.begin) return mSuper.renderBegin({ props, context, states });
+        if (states.loading) return mSuper.renderLoading({ props, context, states });
+        if (states.empty) return mSuper.renderEmpty({ props, context, states });
     },
-    renderBegin(props, context, states) {
-        return (<div class="r-c-begin r-begin">
-            {renderSlot(context.slots, "begin", states, () => [
-                <RILoading class="r-c-loading-icon r-loading-icon" />,
-                <div class={["r-c-begin-text r-begin-text"]}>{props.beginText}</div>
-            ])}
-        </div>);
-    },
-    renderLoading(props, context, states) {
-        return (<div class={["r-c-loading r-loading"]}>
-            {renderSlot(context.slots, "loading", states, () => [
-                <RILoading class="r-c-loading-icon r-loading-icon" />,
-                <div class={["r-c-loading-text r-loading-text"]}>{props.loadingText}</div>
-            ])}
-        </div>);
-    },
-    renderEmpty(props, context, states) {
-        if (!props.emptySrc && !props.emptyText) return null;
-        return <div class="r-c-empty r-empty">
-            {renderSlot(context.slots, "empty", states, () => [
-                renderSlot(context.slots, "emptyImg", states, () => [
-                    props.emptySrc && (
-                        <img class={"r-c-empty-img r-empty-img"} fit="contain" src={props.emptySrc} />
-                    ),
-                ]),
-                props.emptyText && <div class={"r-c-empty-text r-empty-text"}>{props.emptyText}</div>
-            ])}
-        </div>
-    },
-    renderState(props, context, states) {
-        if (states.error) return mSuper.renderError(props, context, states);
-        if (states.begin) return mSuper.renderBegin(props, context, states);
-        if (states.loading) return mSuper.renderLoading(props, context, states);
-        if (states.empty) return mSuper.renderEmpty(props, context, states);
-    },
-    render(props, context, states) {
+    render({ props, context, states }) {
         return <div class='r-loading-mask'>
             {renderSlot(context.slots, "default")}
-            {this.renderState(props, context, states)}
+            <div class='r-loading-mask-states'>
+                {this.renderState({ props, context, states })}
+            </div>
         </div>
     },
 }));
 
 export const RLoadingLoad = RLoadingHoc((mSuper) => ({
+    classType: 'list-load',
     renderState({ props, context, states }) {
         if (states.begin && states.error) return mSuper.renderError({ props, context, states });
         if (!states.begin && states.error) return mSuper.renderLoadError({ props, context, states });

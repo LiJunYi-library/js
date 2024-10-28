@@ -343,6 +343,7 @@ function useAsyncMultiple2(props = {}) {
     ...multipleHook.getProto(),
     ...asyncHooks.getProto(),
     ...loadingHooks?.getProto?.(),
+    empty,
   });
 
   watch(

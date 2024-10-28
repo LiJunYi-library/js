@@ -77,6 +77,34 @@ export declare type LoadingProps = {
 
 export declare const RLoading: DefineComponent<LoadingProps>;
 
+/**
+ * scss
+ *  .r-loading-mask{
+ *     .r-loading-mask-states{
+            .r-global-error,
+            .r-global-load-error,
+            .r-global-begin,
+            .r-global-load,
+            .r-global-loading,
+            .r-global-finished,
+            .r-global-empty
+            .r-global-error-img,
+            .r-global-load-error-img,
+            .r-global-begin-img,
+            .r-global-load-img,
+            .r-global-loading-img,
+            .r-global-finished-img,
+            .r-global-empty-img
+            .r-global-error-text,
+            .r-global-load-error-text,
+            .r-global-begin-text,
+            .r-global-load-text,
+            .r-global-loading-text,
+            .r-global-finished-text,
+            .r-global-empty-text
+ *      }
+ *  }
+ */
 export declare const RLoadingMask: DefineComponent<LoadingProps>;
 
 export declare const RLoadingLoad: DefineComponent<LoadingProps>;

@@ -1,82 +1,37 @@
-.r-c-error {
-  .r-c-error-img {
-    width: 100%;
-    display: block;
-  }
-
-  .r-c-error-text {
-    text-align: center;
-    color: red;
-  }
+.r-global-error-text,
+.r-global-load-error-text,
+.r-global-begin-text,
+.r-global-load-text,
+.r-global-loading-text,
+.r-global-finished-text,
+.r-global-empty-text {
+  text-align: center;
 }
 
-.r-c-load-error {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  .r-c-load-error-text {
-    text-align: center;
-    color: red;
-  }
-}
-
-
-
-.r-c-begin {
-  .r-c-begin-loading {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    min-height: 200px;
-  }
-}
-
-
-
-.r-c-loading {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  min-height: 200px;
-}
-
-.r-loading {
-  justify-content: center;
-  align-items: center;
-}
-
-.r-c-load {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  min-height: 200px;
-}
-
-.r-c-empty {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 200px;
-}
-
-.r-c-empty-img {
-  width: 100px;
+.r-global-error-img,
+.r-global-load-error-img,
+.r-global-begin-img,
+.r-global-load-img,
+.r-global-loading-img,
+.r-global-finished-img,
+.r-global-empty-img {
+  width: 100%;
   display: block;
 }
 
-.r-c-finished {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  min-height: 200px;
+
+.r-global-error-text,
+.r-global-load-error-text {
+  color: red;
 }
+
+.r-global-begin-loading,
+.r-global-loading {
+  display: flex;
+  justify-content: center;
+}
+
+
 
 
 .r-loading-mask {
@@ -102,24 +57,13 @@
     min-height: 1px;
   }
 
-  .skelecton {
-    background-image: url("./skelecton.png");
-    background-size: 100% 100%;
+  .r-global-load-error-text,
+  .r-global-finished-text,
+  .r-global-loading-text,
+  .r-global-load-text {
+    height: 50px;
+    line-height: 50px;
   }
 
-  .r-c-load-error {
-    min-height: 50px;
-  }
 
-  .r-c-finished {
-    min-height: 50px;
-  }
-
-  .r-c-loading {
-    min-height: 50px;
-  }
-
-  .r-c-load {
-    min-height: 50px;
-  }
 }

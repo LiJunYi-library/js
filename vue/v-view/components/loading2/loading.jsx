@@ -1,6 +1,7 @@
 import { defineComponent, renderSlot, onMounted, onBeforeMount } from "vue";
 import { useLoading } from "@rainbow_ljy/v-hooks";
 import { RILoading } from "../icon";
+import { RGlobal } from '../../global'
 import "./loading.scss";
 
 const loadingProps = {
@@ -10,7 +11,7 @@ const loadingProps = {
     },
     errorSrc: {
         type: [Number, String],
-        default: require("./error.png"),
+        default: RGlobal.loadingProps.errorSrc,
     },
     loadErrorText: {
         type: [Number, String],
@@ -22,7 +23,7 @@ const loadingProps = {
     },
     beginSrc: {
         type: [Number, String],
-        default: require("./skelecton.png"),
+        default: RGlobal.loadingProps.beginSrc,
     },
     loadingText: {
         type: [Number, String],
@@ -34,7 +35,7 @@ const loadingProps = {
     },
     emptySrc: {
         type: [Number, String],
-        default: require("./empty.png"),
+        default: RGlobal.loadingProps.emptySrc,
     },
     emptyText: {
         type: [Number, String],
@@ -66,7 +67,7 @@ export function RLoadingHoc(params) {
         emits: [],
         classType: '',
         createClass(name) {
-            return [`r-c-${name} r-${name}`, this.classType && `r-${this.classType}-${name}`];
+            return [`r-global-${name} r-${name}`, this.classType && `r-${this.classType}-${name}`];
         },
         onErrorClick({ props, context, states }) {
             if (context?.attrs?.onErrorClick) return context.attrs.onErrorClick(states);
@@ -76,7 +77,7 @@ export function RLoadingHoc(params) {
             if (!props.errorText && !props.errorSrc) return null
             return renderSlot(context.slots, "error", states, () => [
                 <div class={config.createClass('error')} onClick={() => config.onErrorClick({ props, context, states })}>
-                    <img class={config.createClass('error-img')} src={props.errorSrc} />
+                    {props.errorSrc && <img class={config.createClass('error-img')} src={props.errorSrc} />}
                     <div class={config.createClass('error-text')} >{props.errorText}</div>
                 </div>,
             ]);
@@ -98,9 +99,10 @@ export function RLoadingHoc(params) {
             return renderSlot(context.slots, "begin", states, () => [
                 <div class={config.createClass('begin')}>
                     <div class={config.createClass('begin-loading')}>
-                        <RILoading class="r-c-loading-icon r-loading-icon" />
+                        <RILoading class={config.createClass('loading-icon')} />
                         <div class={config.createClass('begin-text')} >{props.beginText}</div>
                     </div>
+                    {props.beginSrc && <img class={config.createClass('begin-img')} src={props.beginSrc} />}
                     {renderSlot(context.slots, "beginning",)}
                 </div>,
             ]);
@@ -123,21 +125,27 @@ export function RLoadingHoc(params) {
             if (!props.loadingText) return null
             return renderSlot(context.slots, "loading", states, () => [
                 <div class={config.createClass('loading')} >
-                    <RILoading class="r-c-loading-icon r-loading-icon" />
+                    <RILoading class={config.createClass('loading-icon')} />
                     <div class={config.createClass('loading-text')} >{props.loadingText}</div>
+                </div>,
+            ]);
+        },
+        renderfinished({ props, context, states }) {
+            if (!props.finishedText) return null
+            return renderSlot(context.slots, "finished", states, () => [
+                <div class={config.createClass('finished')} >
+                    <div class={config.createClass('finished-text')} >{props.finishedText}</div>
                 </div>,
             ]);
         },
         renderEmpty({ props, context, states }) {
             if (!props.emptySrc && !props.emptyText) return null;
             return renderSlot(context.slots, "empty", states, () => [
-                <div class="r-c-empty r-empty">
+                <div class={config.createClass('empty')} >
                     {renderSlot(context.slots, "emptyImg", states, () => [
-                        props.emptySrc && (
-                            <img class={"r-c-empty-img r-empty-img"} fit="contain" src={props.emptySrc} />
-                        ),
+                        props.emptySrc && <img class={config.createClass('empty-img')} fit="contain" src={props.emptySrc} />,
                     ])}
-                    {props.emptyText && <div class={"r-c-empty-text r-empty-text"}>{props.emptyText}</div>}
+                    {props.emptyText && <div class={config.createClass('empty-text')}  >{props.emptyText}</div>}
                 </div>,
             ]);
         },

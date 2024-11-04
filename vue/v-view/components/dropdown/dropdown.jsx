@@ -90,6 +90,11 @@ export const RDropdown = defineComponent({
       return  attrs
     }
 
+  const label =  computed(()=>{
+    if(props.activeLabel === true ) return props.label;
+    return props.activeLabel || props.label
+  })
+
     return () => {
       return (
         <div
@@ -103,7 +108,7 @@ export const RDropdown = defineComponent({
             {renderSlot(context.slots, "content", ctx, () => [
               <div class={createClass("r-dropdown-text")}>
                 {renderSlot(context.slots, "label", ctx, () => [
-                  <div class={createClass("r-dropdown-label")}> {props.activeLabel || props.label} </div>,
+                  <div class={createClass("r-dropdown-label")}> {label.value} </div>,
                 ])}
                 <span class={createClass("r-dropdown-icon")}>
                   {renderSlot(context.slots, "icon", ctx, () => [

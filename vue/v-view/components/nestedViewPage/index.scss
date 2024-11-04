@@ -1,0 +1,11 @@
+.r-nested-view-page {
+    // --v-page-width: 100vw;
+    width: 100vw;
+    overflow: hidden;
+    touch-action: none;
+}
+
+.r-nested-view-page-list {
+    display: flex;
+    flex-wrap: nowrap;
+}

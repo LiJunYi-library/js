@@ -9,6 +9,7 @@
 /vue/doc/node_modules/
 /vue/projects/
 /vue/vscode/
+/react/projects/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

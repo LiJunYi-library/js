@@ -102,7 +102,7 @@ export const RNestedViewPage = defineComponent({
                 deceleration: 0.02,
                 velocity: event.velocityX,
                 onanimation(v) {
-                    const event = { moveX: v * 30 }
+                    const event = { moveX: v * 50 }
                     // console.log('vvvvvv', v);
                     let sLeft = scrollLeft + event.moveX;
                     if (sLeft > max) {
@@ -139,11 +139,11 @@ export const RNestedViewPage = defineComponent({
 
 
         onMounted(() => {
-            extendedSlideEvents(scrollEl.value, { direction: ['left', 'right'] })
+            extendedSlideEvents(scrollEl.value, { direction: ['left', 'right'], customEventName: 'swarp',  })
             scrollEl.value.addEventListener('slideDown', slideDown, { passive: false, capture: false });
             scrollEl.value.addEventListener('slideLeft', slideLeft, { passive: false, capture: false });
             scrollEl.value.addEventListener('slideRight', slideRight, { passive: false, capture: false });
-            // scrollEl.value.addEventListener('slideEnd', slideEnd, { passive: false, capture: false });
+            scrollEl.value.addEventListener('swarpEnd', slideEnd, { passive: false, capture: false });
         });
 
         const width = () => {

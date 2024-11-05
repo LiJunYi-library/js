@@ -107,8 +107,8 @@ export const RNestedScroll = defineComponent({
 
 
         function slideEnd(event) {
-            if (expose.disableTouch) return
-            console.log('scroll-slideEnd');
+            // if (expose.disableTouch) return
+            console.log('scroll-slideEnd', event);
             ani = cAni({
                 velocity: event.velocityY,
                 onanimationend(v) {
@@ -153,6 +153,7 @@ export const RNestedScroll = defineComponent({
         }
 
         function slideDown(event) {
+            console.log('slideDown', event.currentTarget);
             ani?.stop?.();
         }
 
@@ -204,7 +205,7 @@ export const RNestedScroll = defineComponent({
 
         return () => {
             return <div class="r-nested-scroll" ref={(el) => scrollEl.value = el}>
-                <div ref={(el) => container.value = el}  class="r-nested-scroll-container">
+                <div ref={(el) => container.value = el} class="r-nested-scroll-container">
                     {ctx.slots?.default?.()}
                 </div>
             </div>

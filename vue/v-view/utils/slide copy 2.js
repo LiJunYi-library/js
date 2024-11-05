@@ -1,32 +1,10 @@
 const COMPUTE_INTERVAL = 25;
-let onCapturePointerdownCount  = 0;
+let pointerCount = 0;
 class SlideEvent extends CustomEvent {
     constructor(type, eventInitDict = {}) {
         super(type, { bubbles: true, cancelable: true, ...eventInitDict })
     }
 }
-
-(() => {
-    document.addEventListener('pointerdown', onPointerdown);
-    document.addEventListener('pointermove', onPointermove);
-    document.addEventListener('pointerup', onPointerup);
-
-
-    function onPointerdown(event) {
-
-    }
-
-    function onPointermove(event) {
-
-    }
-
-    function onPointerup(event) {
-
-    }
-
-})()
-
-
 
 /**
  * 
@@ -45,7 +23,6 @@ export function extendedSlideEvents(view = document.createElement('div'), option
     let direction;
     let recordPointerCount;
     let orientation;
-    let onPointermoveCount = 0;
     const config = {
         onCaptureSlideDown: () => undefined,
         onSlideDown: () => undefined,
@@ -66,15 +43,14 @@ export function extendedSlideEvents(view = document.createElement('div'), option
 
 
     function onCapturePointerdown(event) {
-        onCapturePointerdownCount++;
-        direction = undefined;
-        orientation = undefined;
-        onPointermoveCount = 0;
+        pointerCount++;
+        direction = undefined
+        orientation = undefined
         onDispatchEvent('captureSlideDown', event)
     }
 
     function onPointerdown(event) {
-        recordPointerCount = onCapturePointerdownCount;
+        recordPointerCount = pointerCount;
         event.currentTime = Date.now();
         beginEvent = event;
         prveEvent = event;
@@ -85,7 +61,7 @@ export function extendedSlideEvents(view = document.createElement('div'), option
     }
 
     function onPointerup(event) {
-        onCapturePointerdownCount = 0;
+        pointerCount = 0;
         if (!isVerdict) return;
         extendedEventArgs(event);
         console.log('onPointerup', recordPointerCount);
@@ -98,7 +74,7 @@ export function extendedSlideEvents(view = document.createElement('div'), option
 
 
     function onPointermove(event) {
-        onCapturePointerdownCount = 0;
+        pointerCount = 0;
         extendedEventArgs(event);
         prveEvent = event;
         //////////////////
@@ -118,20 +94,14 @@ export function extendedSlideEvents(view = document.createElement('div'), option
                 if (isTopAng || isBottomAng) orientation = 'vertical'
                 isVerdict = true;
                 console.log('我判断结束wei', direction, orientation);
-
+                triggerEvent(event, () => {
+                    onDispatchEvent('slideStrat', event);
+                })
                 return;
             }
             return;
         }
         //////////////// console.log('我判断结束 执行事件', event.movementX, event.moveX);
-        onPointermoveCount++;
-        if (onPointermoveCount === 1) {
-            console.log('slideStrat');
-            triggerEvent(event, () => {
-                onDispatchEvent('slideStrat', event);
-            })
-        }
-
         triggerEvent(event, () => {
             onDispatchEvent('slideMove', event);
             directions().forEach((eName) => directionDispatch?.[eName]?.(event))

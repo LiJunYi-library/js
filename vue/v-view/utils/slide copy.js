@@ -1,51 +1,41 @@
 const COMPUTE_INTERVAL = 25;
-let onCapturePointerdownCount  = 0;
+let onCapturePointerdownCount = 0;
+let onPointerdownCount = 0;
+let onPointerupCount = 0;
 class SlideEvent extends CustomEvent {
     constructor(type, eventInitDict = {}) {
         super(type, { bubbles: true, cancelable: true, ...eventInitDict })
     }
 }
-
-(() => {
-    document.addEventListener('pointerdown', onPointerdown);
-    document.addEventListener('pointermove', onPointermove);
-    document.addEventListener('pointerup', onPointerup);
-
-
-    function onPointerdown(event) {
-
-    }
-
-    function onPointermove(event) {
-
-    }
-
-    function onPointerup(event) {
-
-    }
-
-})()
-
-
+let viewList = []
+document.addEventListener('pointerdown', (event)=>{
+    const slideEvent = inheritPointerEvent('slideDown', event);
+    console.log(viewList);
+    
+    // viewList.forEach(el=> el.dispatchEvent(slideEvent))
+    viewList.at(2).dispatchEvent(slideEvent)
+})
 
 /**
  * 
  * @param {*} view 
  */
 export function extendedSlideEvents(view = document.createElement('div'), options = {}) {
+    viewList.push(view)
     // **TODO pointercancel
-    view.addEventListener('pointerdown', onCapturePointerdown, { passive: false, capture: true });
-    view.addEventListener('pointerdown', onPointerdown);
-    view.addEventListener('pointermove', onPointermove);
-    view.addEventListener('pointerup', onPointerup);
-    let beginEvent;
+    // view.addEventListener('pointerdown', onCapturePointerdown, { passive: false, capture: true });
+    // view.addEventListener('pointerdown', onPointerdown);
+    // view.addEventListener('pointermove', onPointermove);
+    // view.addEventListener('pointerup', onPointerup);
+
     let isVerdict = false;
+    let beginEvent;
     let prveEvent;
     let intervalEvent;
-    let direction;
     let recordPointerCount;
+    //
+    let direction;
     let orientation;
-    let onPointermoveCount = 0;
     const config = {
         onCaptureSlideDown: () => undefined,
         onSlideDown: () => undefined,
@@ -67,32 +57,39 @@ export function extendedSlideEvents(view = document.createElement('div'), option
 
     function onCapturePointerdown(event) {
         onCapturePointerdownCount++;
-        direction = undefined;
-        orientation = undefined;
-        onPointermoveCount = 0;
+        direction = undefined
+        orientation = undefined
+        onPointerdownCount = 0;
+        onPointerupCount= 0;
         onDispatchEvent('captureSlideDown', event)
     }
 
     function onPointerdown(event) {
         recordPointerCount = onCapturePointerdownCount;
+        onPointerdownCount++;
+
         event.currentTime = Date.now();
+        event.recordPointerCount = recordPointerCount;
+        event.isRoot = recordPointerCount === 1;
         beginEvent = event;
         prveEvent = event;
         intervalEvent = event;
         isVerdict = false;
-        console.log('onPointerdown', recordPointerCount);
-        onDispatchEvent('slideDown', event)
+
+        triggerConfigEvent('slideDown', event);
+        if (onPointerdownCount === 1) doDispatchEvent('slideDown', event)
+        if (onPointerdownCount === recordPointerCount) onCapturePointerdownCount = 0;
     }
 
     function onPointerup(event) {
         onCapturePointerdownCount = 0;
-        if (!isVerdict) return;
+        onPointerupCount++;
+        // if (!isVerdict) return;
         extendedEventArgs(event);
-        console.log('onPointerup', recordPointerCount);
-
-        triggerEvent(event, () => {
-            onDispatchEvent('slideEnd', event)
-        })
+        setEventOrientation(event);
+        console.log('onPointerup onPointerupCount', onPointerupCount);
+        // triggerEvent(event, () => onDispatchEvent('slideEnd', event))
+        onDispatchEvent('slideEnd', event)
         onDispatchEvent('slideUp', event)
     }
 
@@ -116,22 +113,17 @@ export function extendedSlideEvents(view = document.createElement('div'), option
                 if (isBottomAng) direction = 'bottom';
                 if (isRightAng || isLeftAng) orientation = 'horizontal'
                 if (isTopAng || isBottomAng) orientation = 'vertical'
+                setEventOrientation(event);
                 isVerdict = true;
                 console.log('我判断结束wei', direction, orientation);
-
+                triggerEvent(event, () => {
+                    onDispatchEvent('slideStrat', event);
+                })
                 return;
             }
             return;
         }
         //////////////// console.log('我判断结束 执行事件', event.movementX, event.moveX);
-        onPointermoveCount++;
-        if (onPointermoveCount === 1) {
-            console.log('slideStrat');
-            triggerEvent(event, () => {
-                onDispatchEvent('slideStrat', event);
-            })
-        }
-
         triggerEvent(event, () => {
             onDispatchEvent('slideMove', event);
             directions().forEach((eName) => directionDispatch?.[eName]?.(event))
@@ -183,19 +175,44 @@ export function extendedSlideEvents(view = document.createElement('div'), option
         }
     }
 
-    function onDispatchEvent(name = '', event) {
+    function triggerConfigEvent(name = '', event) {
+        config?.['on' + stringUpperFirstCase(name)]?.(event);
+        if (!config.customEventName) return;
+        const customEventName = name.replace(/(Slide|slide)/, config.customEventName);
+        config?.['on' + stringUpperFirstCase(customEventName)]?.(event);
+    }
+
+    function doDispatchEvent(name = '', event) {
+        console.log(event.currentTarget,view);
+        
         const slideEvent = inheritPointerEvent(name, event);
-        config?.['on' + stringUpperFirstCase(name)]?.(slideEvent);
         view.dispatchEvent(slideEvent);
         if (!config.customEventName) return;
         const customEventName = name.replace(/(Slide|slide)/, config.customEventName)
         const customSlideEven = inheritPointerEvent(customEventName, event);
-        config?.['on' + stringUpperFirstCase(customEventName)]?.(slideEvent);
         view.dispatchEvent(customSlideEven);
+    }
+
+    function onDispatchEvent(name = '', event) {
+        triggerConfigEvent(name, event);
+        doDispatchEvent(name, event);
+        // const slideEvent = inheritPointerEvent(name, event);
+        // config?.['on' + stringUpperFirstCase(name)]?.(event);
+        // view.dispatchEvent(slideEvent);
+        // if (!config.customEventName) return;
+        // const customEventName = name.replace(/(Slide|slide)/, config.customEventName)
+        // const customSlideEven = inheritPointerEvent(customEventName, event);
+        // config?.['on' + stringUpperFirstCase(customEventName)]?.(event);
+        // view.dispatchEvent(customSlideEven);
     }
 
     function extendedVerdictEvent(event) {
 
+    }
+
+    function setEventOrientation(event) {
+        event.direction = direction
+        event.orientation = orientation
     }
 
     function extendedEventArgs(event) {

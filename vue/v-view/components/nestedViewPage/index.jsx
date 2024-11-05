@@ -1,7 +1,7 @@
-import { onMounted, ref, defineComponent, computed, inject, reactive, provide } from 'vue'
+import { onMounted, ref, defineComponent, computed, inject, reactive, provide, watchEffect } from 'vue'
 import './index.scss'
 import { extendedSlideEvents } from '../../utils/slide'
-const RNestedViewPageProps = { tag: String, isRoot: Boolean, collectVnode: [] };
+const RNestedViewPageProps = { tag: String, isRoot: Boolean, collectVnode: [], listHook: Object };
 
 export const RNestedViewPage = defineComponent({
     props: RNestedViewPageProps,
@@ -56,6 +56,8 @@ export const RNestedViewPage = defineComponent({
         }
 
         function slideDown(event) {
+            console.log('slideDown',event.currentTarget);
+            
             ani?.stop?.();
         }
 
@@ -83,9 +85,10 @@ export const RNestedViewPage = defineComponent({
         }
 
         function slideEnd(event) {
+            console.log('page-slideEnd', event);
+            if (event.orientation === 'vertical') return;
             if (isScrollRightEnd()) return;
             if (isScrollLeftEnd()) return;
-            console.log('page-slideEnd');
             event.stopPropagation();
             expose.isWork = false;
 
@@ -102,13 +105,14 @@ export const RNestedViewPage = defineComponent({
                 deceleration: 0.02,
                 velocity: event.velocityX,
                 onanimation(v) {
-                    const event = { moveX: v * 50 }
+                    const event = { moveX: v * 35 }
                     // console.log('vvvvvv', v);
                     let sLeft = scrollLeft + event.moveX;
                     if (sLeft > max) {
                         sLeft = max + 0.2;
                         expose.index = expose.index + 1
                         parent.child = expose?.children?.[expose.index]
+                        props.listHook?.updateIndex?.(expose.index)
                         // console.log(expose?.children, expose.index, parent.child);
                         ani.stop();
                     }
@@ -116,6 +120,7 @@ export const RNestedViewPage = defineComponent({
                         sLeft = min
                         expose.index = expose.index - 1
                         parent.child = expose?.children?.[expose.index]
+                        props.listHook?.updateIndex?.(expose.index)
                         // console.log(expose?.children, expose.index, parent.child);
                         ani.stop();
                     }
@@ -130,12 +135,24 @@ export const RNestedViewPage = defineComponent({
                     scrollEl.value.scrollLeft = scrollLeft
                     expose.index = index
                     parent.child = expose?.children?.[expose.index]
+                    props.listHook?.updateIndex?.(expose.index)
                     // console.log(expose?.children, expose.index, parent.child);
 
                 }
             });
             ani.start();
         }
+
+
+        watchEffect(() => {
+            console.log(scrollEl.value?.offsetWidth);
+
+            if (!scrollEl.value?.offsetWidth) return
+            scrollLeft = scrollEl.value.offsetWidth * props.listHook.index
+            scrollEl.value.scrollLeft = scrollLeft
+            expose.index = props.listHook.index
+            parent.child = expose?.children?.[props.listHook.index]
+        });
 
 
         onMounted(() => {

@@ -160,7 +160,7 @@ export const RNestedViewPage = defineComponent({
             scrollEl.value.addEventListener('slideDown', slideDown, { passive: false, capture: false });
             scrollEl.value.addEventListener('slideLeft', slideLeft, { passive: false, capture: false });
             scrollEl.value.addEventListener('slideRight', slideRight, { passive: false, capture: false });
-            scrollEl.value.addEventListener('swarpEnd', slideEnd, { passive: false, capture: false });
+            scrollEl.value.addEventListener('slideEnd', slideEnd, { passive: false, capture: false });
         });
 
         const width = () => {

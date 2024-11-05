@@ -84,7 +84,7 @@ export function extendedSlideEvents(view = document.createElement('div'), option
     function onPointerup(event) {
         onCapturePointerdownCount = 0;
         onPointerupCount++;
-        // if (!isVerdict) return;
+        if (!isVerdict) return;
         extendedEventArgs(event);
         setEventOrientation(event);
         console.log('onPointerup onPointerupCount', onPointerupCount);

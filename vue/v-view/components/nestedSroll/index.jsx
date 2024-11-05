@@ -153,7 +153,7 @@ export const RNestedScroll = defineComponent({
         }
 
         function slideDown(event) {
-            console.log('slideDown', event.currentTarget);
+            console.log('slideDown',event, event.currentTarget.__r_slide__);
             ani?.stop?.();
         }
 
@@ -188,18 +188,18 @@ export const RNestedScroll = defineComponent({
 
         onMounted(() => {
             extendedSlideEvents(scrollEl.value, { direction: ['top', 'bottom'], customEventName: 'scroll', })
-            scrollEl.value.addEventListener('slideDown', slideDown, { passive: false, capture: true });
+            scrollEl.value.addEventListener('slideDown', slideDown, { passive: false, capture: false });
             scrollEl.value.addEventListener('slideBottom', slideBottom, { passive: false, capture: true });
             scrollEl.value.addEventListener('slideTop', slideTop, { passive: false, capture: true });
-            scrollEl.value.addEventListener('scrollEnd', slideEnd, { passive: false, capture: true });
+            scrollEl.value.addEventListener('slideEnd', slideEnd, { passive: false, capture: true });
         })
 
 
         onBeforeUnmount(() => {
-            scrollEl.value.removeEventListener('slideDown', slideDown, { passive: false, capture: true });
+            scrollEl.value.removeEventListener('slideDown', slideDown, { passive: false, capture: false });
             scrollEl.value.removeEventListener('slideBottom', slideBottom, { passive: false, capture: true });
             scrollEl.value.removeEventListener('slideTop', slideTop, { passive: false, capture: true });
-            scrollEl.value.removeEventListener('scrollEnd', slideEnd, { passive: false, capture: true });
+            scrollEl.value.removeEventListener('slideEnd', slideEnd, { passive: false, capture: true });
 
         })
 

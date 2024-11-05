@@ -1,6 +1,7 @@
 const COMPUTE_INTERVAL = 25;
 let currentView = document.createElement('div');
 let srcViews = [];
+export const customEventNameMap = new Map();
 const compute = {
     isGetPdownLock: false,
     srcViews: [],
@@ -12,6 +13,7 @@ class SlideEvent extends CustomEvent {
 }
 
 (() => {
+    // **TODO pointercancel
     document.addEventListener('pointerdown', onPointerdown);
     document.addEventListener('pointermove', onPointermove);
     document.addEventListener('pointerup', onPointerup);
@@ -26,7 +28,6 @@ class SlideEvent extends CustomEvent {
     function onPointerdown(event) {
         extendedEventArgs(event);
         dispatchEvent('slideDown', event);
-
         beginEvent = event;
         prveEvent = event;
         intervalEvent = event;
@@ -64,6 +65,12 @@ class SlideEvent extends CustomEvent {
         }
 
         dispatchEvent('slideMove', event);
+        if (event.moveX < 0) dispatchEvent('slideRight', event);
+        if (event.moveY < 0) dispatchEvent('slideTop', event);
+        if (event.moveX > 0) dispatchEvent('slideLeft', event);
+        if (event.moveY > 0) dispatchEvent('slideBottom', event);
+        if (event.moveX !== 0) dispatchEvent('slideHorizontal', event);
+        if (event.moveY !== 0) dispatchEvent('slideVertical', event);
     }
 
     function onPointerup(event) {
@@ -102,26 +109,31 @@ class SlideEvent extends CustomEvent {
     }
 
     function dispatchEvent(name, event) {
-        const slideEvent = inheritPointerEvent(name, event)
-        currentView.dispatchEvent(slideEvent)
+        console.log(currentView.__r_slide__);
+        
+        const slideEvent = inheritPointerEvent(name, event);
+        currentView.dispatchEvent(slideEvent);
+        customEventNameMap.forEach(value => {
+            const customEventName = name.replace(/(Slide|slide)/, value);
+            const customSlideEven = inheritPointerEvent(customEventName, event);
+            currentView.dispatchEvent(customSlideEven);
+        })
     }
 
 })()
-
-
 
 /**
  * 
  * @param {*} view 
  */
 export function extendedSlideEvents(view = document.createElement('div'), options = {}) {
-    // **TODO pointercancel
     view.addEventListener('pointerdown', onCapturePointerdown, { passive: false, capture: true });
     view.addEventListener('pointerdown', onPointerdown);
-    // view.addEventListener('pointermove', onCapturePointermove, { passive: false, capture: true });
-    // view.addEventListener('pointerup', onCapturePointerup, { passive: false, capture: true });
     if (!view.__r_slide__) view.__r_slide__ = {};
     const _r_slide_ = view.__r_slide__;
+    const config = { customEventName: '', direction: '', ...options }
+    if (config.customEventName) customEventNameMap.set(config.customEventName, config.customEventName)
+    _r_slide_.customEventName = config.customEventName;
 
     function onCapturePointerdown(event) {
         srcViews.push(event.currentTarget)
@@ -137,37 +149,20 @@ export function extendedSlideEvents(view = document.createElement('div'), option
             srcViews = [];
             compute.isGetPdownLock = true;
         }
-
     }
-
-    // function onCapturePointerup(event) {
-    //     srcViews = [];
-    // }
-
-    // function onCapturePointermove(event) {
-    //     srcViews = [];
-    // }
 
     function destroy() {
         view.removeEventListener('pointerdown', onCapturePointerdown, { passive: false, capture: true });
         view.removeEventListener('pointerdown', onPointerdown);
-        // view.removeEventListener('pointermove', onCapturePointermove);
-        // view.removeEventListener('pointerup', onCapturePointerup);
     }
 
     return { destroy }
 }
 
-
-
 function undefinedReturn(params, def) {
     if (isNaN(params)) return def
     if (params === undefined) return def
     return params
-}
-
-function fixedFloat(num) {
-    return parseFloat(num.toFixed(2));
 }
 
 function inheritPointerEvent(name, event = {}, eventInitDict = {}) {

@@ -24,6 +24,7 @@ class SlideEvent extends CustomEvent {
     let direction;
     let orientation;
     let isStart = true;
+    let pressures = [];
 
     function onPointerdown(event) {
         extendedEventArgs(event);
@@ -35,6 +36,7 @@ class SlideEvent extends CustomEvent {
         isStart = true;
         direction = undefined;
         orientation = undefined;
+        pressures = [];
     }
 
     function onPointermove(event) {
@@ -77,9 +79,11 @@ class SlideEvent extends CustomEvent {
         extendedEventArgs(event);
         if (isVerdict) dispatchEvent('slideEnd', event)
         dispatchEvent('slideUp', event)
+        currentView = undefined
     }
 
     function extendedEventArgs(event) {
+        pressures.push(event.pressure);
         event.srcViews = compute.srcViews;
         event.currentTime = Date.now();
         event.direction = direction
@@ -99,18 +103,25 @@ class SlideEvent extends CustomEvent {
         event.velocityX = undefinedReturn(intervalEvent.velocityX, event.speedX)
         event.velocityY = undefinedReturn(intervalEvent.velocityY, event.speedY)
         if ((event.currentTime - intervalEvent.currentTime) >= COMPUTE_INTERVAL) {
+            let avgPressure = pressures.reduce((add, v) => { add = v + add; return add }, 0) / pressures.length;
+            // TODO 兼容性需处理
+            if (avgPressure < 0.5) avgPressure = 0.5
+            if (avgPressure > 1.5) avgPressure = avgPressure - 1
+            if (avgPressure > 2.5) avgPressure = avgPressure - 2
+            if (avgPressure > 3.5) avgPressure = avgPressure - 3
+            // console.log('avgPressure', avgPressure);
             const moveX = (intervalEvent?.pageX ?? 0) - event.pageX;
             const moveY = (intervalEvent?.pageY ?? 0) - event.pageY;
             const deltaTime = event.currentTime - (intervalEvent?.currentTime ?? 0);
-            event.velocityX = moveX / deltaTime
-            event.velocityY = moveY / deltaTime
+            event.velocityX = moveX / deltaTime * avgPressure
+            event.velocityY = moveY / deltaTime * avgPressure
             intervalEvent = event;
+            pressures = []
         }
     }
 
     function dispatchEvent(name, event) {
-        console.log(currentView.__r_slide__);
-        
+        if (!currentView) return
         const slideEvent = inheritPointerEvent(name, event);
         currentView.dispatchEvent(slideEvent);
         customEventNameMap.forEach(value => {

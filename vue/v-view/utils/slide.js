@@ -24,8 +24,6 @@ class SlideEvent extends CustomEvent {
     let isStart = true;
 
     function onPointerdown(event) {
-        console.log("currentView", currentView);
-
         extendedEventArgs(event);
         dispatchEvent('slideDown', event);
 
@@ -42,7 +40,6 @@ class SlideEvent extends CustomEvent {
         extendedEventArgs(event);
         prveEvent = event;
         if (!isVerdict) {
-            // console.log('我处于判断阶段');
             if (event.deltaC > 8) {
                 const ang = event.deltaAng;
                 const isRightAng = 315 <= ang || ang < 45;
@@ -56,13 +53,11 @@ class SlideEvent extends CustomEvent {
                 if (isRightAng || isLeftAng) orientation = 'horizontal'
                 if (isTopAng || isBottomAng) orientation = 'vertical'
                 isVerdict = true;
-                console.log('我判断结束wei', direction, orientation);
                 return;
             }
             return;
         }
         if (isStart) {
-            console.log('------slideStrat------', event);
             dispatchEvent('slideStrat', event);
             isStart = false;
             return;

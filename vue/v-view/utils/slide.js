@@ -68,9 +68,9 @@ class SlideEvent extends CustomEvent {
 
         dispatchEvent('slideMove', event);
         if (event.moveX < 0) dispatchEvent('slideRight', event);
-        if (event.moveY < 0) dispatchEvent('slideTop', event);
+        if (event.moveY < 0) dispatchEvent('slideBottom', event);
         if (event.moveX > 0) dispatchEvent('slideLeft', event);
-        if (event.moveY > 0) dispatchEvent('slideBottom', event);
+        if (event.moveY > 0) dispatchEvent('slideTop', event);
         if (event.moveX !== 0) dispatchEvent('slideHorizontal', event);
         if (event.moveY !== 0) dispatchEvent('slideVertical', event);
     }
@@ -109,6 +109,7 @@ class SlideEvent extends CustomEvent {
             if (avgPressure > 1.5) avgPressure = avgPressure - 1
             if (avgPressure > 2.5) avgPressure = avgPressure - 2
             if (avgPressure > 3.5) avgPressure = avgPressure - 3
+            if (avgPressure > 4.5)  avgPressure = 1.8;
             // console.log('avgPressure', avgPressure);
             const moveX = (intervalEvent?.pageX ?? 0) - event.pageX;
             const moveY = (intervalEvent?.pageY ?? 0) - event.pageY;

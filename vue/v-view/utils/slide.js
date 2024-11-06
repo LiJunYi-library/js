@@ -77,7 +77,15 @@ class SlideEvent extends CustomEvent {
 
     function onPointerup(event) {
         extendedEventArgs(event);
-        if (isVerdict) dispatchEvent('slideEnd', event)
+        if (isVerdict) {
+            dispatchEvent('slideEnd', event);
+            if (event.velocityX < 0) dispatchEvent('slideRightEnd', event);
+            if (event.velocityY < 0) dispatchEvent('slideBottomEnd', event);
+            if (event.velocityX > 0) dispatchEvent('slideLeftEnd', event);
+            if (event.velocityY > 0) dispatchEvent('slideTopEnd', event);
+            if (event.velocityX !== 0) dispatchEvent('slideHorizontalEnd', event);
+            if (event.velocityY !== 0) dispatchEvent('slideVerticalEnd', event);
+        }
         dispatchEvent('slideUp', event)
         currentView = undefined
     }
@@ -109,7 +117,7 @@ class SlideEvent extends CustomEvent {
             if (avgPressure > 1.5) avgPressure = avgPressure - 1
             if (avgPressure > 2.5) avgPressure = avgPressure - 2
             if (avgPressure > 3.5) avgPressure = avgPressure - 3
-            if (avgPressure > 4.5)  avgPressure = 1.8;
+            if (avgPressure > 4.5) avgPressure = 1.8;
             // console.log('avgPressure', avgPressure);
             const moveX = (intervalEvent?.pageX ?? 0) - event.pageX;
             const moveY = (intervalEvent?.pageY ?? 0) - event.pageY;

@@ -12,8 +12,8 @@ export const RNestedViewPage = defineComponent({
             child: undefined,
             children: [],
             parent,
-            dispatchScrollUp,
-            dispatchScrollDown,
+            dispatchScrollTop,
+            dispatchScrollBottom,
             props,
             layer: (parent?.layer ?? 0) + 1,
             isWork: false,
@@ -23,10 +23,7 @@ export const RNestedViewPage = defineComponent({
         if (parent) parent.children.push(expose);
         if (parent) parent.child = parent.children[0];
 
-        // if (props.isRoot) {
-        //     console.log('RNestedViewPageContext viewPageParent scrollParent');
-        //     console.log(expose);
-        // }
+   
 
 
         const scrollEl = ref()
@@ -35,12 +32,12 @@ export const RNestedViewPage = defineComponent({
         let ani;
         const childrens = computed(() => props.collectVnode.map((el) => el.component).filter(Boolean));
 
-        function dispatchScrollUp(moveY) {
-            expose.child?.dispatchScrollUp?.(moveY)
+        function dispatchScrollTop(...arg) {
+            expose.child?.dispatchScrollTop?.(...arg)
         }
 
-        function dispatchScrollDown(moveY) {
-            expose.parent?.dispatchScrollDown?.(moveY)
+        function dispatchScrollBottom(...arg) {
+            expose.parent?.dispatchScrollBottom?.(...arg)
         }
 
         function maxScrollLeft() {
@@ -56,15 +53,17 @@ export const RNestedViewPage = defineComponent({
         }
 
         function slideDown(event) {
-            console.log('slideDown',event.currentTarget);
-            
+            console.log('slideDown', event.currentTarget);
+
             ani?.stop?.();
         }
 
         function slideLeft(event) {
+            if (event.orientation !== 'horizontal') return;
             if (parent && parent.isWork) return;
             if (isScrollRightEnd()) return;
             event.stopPropagation();
+            console.log('slideLeft',);
             expose.isWork = true;
             let sLeft = scrollLeft + event.moveX;
             if (sLeft > maxScrollLeft()) sLeft = maxScrollLeft() + 0.2;
@@ -73,10 +72,11 @@ export const RNestedViewPage = defineComponent({
         }
 
         function slideRight(event) {
+            if (event.orientation !== 'horizontal') return;
             if (parent && parent.isWork) return;
             if (isScrollLeftEnd()) return;
             event.stopPropagation();
-            // console.log('slideRight',props.tag);
+            console.log('slideRight', props.tag);
             expose.isWork = true;
             let sLeft = scrollLeft + event.moveX;
             if (sLeft < 0) sLeft = 0
@@ -86,6 +86,7 @@ export const RNestedViewPage = defineComponent({
 
         function slideEnd(event) {
             console.log('page-slideEnd', event);
+            if (event.orientation !== 'horizontal') return;
             if (event.orientation === 'vertical') return;
             if (isScrollRightEnd()) return;
             if (isScrollLeftEnd()) return;
@@ -156,11 +157,11 @@ export const RNestedViewPage = defineComponent({
 
 
         onMounted(() => {
-            extendedSlideEvents(scrollEl.value, { direction: ['left', 'right'], customEventName: 'swarp',  })
-            scrollEl.value.addEventListener('slideDown', slideDown, { passive: false, capture: false });
-            scrollEl.value.addEventListener('slideLeft', slideLeft, { passive: false, capture: false });
-            scrollEl.value.addEventListener('slideRight', slideRight, { passive: false, capture: false });
-            scrollEl.value.addEventListener('slideEnd', slideEnd, { passive: false, capture: false });
+            extendedSlideEvents(scrollEl.value, { direction: ['left', 'right'], customEventName: 'swarp', })
+            scrollEl.value.addEventListener('swarpDown', slideDown, { passive: false, capture: false });
+            scrollEl.value.addEventListener('swarpLeft', slideLeft, { passive: false, capture: false });
+            scrollEl.value.addEventListener('swarpRight', slideRight, { passive: false, capture: false });
+            scrollEl.value.addEventListener('swarpEnd', slideEnd, { passive: false, capture: false });
         });
 
         const width = () => {

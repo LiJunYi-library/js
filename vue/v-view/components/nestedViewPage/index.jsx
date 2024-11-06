@@ -23,13 +23,12 @@ export const RNestedViewPage = defineComponent({
         if (parent) parent.children.push(expose);
         if (parent) parent.child = parent.children[0];
 
-   
-
-
+        const LOG = (...arg) => console.log(...arg);
         const scrollEl = ref()
         const container = ref()
         let scrollLeft = 0;
         let ani;
+        let adsorbAni;
         const childrens = computed(() => props.collectVnode.map((el) => el.component).filter(Boolean));
 
         function dispatchScrollTop(...arg) {
@@ -53,17 +52,17 @@ export const RNestedViewPage = defineComponent({
         }
 
         function slideDown(event) {
-            console.log('slideDown', event.currentTarget);
-
             ani?.stop?.();
+            adsorbAni?.stop?.();
         }
 
         function slideLeft(event) {
             if (event.orientation !== 'horizontal') return;
             if (parent && parent.isWork) return;
+            // 如果没有滚动到了最右边 就不消费事件 return 出去
+            // 如果滚动到了最右边 就去消费事件 并阻止事件向上冒泡
             if (isScrollRightEnd()) return;
             event.stopPropagation();
-            console.log('slideLeft',);
             expose.isWork = true;
             let sLeft = scrollLeft + event.moveX;
             if (sLeft > maxScrollLeft()) sLeft = maxScrollLeft() + 0.2;
@@ -74,9 +73,10 @@ export const RNestedViewPage = defineComponent({
         function slideRight(event) {
             if (event.orientation !== 'horizontal') return;
             if (parent && parent.isWork) return;
+            // 如果没有滚动到了最左边 就不消费事件 return 出去
+            // 如果滚动到了最左边 就去消费事件 并阻止事件向上冒泡
             if (isScrollLeftEnd()) return;
             event.stopPropagation();
-            console.log('slideRight', props.tag);
             expose.isWork = true;
             let sLeft = scrollLeft + event.moveX;
             if (sLeft < 0) sLeft = 0
@@ -85,69 +85,80 @@ export const RNestedViewPage = defineComponent({
         }
 
         function slideEnd(event) {
-            console.log('page-slideEnd', event);
             if (event.orientation !== 'horizontal') return;
-            if (event.orientation === 'vertical') return;
             if (isScrollRightEnd()) return;
             if (isScrollLeftEnd()) return;
             event.stopPropagation();
             expose.isWork = false;
 
-            // console.log(expose.index, 'slideEnd', event.speedX, event.velocityX);
-
             const max = scrollEl.value.offsetWidth * (expose.index + 1)
             let minIndex = expose.index - 1
             if (minIndex < 0) minIndex = 0
             const min = scrollEl.value.offsetWidth * minIndex;
-            // console.log(max);
-
 
             ani = cAni({
                 deceleration: 0.02,
                 velocity: event.velocityX,
                 onanimation(v) {
-                    const event = { moveX: v * 35 }
-                    // console.log('vvvvvv', v);
+                    const event = { moveX: v * 30 }
                     let sLeft = scrollLeft + event.moveX;
                     if (sLeft > max) {
+                        ani.stop();
                         sLeft = max + 0.2;
                         expose.index = expose.index + 1
                         parent.child = expose?.children?.[expose.index]
                         props.listHook?.updateIndex?.(expose.index)
-                        // console.log(expose?.children, expose.index, parent.child);
-                        ani.stop();
                     }
                     if (sLeft < min) {
+                        ani.stop();
                         sLeft = min
                         expose.index = expose.index - 1
                         parent.child = expose?.children?.[expose.index]
                         props.listHook?.updateIndex?.(expose.index)
-                        // console.log(expose?.children, expose.index, parent.child);
-                        ani.stop();
                     }
                     scrollLeft = sLeft;
                     scrollEl.value.scrollLeft = scrollLeft
-                    // if (event.space < 0) onScrollUp(event);
-                    // if (event.space > 0) onScrollDown(event);
                 },
                 onanimationend(v) {
+                    const oldLeft = scrollEl.value.scrollLeft;
                     const index = Math.round(scrollLeft / scrollEl.value.offsetWidth)
                     scrollLeft = scrollEl.value.offsetWidth * index
-                    scrollEl.value.scrollLeft = scrollLeft
-                    expose.index = index
-                    parent.child = expose?.children?.[expose.index]
-                    props.listHook?.updateIndex?.(expose.index)
-                    // console.log(expose?.children, expose.index, parent.child);
-
+                    adsorbAni = Animation({
+                        from: oldLeft,
+                        to: scrollLeft,
+                        avg: 10,
+                        onanimation(aLeft) {
+                            console.log(aLeft);
+                            scrollEl.value.scrollLeft = aLeft
+                        },
+                        onanimationend() {
+                            expose.index = index
+                            parent.child = expose?.children?.[expose.index]
+                            props.listHook?.updateIndex?.(expose.index)
+                        }
+                    })
+                    adsorbAni.start();
                 }
             });
             ani.start();
         }
 
+        function slideLeftEnd(event) {
+            // if (event.orientation !== 'horizontal') return;
+            // if (parent && parent.isWork) return;
+            // // 如果没有滚动到了最右边 就不消费事件 return 出去
+            // // 如果滚动到了最右边 就去消费事件 并阻止事件向上冒泡
+            // if (isScrollRightEnd()) return;
+            // event.stopPropagation();
+            // expose.isWork = false;
+        }
+
+
+        function slideRightEnd(event) {
+            LOG('slideRightEnd')
+        }
 
         watchEffect(() => {
-            console.log(scrollEl.value?.offsetWidth);
-
             if (!scrollEl.value?.offsetWidth) return
             scrollLeft = scrollEl.value.offsetWidth * props.listHook.index
             scrollEl.value.scrollLeft = scrollLeft
@@ -162,6 +173,8 @@ export const RNestedViewPage = defineComponent({
             scrollEl.value.addEventListener('swarpLeft', slideLeft, { passive: false, capture: false });
             scrollEl.value.addEventListener('swarpRight', slideRight, { passive: false, capture: false });
             scrollEl.value.addEventListener('swarpEnd', slideEnd, { passive: false, capture: false });
+            // scrollEl.value.addEventListener('swarpLeftEnd', slideLeftEnd, { passive: false, capture: false });
+            // scrollEl.value.addEventListener('swarpRightEnd', slideRightEnd, { passive: false, capture: false });
         });
 
         const width = () => {
@@ -173,7 +186,6 @@ export const RNestedViewPage = defineComponent({
             if (scrollEl.value) return scrollEl.value.offsetWidth * length + 'px'
             return `calc(  100vw  * ${length}  )`
         }
-
 
         return () => {
             const children = ctx.slots?.default?.();
@@ -205,8 +217,9 @@ function cAni(config = {}) {
 
 
     function animaMinus() {
-        if (stopAction) return;
+        if (stopAction) return cancelAnimationFrame(time);
         time = requestAnimationFrame(() => {
+            if (stopAction) return cancelAnimationFrame(time);
             opt.velocity = Number((opt.velocity + opt.deceleration).toFixed(3));
             if (opt.velocity > 0) opt.velocity = 0;
             if (opt.velocity >= 0) {
@@ -214,7 +227,7 @@ function cAni(config = {}) {
                 opt.onanimationend(opt.velocity)
                 return
             }
-            if (stopAction) return;
+            if (stopAction) return cancelAnimationFrame(time);
             opt.onanimation(opt.velocity)
             animaMinus()
         })
@@ -223,16 +236,17 @@ function cAni(config = {}) {
 
 
     function animaAdd() {
-        if (stopAction) return;
+        if (stopAction) return cancelAnimationFrame(time);
         time = requestAnimationFrame(() => {
+            if (stopAction) return cancelAnimationFrame(time);
             opt.velocity = Number((opt.velocity - opt.deceleration).toFixed(3));
             if (opt.velocity < 0) opt.velocity = 0;
             if (opt.velocity <= 0) {
-                stop()
                 opt.onanimationend(opt.velocity)
+                stop()
                 return
             }
-            if (stopAction) return;
+            if (stopAction) return cancelAnimationFrame(time);
             opt.onanimation(opt.velocity)
             animaAdd()
         })
@@ -247,13 +261,70 @@ function cAni(config = {}) {
     function stop() {
         stopAction = true;
         cancelAnimationFrame(time)
-        // console.log('停止动画');
     }
 
 
     function start() {
         stopAction = false;
         anima()
+    }
+
+    return { start, stop }
+}
+
+function Animation(config = {}) {
+    let timer;
+    let stopAction = false;
+    const opt = {
+        from: 0,
+        to: 300,
+        avg: 10,
+        duration: 500,
+        onanimationend: () => undefined,
+        onanimation: () => undefined,
+        ...config
+    }
+    let value = opt.from;
+
+
+    function flash() {
+        if (opt.from < opt.to) {
+            value = value + opt.avg;
+            if (value >= opt.to) value = opt.to
+            opt.onanimation(value)
+            if (value >= opt.to) {
+                opt.onanimationend(value)
+                stop()
+                return
+            }
+        }
+
+        if (opt.from > opt.to) {
+            value = value - opt.avg;
+            if (value <= opt.to) value = opt.to
+            opt.onanimation(value)
+            if (value <= opt.to) {
+                opt.onanimationend(value)
+                stop()
+                return
+            }
+        }
+    }
+
+
+    function start() {
+        if (stopAction) return cancelAnimationFrame(timer);
+        timer = requestAnimationFrame(() => {
+            if (stopAction) return cancelAnimationFrame(timer);
+            flash()
+            start()
+        })
+    }
+
+
+    function stop() {
+        stopAction = true;
+        cancelAnimationFrame(timer)
     }
 
     return { start, stop }

@@ -16,7 +16,8 @@ export const RNestedScroll = defineComponent({
             dispatchScrollBottom,
             props,
             layer: (parent?.layer ?? 0) + 1,
-            disableTouch: Boolean(parent),
+            isWork: false,
+            index: 0,
         })
         provide("RNestedViewsContext", expose);
         if (parent) parent.children.push(expose);
@@ -27,6 +28,7 @@ export const RNestedScroll = defineComponent({
         const container = ref('container')
         let scrollTop = 0;
         let ani;
+        const coefficient = 20;
 
         function isScrollToTopEnd() {
             return scrollEl.value.scrollTop <= 0;
@@ -99,11 +101,13 @@ export const RNestedScroll = defineComponent({
             // 如果滚动到了底部 就不消费事件 return 出去
             // 如果没滚动到底部消费事件 并阻止事件向下传递
             if (isScrollToBottomEnd()) return;
+            // LOG('slideCaptureTopEnd', event.velocityY);
             event.stopPropagation();
+            ani?.stop?.();
             ani = cAni({
                 velocity: event.velocityY,
                 onanimation(v) {
-                    const moveY = v * 15;
+                    const moveY = v * coefficient;
                     if (moveY > 0) dispatchScrollTop(moveY);
                 }
             });
@@ -115,11 +119,13 @@ export const RNestedScroll = defineComponent({
             // 如果滚动到了顶部 就不消费事件 return 出去
             // 如果没滚动顶部 就去消费事件 并阻止事件向上冒泡
             if (isScrollToTopEnd()) return;
+            // LOG('slideBottomEnd', event.velocityY);
             event.stopPropagation();
+            ani?.stop?.();
             ani = cAni({
                 velocity: event.velocityY,
                 onanimation(v) {
-                    const moveY = v * 15;
+                    const moveY = v * coefficient;
                     if (moveY < 0) dispatchScrollBottom(moveY);
                 }
             });
@@ -172,15 +178,16 @@ function cAni(config = {}) {
 
 
     function animaMinus() {
-        if (stopAction) return;
+        if (stopAction) return cancelAnimationFrame(time);
         time = requestAnimationFrame(() => {
+            if (stopAction) return cancelAnimationFrame(time);
             opt.velocity = Number((opt.velocity + opt.deceleration).toFixed(3));
             if (opt.velocity > 0) opt.velocity = 0;
             if (opt.velocity >= 0) {
                 stop()
                 return
             }
-            if (stopAction) return;
+            if (stopAction) return cancelAnimationFrame(time);
             opt.onanimation(opt.velocity)
             animaMinus()
         })
@@ -189,15 +196,16 @@ function cAni(config = {}) {
 
 
     function animaAdd() {
-        if (stopAction) return;
+        if (stopAction) return cancelAnimationFrame(time);
         time = requestAnimationFrame(() => {
+            if (stopAction) return cancelAnimationFrame(time);
             opt.velocity = Number((opt.velocity - opt.deceleration).toFixed(3));
             if (opt.velocity < 0) opt.velocity = 0;
             if (opt.velocity <= 0) {
                 stop()
                 return
             }
-            if (stopAction) return;
+            if (stopAction) return cancelAnimationFrame(time);
             opt.onanimation(opt.velocity)
             animaAdd()
         })
@@ -212,7 +220,6 @@ function cAni(config = {}) {
     function stop() {
         stopAction = true;
         cancelAnimationFrame(time)
-        // console.log('停止动画');
     }
 
 

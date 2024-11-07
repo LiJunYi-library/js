@@ -111,14 +111,14 @@ class SlideEvent extends CustomEvent {
         event.velocityX = undefinedReturn(intervalEvent.velocityX, event.speedX)
         event.velocityY = undefinedReturn(intervalEvent.velocityY, event.speedY)
         if ((event.currentTime - intervalEvent.currentTime) >= COMPUTE_INTERVAL) {
-            // let avgPressure = 1;
-            let avgPressure = pressures.reduce((add, v) => { add = v + add; return add }, 0) / pressures.length;
-            // TODO 兼容性需处理
-            if (avgPressure < 0.8) avgPressure = 0.8
-            if (avgPressure > 1.8) avgPressure = avgPressure - 1
-            if (avgPressure > 2.8) avgPressure = avgPressure - 2
-            if (avgPressure > 3.8) avgPressure = avgPressure - 3
-            if (avgPressure > 4.8) avgPressure = 1.8;
+            let avgPressure = 1;
+            // let avgPressure = pressures.reduce((add, v) => { add = v + add; return add }, 0) / pressures.length;
+            // // TODO 兼容性需处理
+            // if (avgPressure < 0.8) avgPressure = 0.8
+            // if (avgPressure > 1.8) avgPressure = avgPressure - 1
+            // if (avgPressure > 2.8) avgPressure = avgPressure - 2
+            // if (avgPressure > 3.8) avgPressure = avgPressure - 3
+            // if (avgPressure > 4.8) avgPressure = 1.8;
             // console.log('avgPressure', avgPressure);
             const moveX = (intervalEvent?.pageX ?? 0) - event.pageX;
             const moveY = (intervalEvent?.pageY ?? 0) - event.pageY;

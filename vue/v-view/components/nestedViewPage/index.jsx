@@ -12,8 +12,8 @@ export const RNestedViewPage = defineComponent({
             child: undefined,
             children: [],
             parent,
-            dispatchScrollTop,
-            dispatchScrollBottom,
+            dispatchScrollTopFlying,
+            dispatchScrollBottomFlying,
             props,
             layer: (parent?.layer ?? 0) + 1,
             isWork: false,
@@ -31,12 +31,12 @@ export const RNestedViewPage = defineComponent({
         let adsorbAni;
         const childrens = computed(() => props.collectVnode.map((el) => el.component).filter(Boolean));
 
-        function dispatchScrollTop(...arg) {
-            expose.child?.dispatchScrollTop?.(...arg)
+        function dispatchScrollTopFlying(...arg) {
+            expose.child?.dispatchScrollTopFlying?.(...arg)
         }
 
-        function dispatchScrollBottom(...arg) {
-            expose.parent?.dispatchScrollBottom?.(...arg)
+        function dispatchScrollBottomFlying(...arg) {
+            expose.parent?.dispatchScrollBottomFlying?.(...arg)
         }
 
         function maxScrollLeft() {

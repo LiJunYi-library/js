@@ -198,11 +198,27 @@ export function arraySort(list = [], formatter, formatter2) {
   return list;
 }
 
+export function arraySortMin(...arg) {
+  return arraySort(...arg)[0]
+}
+
+export function arraySortMax(list = [], ...arg) {
+  return arraySort(list, ...arg)[list.length - 1]
+}
+
 // 数组排序  根据属性倒序
 export function arrayReverseSort(list = [], formatter, formatter2) {
   let fmt = formatter2 || formatter
   list.sort((a, b) => fmt(b) - formatter(a))
   return list;
+}
+
+export function arrayReverseSortMin(...arg) {
+  return arrayReverseSort(...arg)[list.length - 1]
+}
+
+export function arrayReverseSortMax(list = [], ...arg) {
+  return arrayReverseSort(list, ...arg)[0]
 }
 
 /**
@@ -230,7 +246,6 @@ export function arrayRandom(list) {
     list.push(list[index]);
     list.splice(index, 1);
   }
-  return list;
 }
 // 触发数组方法
 export function arrayInvokeFuns(...args) {

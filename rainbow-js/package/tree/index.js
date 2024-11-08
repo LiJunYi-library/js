@@ -6,18 +6,20 @@ function fmt(item) {
 }
 
 /**
- * 树形结构模糊筛选 不改变原树的堆
+ * 树形结构筛选 改变原对象
  * @param {*} children 
  * @param {*} formatter 
  * @param {*} formatterChildren 
+ * @param {*} isdeep
  * 
  * @param {*} copyC 
  * @param {*} parent 
  * @param {*} parentList 
  */
-export function treeVagueFilter(
+export function treeConditionRemove(
   children = [],
   formatter,
+  isdeep = false,
   formatterChildren = fmt,
   copyC = [...children],
   parent,
@@ -25,8 +27,8 @@ export function treeVagueFilter(
   copyC.forEach(child => {
     const childList = formatterChildren(child);
     if (!formatter(child) && !childList?.length) arrayRemove(children, child)
-    if (formatter(child)) return
-    if (childList?.length) treeVagueFilter(childList, formatter, formatterChildren, [...(childList ?? [])], child, children)
+    if (!isdeep && formatter(child)) return
+    if (childList?.length) treeConditionRemove(childList, formatter, isdeep, formatterChildren, [...(childList ?? [])], child, children)
   });
 
   if (parent && parentList) {
@@ -34,6 +36,53 @@ export function treeVagueFilter(
     if (!formatter(parent) && !pChildList?.length) arrayRemove(parentList, parent)
   }
 }
+
+export function treeConditionDeepRemove(children = [], formatter, formatterChildren) {
+  treeConditionRemove(children, formatter, true, formatterChildren)
+}
+
+
+
+function __treefilter(
+  children = [],
+  formatter,
+  isdeep = false,
+  formatterChildren = fmt,
+  copyC = [...children],
+  parent,
+  parentList) {
+  children.forEach(el => el.children = el.children?.map?.(val => ({ ...val })))
+  copyC.forEach(child => {
+    let childList = formatterChildren(child);
+    if (!formatter(child) && !childList?.length) arrayRemove(children, child)
+    if (!isdeep && formatter(child)) return
+    let copy = [...(childList ?? [])]
+    if (childList?.length) __treefilter(childList, formatter, isdeep, formatterChildren, copy, child, children)
+  });
+
+  if (parent && parentList) {
+    const pChildList = formatterChildren(parent);
+    if (!formatter(parent) && !pChildList?.length) arrayRemove(parentList, parent)
+  }
+}
+/**
+ * 树形结构筛选 不改变原对象 返回新树
+ * @param {*} children 
+ * @param {*} formatter 
+ * @param {*} formatterChildren 
+ * @param {*} isdeep
+ * 
+ * @param {*} copyC 
+ * @param {*} parent 
+ * @param {*} parentList 
+ */
+function treefilter(treeList = [], ...arg) {
+  const d = treeList.map(el => ({ ...el }));
+  __treefilter(d, ...arg);
+  return d;
+}
+// console.log(treefilter(d.data, (item) => item.name?.includes("玩具"), false));
+// console.log(d.data);
 
 /**
  * 树形结构 递归循环
@@ -58,3 +107,6 @@ export function treeForEach(list = [], fun, recursive, formatter = fmt, layer = 
   }
   return roote;
 }
+
+
+

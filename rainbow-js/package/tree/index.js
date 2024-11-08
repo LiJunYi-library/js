@@ -76,7 +76,7 @@ function __treefilter(
  * @param {*} parent 
  * @param {*} parentList 
  */
-function treefilter(treeList = [], ...arg) {
+export function treefilter(treeList = [], ...arg) {
   const d = treeList.map(el => ({ ...el }));
   __treefilter(d, ...arg);
   return d;

@@ -44,7 +44,7 @@ const tems = { ElInputNumber, ElInput };
 
 
 const options = reactive({
-    index: useLocalStorageRef('dfg', undefined).value,
+    index: useLocalStorageRef('dfg').value,
     value: undefined,
     label: undefined,
     list: arrayLoopMap(10, (v) => ({ value: `value--${v}`, label: `label--${v}` })),

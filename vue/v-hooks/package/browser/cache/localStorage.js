@@ -69,10 +69,14 @@ function localStorageRef(props = {}) {
 }
 
 export function useLocalStorageRef(...args) {
-  if (args.length === 1) return localStorageRef(args[0]);
+  if (args.length === 1) {
+    if (typeof args[0] === 'string') return localStorageRef({ key: args[0], });
+    return localStorageRef(args[0]);
+  }
+
   if (args.length === 2) return localStorageRef({ key: args[0], defaultValue: args[1] });
-  const props = args[2] || {};
-  return localStorageRef({ key: args[0], defaultValue: args[1], ...props });
+
+  return localStorageRef({ key: args[0], defaultValue: args[1], ...(args[2] || {}) });
 }
 
 function dateLocalStorageRef(props = {}) {

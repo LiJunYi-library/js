@@ -72,11 +72,7 @@ export function useLocalStorageRef(...args) {
   if (args.length === 1) return localStorageRef(args[0]);
   if (args.length === 2) return localStorageRef({ key: args[0], defaultValue: args[1] });
   const props = args[2] || {};
-  return localStorageRef({
-    key: args[0],
-    defaultValue: args[1],
-    ...props,
-  });
+  return localStorageRef({ key: args[0], defaultValue: args[1], ...props });
 }
 
 function dateLocalStorageRef(props = {}) {

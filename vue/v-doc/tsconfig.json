@@ -1,0 +1,55 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "noImplicitThis": false,
+    "suppressImplicitAnyIndexErrors": false,
+    "experimentalDecorators": true,
+    "baseUrl": ".",
+    "types": [
+      "webpack-env",
+      "mocha",
+      "chai"
+    ],
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "lib/*": [
+        "library/*"
+      ]
+    },
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
+  },
+  "include": [
+    "firm/**/*",
+    "firm/**/*.ts",
+    "firm/**/*.tsx",
+    "test/**/*",
+    "test/**/*.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "src/main.ts",
+    "src/computed/index.js"  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

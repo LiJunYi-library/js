@@ -139,7 +139,7 @@ function useMultiple2(props = {}) {
   async function onSelect(item, i) {
     const val = formatterValue(item);
     const lab = formatterLabel(item);
-    if (!(await config.validator(hooks))) return true;
+    if (!(await config.validator(item, i))) return true;
     if (same(item)) {
       hooks.context.SH.select = hooks.context.SH.select.filter(
         (v) => v !== item

@@ -1,9 +1,7 @@
 import { ReactiveEffect, UnwrapNestedRefs, Ref } from "vue";
 import { PromiseHooks, AsyncFun, PromiseConfig } from "../promise";
+import { Radio, SelectProps } from './radio'
 
-export declare class Radio {
-  constructor(params: any);
-}
 
 export declare function useRadio(options: any): any; // todo
 export declare function useAsyncRadio(options: any): any; // todo
@@ -12,7 +10,7 @@ export declare function useAsyncMultiple(options: any): any; // todo
 export declare function useSelect(options: any): any; // todo
 export declare function useAsyncSelect(options: any): any; // todo
 
-export declare function useRadio2(options: any): any; // use
+export declare function useRadio2<T>(options: SelectProps<T>): Radio<T>; // use
 export declare function useRadio3(options: any): any; // use
 export declare function useAsyncRadio2(options: any): any; // use
 export declare function useMultiple2(options: any): any; // use

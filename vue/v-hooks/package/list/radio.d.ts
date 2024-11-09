@@ -1,69 +1,57 @@
-type Funs = {
-  /**
-   * @param value 更新 value
-   */
-  updateValue(value: any): any;
-  /**
-   * @param index 更新 index
-   */
-  updateIndex(index: any): any;
-  /**
-   * @param label 更新 label
-   */
-  updateLabel(options: any): any;
-  /**
-   * @param select  更新 select 接收一个数组中的值
-   */
-  updateSelect(select: any): any;
-  /**
-   * @param select  更新 select 接收一个回调函数用于更新 find的用法
-   */
-  updateSelect(fun: (item: never, index: number, list: never[]) => boolean): any;
 
-  transform(options: any): any; // 废弃
-  transformStore(options: any): any;
-  transformParams(options: any): any;
-  save(options: any): any;
-  restore(options: any): any;
-  onSelect(options: any): any;
-  same(options: any): any;
-  reset(options: any): any;
-  formatterValue(options: any): any;
-  formatterLabel(options: any): any;
-  formatterDisabled(options: any): any;
-  updateList(options: any): any;
-  resolveList(options: any): any;
-  resolveValue(options: any): any;
-  verifyValueInList(options: any): any;
-  updateListAndReset(options: any): any;
-  updateListToResolveValue(options: any): any;
-  getSelectOfValue(options: any): any;
-  selectOfValue(options: any): any;
-  getLabelOfValue(options: any): any;
-  labelOfValue(options: any): any;
-  getIndexOfValue(options: any): any;
-  indexOfValue(options: any): any;
-  someValue(options: any): any;
+
+export declare type SelectProps<T = any> = {
+  select?: T,
+  value: any,
+  label: any,
+  index?: number,
+  cancelSame?: boolean, // 是否取消相同的
+  isMultiple?: boolean,
+  formRequired?: boolean,
+  formRequiredErrorMessage?: string,
+  onChange?(),
+  validator?: (item: T, index: number) => Promise<boolean>,
+  formatterValue?: (item?: T) => any,
+  formatterLabel?: (item?: T) => any,
+  formatterDisabled?: (item?: T) => any,
+  formatterList?: (list: T[]) => T[],
+  listRef: (...any) => any,
+  selectRef: (...any) => any,
+  valueRef: (...any) => any,
+  labelRef: (...any) => any,
+  indexRef: (...any) => any,
+  priority?: "valueItem" | "indexItem" | "labelItem",
+  list?: T[],
+}
+
+export declare type Radio<T = any> = {
+  index?: number,
+  label?: any,
+  value?: any,
+  select?: T,
+  list: T[],
+  onSelect(item: T, index: number): boolean,
+  same(item: T): boolean,
+  reset(),
+  formatterValue(),
+  formatterLabel(): any,
+  formatterDisabled(): boolean,
+  updateList(l: T[] = [], values?: { select?: T, value?: any, label?: any, index?: number, }): void,
+  updateValue(v: any): void,
+  updateIndex(v: number): void,
+  updateLabel(v: any): void,
+  updateSelect(v: T): void,
+  updateSelect(v: (value: T, index: number, arr: T[]) => T): void,
+  getSelectOfValue(v: any): T,
+  getLabelOfValue(v: any): any,
+  getIndexOfValue(v: any): number,
+  someValue(v: any): boolean,
+  resolveList(l: T[] = []): void,
+  resolveValue(): void,
+  verifyValueInList(): boolean,
+  updateListAndReset(l: T[] = []): void,
+  updateListToResolveValue(l: T[] = []): void,
+  updateListResolve(l: T[] = []): void,
+
+  formValidation(),
 };
-
-type Proxy = {
-  list: any[];
-  select: any;
-  value: any;
-  label: any;
-  index: any;
-  store: Store;
-} & Funs;
-
-type Store = {
-  list: any[];
-  select: any;
-  value: any;
-  label: any;
-  index: any;
-};
-
-export declare function useRadio(options: any): {
-  proxy: Proxy;
-  store: Store;
-} & Funs;

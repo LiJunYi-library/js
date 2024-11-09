@@ -7,6 +7,7 @@
 .DS_Store
 /node_modules
 /vue/doc/node_modules/
+/vue/v-doc/node_modules/
 /vue/projects/
 /vue/vscode/
 /react/projects/

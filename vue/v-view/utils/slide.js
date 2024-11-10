@@ -1,4 +1,4 @@
-const COMPUTE_INTERVAL = 20;
+const COMPUTE_INTERVAL = 30;
 let currentView = document.createElement('div');
 let srcViews = [];
 let timer;
@@ -82,6 +82,7 @@ class SlideEvent extends CustomEvent {
         if (event.moveY > 0) dispatchEvent('slideTop', event);
         if (event.moveX !== 0) dispatchEvent('slideHorizontal', event);
         if (event.moveY !== 0) dispatchEvent('slideVertical', event);
+        dispatchEvent('slideAfterMove', event);
         timer = setTimeout(() => { intervalEvent = event }, COMPUTE_INTERVAL);
     }
 
@@ -96,6 +97,7 @@ class SlideEvent extends CustomEvent {
             if (event.velocityY > 0) dispatchEvent('slideTopEnd', event);
             if (event.velocityX !== 0) dispatchEvent('slideHorizontalEnd', event);
             if (event.velocityY !== 0) dispatchEvent('slideVerticalEnd', event);
+            dispatchEvent('slideAfterEnd', event);
         }
         dispatchEvent('slideUp', event)
         currentView = undefined

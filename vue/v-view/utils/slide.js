@@ -1,6 +1,7 @@
-const COMPUTE_INTERVAL = 25;
+const COMPUTE_INTERVAL = 20;
 let currentView = document.createElement('div');
 let srcViews = [];
+let timer;
 export const customEventNameMap = new Map();
 const compute = {
     isGetPdownLock: false,
@@ -27,6 +28,7 @@ class SlideEvent extends CustomEvent {
     let pressures = [];
 
     function onPointerdown(event) {
+        clearTimeout(timer);
         extendedEventArgs(event);
         dispatchEvent('slideDown', event);
         beginEvent = event;
@@ -40,6 +42,7 @@ class SlideEvent extends CustomEvent {
     }
 
     function onPointermove(event) {
+        clearTimeout(timer);
         extendedEventArgs(event);
         prveEvent = event;
         if (!isVerdict) {
@@ -62,6 +65,12 @@ class SlideEvent extends CustomEvent {
         }
         if (isStart) {
             dispatchEvent('slideStrat', event);
+            if (event.moveX < 0) dispatchEvent('slideRightStrat', event);
+            if (event.moveY < 0) dispatchEvent('slideBottomStrat', event);
+            if (event.moveX > 0) dispatchEvent('slideLeftStrat', event);
+            if (event.moveY > 0) dispatchEvent('slideTopStrat', event);
+            if (event.moveX !== 0) dispatchEvent('slideHorizontalStrat', event);
+            if (event.moveY !== 0) dispatchEvent('slideVerticalStrat', event);
             isStart = false;
             return;
         }
@@ -73,9 +82,11 @@ class SlideEvent extends CustomEvent {
         if (event.moveY > 0) dispatchEvent('slideTop', event);
         if (event.moveX !== 0) dispatchEvent('slideHorizontal', event);
         if (event.moveY !== 0) dispatchEvent('slideVertical', event);
+        timer = setTimeout(() => { intervalEvent = event }, COMPUTE_INTERVAL);
     }
 
     function onPointerup(event) {
+        clearTimeout(timer);
         extendedEventArgs(event);
         if (isVerdict) {
             dispatchEvent('slideEnd', event);
@@ -120,11 +131,12 @@ class SlideEvent extends CustomEvent {
             // if (avgPressure > 3.8) avgPressure = avgPressure - 3
             // if (avgPressure > 4.8) avgPressure = 1.8;
             // console.log('avgPressure', avgPressure);
+            // console.log('avgPressure', intervalEvent?.pageY, event.pageY);
             const moveX = (intervalEvent?.pageX ?? 0) - event.pageX;
             const moveY = (intervalEvent?.pageY ?? 0) - event.pageY;
             const deltaTime = event.currentTime - (intervalEvent?.currentTime ?? 0);
-            event.velocityX = moveX / deltaTime * avgPressure
-            event.velocityY = moveY / deltaTime * avgPressure
+            event.velocityX = Number((moveX / deltaTime * avgPressure).toFixed(2))
+            event.velocityY = Number((moveY / deltaTime * avgPressure).toFixed(2))
             intervalEvent = event;
             pressures = []
         }

@@ -6,8 +6,8 @@ import './index.scss';
 
 export const RScrollRefresh = defineComponent({
   props: {
-    maxHeight: { type: Number, default: 70 },
-    refreshHeight: { type: Number, default: 50 },
+    maxHeight: { type: Number, default: 200 },
+    refreshHeight: { type: Number, default: 100 },
     minTime: { type: Number, default: 500 },
   },
   setup(props, context) {

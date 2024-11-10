@@ -105,7 +105,7 @@ export const RScroll = defineComponent({
         contentStyle: [Object, String, Array],
         triggerScrollBottomHeight: { type: [Number, String], default: 2 },
     },
-    emits: ["scrollDown", "scrollUp", "scrollChange", "scrollBottom", "scrollRefresh"],
+    emits: ["scrollChange", "scrollDown", "scrollUp", "scrollTop", "scrollBottom", "scrollRefresh"],
     setup(props, context) {
         const { scrollController: SC } = props;
         const RScrollContext = reactive({

@@ -1,4 +1,4 @@
-import { onMounted, ref, defineComponent, onBeforeUnmount, inject, reactive, provide } from 'vue'
+import { onMounted, ref, defineComponent, onBeforeUnmount, inject, reactive, provide, renderSlot } from 'vue'
 import './index.scss'
 import { extendedSlideEvents } from '../../utils/slide'
 const RNestedScrollProps = { tag: String, isRoot: Boolean };
@@ -15,6 +15,8 @@ export const RNestedScroll = defineComponent({
             parent: parent,
             dispatchScrollTopFlying,
             dispatchScrollBottomFlying,
+            isScrollToTopEnd,
+            isScrollToBottomEnd,
             props,
             layer: (parent?.layer ?? 0) + 1,
             isWork: false,
@@ -23,6 +25,16 @@ export const RNestedScroll = defineComponent({
         provide("RNestedViewsContext", expose);
         if (parent) parent.children.push(expose);
         if (parent) parent.child = parent.children[0];
+        const RScrollContext = reactive({
+            element: null,
+            contentElement: null,
+            scrollTop: 0,
+            otherElement: [],
+            children: [],
+            stickys: [],
+            isHandActuated: false,
+        });
+        provide("RScrollContext", RScrollContext);
 
         const scrollEl = ref('scrollEl')
         const container = ref('container')
@@ -46,6 +58,18 @@ export const RNestedScroll = defineComponent({
             return container.value.offsetHeight - scrollEl.value.offsetHeight;
         }
 
+        function dispatchChildrenEvent(name, ...arg) {
+            if (!name) return;
+            RScrollContext.children.forEach((el) => {
+                el?.[name]?.(...arg);
+            });
+        }
+
+        function getAllNestedParent(current, arr = []) {
+            if (!current) return arr;
+            arr.push(current);
+            return getAllNestedParent(current.parent, arr)
+        }
 
         function doScrollTop(moveY) {
             let stop = scrollTop + moveY;
@@ -58,6 +82,7 @@ export const RNestedScroll = defineComponent({
             // LOG('onScrollUp', scrollEl.value.scrollTop);
             ctx.emit('scrollUp');
             ctx.emit('scrollChange');
+            RScrollContext.scrollTop = scrollEl.value.scrollTop;
             if (isScrollToBottomEnd()) {
                 ctx.emit('scrollBottom');
                 // LOG('滚动到--底部', scrollEl.value.scrollTop);
@@ -94,6 +119,7 @@ export const RNestedScroll = defineComponent({
             // LOG('onScrollDown', scrollEl.value.scrollTop);
             ctx.emit('scrollDown')
             ctx.emit('scrollChange');
+            RScrollContext.scrollTop = scrollEl.value.scrollTop;
             if (isScrollToTopEnd()) {
                 ctx.emit('scrollTop');
                 // LOG('滚动到顶部', scrollEl.value.scrollTop);
@@ -132,8 +158,6 @@ export const RNestedScroll = defineComponent({
             if (event.orientation !== 'vertical') return;
         }
 
-
-
         function slideCaptureTop(event) {
             if (event.orientation !== 'vertical') return;
             // 如果滚动到了底部 就不消费事件 return 出去
@@ -158,10 +182,14 @@ export const RNestedScroll = defineComponent({
 
         function slideAfterMove(event) {
             if (event.orientation !== 'vertical') return;
-            if (event.direction === 'bottom' && isScrollToTopEnd() && !isScrollMove) {
+            const isAllScrollToTopEnd = getAllNestedParent(expose).map(el => el.isScrollToTopEnd).filter(Boolean).every(fn => fn());
+            
+            if (event.direction === 'bottom' && isAllScrollToTopEnd && !isScrollMove) {
                 isRefreshMove = true; // 设置为刷新状态 并阻止向上冒泡
                 event.stopPropagation();
-                ctx.emit('scrollRefreshMove', event);
+                ctx.emit('scrollRefreshMove', event, event.deltaY);
+                dispatchChildrenEvent('onScrollRefresh', event, event.deltaY);
+                dispatchChildrenEvent('onScrollRefreshMove', event, event.deltaY);
             }
         }
 
@@ -192,6 +220,24 @@ export const RNestedScroll = defineComponent({
             dispatchScrollBottomFlying(event.velocityY);
         }
 
+        function onTouchstart(event) {
+            dispatchChildrenEvent('onTouchstart', event);
+        }
+
+        function onTouchend(event) {
+            dispatchChildrenEvent('onTouchend', event);
+        }
+
+        function onRef(el) {
+            RScrollContext.element = el;
+            scrollEl.value = el
+        }
+
+        function onContentRef(el) {
+            RScrollContext.contentElement = el;
+            container.value = el
+        }
+
         let mSlide;
         onMounted(() => {
             mSlide = extendedSlideEvents(scrollEl.value, { direction: ['top', 'bottom'], customEventName: 'scroll', })
@@ -218,10 +264,12 @@ export const RNestedScroll = defineComponent({
         })
 
         return () => {
-            return <div class="r-nested-scroll" ref={(el) => scrollEl.value = el} >
-                <div ref={(el) => container.value = el} class="r-nested-scroll-container">
+            return <div class="r-nested-scroll" ref={onRef} onTouchstart={onTouchstart} onTouchend={onTouchend} >
+                {renderSlot(ctx.slots, "top")}
+                <div ref={onContentRef} class="r-nested-scroll-container">
                     {ctx.slots?.default?.()}
                 </div>
+                {renderSlot(ctx.slots, "bottom")}
             </div>
         }
     }

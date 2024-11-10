@@ -5,6 +5,7 @@ const RNestedScrollProps = { tag: String, isRoot: Boolean };
 
 export const RNestedScroll = defineComponent({
     props: RNestedScrollProps,
+    emits: ["scrollChange", "scrollDown", "scrollUp", "scrollTop", "scrollBottom", "scrollRefresh", "scrollEnd"],
     setup(props, ctx) {
         const parent = props.isRoot ? undefined : inject("RNestedViewsContext");
         const expose = reactive({
@@ -29,6 +30,8 @@ export const RNestedScroll = defineComponent({
         let scrollTop = 0;
         let ani;
         const coefficient = 20;
+        let isScrollMove = false;
+
 
         function isScrollToTopEnd() {
             return scrollEl.value.scrollTop <= 0;
@@ -43,22 +46,6 @@ export const RNestedScroll = defineComponent({
             return container.value.offsetHeight - scrollEl.value.offsetHeight;
         }
 
-        function slideCaptureDown() {
-            ani?.stop?.();
-        }
-
-        function slideCaptureStrat(event) {
-            if (event.orientation !== 'vertical') return;
-        }
-
-        function slideCaptureTop(event) {
-            if (event.orientation !== 'vertical') return;
-            // 如果滚动到了底部 就不消费事件 return 出去
-            // 如果没滚动到底部消费事件 并阻止事件向下传递
-            if (isScrollToBottomEnd()) return;
-            event.stopPropagation();
-            doScrollTop(event.moveY)
-        }
 
         function doScrollTop(moveY) {
             let stop = scrollTop + moveY;
@@ -68,22 +55,13 @@ export const RNestedScroll = defineComponent({
                 scrollTop = maxScrollTop()
                 scrollEl.value.scrollTop = maxScrollTop() + 10
             }
-        }
-
-        function slideBottom(event) {
-            if (event.orientation !== 'vertical') return;
-            // 如果滚动到了顶部 就不消费事件 return 出去
-            // 如果没滚动顶部 就去消费事件 并阻止事件向上冒泡
-            if (isScrollToTopEnd()) return;
-            event.stopPropagation();
-            doScrollBottom(event.moveY)
-        }
-
-        function doScrollBottom(moveY) {
-            let stop = scrollTop + moveY;
-            if (stop < 0) stop = 0
-            scrollTop = stop
-            scrollEl.value.scrollTop = scrollTop
+            // LOG('onScrollUp', scrollEl.value.scrollTop);
+            ctx.emit('scrollUp');
+            ctx.emit('scrollChange');
+            if (isScrollToBottomEnd()) {
+                ctx.emit('scrollBottom');
+                // LOG('滚动到--底部', scrollEl.value.scrollTop);
+            }
         }
 
         function dispatchScrollTopFlying(velocity) {
@@ -96,12 +74,30 @@ export const RNestedScroll = defineComponent({
                         doScrollTop(moveY)
                         if (isScrollToBottomEnd()) {
                             ani?.stop?.();
+                            LOG('滚动停止 到底停止');
                             expose.child?.dispatchScrollTopFlying?.(v)
                         }
                     }
+                },
+                onanimationEnd(v) {
+                    LOG('滚动停止');
                 }
             });
             ani.start();
+        }
+
+        function doScrollBottom(moveY) {
+            let stop = scrollTop + moveY;
+            if (stop < 0) stop = 0
+            scrollTop = stop
+            scrollEl.value.scrollTop = scrollTop
+            // LOG('onScrollDown', scrollEl.value.scrollTop);
+            ctx.emit('scrollDown')
+            ctx.emit('scrollChange');
+            if (isScrollToTopEnd()) {
+                ctx.emit('scrollTop');
+                // LOG('滚动到顶部', scrollEl.value.scrollTop);
+            }
         }
 
         function dispatchScrollBottomFlying(velocity) {
@@ -110,36 +106,69 @@ export const RNestedScroll = defineComponent({
                 velocity,
                 onanimation(v) {
                     const moveY = Math.ceil(v * coefficient);
-                    if (moveY < 0){
+                    if (moveY < 0) {
                         doScrollBottom(moveY)
                         if (isScrollToTopEnd()) {
                             ani?.stop?.();
+                            LOG('滚动停止 到顶部停止');
                             expose.parent?.dispatchScrollBottomFlying?.(v)
                         }
                     }
+                },
+                onanimationEnd(v) {
+                    LOG('滚动停止');
                 }
             });
             ani.start();
         }
 
-        function slideCaptureTopEnd(event) {
+        function slideCaptureDown() {
+            ani?.stop?.();
+        }
+
+        function slideCaptureStrat(event) {
             if (event.orientation !== 'vertical') return;
-            // LOG('slideCaptureTopEnd', event.orientation);
+        }
+
+        function slideMove(event) {
+            if (event.orientation !== 'vertical') return;
+            // console.log('slideMove', event.vertical);
+            if (event.direction === 'bottom' && scrollEl.value.scrollTop <= 0) {
+                console.log('scrollRefresh',isScrollMove);
+                event.stopImmediatePropagation();
+                event.preventDefault();
+            }
+        }
+
+        function slideCaptureTop(event) {
+            if (event.orientation !== 'vertical') return;
             // 如果滚动到了底部 就不消费事件 return 出去
             // 如果没滚动到底部消费事件 并阻止事件向下传递
             if (isScrollToBottomEnd()) return;
             event.stopPropagation();
+            isScrollMove = true;
+            doScrollTop(event.moveY)
+        }
+
+        function slideBottom(event) {
+            if (event.orientation !== 'vertical') return;
+            // 如果滚动到了顶部 就不消费事件 return 出去
+            // 如果没滚动顶部 就去消费事件 并阻止事件向上冒泡
+            if (isScrollToTopEnd()) return;
+            event.stopPropagation();
+            isScrollMove = true;
+            doScrollBottom(event.moveY)
+        }
+
+        function slideCaptureTopEnd(event) {
+            if (event.orientation !== 'vertical') return;
+            // 如果滚动到了底部 就不消费事件 return 出去
+            // 如果没滚动到底部消费事件 并阻止事件向下传递
+            if (isScrollToBottomEnd()) return;
+            event.stopPropagation();
+            isScrollMove = false;
             LOG('清除动画 slideCaptureTopEnd', event.velocityY);
             dispatchScrollTopFlying(event.velocityY)
-            // ani?.stop?.();
-            // ani = cAni({
-            //     velocity: event.velocityY,
-            //     onanimation(v) {
-            //         const moveY = Math.ceil(v * coefficient);
-            //         if (moveY > 0) dispatchScrollTop(moveY);
-            //     }
-            // });
-            // ani.start();
         }
 
         function slideBottomEnd(event) {
@@ -148,17 +177,9 @@ export const RNestedScroll = defineComponent({
             // 如果没滚动顶部 就去消费事件 并阻止事件向上冒泡
             if (isScrollToTopEnd()) return;
             event.stopPropagation();
+            isScrollMove = false;
             LOG('清除动画 slideBottomEnd', event.velocityY);
             dispatchScrollBottomFlying(event.velocityY);
-            // ani?.stop?.();
-            // ani = cAni({
-            //     velocity: event.velocityY,
-            //     onanimation(v) {
-            //         const moveY = Math.ceil(v * coefficient);
-            //         if (moveY < 0) dispatchScrollBottom(moveY);
-            //     }
-            // });
-            // ani.start();
         }
 
         let mSlide;
@@ -166,6 +187,8 @@ export const RNestedScroll = defineComponent({
             mSlide = extendedSlideEvents(scrollEl.value, { direction: ['top', 'bottom'], customEventName: 'scroll', })
             scrollEl.value.addEventListener('scrollDown', slideCaptureDown, { passive: false, capture: true });
             scrollEl.value.addEventListener('scrollStrat', slideCaptureStrat, { passive: false, capture: true });
+
+            scrollEl.value.addEventListener('scrollMove', slideMove, { passive: false, capture: false });
             scrollEl.value.addEventListener('scrollTop', slideCaptureTop, { passive: false, capture: true });
             scrollEl.value.addEventListener('scrollBottom', slideBottom, { passive: false, capture: false });
             scrollEl.value.addEventListener('scrollTopEnd', slideCaptureTopEnd, { passive: false, capture: true });
@@ -183,7 +206,7 @@ export const RNestedScroll = defineComponent({
         })
 
         return () => {
-            return <div class="r-nested-scroll" ref={(el) => scrollEl.value = el}>
+            return <div class="r-nested-scroll" ref={(el) => scrollEl.value = el} >
                 <div ref={(el) => container.value = el} class="r-nested-scroll-container">
                     {ctx.slots?.default?.()}
                 </div>
@@ -199,6 +222,7 @@ function cAni(config = {}) {
         velocity: 0,
         deceleration: 0.03,
         onanimation: () => undefined,
+        onanimationEnd: () => undefined,
         ...config
     }
     let stopAction = false;
@@ -214,6 +238,7 @@ function cAni(config = {}) {
             if (opt.velocity > 0) opt.velocity = 0;
             if (opt.velocity >= 0) {
                 stop()
+                opt.onanimationEnd(opt.velocity)
                 return
             }
             if (stopAction) return cancelAnimationFrame(time);
@@ -232,6 +257,7 @@ function cAni(config = {}) {
             if (opt.velocity < 0) opt.velocity = 0;
             if (opt.velocity <= 0) {
                 stop()
+                opt.onanimationEnd(opt.velocity)
                 return
             }
             if (stopAction) return cancelAnimationFrame(time);

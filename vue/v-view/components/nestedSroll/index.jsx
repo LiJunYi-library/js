@@ -1,12 +1,23 @@
 import { onMounted, ref, defineComponent, onBeforeUnmount, inject, reactive, provide, renderSlot } from 'vue'
 import './index.scss'
 import { extendedSlideEvents } from '../../utils/slide'
+import { useResizeObserver } from '@rainbow_ljy/v-hooks';
 const RNestedScrollProps = { tag: String, isRoot: Boolean };
 const LOG = (...arg) => console.log(...arg);
 export const RNestedScroll = defineComponent({
     props: RNestedScrollProps,
     emits: ["scrollChange", "scrollDown", "scrollUp", "scrollTop", "scrollBottom", "scrollRefreshMove", "scrollEnd"],
     setup(props, ctx) {
+        const RScrollContext = reactive({
+            element: null,
+            contentElement: null,
+            scrollTop: 0,
+            otherElement: [],
+            children: [],
+            stickys: [],
+            isHandActuated: false,
+        });
+        provide("RScrollContext", RScrollContext);
         const parent = props.isRoot ? undefined : inject("RNestedViewsContext");
         const expose = reactive({
             name: 'RNestedScrollContext',
@@ -21,20 +32,13 @@ export const RNestedScroll = defineComponent({
             layer: (parent?.layer ?? 0) + 1,
             isWork: false,
             index: 0,
+            RScrollContext,
         })
         provide("RNestedViewsContext", expose);
         if (parent) parent.children.push(expose);
         if (parent) parent.child = parent.children[0];
-        const RScrollContext = reactive({
-            element: null,
-            contentElement: null,
-            scrollTop: 0,
-            otherElement: [],
-            children: [],
-            stickys: [],
-            isHandActuated: false,
-        });
-        provide("RScrollContext", RScrollContext);
+
+
 
         const scrollEl = ref('scrollEl')
         const container = ref('container')
@@ -43,6 +47,10 @@ export const RNestedScroll = defineComponent({
         const coefficient = 20;
         let isScrollMove = false;
         let isRefreshMove = false;
+        useResizeObserver(() => container.value, ([entrie]) => {
+            console.log(entrie);
+            dispatchChildrenEvent('onResize', entrie, RScrollContext.element.scrollTop);
+        })
 
 
         function isScrollToTopEnd() {
@@ -82,6 +90,7 @@ export const RNestedScroll = defineComponent({
             // LOG('onScrollUp', scrollEl.value.scrollTop);
             ctx.emit('scrollUp');
             ctx.emit('scrollChange');
+            dispatchChildrenEvent('onScrollUp', { moveY }, RScrollContext.element.scrollTop);
             RScrollContext.scrollTop = scrollEl.value.scrollTop;
             if (isScrollToBottomEnd()) {
                 ctx.emit('scrollBottom');
@@ -119,6 +128,7 @@ export const RNestedScroll = defineComponent({
             // LOG('onScrollDown', scrollEl.value.scrollTop);
             ctx.emit('scrollDown')
             ctx.emit('scrollChange');
+            dispatchChildrenEvent('onScrollDown', { moveY }, RScrollContext.element.scrollTop);
             RScrollContext.scrollTop = scrollEl.value.scrollTop;
             if (isScrollToTopEnd()) {
                 ctx.emit('scrollTop');
@@ -182,14 +192,13 @@ export const RNestedScroll = defineComponent({
 
         function slideAfterMove(event) {
             if (event.orientation !== 'vertical') return;
-            const isAllScrollToTopEnd = getAllNestedParent(expose).map(el => el.isScrollToTopEnd).filter(Boolean).every(fn => fn());
-
-            if (event.direction === 'bottom' && isAllScrollToTopEnd && !isScrollMove) {
-                isRefreshMove = true; // 设置为刷新状态 并阻止向上冒泡
-                event.stopPropagation();
-                ctx.emit('scrollRefreshMove', event, event.deltaY);
-                dispatchChildrenEvent('onScrollRefreshMove', event, event.deltaY);
-            }
+            // const isAllScrollToTopEnd = getAllNestedParent(expose).map(el => el.isScrollToTopEnd).filter(Boolean).every(fn => fn());
+            // if (event.direction === 'bottom' && isAllScrollToTopEnd && !isScrollMove) {
+            //     isRefreshMove = true; // 设置为刷新状态 并阻止向上冒泡
+            //     event.stopPropagation();
+            //     ctx.emit('scrollRefreshMove', event, event.deltaY);
+            //     dispatchChildrenEvent('onScrollRefreshMove', event, event.deltaY);
+            // }
         }
 
         function slideEnd(event) {
@@ -301,7 +310,7 @@ function cAni(config = {}) {
                 return
             }
             if (stopAction) return cancelAnimationFrame(time);
-            LOG('onanimation')
+            // LOG('onanimation')
             opt.onanimation(opt.velocity)
             animaMinus()
         })
@@ -321,7 +330,7 @@ function cAni(config = {}) {
                 return
             }
             if (stopAction) return cancelAnimationFrame(time);
-            LOG('onanimation')
+            // LOG('onanimation')
             opt.onanimation(opt.velocity)
             animaAdd()
         })

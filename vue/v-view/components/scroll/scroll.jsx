@@ -208,18 +208,18 @@ export const RScroll = defineComponent({
             event.containerHeight = RScrollContext.element.offsetHeight;
             event.contentHeight = RScrollContext.contentElement.offsetHeight;
 
-            if (space > 0) {
-                RScrollContext.children.forEach((el) => {
-                    el.onScrollDown(event, scrollTop);
-                });
-                context.emit("scrollDown", scrollTop);
-            }
-
-            if (space < 0) {
+            if (space > 0) { 
                 RScrollContext.children.forEach((el) => {
                     el.onScrollUp(event, scrollTop);
                 });
                 context.emit("scrollUp", scrollTop);
+            }
+
+            if (space < 0) {
+                RScrollContext.children.forEach((el) => {
+                    el.onScrollDown(event, scrollTop);
+                });
+                context.emit("scrollDown", scrollTop);
             }
 
             RScrollContext.children.forEach((el) => {

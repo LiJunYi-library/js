@@ -20,8 +20,8 @@ export const RScrollMemoryBubble = defineComponent({
     const visible = ref(props.visible);
     const cache = { stop: 0 }
     const scrollController = props.visibleReversal
-      ? useScrollController({ onScrollUp: setVisibleFalse, onScrollDown: setVisibleTrue })
-      : useScrollController({ onScrollUp: setVisibleTrue, onScrollDown: setVisibleFalse })
+      ? useScrollController({ onScrollUp: setVisibleTrue, onScrollDown: setVisibleFalse })
+      : useScrollController({ onScrollUp: setVisibleFalse, onScrollDown: setVisibleTrue })
 
     function setVisibleTrue(event, stop) {
       if (visible.value === true) return;

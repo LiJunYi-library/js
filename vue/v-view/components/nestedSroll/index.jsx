@@ -48,7 +48,7 @@ export const RNestedScroll = defineComponent({
         let isScrollMove = false;
         let isRefreshMove = false;
         useResizeObserver(() => container.value, ([entrie]) => {
-            dispatchChildrenEvent('onResize', entrie, RScrollContext.element.scrollTop);
+            dispatchChildrenEvent('onResize', entrie, getNestedScrollTop());
         })
 
 
@@ -111,10 +111,11 @@ export const RNestedScroll = defineComponent({
                 scrollEl.value.scrollTop = maxScrollTop() + 10
             }
             // LOG('onScrollUp', scrollEl.value.scrollTop);
-            const event = createEvent({ moveY })
+            const sEvent = createEvent({ moveY })
             ctx.emit('scrollUp');
             ctx.emit('scrollChange');
-            dispatchChildrenEvent('onScrollUp', event, getNestedScrollTop());
+            dispatchChildrenEvent('onScrollUp', sEvent, getNestedScrollTop());
+            dispatchChildrenEvent('onScroll', sEvent, getNestedScrollTop());
             RScrollContext.scrollTop = scrollEl.value.scrollTop;
             if (isScrollToBottomEnd()) {
                 ctx.emit('scrollBottom');
@@ -150,10 +151,11 @@ export const RNestedScroll = defineComponent({
             scrollTop = stop
             scrollEl.value.scrollTop = scrollTop
             // LOG('doScrollBottom', scrollEl.value.scrollTop);
-            const event = createEvent({ moveY })
+            const sEvent = createEvent({ moveY })
             ctx.emit('scrollDown')
             ctx.emit('scrollChange');
-            dispatchChildrenEvent('onScrollDown', event, getNestedScrollTop());
+            dispatchChildrenEvent('onScrollDown', sEvent, getNestedScrollTop());
+            dispatchChildrenEvent('onScroll', sEvent, getNestedScrollTop());
             RScrollContext.scrollTop = scrollEl.value.scrollTop;
             if (isScrollToTopEnd()) {
                 ctx.emit('scrollTop');
@@ -254,11 +256,11 @@ export const RNestedScroll = defineComponent({
         }
 
         function onTouchstart(event) {
-            dispatchChildrenEvent('onTouchstart', event);
+            dispatchChildrenEvent('onTouchstart', event, getNestedScrollTop());
         }
 
         function onTouchend(event) {
-            dispatchChildrenEvent('onTouchend', event);
+            dispatchChildrenEvent('onTouchend', event, getNestedScrollTop());
         }
 
         function onRef(el) {
@@ -285,7 +287,7 @@ export const RNestedScroll = defineComponent({
             scrollEl.value.addEventListener('scrollTopEnd', slideCaptureTopEnd, { passive: false, capture: true });
             scrollEl.value.addEventListener('scrollBottomEnd', slideBottomEnd, { passive: false, capture: false });
 
-            dispatchChildrenEvent('onMounted', RScrollContext.element.scrollTop);
+            dispatchChildrenEvent('onMounted', getNestedScrollTop());
         })
 
         onBeforeUnmount(() => {

@@ -6,7 +6,7 @@ const RNestedViewPageProps = { tag: String, isRoot: Boolean, collectVnode: [], l
 export const RNestedViewPage = defineComponent({
     props: RNestedViewPageProps,
     setup(props, ctx) {
-        const parent = inject("RNestedViewsContext");
+        const parent = props.isRoot ? undefined : inject("RNestedViewsContext");
         const expose = reactive({
             name: 'RNestedViewPageContext',
             child: undefined,
@@ -20,6 +20,7 @@ export const RNestedViewPage = defineComponent({
             index: 0,
         })
         provide("RNestedViewsContext", expose);
+        expose.root = parent?.root || expose;
         if (parent) parent.children.push(expose);
         if (parent) parent.child = parent.children[0];
 

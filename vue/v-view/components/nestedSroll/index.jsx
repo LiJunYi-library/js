@@ -35,9 +35,12 @@ export const RNestedScroll = defineComponent({
             RScrollContext,
         })
         provide("RNestedViewsContext", expose);
+        expose.root = parent?.root || expose;
         if (parent) parent.children.push(expose);
         if (parent) parent.child = parent.children[0];
+     
 
+        console.log(expose);
 
 
         const scrollEl = ref('scrollEl')
@@ -48,7 +51,6 @@ export const RNestedScroll = defineComponent({
         let isScrollMove = false;
         let isRefreshMove = false;
         useResizeObserver(() => container.value, ([entrie]) => {
-            console.log(entrie);
             dispatchChildrenEvent('onResize', entrie, RScrollContext.element.scrollTop);
         })
 
@@ -75,8 +77,20 @@ export const RNestedScroll = defineComponent({
 
         function getAllNestedParent(current, arr = []) {
             if (!current) return arr;
-            arr.push(current);
+            arr.unshift(current);
             return getAllNestedParent(current.parent, arr)
+        }
+
+        function getAllNestedChild(current, arr = []) {
+            if (!current) return arr;
+            arr.push(current);
+            return getAllNestedChild(current.child, arr)
+        }
+
+        function getNestedScrollTop() {
+            const tree = getAllNestedChild(expose.root)
+            console.log(tree);
+            
         }
 
         function doScrollTop(moveY) {
@@ -125,7 +139,7 @@ export const RNestedScroll = defineComponent({
             if (stop < 0) stop = 0
             scrollTop = stop
             scrollEl.value.scrollTop = scrollTop
-            // LOG('onScrollDown', scrollEl.value.scrollTop);
+            LOG('onScrollDown', getNestedScrollTop());
             ctx.emit('scrollDown')
             ctx.emit('scrollChange');
             dispatchChildrenEvent('onScrollDown', { moveY }, RScrollContext.element.scrollTop);
@@ -259,6 +273,8 @@ export const RNestedScroll = defineComponent({
             scrollEl.value.addEventListener('scrollEnd', slideEnd, { passive: false, capture: true });
             scrollEl.value.addEventListener('scrollTopEnd', slideCaptureTopEnd, { passive: false, capture: true });
             scrollEl.value.addEventListener('scrollBottomEnd', slideBottomEnd, { passive: false, capture: false });
+
+            dispatchChildrenEvent('onMounted', RScrollContext.element.scrollTop);
         })
 
         onBeforeUnmount(() => {

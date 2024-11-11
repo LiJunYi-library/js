@@ -58,7 +58,7 @@ export function useScrollController(props = {}) {
         onScrollDown: () => undefined,
         onScroll: () => undefined,
         onScrollend: () => undefined,
-        onScrollRefresh: () => undefined,
+        onScrollRefreshMove: () => undefined,
         onResize: () => undefined,
         onMounted: () => undefined,
         onTouchstart: () => undefined,
@@ -340,7 +340,7 @@ export const RScroll = defineComponent({
                 let refreshHeight = moveY - 10;
                 event.refreshHeight = refreshHeight
                 RScrollContext.children.forEach((el) => {
-                    el.onScrollRefresh(event, refreshHeight);
+                    el.onScrollRefreshMove(event, refreshHeight);
                 });
                 context.emit("scrollRefresh", refreshHeight);
             }

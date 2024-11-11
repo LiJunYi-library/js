@@ -162,7 +162,7 @@ export const RNestedScroll = defineComponent({
             if (event.orientation !== 'vertical') return;
             // 如果滚动到了底部 就不消费事件 return 出去
             // 如果没滚动到底部消费事件 并阻止事件向下传递
-            if (isScrollToBottomEnd()) return;
+            if (isScrollToBottomEnd()) return isScrollMove = false;
             event.stopPropagation();
             if (isRefreshMove) return; //处于刷新状态中
             isScrollMove = true;
@@ -173,7 +173,7 @@ export const RNestedScroll = defineComponent({
             if (event.orientation !== 'vertical') return;
             // 如果滚动到了顶部 就不消费事件 return 出去
             // 如果没滚动顶部 就去消费事件 并阻止事件向上冒泡
-            if (isScrollToTopEnd()) return;
+            if (isScrollToTopEnd()) return isScrollMove = false;
             event.stopPropagation();
             if (isRefreshMove) return; //处于刷新状态中
             isScrollMove = true;
@@ -183,12 +183,11 @@ export const RNestedScroll = defineComponent({
         function slideAfterMove(event) {
             if (event.orientation !== 'vertical') return;
             const isAllScrollToTopEnd = getAllNestedParent(expose).map(el => el.isScrollToTopEnd).filter(Boolean).every(fn => fn());
-            
+
             if (event.direction === 'bottom' && isAllScrollToTopEnd && !isScrollMove) {
                 isRefreshMove = true; // 设置为刷新状态 并阻止向上冒泡
                 event.stopPropagation();
                 ctx.emit('scrollRefreshMove', event, event.deltaY);
-                dispatchChildrenEvent('onScrollRefresh', event, event.deltaY);
                 dispatchChildrenEvent('onScrollRefreshMove', event, event.deltaY);
             }
         }

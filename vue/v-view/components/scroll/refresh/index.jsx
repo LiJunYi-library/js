@@ -23,7 +23,7 @@ export const RScrollRefresh = defineComponent({
 
 
     useScrollController({
-      onScrollRefresh(event, rh) {
+      onScrollRefreshMove(event, rh) {
         if (loading.value) return event.preventDefault();
         if (rh < 0) rh = 0;
         height.value = (rh / (props.maxHeight / 2 + rh)) * props.maxHeight

@@ -205,8 +205,8 @@ export const RScroll = defineComponent({
 
             event.space = space;
             event.scrollTop = scrollTop;
-            event.containerHeight = RScrollContext.element.offsetHeight;
-            event.contentHeight = RScrollContext.contentElement.offsetHeight;
+            event.scrollHeight = RScrollContext.element.offsetHeight;
+            event.containerHeight = RScrollContext.contentElement.offsetHeight;
 
             if (space > 0) { 
                 RScrollContext.children.forEach((el) => {

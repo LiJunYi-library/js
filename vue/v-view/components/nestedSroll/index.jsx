@@ -38,9 +38,6 @@ export const RNestedScroll = defineComponent({
         expose.root = parent?.root || expose;
         if (parent) parent.children.push(expose);
         if (parent) parent.child = parent.children[0];
-     
-
-        console.log(expose);
 
 
         const scrollEl = ref('scrollEl')
@@ -87,10 +84,22 @@ export const RNestedScroll = defineComponent({
             return getAllNestedChild(current.child, arr)
         }
 
-        function getNestedScrollTop() {
-            const tree = getAllNestedChild(expose.root)
-            console.log(tree);
-            
+        function getNestedScrollTop(ctxNode = expose.root) {
+            const tree = getAllNestedChild(ctxNode).map(el => el?.RScrollContext?.element).filter(Boolean)
+            const top = tree.reduce((add, el) => { add = add + el.scrollTop; return add }, 0)
+            return top
+        }
+
+        function createEvent(event = {}) {
+            return {
+                ...event,
+                space: event?.moveY,
+                scrollTop: scrollEl.value.scrollTop,
+                nestedScrollTop: getNestedScrollTop(),
+                nestedChildScrollTop: getNestedScrollTop(expose),
+                scrollHeight: scrollEl.value.offsetHeight,
+                containerHeight: container.value.offsetHeight,
+            }
         }
 
         function doScrollTop(moveY) {
@@ -102,9 +111,10 @@ export const RNestedScroll = defineComponent({
                 scrollEl.value.scrollTop = maxScrollTop() + 10
             }
             // LOG('onScrollUp', scrollEl.value.scrollTop);
+            const event = createEvent({ moveY })
             ctx.emit('scrollUp');
             ctx.emit('scrollChange');
-            dispatchChildrenEvent('onScrollUp', { moveY }, RScrollContext.element.scrollTop);
+            dispatchChildrenEvent('onScrollUp', event, getNestedScrollTop());
             RScrollContext.scrollTop = scrollEl.value.scrollTop;
             if (isScrollToBottomEnd()) {
                 ctx.emit('scrollBottom');
@@ -139,10 +149,11 @@ export const RNestedScroll = defineComponent({
             if (stop < 0) stop = 0
             scrollTop = stop
             scrollEl.value.scrollTop = scrollTop
-            LOG('onScrollDown', getNestedScrollTop());
+            // LOG('doScrollBottom', scrollEl.value.scrollTop);
+            const event = createEvent({ moveY })
             ctx.emit('scrollDown')
             ctx.emit('scrollChange');
-            dispatchChildrenEvent('onScrollDown', { moveY }, RScrollContext.element.scrollTop);
+            dispatchChildrenEvent('onScrollDown', event, getNestedScrollTop());
             RScrollContext.scrollTop = scrollEl.value.scrollTop;
             if (isScrollToTopEnd()) {
                 ctx.emit('scrollTop');

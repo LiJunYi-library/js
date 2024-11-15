@@ -16,21 +16,12 @@ function useRadio2(props = {}) {
   };
   function resolveProps(options = config) {
     const map = {
-      indexItem: undefined,
-      valueItem: undefined,
-      labelItem: undefined,
+      indexItem: () => options.index !== undefined ? options.list[options.index] : undefined,
+      valueItem: () => options.value !== undefined ? options.list.find(findForValue(options.value)) : undefined,
+      labelItem: () => options.label !== undefined ? options.list.find(findForLabel(options.label)) : undefined,
     };
-    if (options.index !== undefined)
-      map.indexItem = options.list[options.index];
-    if (options.value !== undefined)
-      map.valueItem = options.list.find(findForValue(options.value));
-    if (options.label !== undefined)
-      map.labelItem = options.list.find(findForLabel(options.label));
-    const item =
-      map[options.priority] || map.valueItem || map.indexItem || map.labelItem;
-
-    if (!item && !options.list.length) return { ...options };
-
+    let item;
+    if (options.priority !== 'none') item = map?.[options.priority]?.() || map.valueItem() || map.indexItem() || map.labelItem();
     const arg = {
       list: options.list,
       select: item,
@@ -124,9 +115,9 @@ function useRadio2(props = {}) {
     hooks.context.SH.index = undefined;
   }
 
-  function updateList(l = [], values = {}) {
-    list.value = l;
-    const arg = { ...config, list: l, ...values };
+  function updateList(li = [], values = {}) {
+    list.value = li;
+    const arg = { ...config, list: li, ...values };
     const args = resolveProps(arg);
     hooks.context.SH.select = args.select;
     hooks.context.SH.value = args.value;
@@ -158,12 +149,8 @@ function useRadio2(props = {}) {
   }
 
   function updateSelect(val) {
-    if (typeof val === "function") {
-      hooks.context.SH.select = list.value.find(val);
-    } else {
-      hooks.context.SH.select = val;
-    }
-
+    if (typeof val === "function") hooks.context.SH.select = list.value.find(val);
+    else hooks.context.SH.select = val;
     hooks.context.SH.index = findIndex(list.value, hooks.context.SH.select);
     hooks.context.SH.value = formatterValue(hooks.context.SH.select);
     hooks.context.SH.label = formatterLabel(hooks.context.SH.select);

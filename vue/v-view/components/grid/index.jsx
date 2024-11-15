@@ -1,6 +1,7 @@
 import { RResize } from "../resize";
 import { defineComponent, watch, computed, renderSlot, renderList, ref, onMounted, onBeforeUnmount } from "vue";
 import "./index.scss";
+import './base'
 
 export const RGridProps = {
   columns: { type: Number, default: 1 },

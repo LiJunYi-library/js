@@ -24,7 +24,7 @@ function getSelectProps(options = {}) {
     valueRef: ref,
     labelRef: ref,
     indexRef: ref,
-    priority: "valueItem", // 优先使用的 valueItem ||   indexItem || labelItem
+    priority: "valueItem", // 优先使用的 valueItem || indexItem || labelItem || none
     ...options,
     list: options.list || [],
   };

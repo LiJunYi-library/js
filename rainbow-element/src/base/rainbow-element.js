@@ -49,7 +49,7 @@ export class RainbowElement extends HTMLElement {
         const parent = p.parentNode;
         if (!parent) return;
         const tName = parent.constructor.name;
-        if (tName === name) return parent;
+        if (tName === name || parent.$elementName === name) return parent;
         return this.$getParentByType(name, parent)
     }
 
@@ -162,7 +162,7 @@ export class RainbowElement extends HTMLElement {
         this.$dispatchOn('$onAdopted')
         // console.log("自定义元素移动至新页面。");
     }
-    
+
 
     $onDisconnected() { }
     disconnectedCallback() {

@@ -24,7 +24,8 @@ export class RScroll extends RainbowElement {
 
         this.addEventListener('scroll', this.$onScroll.bind(this));
     }
-
+    
+    $elementName = 'RScroll'
     $prveScrollTop = this.scrollTop;
 
     $onScroll(event) {
@@ -32,7 +33,6 @@ export class RScroll extends RainbowElement {
         event.moveY = this.$prveScrollTop - this.scrollTop;
         if (event.moveY < 0) this.dispatchEvent(this.$createCustomEvent('scrollUp', event));
         if (event.moveY > 0) this.dispatchEvent(this.$createCustomEvent('scrollDown', event));
-        // console.log(event)
         this.$prveScrollTop = this.scrollTop;
     }
 

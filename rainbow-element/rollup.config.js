@@ -11,19 +11,19 @@ export default {
         {
             file: 'index.esm.js', 
             format: 'esm',
-            sourcemap: false
+            sourcemap: true
         },
         {
             file: 'index.js',
-            format: 'umd',
+            format: 'esm',
             name: 'rainbowElement',
-            sourcemap: false
+            sourcemap: true
         },
         {
             file: 'index.main.js',
             format: 'iife',
             name: 'rainbowElement',
-            sourcemap: false
+            sourcemap: true
         },
     ],
     plugins: [

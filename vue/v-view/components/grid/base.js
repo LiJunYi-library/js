@@ -13,8 +13,6 @@ class RainbowElement extends HTMLElement {
         }
         this.prototype.$props = props
         this.prototype.$attrs = attrs
-        console.log(keys);
-
         return keys
     }
 

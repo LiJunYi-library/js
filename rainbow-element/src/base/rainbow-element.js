@@ -32,6 +32,27 @@ export class RainbowElement extends HTMLElement {
         this.$initChildrenResizeObserver();
     }
 
+    $createCustomEvent(name, event, eventInitDict = {},) {
+        const newEvent = new CustomEvent(name, { bubbles: true, cancelable: true, ...eventInitDict })
+        for (const key in event) {
+            try {
+                if (newEvent[key] === undefined) newEvent[key] = event[key];
+            } catch (error) {
+                console.warn(error);
+            }
+        }
+        return newEvent
+    }
+
+    $getParentByType(name, p = this) {
+        if (!p) return;
+        const parent = p.parentNode;
+        if (!parent) return;
+        const tName = parent.constructor.name;
+        if (tName === name) return parent;
+        return this.$getParentByType(name, parent)
+    }
+
     $dispatchOn(eName, ...args) {
         this?.[eName]?.(...args)
         if (this.$renderEvents.includes(eName)) this.$onRender(eName, ...args)
@@ -128,7 +149,7 @@ export class RainbowElement extends HTMLElement {
         if (this.$isASTinit === true) this.$onAttrsChange(this.$attrs, name, oldValue, newValue);
     }
 
-
+    $onConnected() { }
     connectedCallback() {
         this.$isASTinit = true;
         Array.from(this.children).forEach(child => this.$childrenResizeObserver.observe(child));
@@ -136,16 +157,19 @@ export class RainbowElement extends HTMLElement {
         // console.log('自定义元素添加至页面。', this.offsetWidth);
     }
 
+    $onAdopted() { }
     adoptedCallback() {
         this.$dispatchOn('$onAdopted')
         // console.log("自定义元素移动至新页面。");
     }
 
+    $onDisconnected() { }
     disconnectedCallback() {
         // console.log("自定义元素从页面中移除。");
         this.$resizeObserver?.disconnect?.();
         this.$childrenResizeObserver?.disconnect?.();
         this.$mutationObserver?.disconnect?.();
+        this.$dispatchOn('$onDisconnected')
     }
 
 }

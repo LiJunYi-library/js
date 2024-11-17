@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./index.css">
+    <script type="module">
+        import './index.js'
+        // console.log(RGrids);
+
+    </script>
+</head>
+<style>
+    body {
+        word-wrap: break-word;
+    }
+
+    .r-falls-item {
+        background: yellow;
+    }
+</style>
+
+<body>
+    <!-- <div style="position: relative;height: 500px;">
+        <r-absolute position="center">center</r-absolute>
+        <r-absolute position="top-left">top-left</r-absolute>
+        <r-absolute position="top-center">top-center</r-absolute>
+        <r-absolute position="top-right">top-right</r-absolute>
+        <r-absolute position="right-center">right-center</r-absolute>
+        <r-absolute position="right-bottom">right-bottom</r-absolute>
+        <r-absolute position="bottom-center">bottom-center</r-absolute>
+        <r-absolute position="bottom-left">bottom-left</r-absolute>
+        <r-absolute position="left-center">left-center</r-absolute>
+    </div> -->
+
+    <r-falls wrap="true" reverse="true" column-gap="10" row-gap="20" id="box">
+        <div>12345</div>
+        <div>
+            123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123
+        </div>
+        <div class="8889">123897456123897456123897456123897456123897456123897456123897456123897456</div>
+        <div>123</div>
+        <div id="item">99999</div>
+    </r-falls>
+
+    <!-- <r-grid wrap="true" reverse="true" row-gap="10" >
+        <div>12345</div>
+        <div>123</div>
+        <div>123897456</div>
+        <div>123</div>
+        <div>99999</div>
+    </r-grid> -->
+    <!-- 
+    <r-flex wrap="true" direction="column" reverse="true" >
+        <div>12345</div>
+        <div>123</div>
+        <div>123</div>
+        <div>123897456</div>
+        <div>123</div>
+        <div>99999</div>
+    </r-flex> -->
+</body>
+
+<script>
+
+const box = document.getElementById('box')
+const i2 = document.createElement('div')
+i2.innerText='2'
+box.append(i2)
+console.log('aaaaaaaaa');
+
+
+    // setTimeout(() => {
+    //     const item = document.createElement('div')
+    //     item.innerText = 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww'
+   
+    //     box.append(item)
+
+    //     setTimeout(() => {
+    //         item.innerText = 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww' 
+    //     }, 1000);
+    // }, 1000);
+
+</script>
+
+</html>

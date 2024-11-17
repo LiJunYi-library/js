@@ -22,7 +22,7 @@ const testArr = [
   { num: 99, tt: "奇" },
 ];
 
-export * from "./sql";
+export * from "./sql.js";
 
 if (!Array.prototype.at) {
   Array.prototype.at = function (...arg) {

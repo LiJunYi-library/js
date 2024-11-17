@@ -1,4 +1,5 @@
 import { RainbowElement } from '../base/index.js'
+import './index.css'
 
 export class RFlex extends RainbowElement {
     static observedAttributes = this.$initProps({

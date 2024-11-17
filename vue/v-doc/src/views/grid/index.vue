@@ -1,5 +1,12 @@
 <template>
     <div>
+        <r-flex wrap="true" reverse="true" row-gap="10">
+            <div>12345</div>
+            <div>123</div>
+            <div>123897456</div>
+            <div>123</div>
+            <div>99999</div>
+        </r-flex>
 
     </div>
 </template>

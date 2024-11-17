@@ -16,7 +16,7 @@ export const RFlexHoc = (optinos = {}) => {
             align: { type: String, default: "" },
             alignSelf: { type: String, default: "" },
             auto: { type: [String, Boolean], default: "" },
-            fill: [Boolean, String],
+            fill:  { type: [String, Boolean], default: "" },
             gap: { type: [Number, String], default: "" },
             ...config.props,
         },

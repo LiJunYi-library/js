@@ -1,13 +1,7 @@
 import { RainbowElement } from '../base/index.js'
-// import { arrayLoopMap } from '../../rainbow-js/package/array/index.js'
+import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
+import './index.css'
 
-function arrayLoopMap(num, cb) {
-    const arr = [];
-    for (let index = 0; index < num; index++) {
-        arr.push(cb(index));
-    }
-    return arr;
-}
 
 export class RFalls extends RainbowElement {
     static observedAttributes = this.$initProps({
@@ -17,6 +11,10 @@ export class RFalls extends RainbowElement {
         'row-gap': { type: Number, default: 0 },
         'column-gap': { type: Number, default: 0 },
     });
+
+    constructor(...arg){
+        super(...arg)
+    }
 
 
     get $col() {

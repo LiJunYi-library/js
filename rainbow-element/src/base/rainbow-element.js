@@ -1,5 +1,5 @@
 export class RainbowElement extends HTMLElement {
-    static $initProps = (props) => {
+    static $initProps(props) {
         const keys = [];
         const attrs = {};
         for (const key in props) {
@@ -46,7 +46,6 @@ export class RainbowElement extends HTMLElement {
         }
     }
     $mutationObserverCB(mutationsList, ...arg) {
-        console.log(' $onMutation ', mutationsList);
         this.$dispatchOn('$onMutation', mutationsList, ...arg)
         for (let mutation of mutationsList) {
             if (mutation.type === "childList") {
@@ -103,8 +102,9 @@ export class RainbowElement extends HTMLElement {
 
 
     $setAttrsProp(name, value) {
+
         const pop = this.$props[name];
-        if (!pop) this.$attrs[name] = value;
+        if (!pop) return this.$attrs[name] = value;
         let cto = pop.type || pop;
         if (cto instanceof Array) {
             let t = cto.map(el => el.name);

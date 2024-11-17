@@ -5,10 +5,10 @@ import './index.scss';
 
 export const RScrollMemoryBubble = defineComponent({
   props: {
-    top: Number,
-    left: Number,
-    right: Number,
-    bottom: Number,
+    top: String,
+    left: String,
+    right: String,
+    bottom: String,
     position: { type: String, default: "right" },
     visible: { type: Boolean, default: true },
     visibleDistance: { type: Number, default: 100 },

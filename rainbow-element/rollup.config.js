@@ -1,4 +1,4 @@
-// rollup.config.js
+
 import resolve from '@rollup/plugin-node-resolve'; // 使 Rollup 能够查找外部模块
 import commonjs from '@rollup/plugin-commonjs'; // 将 CommonJS 转换为 ES6 模块
 import { terser } from 'rollup-plugin-terser'; // 压缩 JavaScript 代码
@@ -11,19 +11,19 @@ export default {
         {
             file: 'index.esm.js', 
             format: 'esm',
-            sourcemap: true
+            sourcemap: false
         },
         {
             file: 'index.js',
             format: 'umd',
             name: 'rainbowElement',
-            sourcemap: true
+            sourcemap: false
         },
         {
             file: 'index.main.js',
             format: 'iife',
             name: 'rainbowElement',
-            sourcemap: true
+            sourcemap: false
         },
     ],
     plugins: [

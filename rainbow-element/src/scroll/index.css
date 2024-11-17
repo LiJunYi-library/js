@@ -1,0 +1,8 @@
+.r-scroll {
+    display: block;
+    position: relative;
+    overflow: auto;
+    max-height: 100vh;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}

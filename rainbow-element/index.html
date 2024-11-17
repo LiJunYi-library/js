@@ -4,86 +4,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="./index.css">
-    <script src="./index.main.js"></script>
-    <!-- <script type="module">
-        import './src/index.js'
-        // console.log(RGrids);
-
-    </script> -->
+    <title>Dialog with Overlay Animation</title>
 </head>
-<style>
-    body {
-        word-wrap: break-word;
-    }
-
-    .r-falls-item {
-        background: yellow;
-    }
-</style>
 
 <body>
-    <!-- <div style="position: relative;height: 500px;">
-        <r-absolute position="center">center</r-absolute>
-        <r-absolute position="top-left">top-left</r-absolute>
-        <r-absolute position="top-center">top-center</r-absolute>
-        <r-absolute position="top-right">top-right</r-absolute>
-        <r-absolute position="right-center">right-center</r-absolute>
-        <r-absolute position="right-bottom">right-bottom</r-absolute>
-        <r-absolute position="bottom-center">bottom-center</r-absolute>
-        <r-absolute position="bottom-left">bottom-left</r-absolute>
-        <r-absolute position="left-center">left-center</r-absolute>
-    </div> -->
+    <!DOCTYPE html>
+    <html lang="en">
 
-    <r-falls wrap="true" reverse="true" column-gap="10" row-gap="20" id="box">
-        <div>12345</div>
-        <div>
-            123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123
-        </div>
-        <div class="8889">123897456123897456123897456123897456123897456123897456123897456123897456</div>
-        <div>123</div>
-        <div id="item">99999</div>
-    </r-falls>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Card Example</title>
+        <script type="module" ></script>
+    </head>
 
-    <!-- <r-grid wrap="true" reverse="true" row-gap="10" >
-        <div>12345</div>
-        <div>123</div>
-        <div>123897456</div>
-        <div>123</div>
-        <div>99999</div>
-    </r-grid> -->
-    <!-- 
-    <r-flex wrap="true" direction="column" reverse="true" >
-        <div>12345</div>
-        <div>123</div>
-        <div>123</div>
-        <div>123897456</div>
-        <div>123</div>
-        <div>99999</div>
-    </r-flex> -->
+    <body>
+        <r-scroll>
+            <style>
+                .r-scroll-content {
+                    background: palegreen;
+                }
+            </style>
+            <h2 slot="top" class="s-top">Welcome to My Card</h2>
+            <p style="width: 20px;font-size: 104px;word-wrap: break-word;">Thisisasimplecardcomponentwithnamedslots.</p>
+        </r-scroll>
+    </body>
+
+    </html>
+
+    <script>
+
+        class RScroll extends HTMLElement {
+            constructor() {
+                super();
+                this.attachShadow({ mode: 'open' });
+                this.className = 'r-scroll'
+
+                const box = document.createElement('div');
+                box.className = 'r-scroll-content';
+                box.setAttribute('part', 'r-scroll-content  sdt');
+
+                const topSlot = document.createElement('slot');
+                topSlot.setAttribute('name', 'top');
+                topSlot.className = 'top';
+
+                const contentSlot = document.createElement('slot');
+                contentSlot.className = 'content';
+
+                const bottomSlot = document.createElement('slot');
+                bottomSlot.setAttribute('name', 'bottom');
+                bottomSlot.className = 'bottom';
+
+                box.appendChild(contentSlot);
+                this.shadowRoot.appendChild(topSlot);
+                this.shadowRoot.appendChild(box);
+                this.shadowRoot.appendChild(bottomSlot);
+            }
+        }
+
+        customElements.define('r-scroll', RScroll);
+    </script>
 </body>
 
-<script>
+<style>
+    r-scroll::part(sdt) {
+        background: cyan;
+    }
 
-const box = document.getElementById('box')
-const i2 = document.createElement('div')
-i2.innerText='2'
-box.append(i2)
-console.log('aaaaaaaaa');
+    ::slotted(.r-scroll-content) {
+        background-color: aqua;
+    }
 
+    .s-top {
+        background: pink;
+    }
 
-    // setTimeout(() => {
-    //     const item = document.createElement('div')
-    //     item.innerText = 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww'
-   
-    //     box.append(item)
+    r-scroll:host .r-scroll-content {
+        /* 你的样式规则 */
+        background: pink;
+    }
 
-    //     setTimeout(() => {
-    //         item.innerText = 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww' 
-    //     }, 1000);
-    // }, 1000);
+    /* 当 r-scroll 组件位于某个特定类的元素内时 */
+    r-scroll:host-context(.r-scroll-content) {
+        background: pink;
+    }
 
-</script>
+    .r-scroll {
+        background: orange;
+        max-height: 100vh;
+        overflow: auto;
+    }
+
+    r-scroll::shadow .r-scroll-content {
+        background: yellow;
+    }
+
+    r-scroll::part(content) {
+        max-height: 100vh;
+        overflow: auto;
+    }
+
+    r-scroll::slotted(.r-scroll-content) {
+        background: red;
+    }
+
+    .r-scroll::slotted(.r-scroll-content) {
+        background: red;
+    }
+
+    .r-scroll-content {
+        max-height: 100vh;
+        overflow: auto;
+    }
+
+    /* 基本样式 */
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    dialog {
+        display: none;
+        position: relative;
+        width: 300px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: white;
+        padding: 20px;
+    }
+
+    dialog::backdrop {
+        background-color: rgba(0, 0, 0, 0.5);
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    dialog.show-dialog {
+        display: block;
+        animation: slideIn 0.3s ease-in-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
 
 </html>

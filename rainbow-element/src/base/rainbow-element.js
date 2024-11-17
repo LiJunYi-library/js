@@ -93,11 +93,9 @@ export class RainbowElement extends HTMLElement {
             console.warn(error);
         }
     }
-
     $childrenResizeObserverCB(...arg) {
         this.$dispatchOn('$onChildrenResize', ...arg);
     }
-
 
 
     $initResizeObserver() {
@@ -149,6 +147,7 @@ export class RainbowElement extends HTMLElement {
         if (this.$isASTinit === true) this.$onAttrsChange(this.$attrs, name, oldValue, newValue);
     }
 
+
     $onConnected() { }
     connectedCallback() {
         this.$isASTinit = true;
@@ -157,11 +156,13 @@ export class RainbowElement extends HTMLElement {
         // console.log('自定义元素添加至页面。', this.offsetWidth);
     }
 
+
     $onAdopted() { }
     adoptedCallback() {
         this.$dispatchOn('$onAdopted')
         // console.log("自定义元素移动至新页面。");
     }
+    
 
     $onDisconnected() { }
     disconnectedCallback() {

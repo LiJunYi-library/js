@@ -15,5 +15,6 @@ module.exports = {
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "no-undef": "warn",
+    'vue/no-deprecated-slot-attribute': "off",
   },
 };

@@ -31,7 +31,7 @@
             <div class="s-top">Welcome to My Card {{ name }}</div>
             <div class="s-top">Welcome to My Card {{ name }}</div>
             <div class="s-top" style="font-size: 100px;">My {{ name }}</div>
-            <r-scroll-sticky  activetop="500" top="30" odd="5" opacityani="true" ></r-scroll-sticky>
+            <r-scroll-sticky  opacity-top="1000" top="30" odd="5" opacity-ani="true" ></r-scroll-sticky>
             <div style="width: 20px;font-size: 104px;word-wrap: break-word;">
                 Thisisasimplecardcomponentwithnamedslots.
             </div>

@@ -5,8 +5,9 @@ export class RScrollSticky extends RainbowElement {
     static observedAttributes = this.$initProps({
         top: Number,
         bottom: Number,
-        activetop: Number, // r-scroll-sticky-act 的高度
-        opacityani: Boolean
+        'active-top': Number, // r-scroll-sticky-act 的高度
+        'opacity-ani': Boolean,
+        'opacity-top': Number,
     });
 
     $isSticky = false;
@@ -54,22 +55,26 @@ export class RScrollSticky extends RainbowElement {
         this.$scrollParent.removeEventListener('scroll', this.$onScroll.bind(this));
     }
 
+    get $opacityTop() {
+        if (this.$attrs['opacity-top'] !== undefined) return this.$attrs['opacity-top']
+        return this.$initTop
+    }
+
     $onScroll(event) {
         if (this.$attrs.top === undefined) return;
         const { scrollTop } = this.$scrollParent;
+        const { top } = this.$attrs;
         let oTop = Math.round(this.$getOffsetTop(this.$scrollParent) - scrollTop);
-        this.$isSticky = this.$attrs.top === oTop;
-        this.$isStickyTop = this.$attrs.top >= oTop;
-        this.$isStickyBottom = this.$attrs.top <= oTop;
-        if (this.$attrs.activetop !== undefined) this.$isStickyAct = scrollTop >= this.$attrs.activetop;
-        console.log(this.$attrs)
-        if (this.$attrs.opacityani === true) this.$opacity = ((this.$initTop - oTop) / (this.$initTop - this.$attrs.top)).toFixed(3)
-        if (this.$attrs.opacityani === false) this.$opacity = (1 - (this.$initTop - oTop) / (this.$initTop - this.$attrs.top)).toFixed(3)
+        this.$isSticky = top === oTop;
+        this.$isStickyTop = top >= oTop;
+        this.$isStickyBottom = top <= oTop;
+        if (this.$attrs['active-top'] !== undefined) this.$isStickyAct = scrollTop >= this.$attrs['active-top'];
+        const opacity = ((scrollTop) / (this.$opacityTop - top)).toFixed(3)
+        if (this.$attrs['opacity-ani'] === true) this.$opacity = opacity
+        if (this.$attrs['opacity-ani'] === false) this.$opacity = 1 - opacity
 
         this.$bindClass();
         this.$bindStyle();
-        console.log('r-scroll-sticky onScroll', this.$opacity);
-
     }
 
 

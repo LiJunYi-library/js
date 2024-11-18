@@ -1,10 +1,18 @@
 <template>
     <div>
 
-        <!-- <r-flex>
+
+        <!-- <div style="height: 300px;position: relative;">
+            <r-absolute :position="name" :class="['my', 'dsk']">
+                bottom-center
+            </r-absolute>
+        </div>
+
+        <r-flex row-gap="10" :column-gap="gap">
+            <div>123</div>
             <div>123</div>
         </r-flex> -->
-
+        
         <r-scroll>
 
             <h2 slot="top" class="s-top">Welcome to My Card {{ name }}</h2>
@@ -30,9 +38,10 @@ import { useRadio2 } from '@rainbow_ljy/v-hooks';
 import { RNestedScroll, RScrollRefresh, RScrollMemoryBubble, RScrollVirtualGridList } from '@rainbow_ljy/v-view'
 import { ref } from 'vue'
 
-const name = ref('true');
+const name = ref('bottom-center');
 const bool = ref(true);
 const List = ref(arrayLoopMap(100, (value) => ({ value })))
+const gap = ref(10);
 
 function refresh(params) {
     return new Promise(re => setTimeout(re, 2000))
@@ -46,7 +55,8 @@ console.log(radio);
 
 setTimeout(() => {
     bool.value = false
-    name.value = 'false'
+    name.value = 'right-bottom'
+    gap.value = false
 }, 3000);
 
 </script>

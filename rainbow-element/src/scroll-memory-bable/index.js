@@ -23,18 +23,17 @@ export class RScrollMemoryBubble extends RainbowElement {
         this.$bindClass();
     }
 
-    $bindClass(props = this.$attrs) {
-        this.className = ''
-        this.classList.add(...[
+    $bindClass() {
+        this.$setClass((props) => [
             "r-scroll-memory-bubble",
             "r-scroll-memory-bubble-" + props.position,
             this.$visible ? `r-scroll-memory-bubble-visible` : `r-scroll-memory-bubble-hide`,
             this.$visible ? `r-scroll-memory-bubble-visible-${props.position}` : `r-scroll-memory-bubble-hide-${props.position}`,
-        ].filter(Boolean))
+        ])
     }
 
-    $bindStyle(props = this.$attrs) {
-        Object.assign(this.style, { top: props.top, right: props.right, bottom: props.bottom, left: props.left })
+    $bindStyle() {
+        this.$setStyle((props) => ({ top: props.top, right: props.right, bottom: props.bottom, left: props.left }))
     }
 
     $onConnected() {

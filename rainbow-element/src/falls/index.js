@@ -12,7 +12,7 @@ export class RFalls extends RainbowElement {
         'column-gap': { type: Number, default: 0 },
     });
 
-    constructor(...arg){
+    constructor(...arg) {
         super(...arg)
     }
 
@@ -56,7 +56,7 @@ export class RFalls extends RainbowElement {
     $renderEvents = ['$onMutation', '$onWidthChange', '$onChildrenResize', '$onAttrsChange']
 
     $onRender() {
-        this.classList.add('r-falls');
+        this.$setClass(() => ["r-falls"])
         const list = this.$createList();
 
         Array.from(this.children).forEach(child => {

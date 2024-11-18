@@ -21,16 +21,6 @@ export class RGrid extends RainbowElement {
         return this.$attrs.columns
     };
 
-    $bindStyle(props) {
-        Object.assign(this.style, {
-            "display": props.inline ? "inline-grid" : "grid",
-            "grid-template-columns": ` repeat(${this.$columns}, 1fr)`,
-            "grid-gap": props.gap + "px",
-            "row-gap": (props['row-gap'] || props.gap) + "px",
-            "column-gap": (props['column-gap'] || props.gap) + "px",
-        })
-    }
-
     $doLayout() {
         let props = this.$attrs;
         let children = Array.from(this.children)
@@ -68,9 +58,15 @@ export class RGrid extends RainbowElement {
     }
 
     $onRender() {
-        this.$bindStyle(this.$attrs);
+        this.$setClass(() => ['r-grid']);
+        this.$setStyle((props) => ({
+            "display": props.inline ? "inline-grid" : "grid",
+            "grid-template-columns": ` repeat(${this.$columns}, 1fr)`,
+            "grid-gap": props.gap + "px",
+            "row-gap": (props['row-gap'] || props.gap) + "px",
+            "column-gap": (props['column-gap'] || props.gap) + "px",
+        }))
         this.$doLayout();
-        this.classList.add('r-grid')
     }
 
 }

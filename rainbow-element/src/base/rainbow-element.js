@@ -1,3 +1,27 @@
+
+function deleteKey(target, source, bool) {
+    for (const key in target) {
+        if (Object.prototype.hasOwnProperty.call(target, key)) {
+            try {
+                if (bool) source[key] = ''
+                delete source[key]
+            } catch (error) { }
+        }
+    }
+}
+
+function assignStyle(style, newStyle) {
+    for (const key in newStyle) {
+        if (Object.prototype.hasOwnProperty.call(newStyle, key)) {
+            style[key] = newStyle[key];
+            if (style[key] !== newStyle[key]) {
+                style[key] = '';
+                console.warn(` style ${key} set ${newStyle[key]} 失败 已重置为 ''`);
+            }
+        }
+    }
+}
+
 export class RainbowElement extends HTMLElement {
     static $initProps(props) {
         const keys = [];
@@ -22,7 +46,7 @@ export class RainbowElement extends HTMLElement {
     $resizeObserver;
     $mutationObserver;
     $mutationObserverInit = { childList: true };
-    $cache = { offset: {} };
+    $cache = { offset: {}, class: new Map(), style: {} };
     $renderEvents = [];
 
     constructor() {
@@ -30,6 +54,38 @@ export class RainbowElement extends HTMLElement {
         this.$initResizeObserver();
         this.$initMutationObserver();
         this.$initChildrenResizeObserver();
+    }
+
+    $setStyle(fmtStyle = () => ({})) {
+        let ftStyle = fmtStyle(this.$attrs) || {};
+        let newStyle = ftStyle;
+        if (ftStyle instanceof Array) {
+            newStyle = ftStyle.filter(Boolean).reduce((add, value) => {
+                Object.assign(add, value);
+                return add
+            }, {})
+        }
+
+        deleteKey(newStyle, this.$cache.style);
+        deleteKey(this.$cache.style, this.style, true);
+        assignStyle(this.style, newStyle);
+        this.$cache.style = newStyle;
+    }
+
+    $setClass(fmtClass = () => []) {
+        let newClass = fmtClass(this.$attrs)
+        if (newClass?.length === undefined) newClass = [newClass]
+        newClass = newClass.filter(Boolean);
+        let newMap = new Map();
+        newClass.forEach((key) => {
+            newMap.set(key, key);
+            this.$cache.class.delete(key);
+            this.classList.add(key)
+        });
+        this.$cache.class.forEach((key, v) => {
+            this.classList.remove(key)
+        })
+        this.$cache.class = newMap;
     }
 
     $createCustomEvent(name, event, eventInitDict = {},) {
@@ -121,7 +177,6 @@ export class RainbowElement extends HTMLElement {
 
 
     $setAttrsProp(name, value) {
-
         const pop = this.$props[name];
         if (!pop) return this.$attrs[name] = value;
         let cto = pop.type || pop;
@@ -144,7 +199,7 @@ export class RainbowElement extends HTMLElement {
         if (this.$isASTinit === false) this.$ASTProps[name] = newValue;
         this.$attrs[name] = newValue;
         this.$setAttrsProp(name, newValue)
-        if (this.$isASTinit === true) this.$onAttrsChange(this.$attrs, name, oldValue, newValue);
+        if (this.$isASTinit === true) this.$dispatchOn('$onAttrsChange', this.$attrs, name, oldValue, newValue)
     }
 
 

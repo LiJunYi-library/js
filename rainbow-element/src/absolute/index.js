@@ -10,14 +10,15 @@ export class RAbsolute extends RainbowElement {
         top: [Number, String],
     });
 
+    $CacheClass;
+
     $renderEvents = ['$onConnected', '$onAttrsChange']
 
     $onRender() {
-        let props = this.$attrs
-        this.classList.add(...[
+        this.$setClass((props)=>[
             "r-absolute",
             props.position && 'r-absolute-' + props.position,
-        ].filter(Boolean))
+        ])
     }
 
 }

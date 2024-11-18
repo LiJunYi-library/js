@@ -1,0 +1,10 @@
+.r-scroll-sticky {
+    display: block;
+    position: sticky;
+    z-index: 11;
+}
+
+.r-scroll-sticky-measure {
+    width: 0;
+    height: 0;
+}

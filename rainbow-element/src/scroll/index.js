@@ -2,13 +2,37 @@ import './index.css';
 import { RainbowElement } from '../base/index.js'
 
 export class RScroll extends RainbowElement {
+    $elementName = 'RScroll'
+    $scrollEl;
+
+    get scrollTop() {
+        return this.$scrollEl.scrollTop;
+    }
+
+    set scrollTop(v) {
+        this.$scrollEl.scrollTop = v;
+    }
+
+    scrollBy(...arg) {
+        this.$scrollEl.scrollBy(...arg)
+    }
+
+    scrollTo(...arg) {
+        this.$scrollEl.scrollTo(...arg)
+    }
+
     constructor(...arg) {
         super(...arg);
-
         this.attachShadow({ mode: 'open' });
-        const box = document.createElement('div');
-        box.className = 'r-scroll-content';
-        box.setAttribute('part', 'r-scroll-content  sdt');
+
+        this.$scrollEl = document.createElement('div');
+        this.$scrollEl.className = 'r-scroll-element';
+        this.$scrollEl.setAttribute('part', 'r-scroll-element  sdt');
+
+        const content = document.createElement('div');
+        content.className = 'r-scroll-content';
+        content.setAttribute('part', 'r-scroll-content  sdt');
+
         const topSlot = document.createElement('slot');
         topSlot.setAttribute('name', 'top');
         topSlot.className = 'top';
@@ -17,31 +41,34 @@ export class RScroll extends RainbowElement {
         const bottomSlot = document.createElement('slot');
         bottomSlot.setAttribute('name', 'bottom');
         bottomSlot.className = 'bottom';
-        box.appendChild(contentSlot);
-        this.shadowRoot.appendChild(topSlot);
-        this.shadowRoot.appendChild(box);
-        this.shadowRoot.appendChild(bottomSlot);
 
-        this.addEventListener('scroll', this.$onScroll.bind(this));
+        content.appendChild(contentSlot);
+        this.$scrollEl.appendChild(topSlot);
+        this.$scrollEl.appendChild(content);
+        this.$scrollEl.appendChild(bottomSlot);
+        this.shadowRoot.appendChild(this.$scrollEl);
+
+        this.$scrollEl.addEventListener('scroll', this.$onScroll.bind(this));
     }
-    
-    $elementName = 'RScroll'
-    $prveScrollTop = this.scrollTop;
 
     $onScroll(event) {
-        event.scrollTop = this.scrollTop;
-        event.moveY = this.$prveScrollTop - this.scrollTop;
+        const sEl = this.$scrollEl;
+        event.scrollTop = sEl.scrollTop;
+        event.moveY = sEl.$prveScrollTop - sEl.scrollTop;
         if (event.moveY < 0) this.dispatchEvent(this.$createCustomEvent('scrollUp', event));
+        if (this.onscroll) this.onscroll(event)
+        this.dispatchEvent(this.$createCustomEvent('scroll', event))
         if (event.moveY > 0) this.dispatchEvent(this.$createCustomEvent('scrollDown', event));
-        this.$prveScrollTop = this.scrollTop;
+        sEl.$prveScrollTop = sEl.scrollTop;
     }
 
     $onConnected() {
+        this.$scrollEl.$prveScrollTop = this.$scrollEl.scrollTop
         this.classList.add('r-scroll')
     }
 
     $onDisconnected() {
-        this.removeEventListener('scroll', this.$onScroll.bind(this));
+        this.$scrollEl.removeEventListener('scroll', this.$onScroll.bind(this));
     }
 }
 

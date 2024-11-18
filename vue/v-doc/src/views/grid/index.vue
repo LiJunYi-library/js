@@ -1,27 +1,45 @@
 <template>
     <div>
 
+        <div>
 
-        <!-- <div style="height: 300px;position: relative;">
+
+
+            <!-- <div class="">Welcome to My Card right-bottom</div>
+            <div class="">Welcome to My Card right-bottom</div>
+            <div class="">Welcome to My Card right-bottom</div> -->
+            <!-- <div style="width: 20px;font-size: 104px;word-wrap: break-word;">Thisisasimplecardcomponentwithnamedslots.
+            </div> -->
+        </div>
+        <!-- <div style="height: 200px;position: relative;">
             <r-absolute :position="name" :class="['my', 'dsk']">
                 bottom-center
-            </r-absolute>
-        </div>
+            </r-absolute> 
+        </div> -->
 
-        <r-flex row-gap="10" :column-gap="gap">
+        <!--   <r-flex row-gap="10" :column-gap="gap">
             <div>123</div>
             <div>123</div>
         </r-flex> -->
-        
-        <r-scroll>
+        <!-- <r-flex> </r-flex> -->
+        <r-scroll @scroll="scroll">
+            <r-absolute position="top-center">
+                top-center
+            </r-absolute>
 
-            <h2 slot="top" class="s-top">Welcome to My Card {{ name }}</h2>
-            <p style="width: 20px;font-size: 104px;word-wrap: break-word;">Thisisasimplecardcomponentwithnamedslots.</p>
-
-            <div>
-                 <r-scroll-memory-bable top="100px">456789</r-scroll-memory-bable>
+            <div slot="top" class="s-top">Welcome to My Card {{ name }}</div>
+            <div class="s-top">Welcome to My Card {{ name }}</div>
+            <div class="s-top">Welcome to My Card {{ name }}</div>
+            <div class="s-top" style="font-size: 100px;">My {{ name }}</div>
+            <r-scroll-sticky  activetop="500" top="30" odd="5" opacityani="true" ></r-scroll-sticky>
+            <div style="width: 20px;font-size: 104px;word-wrap: break-word;">
+                Thisisasimplecardcomponentwithnamedslots.
             </div>
-           
+
+
+            <r-scroll-memory-bable top="100px">456789</r-scroll-memory-bable>
+
+
 
         </r-scroll>
 
@@ -50,6 +68,10 @@ function refresh(params) {
 const radio = useRadio2({ list: arrayLoopMap(100, (value) => ({ value: 'v' + value, label: value + '*' })) })
 
 
+function scroll(params) {
+    // console.log('scroll', params);
+}
+
 console.log(radio);
 
 
@@ -72,5 +94,14 @@ setTimeout(() => {
 
 .r-scroll-virtual-grid-list-item {
     background: gold;
+}
+
+.r-scroll-sticky{
+    height: 50px;
+    background: cyan;
+}
+
+.r-scroll-sticky-sticky{
+    /* background: rgb(0, 85, 255); */
 }
 </style>

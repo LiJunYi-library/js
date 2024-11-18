@@ -14,9 +14,9 @@ function assignStyle(style, newStyle) {
     for (const key in newStyle) {
         if (Object.prototype.hasOwnProperty.call(newStyle, key)) {
             style[key] = newStyle[key];
-            if (style[key] !== newStyle[key]) {
+            if (isNaN(Number(style[key])) && style[key] != newStyle[key]) {
                 style[key] = '';
-                console.warn(` style ${key} set ${newStyle[key]} 失败 已重置为 ''`);
+                console.warn(` style ${key} set ${newStyle[key]} 失败 已重置为 '' ${style[key]}`);
             }
         }
     }
@@ -107,6 +107,13 @@ export class RainbowElement extends HTMLElement {
         const tName = parent.constructor.name;
         if (tName === name || parent.$elementName === name) return parent;
         return this.$getParentByType(name, parent)
+    }
+
+    $getOffsetTop(p, num = 0) {
+        let offsetTop = this.offsetTop;
+        let top = num + offsetTop;
+        if (this.offsetParent === p) return top;
+        return this.$getOffsetTop(this.offsetParent, top);
     }
 
     $dispatchOn(eName, ...args) {

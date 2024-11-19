@@ -68,6 +68,11 @@ export class RainbowElement extends HTMLElement {
         this.$initChildrenResizeObserver();
     }
 
+    $setStylePx(num) {
+        if (!isNaN(Number(num))) return num + 'px';
+        return ''
+    }
+
     $setStyle(fmtStyle = () => ({})) {
         let ftStyle = fmtStyle(this.$attrs) || {};
         let newStyle = ftStyle;

@@ -42,8 +42,8 @@ export class RScrollSticky extends RainbowElement {
 
     $bindStyle() {
         this.$setStyle((props) => ({
-            top: (props.top) + 'px',
-            bottom: (props.bottom) + 'px',
+            top: this.$setStylePx(props.top),
+            bottom: this.$setStylePx(props.bottom),
             opacity: this.$opacity,
             display: this.$display,
         }))

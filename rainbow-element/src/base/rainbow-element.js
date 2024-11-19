@@ -22,6 +22,17 @@ function assignStyle(style, newStyle) {
     }
 }
 
+
+function convertToCamelCase(str) {
+    if (str.includes('-')) {
+        const parts = str.split('-');
+        const firstPart = parts[0];
+        const remainingParts = parts.slice(1).map(part => part.charAt(0).toUpperCase() + part.slice(1));
+        return firstPart + remainingParts.join('');
+    }
+    return str;
+}
+
 export class RainbowElement extends HTMLElement {
     static $initProps(props) {
         const keys = [];
@@ -31,6 +42,7 @@ export class RainbowElement extends HTMLElement {
                 keys.push(key)
                 if (props[key]?.default instanceof Function) attrs[key] = props[key].default(attrs)
                 else attrs[key] = props[key]?.default;
+                attrs[convertToCamelCase(key)] = attrs[key]
 
             }
         }
@@ -183,9 +195,13 @@ export class RainbowElement extends HTMLElement {
     $onHeightChange() { }
 
 
+    $setAttrsProperty(name, value) {
+        this.$attrs[name] = value;
+        this.$attrs[convertToCamelCase(name)] = value;
+    }
     $setAttrsProp(name, value) {
         const pop = this.$props[name];
-        if (!pop) return this.$attrs[name] = value;
+        if (!pop) return this.$setAttrsProperty(name, value);
         let cto = pop.type || pop;
         if (cto instanceof Array) {
             let t = cto.map(el => el.name);
@@ -199,12 +215,11 @@ export class RainbowElement extends HTMLElement {
             if (value === 'undefined') return undefined;
             return cto(value);
         })()
-        this.$attrs[name] = newV;
+        this.$setAttrsProperty(name, newV)
     }
     $onAttrsChange() { }
     attributeChangedCallback(name, oldValue, newValue) {
         if (this.$isASTinit === false) this.$ASTProps[name] = newValue;
-        this.$attrs[name] = newValue;
         this.$setAttrsProp(name, newValue)
         if (this.$isASTinit === true) this.$dispatchOn('$onAttrsChange', this.$attrs, name, oldValue, newValue)
     }

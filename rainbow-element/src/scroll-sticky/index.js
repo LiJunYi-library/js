@@ -8,6 +8,9 @@ export class RScrollSticky extends RainbowElement {
         'active-top': Number, // r-scroll-sticky-act 的高度
         'opacity-ani': Boolean,
         'opacity-top': Number,
+        'visible-ani': Boolean,
+        'visible-top': Number,
+        'opacity-delay': { type: Number, default: 0 }
     });
 
     $isSticky = false;
@@ -16,6 +19,7 @@ export class RScrollSticky extends RainbowElement {
     $isStickyAct = false;
     $scrollParent;
     $opacity;
+    $display;
 
 
     $renderEvents = ['$onConnected', '$onAttrsChange'];
@@ -41,6 +45,7 @@ export class RScrollSticky extends RainbowElement {
             top: (props.top) + 'px',
             bottom: (props.bottom) + 'px',
             opacity: this.$opacity,
+            display: this.$display,
         }))
     }
 
@@ -60,18 +65,29 @@ export class RScrollSticky extends RainbowElement {
         return this.$initTop
     }
 
+    get $visibleTop() {
+        if (this.$attrs['visible-top'] !== undefined) return this.$attrs['visible-top']
+        return this.$opacityTop
+    }
+
     $onScroll(event) {
+        // console.log(this.$attrs);
         if (this.$attrs.top === undefined) return;
-        const { scrollTop } = this.$scrollParent;
-        const { top } = this.$attrs;
+        const { scrollTop, } = this.$scrollParent;
+        const { top, opacityDelay } = this.$attrs;
         let oTop = Math.round(this.$getOffsetTop(this.$scrollParent) - scrollTop);
         this.$isSticky = top === oTop;
         this.$isStickyTop = top >= oTop;
         this.$isStickyBottom = top <= oTop;
         if (this.$attrs['active-top'] !== undefined) this.$isStickyAct = scrollTop >= this.$attrs['active-top'];
-        const opacity = ((scrollTop) / (this.$opacityTop - top)).toFixed(3)
+
+        const opacity = ((scrollTop - opacityDelay) / (this.$opacityTop - top)).toFixed(3)
         if (this.$attrs['opacity-ani'] === true) this.$opacity = opacity
         if (this.$attrs['opacity-ani'] === false) this.$opacity = 1 - opacity
+
+        const visible = ((scrollTop) / (this.$visibleTop - top))
+        if (this.$attrs['visible-ani'] === true) this.$display = visible > 1 ? 'block' : 'none';
+        if (this.$attrs['visible-ani'] === false) this.$display = (1 - visible) < 0 ? 'none' : 'block';
 
         this.$bindClass();
         this.$bindStyle();
@@ -81,3 +97,20 @@ export class RScrollSticky extends RainbowElement {
 }
 
 customElements.define('r-scroll-sticky', RScrollSticky);
+
+export class RScrollFixed extends RScrollSticky {
+    $bindClass() {
+        this.$setClass((props) => [
+            "r-scroll-fixed",
+            this.$isSticky && "r-scroll-fixed-fixed",
+            !this.$isSticky && "r-scroll-fixed-un-fixed",
+            this.$isStickyTop && "r-scroll-fixed-fixed-top",
+            !this.$isStickyTop && "r-scroll-fixed-un-fixed-top",
+            !this.$isStickyBottom && "r-scroll-fixed-un-fixed-bottom",
+            this.$isStickyAct && "r-scroll-fixed-act",
+        ])
+    }
+}
+
+customElements.define('r-scroll-fixed', RScrollFixed);
+

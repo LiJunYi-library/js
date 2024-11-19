@@ -23,6 +23,7 @@
         </r-flex> -->
         <!-- <r-flex> </r-flex> -->
         <r-scroll @scroll="scroll">
+            <r-scroll-fixed opacity-top="500" opacity-delay="200" top="30" opacity-ani="false">123</r-scroll-fixed>
             <r-absolute position="top-center">
                 top-center
             </r-absolute>
@@ -31,7 +32,7 @@
             <div class="s-top">Welcome to My Card {{ name }}</div>
             <div class="s-top">Welcome to My Card {{ name }}</div>
             <div class="s-top" style="font-size: 100px;">My {{ name }}</div>
-            <r-scroll-sticky  opacity-top="1000" top="30" odd="5" opacity-ani="true" ></r-scroll-sticky>
+
             <div style="width: 20px;font-size: 104px;word-wrap: break-word;">
                 Thisisasimplecardcomponentwithnamedslots.
             </div>
@@ -96,12 +97,12 @@ setTimeout(() => {
     background: gold;
 }
 
-.r-scroll-sticky{
+.r-scroll-fixed {
     height: 50px;
     background: cyan;
 }
 
-.r-scroll-sticky-sticky{
+.r-scroll-fixed-fixed {
     /* background: rgb(0, 85, 255); */
 }
 </style>

@@ -8,3 +8,10 @@
     width: 0;
     height: 0;
 }
+
+.r-scroll-fixed {
+    display: block;
+    position: fixed;
+    width: 100%;
+    z-index: 11;
+}

@@ -1,28 +1,29 @@
 import { RainbowElement } from '../base/index.js'
+import { resizeObserverIMP } from '../base/imps/index.js'
 import './index.css'
 
 export class RGrid extends RainbowElement {
-    static observedAttributes = this.$initProps({
-        columns: { type: Number, default: 1 },
-        gap: [Number, String],
-        'row-gap': [Number, String],
-        'column-gap': [Number, String],
-        inline: Boolean,
-        'min-auto-width': Number,
-        wrap: Boolean,
-        stretch: Boolean,
-        onred: Function
+    static observedAttributes = this.$registerProps({
+        'r-columns': { type: Number, default: 1 },
+        'r-min-auto-width': Number,
+        'r-gap': [Number, String],
+        'r-row-gap': [Number, String],
+        'r-column-gap': [Number, String],
+        'r-grid-wrap': String,
+        'r-grid-stretch': String,
     });
 
-    $renderEvents = ['$onMutation', '$onWidthChange', '$onAttrsChange']
+    static IMPS = this.registerIMPS([resizeObserverIMP()]);
 
     get $columns() {
-        if (this.$attrs['min-auto-width']) return Math.floor(this.offsetWidth / this.$attrs['min-auto-width']);
-        return this.$attrs.columns
+        const { rColumns, rMinAutoWidth } = this.$.DATA
+        if (rMinAutoWidth) return Math.floor(this.offsetWidth / rMinAutoWidth);
+        return rColumns;
     };
 
     $doLayout() {
-        let props = this.$attrs;
+        let props = this.$.DATA;
+        const { rGridWrap, rGridStretch } = this.$.DATA
         let children = Array.from(this.children)
         let clumnList = children.map(el => el.getAttribute('grid-column') * 1 || 1)
         let start = 1;
@@ -30,9 +31,9 @@ export class RGrid extends RainbowElement {
         let maxColumn = this.$columns + 1;
         clumnList.forEach((num, index) => {
             let end = start + num;
-            if (props.wrap) {
+            if (rGridWrap === 'wrap') {
                 if (end > maxColumn) {
-                    if (props.stretch) {
+                    if (rGridStretch === 'stretch') {
                         if (gridColumns[index - 1]) gridColumns[index - 1].end = maxColumn;
                     }
                     start = 1;
@@ -57,15 +58,14 @@ export class RGrid extends RainbowElement {
         });
     }
 
-    $onRender() {
-        this.$setClass(() => ['r-grid']);
-        this.$setStyle((props) => ({
-            "display": props.inline ? "inline-grid" : "grid",
-            "grid-template-columns": ` repeat(${this.$columns}, 1fr)`,
-            "grid-gap": props.gap + "px",
-            "row-gap": (props['row-gap'] || props.gap) + "px",
-            "column-gap": (props['column-gap'] || props.gap) + "px",
-        }))
+    $render(propertys) {
+        const { rGap, rRowGap, rColumnGap } = this.$.attrs
+        this.$.setStyle(() => ([{
+            "grid-template-columns": `repeat(${this.$columns}, 1fr)`,
+            "grid-gap": rGap,
+            "row-gap": rRowGap || rGap,
+            "column-gap": rColumnGap || rGap,
+        }]))
         this.$doLayout();
     }
 

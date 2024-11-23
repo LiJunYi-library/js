@@ -1,3 +1,17 @@
-.r-grid {
+r-grid {
+    display: grid;
+    grid-gap: var(--r-gap);
+    grid-template-columns: repeat(var(--r-columns), 1fr)
+}
+
+r-grid[inline] {
+    display: inline-grid;
+}
+
+r-grid[inline=true] {
+    display: inline-grid;
+}
+
+r-grid[inline=false] {
     display: grid;
 }

@@ -1,10 +1,13 @@
 import '@rainbow_ljy/rainbow-element'
 import '@rainbow_ljy/rainbow-element/index.css'
-import { createApp } from "vue";
+import { createApp, createSSRApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
-import "element-plus/dist/index.css";
-import "vant/lib/index.css";
+// import "element-plus/dist/index.css";
+// import "vant/lib/index.css";
+// import page from  './views/grid/index.vue'
+
+
 
 
 

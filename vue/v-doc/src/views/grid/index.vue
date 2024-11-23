@@ -1,27 +1,24 @@
 <template>
-    <div>
-
-        <div>
+    <div class="page" :class="name">
 
 
+        <r-grid class="my-grid" :r-columns="columns" r-gap="10px" >
+            <div>五五</div>
+            <div grid-column="4">五五</div>
+            <div grid-column="2">五五</div>
+            <div>五五</div>
+            <div>五五</div>
+            <div>五五</div>
+            <div>五五</div>
+            <div>五五</div>
+        </r-grid>
 
-            <!-- <div class="">Welcome to My Card right-bottom</div>
-            <div class="">Welcome to My Card right-bottom</div>
-            <div class="">Welcome to My Card right-bottom</div> -->
-            <!-- <div style="width: 20px;font-size: 104px;word-wrap: break-word;">Thisisasimplecardcomponentwithnamedslots.
-            </div> -->
-        </div>
-        <!-- <div style="height: 200px;position: relative;">
-            <r-absolute :position="name" :class="['my', 'dsk']">
-                bottom-center
-            </r-absolute> 
-        </div> -->
+        <r-absolute>
+            66
+        </r-absolute>
 
-        <!--   <r-flex row-gap="10" :column-gap="gap">
-            <div>123</div>
-            <div>123</div>
-        </r-flex> -->
-        <!-- <r-flex> </r-flex> -->
+
+        <!-- 
         <r-scroll @scroll="scroll">
             <r-scroll-fixed opacity-top="500" opacity-delay="200" top="30" opacity-ani="false">123</r-scroll-fixed>
             <r-absolute position="top-center">
@@ -42,11 +39,9 @@
 
 
 
-        </r-scroll>
+        </r-scroll> -->
 
-        <!-- <r-scroll-bable>
-            <div>123</div>
-        </r-scroll-bable> -->
+
 
 
     </div>
@@ -61,7 +56,13 @@ const name = ref('bottom-center');
 const bool = ref(true);
 const List = ref(arrayLoopMap(100, (value) => ({ value })))
 const gap = ref(10);
+const columns = ref(4);
 
+const styles = ref([]);
+
+styles.value[0] = { left: '20px' }
+
+styles.value[0] = { left: '40' }
 function refresh(params) {
     return new Promise(re => setTimeout(re, 2000))
 }
@@ -77,10 +78,11 @@ console.log(radio);
 
 
 setTimeout(() => {
-    bool.value = false
+    // bool.value = false
     name.value = 'right-bottom'
     gap.value = false
-}, 3000);
+    columns.value = 5
+}, 4000);
 
 </script>
 
@@ -93,7 +95,7 @@ setTimeout(() => {
     word-wrap: break-word;
 }
 
-.r-scroll-virtual-grid-list-item {
+.r-grid-item {
     background: gold;
 }
 
@@ -105,4 +107,35 @@ setTimeout(() => {
 .r-scroll-fixed-fixed {
     /* background: rgb(0, 85, 255); */
 }
+
+.my-grid {
+    --r-columns: r-attr(r-columns);
+    --r-gap: 15px;
+    --r-min-auto-width: 100;
+    --r-grid-wrap: wrap;
+    --r-grid-stretch: stretch;
+}
+
+.my-grid div {
+    background: yellow;
+}
+
+.bottom-center .my-grid {
+    /* --r-columns: 9; */
+}
+
+.right-bottom .my-grid {
+    /* --r-columns: 6; */
+}
+
+/* .dsk {
+    width: calc(100vw - 50px);
+}
+
+.page .dsk {
+    --r-absolute: top;
+    flex-wrap: wrap;
+    column-width: 30px;
+
+} */
 </style>

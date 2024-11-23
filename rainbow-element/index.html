@@ -4,165 +4,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dialog with Overlay Animation</title>
+    <title>Slide Down Event Example</title>
+    <style>
+        :root {
+            --first-size: calc(100vh - 50px);
+            --second-color: #ffff8c;
+        }
+    </style>
 </head>
+<script src="./index.main.js"></script>
+<div></div>
 
 <body>
-    <!DOCTYPE html>
-    <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>My Card Example</title>
-        <script type="module" ></script>
-    </head>
+    <div id="gg"></div>
 
-    <body>
-        <r-scroll>
-            <style>
-                .r-scroll-content {
-                    background: palegreen;
-                }
-            </style>
-            <h2 slot="top" class="s-top">Welcome to My Card</h2>
-            <p style="width: 20px;font-size: 104px;word-wrap: break-word;">Thisisasimplecardcomponentwithnamedslots.</p>
-        </r-scroll>
-    </body>
-
-    </html>
+    <style>
+        #gg {
+            --first-size: calc(100vh - 50px);
+            width: 20rem;
+            height: var(--first-size);
+        }
+    </style>
 
     <script>
+        let dd = document.getElementById('gg')
+        var style = window.getComputedStyle(dd);
+   
+        var size = style.getPropertyValue('--first-size')
+        console.log(size);
 
-        class RScroll extends HTMLElement {
-            constructor() {
-                super();
-                this.attachShadow({ mode: 'open' });
-                this.className = 'r-scroll'
+        var width = style.getPropertyValue('width')
+        console.log(width);
 
-                const box = document.createElement('div');
-                box.className = 'r-scroll-content';
-                box.setAttribute('part', 'r-scroll-content  sdt');
+        var height = style.getPropertyValue('height')
+        console.log(height);
 
-                const topSlot = document.createElement('slot');
-                topSlot.setAttribute('name', 'top');
-                topSlot.className = 'top';
-
-                const contentSlot = document.createElement('slot');
-                contentSlot.className = 'content';
-
-                const bottomSlot = document.createElement('slot');
-                bottomSlot.setAttribute('name', 'bottom');
-                bottomSlot.className = 'bottom';
-
-                box.appendChild(contentSlot);
-                this.shadowRoot.appendChild(topSlot);
-                this.shadowRoot.appendChild(box);
-                this.shadowRoot.appendChild(bottomSlot);
-            }
-        }
-
-        customElements.define('r-scroll', RScroll);
+        style.setProperty('width',size);
+        console.log( style.getPropertyValue('width'))
     </script>
+
+    <!-- <r-grid>
+
+        <r-absolute>1</r-absolute>
+
+    </r-grid> -->
+
 </body>
-
-<style>
-    r-scroll::part(sdt) {
-        background: cyan;
-    }
-
-    ::slotted(.r-scroll-content) {
-        background-color: aqua;
-    }
-
-    .s-top {
-        background: pink;
-    }
-
-    r-scroll:host .r-scroll-content {
-        /* 你的样式规则 */
-        background: pink;
-    }
-
-    /* 当 r-scroll 组件位于某个特定类的元素内时 */
-    r-scroll:host-context(.r-scroll-content) {
-        background: pink;
-    }
-
-    .r-scroll {
-        background: orange;
-        max-height: 100vh;
-        overflow: auto;
-    }
-
-    r-scroll::shadow .r-scroll-content {
-        background: yellow;
-    }
-
-    r-scroll::part(content) {
-        max-height: 100vh;
-        overflow: auto;
-    }
-
-    r-scroll::slotted(.r-scroll-content) {
-        background: red;
-    }
-
-    .r-scroll::slotted(.r-scroll-content) {
-        background: red;
-    }
-
-    .r-scroll-content {
-        max-height: 100vh;
-        overflow: auto;
-    }
-
-    /* 基本样式 */
-    body {
-        font-family: Arial, sans-serif;
-    }
-
-    dialog {
-        display: none;
-        position: relative;
-        width: 300px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        background-color: white;
-        padding: 20px;
-    }
-
-    dialog::backdrop {
-        background-color: rgba(0, 0, 0, 0.5);
-        animation: fadeIn 0.3s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
-
-    dialog.show-dialog {
-        display: block;
-        animation: slideIn 0.3s ease-in-out;
-    }
-
-    @keyframes slideIn {
-        from {
-            transform: translateY(-100%);
-            opacity: 0;
-        }
-
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-</style>
 
 </html>

@@ -1,4 +1,4 @@
-export * from './treeAttrsChange';
+export * from './treeAttrsChangeIMP';
 export * from './resizeObserverIMP';
 
 const imps = {

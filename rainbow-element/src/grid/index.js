@@ -22,7 +22,6 @@ export class RGrid extends RainbowElement {
     };
 
     $doLayout() {
-        let props = this.$.DATA;
         const { rGridWrap, rGridStretch } = this.$.DATA
         let children = Array.from(this.children)
         let clumnList = children.map(el => el.getAttribute('grid-column') * 1 || 1)

@@ -70,21 +70,21 @@ import { animationDebounced } from "@rainbow_ljy/rainbow-js";
 //     this.$cache.style = newStyle;
 // }
 
-//     $setClass(fmtClass = () => []) {
-//         let newClass = fmtClass(this.$attrs)
-//         if (newClass?.length === undefined) newClass = [newClass]
-//         newClass = newClass.filter(Boolean);
-//         let newMap = new Map();
-//         newClass.forEach((key) => {
-//             newMap.set(key, key);
-//             this.$cache.class.delete(key);
-//             this.classList.add(key)
-//         });
-//         this.$cache.class.forEach((key, v) => {
-//             this.classList.remove(key)
-//         })
-//         this.$cache.class = newMap;
-//     }
+// $setClass(fmtClass = () => []) {
+//     let newClass = fmtClass(this.$attrs)
+//     if (newClass?.length === undefined) newClass = [newClass]
+//     newClass = newClass.filter(Boolean);
+//     let newMap = new Map();
+//     newClass.forEach((key) => {
+//         newMap.set(key, key);
+//         this.$cache.class.delete(key);
+//         this.classList.add(key)
+//     });
+//     this.$cache.class.forEach((key, v) => {
+//         this.classList.remove(key)
+//     })
+//     this.$cache.class = newMap;
+// }
 
 //     $createCustomEvent(name, event, eventInitDict = {},) {
 //         const newEvent = new CustomEvent(name, { bubbles: true, cancelable: true, ...eventInitDict })
@@ -286,6 +286,7 @@ export class RainbowElement extends HTMLElement {
         cache: {
             data: {},
             style: {},
+            class: new Map(),
         },
         setStyle: (fmtStyle = () => ({})) => {
             let ftStyle = fmtStyle(this.$.data) || {};
@@ -311,7 +312,23 @@ export class RainbowElement extends HTMLElement {
                 }
             }
             this.$.cache.style = newStyle;
+        },
+        setClass: (fmtClass = () => []) => {
+            let newClass = fmtClass(this.$.data)
+            if (newClass?.length === undefined) newClass = [newClass]
+            newClass = newClass.filter(Boolean);
+            let newMap = new Map();
+            newClass.forEach((key) => {
+                newMap.set(key, key);
+                this.$.cache.class.delete(key);
+                this.classList.add(key)
+            });
+            this.$cache.class.forEach((key, v) => {
+                this.classList.remove(key)
+            })
+            this.$cache.class = newMap;
         }
+
     }
 
     constructor(...arg) {

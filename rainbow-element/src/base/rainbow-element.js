@@ -377,7 +377,7 @@ export class RainbowElement extends HTMLElement {
         this.$.cache.data = css
         // console.log('attrs', this.$.attrs);
         // console.log(isChange);
-        if (isChange || force === true)  this.$debouncedRender(css);
+        if (isChange || force === true) this.$debouncedRender(css);
         return css
     }
 

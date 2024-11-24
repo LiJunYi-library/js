@@ -2,7 +2,7 @@
     <div class="page" :class="name">
 
 
-        <r-grid class="my-grid" :r-columns="columns" r-gap="10px" r-min-auto-width="200px">
+        <r-grid class="my-grid"  :r-columns="columns" r-gap="10px" r-min-auto-width="200px">
             <div>五五</div>
             <div grid-column="3">五五</div>
             <div grid-column="2">五五</div>

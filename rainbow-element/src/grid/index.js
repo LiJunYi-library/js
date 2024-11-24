@@ -15,20 +15,20 @@ export class RGrid extends RainbowElement {
 
     static IMPS = this.registerIMPS([resizeObserverIMP()]);
 
-    get $columns() {
+    get $$columns() {
         let { rColumns, rMinAutoWidth } = this.$.DATA;
         rMinAutoWidth = this.$.computePixel(rMinAutoWidth);
         if (rMinAutoWidth) return Math.floor(this.offsetWidth / rMinAutoWidth);
         return rColumns;
     };
 
-    $doLayout() {
+    $$doLayout() {
         const { rGridWrap, rGridStretch } = this.$.DATA
         let children = Array.from(this.children)
         let clumnList = children.map(el => el.getAttribute('grid-column') * 1 || 1)
         let start = 1;
         let gridColumns = [];
-        let maxColumn = this.$columns + 1;
+        let maxColumn = this.$$columns + 1;
         clumnList.forEach((num, index) => {
             let end = start + num;
             if (rGridWrap === 'wrap') {
@@ -49,7 +49,7 @@ export class RGrid extends RainbowElement {
                 index
             })
             start = start + num
-            if (start > this.$columns) start = 1
+            if (start > this.$$columns) start = 1
         });
         children.forEach((el, index) => {
             el.classList.add('r-grid-item')
@@ -61,12 +61,12 @@ export class RGrid extends RainbowElement {
     $render(propertys) {
         const { rGap, rRowGap, rColumnGap } = this.$.DATA
         this.$.setStyle(() => ([{
-            "grid-template-columns": `repeat(${this.$columns}, 1fr)`,
+            "grid-template-columns": `repeat(${this.$$columns}, 1fr)`,
             "grid-gap": rGap,
             "row-gap": rRowGap || rGap,
             "column-gap": rColumnGap || rGap,
         }]))
-        this.$doLayout();
+        this.$$doLayout();
     }
 
 }

@@ -272,9 +272,10 @@ export class RainbowElement extends HTMLElement {
         attrs: {},
         computePixel(str = '') {
             try {
-                return Number(str.match(/(\d*?)px/)[1])
+                if (/(\d*?)px/.test(str)) return Number(str.match(/(\d*?)px/)[1])
+                return str
             } catch (error) {
-                return undefined
+                return str
             }
         },
         DATA: new Proxy({}, { get: (target, prop) => this.$.data[camelCaseToKebabCase(prop)] }),

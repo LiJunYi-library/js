@@ -16,7 +16,8 @@ export class RGrid extends RainbowElement {
     static IMPS = this.registerIMPS([resizeObserverIMP()]);
 
     get $columns() {
-        const { rColumns, rMinAutoWidth } = this.$.DATA
+        let { rColumns, rMinAutoWidth } = this.$.DATA;
+        rMinAutoWidth = this.$.computePixel(rMinAutoWidth);
         if (rMinAutoWidth) return Math.floor(this.offsetWidth / rMinAutoWidth);
         return rColumns;
     };

@@ -1,6 +1,6 @@
 import { camelCaseToKebabCase, assignStyle, convertToCamelCase, RainbowEvent } from './utils';
 import { treeAttrsChangeIMP } from '../base/imps/index.js';
-
+import { animationDebounced } from "@rainbow_ljy/rainbow-js";
 
 // export class RainbowElement extends HTMLElement {
 //     static $initProps(props) {
@@ -270,6 +270,13 @@ export class RainbowElement extends HTMLElement {
         isInitAttrs: false,
         data: {},
         attrs: {},
+        computePixel(str = '') {
+            try {
+                return Number(str.match(/(\d*?)px/)[1])
+            } catch (error) {
+                return undefined
+            }
+        },
         DATA: new Proxy({}, { get: (target, prop) => this.$.data[camelCaseToKebabCase(prop)] }),
         resolveFunCss: {
             'r-attr': (key) => {
@@ -309,6 +316,7 @@ export class RainbowElement extends HTMLElement {
 
     constructor(...arg) {
         super(...arg);
+        this.$debouncedRender = animationDebounced((...pop) => this.$render(...pop))
         this.IMPS.map(el => el?.simult)?.forEach(el => el?.init?.call?.(this));
     }
 
@@ -369,12 +377,14 @@ export class RainbowElement extends HTMLElement {
         this.$.cache.data = css
         // console.log('attrs', this.$.attrs);
         // console.log(isChange);
-        if (isChange || force === true) this.$render(css);
+        if (isChange || force === true)  this.$debouncedRender(css);
         return css
     }
 
 
     $render() { }
+
+
 
 
 

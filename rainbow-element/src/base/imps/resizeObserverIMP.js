@@ -1,21 +1,18 @@
-import { animationDebounced } from "@rainbow_ljy/rainbow-js";
-
-
-
-
-
-export function resizeObserverIMP(params) {
+export function resizeObserverIMP(props = {}) {
     let obs;
+    const config = {
+        debounced: true,
+        resizeCallback: undefined,
+        resizeOptions: {},
+        ...props
+    }
     return {
         simult: {
             init() {
-                const fun = animationDebounced(() => {
-                    this.$render()
-                })
-                
+                const cb = config.resizeCallback ? config.resizeCallback.bind(this) : this.$debouncedRender.bind(this);
                 try {
-                    obs = new ResizeObserver(fun);
-                    obs.observe(this)
+                    obs = new ResizeObserver(cb);
+                    obs.observe(this, config.resizeOptions)
                 } catch (error) {
                     console.warn(error);
                 }

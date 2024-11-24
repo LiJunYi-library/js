@@ -69,6 +69,12 @@ function refresh(params) {
 
 const radio = useRadio2({ list: arrayLoopMap(100, (value) => ({ value: 'v' + value, label: value + '*' })) })
 
+// const div = document.createElement('div')
+// document.body.append(div)
+// div.style.width= 'calc(100vh - 20px)';
+// const style = window.getComputedStyle(div);
+// console.log(style.getPropertyValue('width'));
+
 
 function scroll(params) {
     // console.log('scroll', params);
@@ -78,6 +84,7 @@ console.log(radio);
 
 
 setTimeout(() => {
+  
     // bool.value = false
     name.value = 'right-bottom'
     gap.value = false
@@ -111,7 +118,7 @@ setTimeout(() => {
 .my-grid {
     --r-columns: r-attr(r-columns);
     --r-gap: 15px;
-    --r-min-auto-width: 100;
+    --r-min-auto-width: 100px;
     --r-grid-wrap: wrap;
     --r-grid-stretch: stretch;
 }

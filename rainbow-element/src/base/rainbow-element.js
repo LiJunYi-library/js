@@ -381,11 +381,6 @@ export class RainbowElement extends HTMLElement {
         return css
     }
 
-
     $render() { }
-
-
-
-
 
 }

@@ -272,19 +272,34 @@ export class RainbowElement extends HTMLElement {
         DATA: new Proxy({}, { get: (target, prop) => this.$.data[camelCaseToKebabCase(prop)] }),
         attrs: {},
         resolveFunCss: {
-            'r-attr': (key) => {
-                return this.$props[key];
+            calc: (v, ...arg) => {
+                return v
             }
+
         },
         resolveCss: (key, str = '') => {
             try {
                 const isAttrFun = /r-attr\([^\)]*?\)/.test(str);
                 if (isAttrFun) str = this.$props[key];
-                let number = Number(str);
+
+                let cssVal = str.replace(/\d+px|\d+vw|\d+vh/g, (len) => {
+                    if (/\d+px/.test(len)) return Number(len.replaceAll('px', ''))
+                    if (/\d+vw/.test(len)) return Number(len.replaceAll('vw', '')) / 100 * window.innerWidth
+                    if (/\d+vh/.test(len)) return Number(len.replaceAll('vh', '')) / 100 * window.innerHeight
+                    return len
+                })
+
+                const isFunstr = /([^\(]*?)\([^\)]*?\)/.test(cssVal);
+                if (isFunstr) return eval(`this.$.resolveFunCss.${cssVal}`)
+
+                let number = Number(cssVal);
                 if (!isNaN(number)) return number;
-                if (/^\d+px$/.test(str)) return Number(str.match(/(\d*?)px/)[1]);
-                return str
+
+                // console.log(key, cssVal, isFunstr);
+                return cssVal;
             } catch (error) {
+                console.log(error);
+
                 return str
             }
         },

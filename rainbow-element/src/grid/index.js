@@ -13,7 +13,7 @@ export class RGrid extends RainbowElement {
         'r-grid-stretch': String,
     });
 
-    static IMPS = this.registerIMPS([resizeObserverIMP()]);
+    static IMPS = this.registerIMPS([resizeObserverIMP({ isOnlyResizeWidth: true })]);
 
     get $$columns() {
         let { rColumns, rMinAutoWidth } = this.$.DATA;

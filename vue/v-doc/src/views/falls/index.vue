@@ -89,11 +89,11 @@ setTimeout(() => {
     --r-columns: 3;
     --r-min-auto-width: 100px;
     --r-gap: 10px;
-    --r-row-gap: 20px;
+    --r-row-gap: 25px;
     --r-column-gap: 15px;
 }
 
-.my-grid div {
+.r-falls-item {
     background: yellow;
 }
 

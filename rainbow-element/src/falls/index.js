@@ -20,11 +20,6 @@ export class RFalls extends RainbowElement {
 
     $render() {
         let { rMinAutoWidth, rColumns, rGap, rRowGap, rColumnGap } = this.$.DATA
-        rColumns = Number(rColumns);
-        rMinAutoWidth = this.$.computePixel(rMinAutoWidth);
-        rGap = this.$.computePixel(rGap);
-        rRowGap = this.$.computePixel(rRowGap);
-        rColumnGap = this.$.computePixel(rColumnGap);
         // console.log(rMinAutoWidth, rColumns, rGap, rRowGap, rColumnGap);
         const col = (() => {
             if (rMinAutoWidth) return Math.floor(this.offsetWidth / rMinAutoWidth);

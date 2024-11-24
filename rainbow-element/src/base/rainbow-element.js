@@ -269,19 +269,23 @@ export class RainbowElement extends HTMLElement {
     $ = {
         isInitAttrs: false,
         data: {},
-        attrs: {},
-        computePixel(str = '') {
-            try {
-                if (/(\d*?)px/.test(str)) return Number(str.match(/(\d*?)px/)[1])
-                return str
-            } catch (error) {
-                return str
-            }
-        },
         DATA: new Proxy({}, { get: (target, prop) => this.$.data[camelCaseToKebabCase(prop)] }),
+        attrs: {},
         resolveFunCss: {
             'r-attr': (key) => {
                 return this.$props[key];
+            }
+        },
+        resolveCss: (key, str = '') => {
+            try {
+                const isAttrFun = /r-attr\([^\)]*?\)/.test(str);
+                if (isAttrFun) str = this.$props[key];
+                let number = Number(str);
+                if (!isNaN(number)) return number;
+                if (/^\d+px$/.test(str)) return Number(str.match(/(\d*?)px/)[1]);
+                return str
+            } catch (error) {
+                return str
             }
         },
         cache: {
@@ -365,35 +369,16 @@ export class RainbowElement extends HTMLElement {
     $changePropsRender(force) {
         let isChange = false
         const css = {};
-        const attrs = {}
         const style = window.getComputedStyle(this);
         for (const key in this.$props) {
             if (Object.prototype.hasOwnProperty.call(this.$props, key)) {
-                css[key] = (() => {
-                    const cssVal = style.getPropertyValue('--' + key).trim();
-                    const isFunstr = /([^\(]*?)\([^\)]*?\)/.test(cssVal);
-                    if (isFunstr) {
-                        const match = cssVal.match(/([^\(]*?)\(([^\)]*?)\)/);
-                        const FunName = match[1];
-                        const isRFunName = /r-.*?/.test(FunName);
-                        const args = match[2].split(',').map(s => s.trim()).filter(Boolean);
-                        try {
-                            attrs[key] = this.$.resolveFunCss[FunName](...args);
-                            attrs[convertToCamelCase(key)] = attrs[key];
-                            if (isRFunName) return attrs[key]
-                        } catch (error) {
-                            console.error(`暂时不支持这个方法${FunName}`)
-                        }
-                    }
-                    return cssVal;
-                })()
+                const cssVal = style.getPropertyValue('--' + key).trim();
+                css[key] = this.$.resolveCss(key, cssVal);
                 if (this.$.cache.data[key] !== css[key]) isChange = true
             }
         }
         this.$.data = css;
-        this.$.attrs = attrs
-        this.$.cache.data = css
-        // console.log('attrs', this.$.attrs);
+        this.$.cache.data = css;
         // console.log(isChange);
         if (isChange || force === true) this.$debouncedRender(css);
         return css

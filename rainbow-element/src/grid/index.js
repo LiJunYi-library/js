@@ -17,7 +17,6 @@ export class RGrid extends RainbowElement {
 
     get $$columns() {
         let { rColumns, rMinAutoWidth } = this.$.DATA;
-        rMinAutoWidth = this.$.computePixel(rMinAutoWidth);
         if (rMinAutoWidth) return Math.floor(this.offsetWidth / rMinAutoWidth);
         return rColumns;
     };
@@ -62,9 +61,9 @@ export class RGrid extends RainbowElement {
         const { rGap, rRowGap, rColumnGap } = this.$.DATA
         this.$.setStyle(() => ([{
             "grid-template-columns": `repeat(${this.$$columns}, 1fr)`,
-            "grid-gap": rGap,
-            "row-gap": rRowGap || rGap,
-            "column-gap": rColumnGap || rGap,
+            "grid-gap": rGap + 'px',
+            "row-gap": (rRowGap || rGap) + 'px',
+            "column-gap": (rColumnGap || rGap) + 'px',
         }]))
         this.$$doLayout();
     }

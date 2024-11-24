@@ -1,10 +1,10 @@
-.r-scroll {
+r-scroll {
     display: block;
     filter: opacity(1);
     overflow: hidden;
 }
 
-.r-scroll::part(r-scroll-element){
+r-scroll::part(r-scroll-element){
     background: yellow;
     display: block;
     position: relative;

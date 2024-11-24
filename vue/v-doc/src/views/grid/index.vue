@@ -2,9 +2,9 @@
     <div class="page" :class="name">
 
 
-        <r-grid class="my-grid" :r-columns="columns" r-gap="10px" >
+        <r-grid class="my-grid" :r-columns="columns" r-gap="10px" r-min-auto-width="200px">
             <div>五五</div>
-            <div grid-column="4">五五</div>
+            <div grid-column="3">五五</div>
             <div grid-column="2">五五</div>
             <div>五五</div>
             <div>五五</div>
@@ -117,7 +117,8 @@ setTimeout(() => {
 
 .my-grid {
     --r-columns: r-attr(r-columns);
-    --r-gap: 15px;
+    --r-gap: r-attr(r-gap);
+    --r-row-gap: 20px;
     --r-min-auto-width: 100px;
     --r-grid-wrap: wrap;
     --r-grid-stretch: stretch;

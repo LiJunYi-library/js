@@ -59,7 +59,8 @@ export class RGrid extends RainbowElement {
     }
 
     $render(propertys) {
-        const { rGap, rRowGap, rColumnGap } = this.$.attrs
+        console.log(this.$.data)
+        const { rGap, rRowGap, rColumnGap } = this.$.DATA
         this.$.setStyle(() => ([{
             "grid-template-columns": `repeat(${this.$columns}, 1fr)`,
             "grid-gap": rGap,

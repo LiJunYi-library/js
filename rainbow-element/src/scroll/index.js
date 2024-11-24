@@ -1,5 +1,5 @@
 import './index.css';
-import { RainbowElement } from '../base/index.js'
+import { RainbowElement, createCustomEvent } from '../base/index.js'
 
 export class RScroll extends RainbowElement {
     $elementName = 'RScroll'
@@ -54,15 +54,13 @@ export class RScroll extends RainbowElement {
     }
 
     $$onScroll(event) {
-        console.log(' $onScroll ',[this]);
-
         const sEl = this.$$scrollEl;
         event.scrollTop = sEl.scrollTop;
         event.moveY = this.$$prveScrollTop - sEl.scrollTop;
-        if (event.moveY < 0) this.dispatchEvent(this.$createCustomEvent('scrollUp', event));
+        if (event.moveY < 0) this.dispatchEvent(createCustomEvent('scrollUp', event));
         if (this.onscroll) this.onscroll(event)
-        this.dispatchEvent(this.$createCustomEvent('scroll', event))
-        if (event.moveY > 0) this.dispatchEvent(this.$createCustomEvent('scrollDown', event));
+        this.dispatchEvent(createCustomEvent('scroll', event))
+        if (event.moveY > 0) this.dispatchEvent(createCustomEvent('scrollDown', event));
         this.$$prveScrollTop = sEl.scrollTop;
     }
 

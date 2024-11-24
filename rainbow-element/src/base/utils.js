@@ -54,3 +54,15 @@ export class RainbowEvent extends Event {
 
     }
 }
+
+export function createCustomEvent(name, event, eventInitDict = {}) {
+    const newEvent = new CustomEvent(name, { bubbles: true, cancelable: true, ...eventInitDict })
+    for (const key in event) {
+        try {
+            if (newEvent[key] === undefined) newEvent[key] = event[key];
+        } catch (error) {
+            console.warn(error);
+        }
+    }
+    return newEvent
+}

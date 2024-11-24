@@ -2,7 +2,7 @@
     <div class="page" :class="name">
 
 
-        <r-scroll class="my-scroll">
+        <r-scroll class="my-scroll" ref="ele">
             <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
             <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
             <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
@@ -24,6 +24,8 @@
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js';
 import { useRadio2 } from '@rainbow_ljy/v-hooks';
 import { ref } from 'vue'
+
+const ele = ref('ele');
 
 const name = ref('bottom-center');
 const bool = ref(true);
@@ -62,6 +64,9 @@ setTimeout(() => {
     name.value = 'right-bottom'
     gap.value = false
     columns.value = 5
+    console.log(ele.value);
+    
+    ele.value.scrollTop=500
 }, 4000);
 
 </script>

@@ -1,5 +1,6 @@
 r-grid {
     display: grid;
+    overflow: hidden;
 }
 
 r-grid[inline] {

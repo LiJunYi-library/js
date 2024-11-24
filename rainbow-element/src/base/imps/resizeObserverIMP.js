@@ -3,7 +3,6 @@ export function resizeObserverIMP(props = {}) {
     const config = {
         isOnlyResizeWidth: false,
         isOnlyResizeHeight: false,
-        debounced: true,
         resizeCallback: undefined,
         resizeOptions: {},
         ...props

@@ -48,36 +48,41 @@ function __treefilter(
   formatter,
   isdeep = false,
   formatterChildren = fmt,
+
   copyC = [...children],
   parent,
-  parentList) {
+  parentList,
+  layer = -1,
+) {
+  layer++;
   children.forEach(el => el.children = el.children?.map?.(val => ({ ...val })))
   copyC.forEach(child => {
     let childList = formatterChildren(child);
-    if (!formatter(child) && !childList?.length) arrayRemove(children, child)
-    if (!isdeep && formatter(child)) return
+    if (!formatter(child, layer, parent) && !childList?.length) arrayRemove(children, child)
+    if (!isdeep && formatter(child, layer, parent)) return
     let copy = [...(childList ?? [])]
-    if (childList?.length) __treefilter(childList, formatter, isdeep, formatterChildren, copy, child, children)
+    if (childList?.length) __treefilter(childList, formatter, isdeep, formatterChildren, copy, child, children, layer)
   });
 
   if (parent && parentList) {
     const pChildList = formatterChildren(parent);
-    if (!formatter(parent) && !pChildList?.length) arrayRemove(parentList, parent)
+    if (!formatter(parent, layer) && !pChildList?.length) arrayRemove(parentList, parent)
   }
 }
 /**
  * 树形结构筛选 不改变原对象 返回新树
  * @param {*} children 
  * @param {*} formatter 
- * @param {*} formatterChildren 
  * @param {*} isdeep
+ * @param {*} formatterChildren 
  * 
  * @param {*} copyC 
  * @param {*} parent 
  * @param {*} parentList 
  */
 export function treefilter(treeList = [], ...arg) {
-  const d = treeList.map(el => ({ ...el }));
+  // const d =  treeList.map(el => ({ ...el }));
+  const d = JSON.parse(JSON.stringify(treeList))
   __treefilter(d, ...arg);
   return d;
 }
@@ -101,11 +106,20 @@ export function treeForEach(list = [], fun, recursive, formatter = fmt, layer = 
   if (recursive && recursive(list, parent, layer, roote)) return roote;
   for (let index = 0; index < list.length; index++) {
     const child = list[index];
-    const children = formatter(child);
+    const children = formatter(child, index, parent, layer);
     if (fun(child, index, list, parent, layer, roote)) return roote;
     treeForEach(children, fun, recursive, formatter, layer, parent)
   }
   return roote;
+}
+
+export function treePathMap(tree = [], formatter, data = [], parent, path = [], layer = -1) {
+  layer++;
+  tree.forEach(() => {
+    path.push
+
+  })
+
 }
 
 

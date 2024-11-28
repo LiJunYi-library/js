@@ -1,8 +1,13 @@
-.r-scroll-memory-bubble {
+r-scroll-memory-bable {
     display: block;
     position: fixed;
     z-index: 30;
     transition: transform 0.3s;
+    --r-orientation: right;
+    --r-init-visibility: visible;
+    --r-visible-distance: 300px;
+    --r-visible-reversal: noReversal;
+    top: 200px;
 }
 
 .r-scroll-memory-bubble-visible {

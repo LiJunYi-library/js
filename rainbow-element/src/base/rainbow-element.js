@@ -107,12 +107,12 @@ import { animationDebounced } from "@rainbow_ljy/rainbow-js";
 //         return this.$getParentByType(name, parent)
 //     }
 
-//     $getOffsetTop(p, num = 0) {
-//         let offsetTop = this.offsetTop;
-//         let top = num + offsetTop;
-//         if (this.offsetParent === p) return top;
-//         return this.$getOffsetTop(this.offsetParent, top);
-//     }
+// $getOffsetTop(p, num = 0) {
+//     let offsetTop = this.offsetTop;
+//     let top = num + offsetTop;
+//     if (this.offsetParent === p) return top;
+//     return this.$getOffsetTop(this.offsetParent, top);
+// }
 
 //     $dispatchOn(eName, ...args) {
 //         this?.[eName]?.(...args)
@@ -343,10 +343,24 @@ export class RainbowElement extends HTMLElement {
                 this.$.cache.class.delete(key);
                 this.classList.add(key)
             });
-            this.$cache.class.forEach((key, v) => {
+            this.$.cache.class.forEach((key, v) => {
                 this.classList.remove(key)
             })
-            this.$cache.class = newMap;
+            this.$.cache.class = newMap;
+        },
+        findParentByType: (name, p = this) => {
+            if (!p) return;
+            const parent = p.parentNode;
+            if (!parent) return;
+            const tName = parent.constructor.name;
+            if (tName === name || parent.$elementName === name) return parent;
+            return this.$.findParentByType(name, parent)
+        },
+        getOffsetTop: (p, num = 0) => {
+            let offsetTop = this.offsetTop;
+            let top = num + offsetTop;
+            if (this.offsetParent === p) return top;
+            return this.$.getOffsetTop(this.offsetParent, top);
         }
 
     }

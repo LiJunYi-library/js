@@ -2,70 +2,64 @@ import './index.css';
 import { RainbowElement } from '../base/index.js'
 
 export class RScrollMemoryBubble extends RainbowElement {
-    static observedAttributes = this.$initProps({
-        top: String,
-        left: String,
-        right: String,
-        bottom: String,
-        position: { type: String, default: "right" },
-        visible: { type: Boolean, default: true },
-        'visible-distance': { type: Number, default: 100 },
-        'visible-reversal': Boolean
+    static observedAttributes = this.$registerProps({
+        'r-orientation': { type: String, default: "right" },  // "left" "right" "top" "bottom" 
+        'r-init-visibility': { type: String, default: 'visible' }, // 'hidden' 'visible'
+        'r-visible-distance': { type: String, default: '100px' }, // px
+        'r-visible-reversal': String // 'noReversal' 'reversal'
     });
 
-    $visible = true;
-    $cacheMoveY = 0;
-    $scrollParent;
-    $renderEvents = ['$onConnected', '$onAttrsChange'];
+    $$visible = true;
+    $$cacheMoveY = 0;
+    $$scrollParent;
 
-    $onRender() {
-        this.$bindStyle();
-        this.$bindClass();
+    connectedCallback(...arg) {
+        super.connectedCallback(...arg);
+        this.$$visible = this.$.DATA.rInitVisibility === 'visible'
+        this.$$scrollParent = this.$.findParentByType('RScroll');
+
+        this.$$scrollParent.addEventListener('scrollUp', this.$$setVisibleFalse.bind(this))
+        this.$$scrollParent.addEventListener('scrollDown', this.$$setVisibleTrue.bind(this))
     }
 
-    $bindClass() {
-        this.$setClass((props) => [
-            "r-scroll-memory-bubble",
-            "r-scroll-memory-bubble-" + props.position,
-            this.$visible ? `r-scroll-memory-bubble-visible` : `r-scroll-memory-bubble-hide`,
-            this.$visible ? `r-scroll-memory-bubble-visible-${props.position}` : `r-scroll-memory-bubble-hide-${props.position}`,
-        ])
+    disconnectedCallback(...arg) {
+        super.connectedCallback(...arg);
+
+        this.$$scrollParent.removeEventListener('scrollUp', this.$$setVisibleFalse.bind(this));
+        this.$$scrollParent.removeEventListener('scrollDown', this.$$setVisibleTrue.bind(this));
     }
 
-    $bindStyle() {
-        this.$setStyle((props) => ({ top: props.top, right: props.right, bottom: props.bottom, left: props.left }))
+    $$setClass() {
+        const { rOrientation } = this.$.DATA
+        this.$.setClass(() => ([
+            "r-scroll-memory-bubble-" + rOrientation,
+            this.$$visible ? `r-scroll-memory-bubble-visible` : `r-scroll-memory-bubble-hide`,
+            this.$$visible ? `r-scroll-memory-bubble-visible-${rOrientation}` : `r-scroll-memory-bubble-hide-${rOrientation}`,
+        ]))
     }
 
-    $onConnected() {
-        this.$visible = this.$attrs.visible;
-        this.$scrollParent = this.$getParentByType('RScroll')
-        this.$scrollParent.addEventListener('scrollUp', this.$setVisibleFalse.bind(this))
-        this.$scrollParent.addEventListener('scrollDown', this.$setVisibleTrue.bind(this))
-    }
-
-    $onDisconnected() {
-        this.$scrollParent.removeEventListener('scrollUp', this.$setVisibleFalse.bind(this));
-        this.$scrollParent.removeEventListener('scrollDown', this.$setVisibleTrue.bind(this));
-    }
-
-    $setVisibleTrue(event) {
-        if (this.$visible === true) return this.$cacheMoveY = 0;
-        this.$cacheMoveY = this.$cacheMoveY + Math.abs(event.moveY);
-        if (this.$cacheMoveY >= this.$attrs['visible-distance']) {
-            this.$cacheMoveY = 0;
-            this.$visible = true;
-            this.$bindClass();
+    $$setVisibleTrue(event) {
+        if (this.$$visible === true) return this.$$cacheMoveY = 0;
+        this.$$cacheMoveY = this.$$cacheMoveY + Math.abs(event.moveY);
+        if (this.$$cacheMoveY >= this.$.DATA.rVisibleDistance) {
+            this.$$cacheMoveY = 0;
+            this.$$visible = true;
+            this.$$setClass();
         }
     }
 
-    $setVisibleFalse(event) {
-        if (this.$visible === false) return this.$cacheMoveY = 0;
-        this.$cacheMoveY = this.$cacheMoveY + Math.abs(event.moveY);
-        if (this.$cacheMoveY >= this.$attrs['visible-distance']) {
-            this.$cacheMoveY = 0;
-            this.$visible = false;
-            this.$bindClass();
+    $$setVisibleFalse(event) {
+        if (this.$$visible === false) return this.$$cacheMoveY = 0;
+        this.$$cacheMoveY = this.$$cacheMoveY + Math.abs(event.moveY);
+        if (this.$$cacheMoveY >= this.$.DATA.rVisibleDistance) {
+            this.$$cacheMoveY = 0;
+            this.$$visible = false;
+            this.$$setClass();
         }
+    }
+
+    $render() {
+        this.$$setClass();
     }
 }
 

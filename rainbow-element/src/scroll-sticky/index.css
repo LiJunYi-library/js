@@ -1,7 +1,10 @@
-.r-scroll-sticky {
+r-scroll-sticky {
     display: block;
     position: sticky;
     z-index: 11;
+    top: 0;
+
+    --r-scroll-anima: scroll( [{opacity: 0, background: cyan},{opacity: 1,background: red,}]);
 }
 
 .r-scroll-sticky-measure {
@@ -9,9 +12,19 @@
     height: 0;
 }
 
-.r-scroll-fixed {
+r-scroll-fixed {
     display: block;
     position: fixed;
     width: 100%;
     z-index: 11;
+}
+
+@keyframes identifier {
+    0% {
+        opacity: 0,
+    }
+
+    20% {
+        opacity: 1,
+    }
 }

@@ -4,6 +4,9 @@
 
         <r-scroll class="my-scroll" ref="ele">
             <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
+            <r-scroll-sticky>
+                <div style="height: 50px;background: cyan;"></div>
+            </r-scroll-sticky>
             <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
             <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
             <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
@@ -14,6 +17,12 @@
             <div style="font-size: 50px;">五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
                 五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
             </div>
+
+            <r-scroll-memory-bable>
+                <div style="width: 50px;height: 50px;background: cyan;"></div>
+            </r-scroll-memory-bable>
+
+      
         </r-scroll>
 
 
@@ -65,8 +74,8 @@ setTimeout(() => {
     gap.value = false
     columns.value = 5
     console.log(ele.value);
-    
-    ele.value.scrollTop=500
+
+    // ele.value.scrollTop = 500
 }, 4000);
 
 </script>

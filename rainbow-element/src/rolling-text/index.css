@@ -3,7 +3,7 @@ r-rolling-text-num {
     overflow: hidden;
     vertical-align: bottom;
     --r-initial-animation: true;
-    /* --r-transition: transform 0.8s; */
+    --r-transition: transform 0.8s linear;
 }
 
 r-rolling-text-num::part(r-rolling-num-container),
@@ -11,8 +11,6 @@ r-rolling-text-num .r-rolling-num-container {
     position: relative;
     transform-style: preserve-3d;
     display: inline-block;
-    /* transform: rotateX(0deg); */
-    transition: 0.8s;
 }
 
 r-rolling-text-num::part(r-rolling-num-rotate),

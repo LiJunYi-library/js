@@ -4,7 +4,6 @@ import { arrayLoop, arrayLoopMap } from "@rainbow_ljy/rainbow-js";
 
 export class RRollingTextNum extends RainbowElement {
   static observedAttributes = this.$registerProps({
-    "r-font": { type: String, default: "20px" }, // px
     "r-initial-animation": String, // true false
     "r-transition": String,
   });
@@ -94,7 +93,6 @@ customElements.define("r-rolling-text-num", RRollingTextNum);
 
 export class RRollingText extends RainbowElement {
   static observedAttributes = this.$registerProps({
-    "r-font": { type: String, default: "20px" },
     "r-value": String,
     "r-math-type": String, // 'floor' , 'none'
   });

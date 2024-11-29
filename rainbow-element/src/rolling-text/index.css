@@ -2,8 +2,7 @@ r-rolling-text-num {
     display: inline-block;
     overflow: hidden;
     vertical-align: bottom;
-    --r-initial-animation: true;
-    --r-transition: transform 0.8s linear;
+    --r-transition: transform 0.8s ;
 }
 
 r-rolling-text-num::part(r-rolling-num-container),

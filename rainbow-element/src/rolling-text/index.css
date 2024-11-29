@@ -1,0 +1,48 @@
+r-rolling-text-num {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    --r-initial-animation: true;
+    /* --r-transition: transform 0.8s; */
+}
+
+r-rolling-text-num::part(r-rolling-num-container),
+r-rolling-text-num .r-rolling-num-container {
+    position: relative;
+    transform-style: preserve-3d;
+    display: inline-block;
+    /* transform: rotateX(0deg); */
+    transition: 0.8s;
+}
+
+r-rolling-text-num::part(r-rolling-num-rotate),
+r-rolling-text-num .r-rolling-num-rotate {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: rgb(255, 255, 0);
+}
+
+r-rolling-text-num::part(r-rolling-num-container-ani),
+r-rolling-text-num .r-rolling-num-container-ani {
+    /* animation: RollingTextNumAni 10s linear infinite; */
+}
+
+@keyframes RollingTextNumAni {
+    0% {
+        transform: rotateX(0);
+    }
+
+    100% {
+        transform: rotateX(-360deg);
+    }
+}
+
+r-rolling-text {
+    --r-value: r-attr(r-value);
+    --r-math-type: floor;
+    display: inline-flex;
+    flex-direction: row-reverse;
+}

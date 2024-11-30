@@ -65,8 +65,6 @@ export class RRollingTextNum extends RainbowElement {
     const { rTransition, rInitialAnimation } = this.$.DATA;
     const rotateX = -((this.$$value / this.$$num) * 360);
     let unactIndex = -Math.round(((rotateX-180) % 360) / 36);
-    console.log('unactIndex', unactIndex);
-    
 
     this.$$rotes.forEach((div, index) => {
       let prveIndex = unactIndex - 1 < 0 ? 9 : unactIndex - 1;
@@ -120,7 +118,7 @@ export class RRollingText extends RainbowElement {
 
   $render() {
     let { rValue, rMathType } = this.$.DATA;
-    console.log("-", [this]);
+    console.log("-", [ ]);
 
     let rValueStr = String(rValue);
     let values = (() => {

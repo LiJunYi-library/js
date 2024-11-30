@@ -18,19 +18,19 @@ export class RainbowElement extends HTMLElement {
     return keys;
   }
 
-  static registerIMPS(imps = []) {
-    this.prototype.IMPS = [treeAttrsChangeIMP, ...imps];
+  IMPS = [treeAttrsChangeIMP];
+
+  registerIMPS() {
+    return [];
   }
 
-  static IMPS = this.registerIMPS();
-
-  $props ={ ...this.constructor.prototype.$props};
+  $props = { ...this.constructor.prototype.$props };
 
   $ = {
     isInitAttrs: false,
     data: {},
     DATA: new Proxy({}, { get: (target, prop) => this.$.data[camelCaseToKebabCase(prop)] }),
-    props: {...this.constructor.prototype.$props},
+    props: { ...this.constructor.prototype.$props },
     resolveFunCss: {
       calc: (v, ...arg) => {
         return v;
@@ -127,6 +127,7 @@ export class RainbowElement extends HTMLElement {
 
   constructor(...arg) {
     super(...arg);
+    this.IMPS.push(...(this.registerIMPS?.() || []));
     this.$debouncedRender = animationDebounced((...pop) => this.$render(...pop));
     this.IMPS.map((el) => el?.simult)?.forEach((el) => el?.init?.call?.(this));
   }

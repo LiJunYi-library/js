@@ -118,7 +118,6 @@ export class RRollingText extends RainbowElement {
 
   $render() {
     let { rValue, rMathType } = this.$.DATA;
-    console.log("-", [ ]);
 
     let rValueStr = String(rValue);
     let values = (() => {
@@ -128,7 +127,6 @@ export class RRollingText extends RainbowElement {
         return rValue / size;
       });
     })();
-    console.log(values);
 
     this.$$renderNumNodes.renderList(values, {
       keyExtractor: (item, index) => index,

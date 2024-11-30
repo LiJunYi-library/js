@@ -13,13 +13,15 @@ export function resizeObserverIMP(props = {}) {
     return {
         simult: {
             init() {
-                const cb = config.resizeCallback ? config.resizeCallback.bind(this) : this.$debouncedRender.bind(this);
+                const cb = config.resizeCallback ? config.resizeCallback.bind(this) : (...arg)=>this.$debouncedRender(...arg);
+                console.log('ResizeObserver',[this])
                 try {
                     obs = new ResizeObserver((...arg) => {
+                        console.log('ResizeObserver',[this])
                         let offset = { width: this.offsetWidth, height: this.offsetHeight };
-                        if (config.isOnlyResizeWidth && cache.width !== offset.width) cb(...arg)
-                        if (config.isOnlyResizeHeight && cache.height !== offset.height) cb(...arg)
-                        if (!config.isOnlyResizeWidth && !config.isOnlyResizeHeight) cb(...arg)
+                        if (config.isOnlyResizeWidth && cache.width !== offset.width) this.$debouncedRender(...arg)
+                        if (config.isOnlyResizeHeight && cache.height !== offset.height) this.$debouncedRender(...arg)
+                        if (!config.isOnlyResizeWidth && !config.isOnlyResizeHeight) this.$debouncedRender(...arg)
                         cache = offset;
                     });
                     obs.observe(this, config.resizeOptions)

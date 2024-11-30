@@ -15,6 +15,10 @@ export class RRollingTextNum extends RainbowElement {
   $$value = 0;
   $$isMonted = false;
 
+  get $$deg() {
+    return 360 / this.$$num;
+  }
+
   get value() {
     return this.$$value;
   }
@@ -44,8 +48,7 @@ export class RRollingTextNum extends RainbowElement {
   }
 
   $$renderNums() {
-    const num = this.$$num;
-    const deg = 360 / num;
+    const deg = this.$$deg;
     const sin = Math.sin((Math.PI / 180) * deg);
     const translateZ = (sin + 0.9) * (this.$$measure.offsetHeight || 1);
 
@@ -61,12 +64,26 @@ export class RRollingTextNum extends RainbowElement {
   async $$rotateX(isTransition) {
     const { rTransition, rInitialAnimation } = this.$.DATA;
     const rotateX = -((this.$$value / this.$$num) * 360);
+    let unactIndex = -Math.round(((rotateX-180) % 360) / 36);
+    console.log('unactIndex', unactIndex);
+    
+
+    this.$$rotes.forEach((div, index) => {
+      let prveIndex = unactIndex - 1 < 0 ? 9 : unactIndex - 1;
+      let nextIndex = unactIndex + 1 > 9 ? 0 : unactIndex + 1;
+      let className = "r-rolling-num-rotate";
+      if (unactIndex === index) className = "r-rolling-num-rotate r-rolling-num-rotate-unact";
+      if (prveIndex === index) className = "r-rolling-num-rotate r-rolling-num-rotate-unprve";
+      if (nextIndex === index) className = "r-rolling-num-rotate r-rolling-num-rotate-unnext";
+
+      div.setAttribute("part", className);
+      div.className = className;
+    });
 
     if (isTransition) {
       this.$$container.style.transition = "";
       this.$$container.style.transition = rTransition;
     }
-
     // if (this.$$isMonted === false && rInitialAnimation === "true") {
     //   await new Promise((resolve) => requestAnimationFrame(() => resolve(true)));
     // }
@@ -103,6 +120,7 @@ export class RRollingText extends RainbowElement {
 
   $render() {
     let { rValue, rMathType } = this.$.DATA;
+    console.log("-", [this]);
 
     let rValueStr = String(rValue);
     let values = (() => {
@@ -112,6 +130,7 @@ export class RRollingText extends RainbowElement {
         return rValue / size;
       });
     })();
+    console.log(values);
 
     this.$$renderNumNodes.renderList(values, {
       keyExtractor: (item, index) => index,

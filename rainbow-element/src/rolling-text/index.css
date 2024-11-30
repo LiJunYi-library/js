@@ -12,6 +12,11 @@ r-rolling-text-num .r-rolling-num-container {
     display: inline-block;
 }
 
+r-rolling-text-num::part(r-rolling-num-measure),
+r-rolling-text-num .r-rolling-num-measure {
+    visibility: hidden;
+}
+
 r-rolling-text-num::part(r-rolling-num-rotate),
 r-rolling-text-num .r-rolling-num-rotate {
     position: absolute;
@@ -19,8 +24,20 @@ r-rolling-text-num .r-rolling-num-rotate {
     height: 100%;
     left: 0;
     top: 0;
-    background-color: rgb(255, 255, 0);
+    opacity: 1;
 }
+
+r-rolling-text-num::part(r-rolling-num-rotate-unprve),
+r-rolling-text-num .r-rolling-num-rotate-unprve,
+r-rolling-text-num::part(r-rolling-num-rotate-unnext),
+r-rolling-text-num .r-rolling-num-rotate-unnext,
+r-rolling-text-num::part(r-rolling-num-rotate-unact),
+r-rolling-text-num .r-rolling-num-rotate-unact {
+   opacity: 0;
+}
+
+
+
 
 r-rolling-text-num::part(r-rolling-num-container-ani),
 r-rolling-text-num .r-rolling-num-container-ani {

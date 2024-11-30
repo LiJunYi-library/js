@@ -20,12 +20,6 @@ export class RainbowElement extends HTMLElement {
 
   IMPS = [treeAttrsChangeIMP];
 
-  registerIMPS() {
-    return [];
-  }
-
-  $props = { ...this.constructor.prototype.$props };
-
   $ = {
     isInitAttrs: false,
     data: {},
@@ -39,7 +33,7 @@ export class RainbowElement extends HTMLElement {
     resolveCss: (key, str = "") => {
       try {
         const isAttrFun = /r-attr\([^\)]*?\)/.test(str);
-        if (isAttrFun) str = this.$props[key];
+        if (isAttrFun) str = this.$.props[key];
 
         let cssVal = str.replace(/\d+px|\d+vw|\d+vh/g, (len) => {
           if (/\d+px/.test(len)) return Number(len.replaceAll("px", ""));
@@ -127,13 +121,13 @@ export class RainbowElement extends HTMLElement {
 
   constructor(...arg) {
     super(...arg);
-    this.IMPS.push(...(this.registerIMPS?.() || []));
+    this.IMPS.push(...(this.$onRegisterIMPS?.() || []));
     this.$debouncedRender = animationDebounced((...pop) => this.$render(...pop));
     this.IMPS.map((el) => el?.simult)?.forEach((el) => el?.init?.call?.(this));
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    this.$props[name] = newValue;
+    this.$.props[name] = newValue;
     if (this.$.isInitAttrs === true) this.$onAttributeChanged(name, oldValue, newValue);
   }
 
@@ -160,8 +154,8 @@ export class RainbowElement extends HTMLElement {
     let isChange = false;
     const css = {};
     const style = window.getComputedStyle(this);
-    for (const key in this.$props) {
-      if (Object.prototype.hasOwnProperty.call(this.$props, key)) {
+    for (const key in this.$.props) {
+      if (Object.prototype.hasOwnProperty.call(this.$.props, key)) {
         const cssVal = style.getPropertyValue("--" + key).trim();
         css[key] = this.$.resolveCss(key, cssVal);
         if (this.$.cache.data[key] !== css[key]) isChange = true;
@@ -172,6 +166,10 @@ export class RainbowElement extends HTMLElement {
     // console.log(isChange);
     if (isChange || force === true) this.$debouncedRender(css);
     return css;
+  }
+
+  $onRegisterIMPS() {
+    return [];
   }
 
   $render() {}

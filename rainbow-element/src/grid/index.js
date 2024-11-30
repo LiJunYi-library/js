@@ -13,8 +13,22 @@ export class RGrid extends RainbowElement {
     "r-grid-stretch": String,
   });
 
-  registerIMPS() {
+  $onRegisterIMPS() {
     return [resizeObserverIMP({ isOnlyResizeWidth: true })];
+  }
+
+  $render() {
+    // console.log([this], this.$.data);
+    const { rGap, rRowGap, rColumnGap } = this.$.DATA;
+    this.$.setStyle(() => [
+      {
+        "grid-template-columns": `repeat(${this.$$columns}, 1fr)`,
+        "grid-gap": rGap + "px",
+        "row-gap": (rRowGap || rGap) + "px",
+        "column-gap": (rColumnGap || rGap) + "px",
+      },
+    ]);
+    this.$$doLayout();
   }
 
   get $$columns() {
@@ -57,20 +71,6 @@ export class RGrid extends RainbowElement {
       el.style["grid-column-start"] = gridColumns[index].start;
       el.style["grid-column-end"] = gridColumns[index].end;
     });
-  }
-
-  $render() {
-    // console.log([this], this.$.data);
-    const { rGap, rRowGap, rColumnGap } = this.$.DATA;
-    this.$.setStyle(() => [
-      {
-        "grid-template-columns": `repeat(${this.$$columns}, 1fr)`,
-        "grid-gap": rGap + "px",
-        "row-gap": (rRowGap || rGap) + "px",
-        "column-gap": (rColumnGap || rGap) + "px",
-      },
-    ]);
-    this.$$doLayout();
   }
 }
 

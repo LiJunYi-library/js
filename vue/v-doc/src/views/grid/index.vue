@@ -1,8 +1,8 @@
 <template>
     <div class="page" :class="name">
 
-
-        <r-grid class="my-grid" :r-columns="columns" r-gap="10px" r-min-auto-width="200px">
+        
+        <r-grid style=" --r-columns:5;--r-gap:10px" >
             <div>五五</div>
             <div grid-column="3">五五</div>
             <div grid-column="2">五五</div>
@@ -13,9 +13,22 @@
             <div>五五</div>
         </r-grid>
 
-        <r-absolute>
-            66
-        </r-absolute>
+
+        <r-grid   style=" --r-columns:2;--r-gap:10px" >
+            <div>五五</div>
+            <div grid-column="1">五五</div>
+            <div grid-column="1">五五</div>
+            <div>五五</div>
+            <div>五五</div>
+            <div>五五</div>
+            <div>五五</div>
+            <div>五五</div>
+        </r-grid>
+
+
+
+
+
 
 
         <!-- 

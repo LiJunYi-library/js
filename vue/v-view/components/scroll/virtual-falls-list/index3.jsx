@@ -1,4 +1,4 @@
-import { defineComponent, computed, reactive, provide, render, watch, onMounted, renderList } from "vue";
+import { defineComponent, computed, reactive, provide, render, watch, onMounted, renderList,onBeforeUnmount } from "vue";
 import { useScrollController } from "../scroll";
 import { useFallsLayout } from "../../falls";
 import { useResizeObserver } from "@rainbow_ljy/v-hooks";
@@ -308,6 +308,10 @@ export const RScrollVirtualFallsListV3 = defineComponent({
 
 
     onMounted(() => { })
+
+    onBeforeUnmount(()=>{
+      backstage.stop();
+    })
 
     function onChangeHeight() {
       // console.log('onChangeHeight');

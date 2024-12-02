@@ -68,7 +68,8 @@ export const RNestedViewPage = defineComponent({
             let sLeft = scrollLeft + event.moveX;
             if (sLeft > maxScrollLeft()) sLeft = maxScrollLeft() + 0.2;
             scrollLeft = sLeft;
-            scrollEl.value.scrollLeft = scrollLeft
+            scrollEl.value.scrollLeft = scrollLeft;
+    
         }
 
         function slideRight(event) {
@@ -107,14 +108,14 @@ export const RNestedViewPage = defineComponent({
                         ani.stop();
                         sLeft = max + 0.2;
                         expose.index = expose.index + 1
-                        parent.child = expose?.children?.[expose.index]
+                        if(parent)   parent.child = expose?.children?.[expose.index]
                         props.listHook?.updateIndex?.(expose.index)
                     }
                     if (sLeft < min) {
                         ani.stop();
                         sLeft = min
                         expose.index = expose.index - 1
-                        parent.child = expose?.children?.[expose.index]
+                        if(parent)    parent.child = expose?.children?.[expose.index]
                         props.listHook?.updateIndex?.(expose.index)
                     }
                     scrollLeft = sLeft;
@@ -134,7 +135,7 @@ export const RNestedViewPage = defineComponent({
                         },
                         onanimationend() {
                             expose.index = index
-                            parent.child = expose?.children?.[expose.index]
+                            if(parent)  parent.child = expose?.children?.[expose.index]
                             props.listHook?.updateIndex?.(expose.index)
                         }
                     })
@@ -164,7 +165,7 @@ export const RNestedViewPage = defineComponent({
             scrollLeft = scrollEl.value.offsetWidth * props.listHook.index
             scrollEl.value.scrollLeft = scrollLeft
             expose.index = props.listHook.index
-            parent.child = expose?.children?.[props.listHook.index]
+            if(parent)  parent.child = expose?.children?.[props.listHook.index]
         });
 
 

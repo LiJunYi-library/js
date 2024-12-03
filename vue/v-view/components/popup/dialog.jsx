@@ -237,8 +237,7 @@ export const RDialogHoc = (options = {}) => {
 
       return (vm) => {
         ctx.vm = vm;
-        return [
-          <Teleport to={teleport.value} disabled={!teleport.value}>
+        return  <Teleport to={teleport.value} disabled={!teleport.value}>
             <Transition
               name={"popup-" + props.position}
               onAfterLeave={onAfterLeave}
@@ -255,8 +254,8 @@ export const RDialogHoc = (options = {}) => {
                 <Transition name={"popup-content-" + props.position}>{renderContent()}</Transition>
               </div>
             </Transition>
-          </Teleport>,
-        ];
+          </Teleport>
+        ;
       };
     },
   });

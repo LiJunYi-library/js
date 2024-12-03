@@ -70,7 +70,7 @@ export class RScroll extends RainbowElement {
     }
 
     disconnectedCallback(...arg) {
-        super.connectedCallback(...arg)
+        super.disconnectedCallback(...arg)
         this.$$scrollEl.removeEventListener('scroll', this.$$onScroll.bind(this));
     }
 

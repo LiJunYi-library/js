@@ -5,6 +5,7 @@ function Transition(params = {}) {
   const props = {
     node: document.createElement("div"),
     name: "",
+    className: "",
     oBeforeEnter: () => 0,
     onEnter: () => 0,
     onAfterEnter: () => 0,
@@ -16,7 +17,12 @@ function Transition(params = {}) {
     className: [],
     visible,
     hide,
+    setName,
   };
+
+  function setName(str) {
+    props.name = str;
+  }
 
   const enter = {
     isAnimation: false,
@@ -29,6 +35,7 @@ function Transition(params = {}) {
       );
       props.node.removeEventListener("transitionend", enter.transitionend);
       props.node.removeEventListener("transitioncancel", enter.transitioncancel);
+      enter.isAnimation = false;
     },
     transitionend: () => {
       console.log("enter transitionend");
@@ -47,6 +54,7 @@ function Transition(params = {}) {
   };
 
   const leave = {
+    isAnimation: false,
     resolve: () => 0,
     clear: () => {
       props.node.classList.remove(
@@ -56,11 +64,12 @@ function Transition(params = {}) {
       );
       props.node.removeEventListener("transitionend", leave.transitionend);
       props.node.removeEventListener("transitioncancel", leave.transitioncancel);
+      leave.isAnimation = false;
     },
     transitionend: () => {
       console.log("leave transitionend");
-      props.node.classList.remove(`${props.name}show`);
-      props.node.classList.add(`${props.name}hide`);
+      props.node.classList.remove(`${props.className}show`);
+      props.node.classList.add(`${props.className}hide`);
       leave.clear();
     },
     transitioncancel: () => {
@@ -76,33 +85,36 @@ function Transition(params = {}) {
   };
 
   async function visible() {
+    if (enter.isAnimation === true) return;
+    enter.isAnimation = true;
     await leave.destroy();
     props.node.classList.add(
-      `${props.name}show`,
+      `${props.className}show`,
       `${props.name}enter-active`,
       `${props.name}enter-from`,
     );
-    props.node.classList.remove(`${props.name}enter-to`, `${props.name}hide`);
+    props.node.classList.remove(`${props.name}enter-to`, `${props.className}hide`);
     props?.oBeforeEnter?.();
     requestAnimationFrame(() => {
       props.node.classList.add(`${props.name}enter-to`);
       props.node.classList.remove(`${props.name}enter-from`);
       props.onEnter();
       props.node.addEventListener("transitionend", enter.transitionend);
-    //   props.node.addEventListener("transitioncancel", enter.transitioncancel);
+      //   props.node.addEventListener("transitioncancel", enter.transitioncancel);
     });
   }
 
   async function hide() {
+    if (leave.isAnimation === true) return;
+    leave.isAnimation = true;
     await enter.destroy();
     props.node.classList.add(`${props.name}leave-active`, `${props.name}leave-from`);
     props.node.classList.remove(`${props.name}leave-to`);
-
     requestAnimationFrame(() => {
       props.node.classList.add(`${props.name}leave-to`);
       props.node.classList.remove(`${props.name}leave-from`);
       props.node.addEventListener("transitionend", leave.transitionend);
-    //   props.node.addEventListener("transitioncancel", leave.transitioncancel);
+      //   props.node.addEventListener("transitioncancel", leave.transitioncancel);
     });
   }
 
@@ -110,17 +122,24 @@ function Transition(params = {}) {
 }
 
 export class RDialog extends RainbowElement {
+  static observedAttributes = this.$registerProps({
+    "r-orientation": String, // "left" "right" "top" "bottom" "center"
+  });
+
+
+
   $$content;
   $$ = {
     Visible: false,
   };
 
-  $$show = false;
-  $$hide = true;
+  $$show = true;
+  $$hide = false;
 
   $$transition = Transition({
     node: this,
     name: "r-dialog-",
+    className: "r-dialog-",
   });
 
   constructor(...arg) {
@@ -136,32 +155,24 @@ export class RDialog extends RainbowElement {
   }
 
   $$setClass() {
-    this.$.setClass(() => [
-      this.$$show && "r-dialog-show",
-      this.$$hide && "r-dialog-hide",
-      "r-dialog-dialog",
-    ]);
+    this.$.setClass(() => [this.$$show && "r-dialog-show", this.$$hide && "r-dialog-hide"]);
   }
 
   open() {
     this.$$show = true;
     this.$$hide = false;
-    // this.$$setClass();
     this.$$transition.visible();
   }
 
   close() {
     this.$$show = false;
     this.$$hide = true;
-    // this.$$setClass();
     this.$$transition.hide();
   }
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     this.$$setClass();
-    // this.style.display = "";
-    // if (this.$$show === false) this.style.display = "none";
     // console.log("connectedCallback");
   }
 
@@ -173,6 +184,12 @@ export class RDialog extends RainbowElement {
   disconnectedCallback(...arg) {
     super.disconnectedCallback(...arg);
     // console.log("disconnectedCallback");
+  }
+
+  $render() {
+    const { rOrientation } = this.$.DATA;
+    // this.$$transition.setName(["r-dialog", rOrientation].filter(Boolean).join("-") + "-");
+    console.log(">>>>>", rOrientation);
   }
 }
 

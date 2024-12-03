@@ -1,11 +1,12 @@
 r-dialog {
     position: fixed;
+    overflow: hidden;
     left: 0;
     top: 0px;
-    overflow: hidden;
+    --r-orientation: center;
 }
 
-r-dialog.r-dialog-show{
+r-dialog.r-dialog-show {
     display: block;
 }
 
@@ -15,11 +16,11 @@ r-dialog.r-dialog-hide {
 
 
 r-dialog.r-dialog-enter-active {
-    transition: 1s linear;
+    transition: 4s linear;
 }
 
 r-dialog.r-dialog-leave-active {
-    transition: 1s linear;
+    transition: 4s linear;
 }
 
 

@@ -117,6 +117,16 @@ export class RainbowElement extends HTMLElement {
       if (this.offsetParent === p) return top;
       return this.$.getOffsetTop(this.offsetParent, top);
     },
+    isAnimation: false,
+    transitionrun: () => {
+      this.$.isAnimation = true;
+    },
+    transitioncancel: () => {
+      this.$.isAnimation = false;
+    },
+    transitionend: () => {
+      this.$.isAnimation = false;
+    },
   };
 
   constructor(...arg) {
@@ -124,6 +134,9 @@ export class RainbowElement extends HTMLElement {
     this.IMPS.push(...(this.$onRegisterIMPS?.() || []));
     this.$debouncedRender = animationDebounced((...pop) => this.$render(...pop));
     this.IMPS.map((el) => el?.simult)?.forEach((el) => el?.init?.call?.(this));
+    this.addEventListener("transitionrun", this.$.transitionrun);
+    this.addEventListener("transitioncancel", this.$.transitioncancel);
+    this.addEventListener("transitionend", this.$.transitionend);
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -147,10 +160,14 @@ export class RainbowElement extends HTMLElement {
   }
 
   disconnectedCallback() {
+    this.removeEventListener("transitionrun", this.$.transitionrun);
+    this.removeEventListener("transitioncancel", this.$.transitioncancel);
+    this.removeEventListener("transitionend", this.$.transitionend);
     this.IMPS.map((el) => el?.simult)?.forEach((el) => el?.disconnected?.call?.(this));
   }
 
   $changePropsRender(force) {
+    if (this.$.isAnimation) return;
     let isChange = false;
     const css = {};
     const style = window.getComputedStyle(this);

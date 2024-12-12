@@ -147,7 +147,6 @@ class RVisibleAnimate extends RainbowElement {
   });
 
   $$visible = true;
-
   $$transition = Transition({
     node: this,
     name: "r-visible-animate-",
@@ -184,11 +183,42 @@ export class RDialog extends RainbowElement {
   });
 
   $$content;
-  $$visible = false;
+  $$visible = true;
   $$transition = Transition({ node: this, name: "r-dialog-", className: "r-dialog-" });
 
   constructor(...arg) {
     super(...arg);
+    // this.attachShadow({ mode: "open" });
+    // this.$$content = document.createElement("div");
+    // this.$$content.className = "r-dialog-content";
+    // this.$$content.setAttribute("part", "r-dialog-content");
+    // const contentSlot = document.createElement("slot");
+    // contentSlot.className = "content";
+    // this.$$content.appendChild(contentSlot);
+    // this.shadowRoot.appendChild(this.$$content);
+
+    // this.$$transition = Transition({
+    //   node: this.$$content,
+    //   name: "r-dialog-",
+    //   className: "r-dialog-",
+    // });
+  }
+
+  //   append(...arg) {
+  //     this.$$content.append(...arg);
+  //   }
+
+  //   appendChild(...arg) {
+  //     this.$$content.appendChild(...arg);
+  //   }
+
+  //   insertBefore(...arg) {
+  //     this.$$content.insertBefore(...arg);
+  //   }
+
+  $$setClass() {
+    const { rOrientation } = this.$.DATA;
+    this.$.setClass(() => [rOrientation && "r-dialog-" + rOrientation]);
   }
 
   open() {
@@ -201,18 +231,14 @@ export class RDialog extends RainbowElement {
     this.$$transition.hide();
   }
 
-  $$setClass() {
-    const { rOrientation } = this.$.DATA;
-    this.$.setClass(() => [
-      rOrientation && "r-dialog-" + rOrientation,
-      this.$$visible === true && "r-dialog-show",
-      this.$$visible === false && "r-dialog-hide",
-    ]);
-  }
+  //   connectedCallback(...arg) {
+  //     // super.appendChild(this.$$content);
+  //     super.connectedCallback(...arg);
+
+  //     // console.log("connectedCallback");
+  //   }
 
   $render() {
-    // this.$$setClass();
-
     const { rOrientation } = this.$.DATA;
     this.$$transition.setName(["r-dialog", rOrientation].filter(Boolean).join("-") + "-");
     this.$.setClass(() => [rOrientation && "r-dialog-" + rOrientation]);

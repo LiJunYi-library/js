@@ -128,7 +128,7 @@ export const RNestedViewPage = defineComponent({
       });
       adsorbAni.start();
       expose.isWork = false;
-      
+
       //   }
 
       //   if (roundIndex === index && 0 <= event.velocityX && event.velocityX <= 0.5) {
@@ -284,8 +284,7 @@ export const RNestedViewPage = defineComponent({
           >
             {children.map((node) => (
               <div class="r-nested-view-page-item" style={{ width: width() }}>
-                {" "}
-                {node}{" "}
+                {node}
               </div>
             ))}
           </div>

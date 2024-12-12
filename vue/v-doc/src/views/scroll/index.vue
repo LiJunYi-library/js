@@ -3,7 +3,7 @@
 
 
         <r-scroll class="my-scroll" ref="ele">
-            <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
+            <div slot="bottom">liu六liu六liu六liu六liu六liu六liu六liu六liu六</div>
             <r-scroll-sticky>
                 <div style="height: 50px;background: cyan;"></div>
             </r-scroll-sticky>

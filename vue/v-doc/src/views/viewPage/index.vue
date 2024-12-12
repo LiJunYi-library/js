@@ -5,7 +5,6 @@
             <div style="height: 100vh;background: yellow;">456</div>
             <div style="height: 100vh;background: orange;">789</div>
             <div style="height: 100vh;">1011</div>
-
         </RNestedViewPage>
 
 
@@ -21,7 +20,7 @@ import { useRadio2 } from '@rainbow_ljy/v-hooks';
 import { ref } from 'vue'
 import { RNestedViewPage, RNestedScroll } from '@rainbow_ljy/v-view'
 
-const radio = useRadio2({ index: 0,list:arrayLoopMap(4,()=>({})) })
+const radio = useRadio2({ index: 0, list: arrayLoopMap(4, () => ({})) })
 
 </script>
 

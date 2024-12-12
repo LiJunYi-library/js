@@ -1,3 +1,153 @@
+r-visible-animate {
+    /* position: fixed; */
+    overflow: hidden;
+    --r-orientation: top;
+}
+
+
+
+r-visible-animate.r-visible-animate-show {
+    display: block;
+}
+
+r-visible-animate.r-visible-animate-hide {
+    display: none;
+}
+
+
+r-visible-animate.r-visible-animate-center-enter-active,
+r-visible-animate.r-visible-animate-center-leave-active,
+r-visible-animate.r-visible-animate-left-enter-active,
+r-visible-animate.r-visible-animate-left-leave-active,
+r-visible-animate.r-visible-animate-right-enter-active,
+r-visible-animate.r-visible-animate-right-leave-active,
+r-visible-animate.r-visible-animate-bottom-enter-active,
+r-visible-animate.r-visible-animate-bottom-leave-active,
+r-visible-animate.r-visible-animate-top-enter-active,
+r-visible-animate.r-visible-animate-top-leave-active {
+    transition: 0.3s;
+}
+
+/**********************/
+r-visible-animate.r-visible-animate-top {
+    left: 0;
+    top: 0;
+    width: 100vW;
+}
+
+r-visible-animate.r-visible-animate-top-enter-from {
+    transform: translateY(-100%);
+}
+
+r-visible-animate.r-visible-animate-top-enter-to {
+    transform: translateY(0%);
+}
+
+r-visible-animate.r-visible-animate-top-leave-from {
+    transform: translateY(0%);
+}
+
+r-visible-animate.r-visible-animate-top-leave-to {
+    transform: translateY(-100%);
+}
+
+/**********************/
+r-visible-animate.r-visible-animate-bottom {
+    left: 0;
+    bottom: 0;
+    width: 100vW;
+}
+
+r-visible-animate.r-visible-animate-bottom-enter-from {
+    transform: translateY(100%);
+}
+
+r-visible-animate.r-visible-animate-bottom-enter-to {
+    transform: translateY(0%);
+}
+
+r-visible-animate.r-visible-animate-bottom-leave-from {
+    transform: translateY(0%);
+}
+
+r-visible-animate.r-visible-animate-bottom-leave-to {
+    transform: translateY(100%);
+}
+
+/**********************/
+
+r-visible-animate.r-visible-animate-left {
+    left: 0;
+    top: 0;
+    height: 100vH;
+}
+
+r-visible-animate.r-visible-animate-left-enter-from {
+    transform: translateX(-100%);
+}
+
+r-visible-animate.r-visible-animate-left-enter-to {
+    transform: translateX(0%);
+}
+
+r-visible-animate.r-visible-animate-left-leave-from {
+    transform: translateX(0%);
+}
+
+r-visible-animate.r-visible-animate-left-leave-to {
+    transform: translateX(-100%);
+}
+
+/**********************/
+
+r-visible-animate.r-visible-animate-right {
+    right: 0;
+    top: 0;
+    height: 100vH;
+}
+
+r-visible-animate.r-visible-animate-right-enter-from {
+    transform: translateX(100%);
+}
+
+r-visible-animate.r-visible-animate-right-enter-to {
+    transform: translateX(0%);
+}
+
+r-visible-animate.r-visible-animate-right-leave-from {
+    transform: translateX(0%);
+}
+
+r-visible-animate.r-visible-animate-right-leave-to {
+    transform: translateX(100%);
+}
+
+/**********************/
+
+r-visible-animate.r-visible-animate-center {
+    left: 50%;
+    top: 50%;
+    transform-origin: 50% 0;
+    transform: translate(-50%, -50%);
+}
+
+r-visible-animate.r-visible-animate-center-enter-from {
+    transform: translate(-50%, -50%) scaleY(0);
+}
+
+r-visible-animate.r-visible-animate-center-enter-to {
+    transform: translate(-50%, -50%) scaleY(1);
+}
+
+r-visible-animate.r-visible-animate-center-leave-from {
+    transform: translate(-50%, -50%) scaleY(1);
+}
+
+r-visible-animate.r-visible-animate-center-leave-to {
+    transform: translate(-50%, -50%) scaleY(0);
+}
+
+
 r-dialog {
     position: fixed;
     overflow: hidden;
@@ -12,6 +162,36 @@ r-dialog.r-dialog-hide {
     display: none;
 }
 
+r-dialog.r-dialog-top {
+    left: 0;
+    top: 0;
+    width: 100vW;
+}
+
+r-dialog.r-dialog-bottom {
+    left: 0;
+    bottom: 0;
+    width: 100vW;
+}
+
+r-dialog.r-dialog-left {
+    left: 0;
+    top: 0;
+    height: 100vH;
+}
+
+r-dialog.r-dialog-right {
+    right: 0;
+    top: 0;
+    height: 100vH;
+}
+
+r-dialog.r-dialog-center {
+    left: 50%;
+    top: 50%;
+    transform-origin: 50% 0;
+    transform: translate(-50%, -50%);
+}
 
 r-dialog.r-dialog-center-enter-active,
 r-dialog.r-dialog-center-leave-active,
@@ -24,122 +204,4 @@ r-dialog.r-dialog-bottom-leave-active,
 r-dialog.r-dialog-top-enter-active,
 r-dialog.r-dialog-top-leave-active {
     transition: 0.3s;
-}
-
-/**********************/
-r-dialog.r-dialog-top {
-    left: 0;
-    top: 400px;
-    width: 100vW;
-}
-
-r-dialog.r-dialog-top-enter-from {
-    transform: translateY(-100%);
-}
-
-r-dialog.r-dialog-top-enter-to {
-    transform: translateY(0%);
-}
-
-r-dialog.r-dialog-top-leave-from {
-    transform: translateY(0%);
-}
-
-r-dialog.r-dialog-top-leave-to {
-    transform: translateY(-100%);
-}
-
-/**********************/
-r-dialog.r-dialog-bottom {
-    left: 0;
-    bottom: 0;
-    width: 100vW;
-}
-
-r-dialog.r-dialog-bottom-enter-from {
-    transform: translateY(100%);
-}
-
-r-dialog.r-dialog-bottom-enter-to {
-    transform: translateY(0%);
-}
-
-r-dialog.r-dialog-bottom-leave-from {
-    transform: translateY(0%);
-}
-
-r-dialog.r-dialog-bottom-leave-to {
-    transform: translateY(100%);
-}
-/**********************/
-
-r-dialog.r-dialog-left {
-    left: 0;
-    top: 0;
-    height: 100vH;
-}
-
-r-dialog.r-dialog-left-enter-from {
-    transform: translateX(-100%);
-}
-
-r-dialog.r-dialog-left-enter-to {
-    transform: translateX(0%);
-}
-
-r-dialog.r-dialog-left-leave-from {
-    transform: translateX(0%);
-}
-
-r-dialog.r-dialog-left-leave-to {
-    transform: translateX(-100%);
-}
-
-/**********************/
-
-r-dialog.r-dialog-right {
-    right: 0;
-    top: 0;
-    height: 100vH;
-}
-
-r-dialog.r-dialog-right-enter-from {
-    transform: translateX(100%);
-}
-
-r-dialog.r-dialog-right-enter-to {
-    transform: translateX(0%);
-}
-
-r-dialog.r-dialog-right-leave-from {
-    transform: translateX(0%);
-}
-
-r-dialog.r-dialog-right-leave-to {
-    transform: translateX(100%);
-}
-
-/**********************/
-
-r-dialog.r-dialog-center {
-    left: 50%;
-    top: 50%;
-    transform-origin: 50%  0;
-    transform: translate(-50%, -50%);
-}
-
-r-dialog.r-dialog-center-enter-from {
-    transform: translate(-50%, -50%) scaleY(0);
-}
-
-r-dialog.r-dialog-center-enter-to {
-    transform: translate(-50%, -50%) scaleY(1);
-}
-
-r-dialog.r-dialog-center-leave-from {
-    transform: translate(-50%, -50%) scaleY(1);
-}
-
-r-dialog.r-dialog-center-leave-to {
-    transform: translate(-50%, -50%) scaleY(0);
 }

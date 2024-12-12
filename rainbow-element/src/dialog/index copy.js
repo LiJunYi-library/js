@@ -14,10 +14,9 @@ function Transition(params = {}) {
 
   const args = {
     className: [],
-    show,
+    visible,
     hide,
     setName,
-    visible,
   };
 
   function setName(str) {
@@ -87,7 +86,7 @@ function Transition(params = {}) {
     },
   };
 
-  async function show() {
+  async function visible() {
     if (enter.isAnimation === true) return;
     enter.isAnimation = true;
     await leave.destroy();
@@ -125,19 +124,6 @@ function Transition(params = {}) {
     });
   }
 
-  function visible(bool) {
-    if (bool) {
-      props.node.classList.add(`${props.className}show`);
-      props.node.classList.remove(`${props.className}hide`);
-      props.node.setAttribute("part", props.node.className);
-      return;
-    }
-
-    props.node.classList.add(`${props.className}hide`);
-    props.node.classList.remove(`${props.className}show`);
-    props.node.setAttribute("part", props.node.className);
-  }
-
   return args;
 }
 
@@ -146,37 +132,14 @@ class RVisibleAnimate extends RainbowElement {
     "r-orientation": String, // "left" "right" "top" "bottom" "center"
   });
 
-  $$visible = true;
-
   $$transition = Transition({
     node: this,
-    name: "r-visible-animate-",
-    className: "r-visible-animate-",
+    name: "r-dialog-",
+    className: "r-dialog-",
   });
-
-  constructor(...arg) {
-    super(...arg);
-  }
-
-  open() {
-    this.$$visible = true;
-    this.$$transition.show();
-  }
-
-  close() {
-    this.$$visible = false;
-    this.$$transition.hide();
-  }
-
-  $render() {
-    const { rOrientation } = this.$.DATA;
-    this.$$transition.setName(["r-visible-animate", rOrientation].filter(Boolean).join("-") + "-");
-    this.$.setClass(() => [rOrientation && "r-visible-animate-" + rOrientation]);
-    this.$$transition.visible(this.$$visible);
-  }
 }
 
-customElements.define("r-visible-animate", RVisibleAnimate);
+customElements.define("r-dialog-content", RVisibleAnimate);
 
 export class RDialog extends RainbowElement {
   static observedAttributes = this.$registerProps({
@@ -184,39 +147,78 @@ export class RDialog extends RainbowElement {
   });
 
   $$content;
-  $$visible = false;
-  $$transition = Transition({ node: this, name: "r-dialog-", className: "r-dialog-" });
+  $$ = {
+    visible: false,
+  };
+
+  $$show = true;
+  $$hide = false;
+
+  $$transition = Transition({
+    node: this,
+    name: "r-dialog-",
+    className: "r-dialog-",
+  });
 
   constructor(...arg) {
     super(...arg);
-  }
+    this.attachShadow({ mode: "open" });
+    this.$$content = document.createElement("div");
+    // this.$$content.className = "r-dialog-content";
+    // this.$$content.setAttribute("part", "r-dialog-content");
+    const contentSlot = document.createElement("slot");
+    contentSlot.className = "content";
+    this.$$content.appendChild(contentSlot);
+    this.shadowRoot.appendChild(this.$$content);
 
-  open() {
-    this.$$visible = true;
-    this.$$transition.show();
-  }
-
-  close() {
-    this.$$visible = false;
-    this.$$transition.hide();
+    this.$$transition = Transition({
+      node: this.$$content,
+      name: "r-dialog-",
+      className: "r-dialog-",
+    });
   }
 
   $$setClass() {
     const { rOrientation } = this.$.DATA;
     this.$.setClass(() => [
+      this.$$show && "r-dialog-show",
+      this.$$hide && "r-dialog-hide",
       rOrientation && "r-dialog-" + rOrientation,
-      this.$$visible === true && "r-dialog-show",
-      this.$$visible === false && "r-dialog-hide",
     ]);
   }
 
-  $render() {
-    // this.$$setClass();
+  open() {
+    this.$$show = true;
+    this.$$hide = false;
+    this.$$transition.visible();
+  }
 
+  close() {
+    this.$$show = false;
+    this.$$hide = true;
+    this.$$transition.hide();
+  }
+
+  connectedCallback(...arg) {
+    super.connectedCallback(...arg);
+    this.$$setClass();
+    // console.log("connectedCallback");
+  }
+
+  adoptedCallback(...arg) {
+    super.adoptedCallback(...arg);
+    // console.log("adoptedCallback");
+  }
+
+  disconnectedCallback(...arg) {
+    super.disconnectedCallback(...arg);
+    // console.log("disconnectedCallback");
+  }
+
+  $render() {
     const { rOrientation } = this.$.DATA;
     this.$$transition.setName(["r-dialog", rOrientation].filter(Boolean).join("-") + "-");
-    this.$.setClass(() => [rOrientation && "r-dialog-" + rOrientation]);
-    this.$$transition.visible(this.$$visible);
+    this.$$setClass();
   }
 }
 

@@ -88,7 +88,7 @@ importers:
         version: 13.12.2(react-native@0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(encoding@0.1.13)(react@18.3.1))(react@18.3.1)
       react-scripts:
         specifier: ^5.0.1
-        version: 5.0.1(@babel/plugin-syntax-flow@7.24.7(@babel/core@7.25.2))(@babel/plugin-transform-react-jsx@7.25.2(@babel/core@7.25.2))(@types/babel__core@7.20.5)(esbuild@0.23.1)(eslint@8.57.0)(react@18.3.1)(sass@1.78.0)(type-fest@2.19.0)(typescript@5.6.2)(vue-template-compiler@2.7.16)(webpack-cli@5.1.4)
+        version: 5.0.1(@babel/plugin-syntax-flow@7.24.7(@babel/core@7.25.2))(@babel/plugin-transform-react-jsx@7.25.2(@babel/core@7.25.2))(@types/babel__core@7.20.5)(esbuild@0.23.1)(eslint@8.57.0)(react@18.3.1)(sass@1.78.0)(type-fest@2.19.0)(typescript@5.6.2)(vue-template-compiler@2.7.16)(webpack-cli@5.1.4)(webpack-hot-middleware@2.26.1)
       vant:
         specifier: ^4.8.1
         version: 4.9.5(vue@3.5.4(typescript@5.6.2))
@@ -107,6 +107,9 @@ importers:
       web-vitals:
         specifier: ^3.5.0
         version: 3.5.2
+      webpack-hot-middleware:
+        specifier: ^2.26.1
+        version: 2.26.1
     devDependencies:
       '@babel/core':
         specifier: ^7.20.0
@@ -125,7 +128,7 @@ importers:
         version: 1.9.0(react@18.3.1)
       '@pmmmwh/react-refresh-webpack-plugin':
         specifier: ^0.5.11
-        version: 0.5.15(react-refresh@0.11.0)(type-fest@2.19.0)(webpack-dev-server@4.15.2)(webpack@5.94.0)
+        version: 0.5.15(react-refresh@0.11.0)(type-fest@2.19.0)(webpack-dev-server@4.15.2)(webpack-hot-middleware@2.26.1)(webpack@5.94.0)
       '@react-native/babel-preset':
         specifier: 0.73.21
         version: 0.73.21(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))
@@ -9911,6 +9914,9 @@ packages:
       webpack-cli:
         optional: true
 
+  webpack-hot-middleware@2.26.1:
+    resolution: {integrity: sha512-khZGfAeJx6I8K9zKohEWWYN6KDlVw2DHownoe+6Vtwj1LP9WFgegXnVMSkZ/dBEBtXFwrkkydsaPFlB7f8wU2A==}
+
   webpack-manifest-plugin@4.1.1:
     resolution: {integrity: sha512-YXUAwxtfKIJIKkhg03MKuiFAD72PlrqCiwdwO4VEXdRO5V0ORCNwaOwAZawPZalCbmH9kBDmXnNeQOw+BIEiow==}
     engines: {node: '>=12.22.0'}
@@ -12207,7 +12213,7 @@ snapshots:
 
   '@pkgr/core@0.1.1': {}
 
-  '@pmmmwh/react-refresh-webpack-plugin@0.5.15(react-refresh@0.11.0)(type-fest@2.19.0)(webpack-dev-server@4.15.2)(webpack@5.94.0)':
+  '@pmmmwh/react-refresh-webpack-plugin@0.5.15(react-refresh@0.11.0)(type-fest@2.19.0)(webpack-dev-server@4.15.2)(webpack-hot-middleware@2.26.1)(webpack@5.94.0)':
     dependencies:
       ansi-html: 0.0.9
       core-js-pure: 3.38.1
@@ -12221,6 +12227,7 @@ snapshots:
     optionalDependencies:
       type-fest: 2.19.0
       webpack-dev-server: 4.15.2(debug@4.3.7)(webpack-cli@5.1.4)(webpack@5.94.0)
+      webpack-hot-middleware: 2.26.1
 
   '@polka/url@1.0.0-next.25': {}
 
@@ -12524,9 +12531,7 @@ snapshots:
     transitivePeerDependencies:
       - '@babel/core'
       - '@babel/preset-env'
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   '@react-native/normalize-colors@0.73.2': {}
 
@@ -20282,10 +20287,10 @@ snapshots:
 
   react-refresh@0.14.2: {}
 
-  react-scripts@5.0.1(@babel/plugin-syntax-flow@7.24.7(@babel/core@7.25.2))(@babel/plugin-transform-react-jsx@7.25.2(@babel/core@7.25.2))(@types/babel__core@7.20.5)(esbuild@0.23.1)(eslint@8.57.0)(react@18.3.1)(sass@1.78.0)(type-fest@2.19.0)(typescript@5.6.2)(vue-template-compiler@2.7.16)(webpack-cli@5.1.4):
+  react-scripts@5.0.1(@babel/plugin-syntax-flow@7.24.7(@babel/core@7.25.2))(@babel/plugin-transform-react-jsx@7.25.2(@babel/core@7.25.2))(@types/babel__core@7.20.5)(esbuild@0.23.1)(eslint@8.57.0)(react@18.3.1)(sass@1.78.0)(type-fest@2.19.0)(typescript@5.6.2)(vue-template-compiler@2.7.16)(webpack-cli@5.1.4)(webpack-hot-middleware@2.26.1):
     dependencies:
       '@babel/core': 7.25.2
-      '@pmmmwh/react-refresh-webpack-plugin': 0.5.15(react-refresh@0.11.0)(type-fest@2.19.0)(webpack-dev-server@4.15.2)(webpack@5.94.0)
+      '@pmmmwh/react-refresh-webpack-plugin': 0.5.15(react-refresh@0.11.0)(type-fest@2.19.0)(webpack-dev-server@4.15.2)(webpack-hot-middleware@2.26.1)(webpack@5.94.0)
       '@svgr/webpack': 5.5.0
       babel-jest: 27.5.1(@babel/core@7.25.2)
       babel-loader: 8.3.0(@babel/core@7.25.2)(webpack@5.94.0)
@@ -21963,6 +21968,12 @@ snapshots:
       - debug
       - supports-color
       - utf-8-validate
+
+  webpack-hot-middleware@2.26.1:
+    dependencies:
+      ansi-html-community: 0.0.8
+      html-entities: 2.5.2
+      strip-ansi: 6.0.1
 
   webpack-manifest-plugin@4.1.1(webpack@5.94.0):
     dependencies:

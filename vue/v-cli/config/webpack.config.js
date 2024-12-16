@@ -32,11 +32,11 @@ function formatterConfig(props) {
   const config = {
     mode: "development",
     context: path.resolve(""),
-    entry: '',
-    htmlTemplate: '',
+    entry: "",
+    htmlTemplate: "",
     outputPath: path.resolve("", `./build`),
-    ...props
-  }
+    ...props,
+  };
 
   const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -98,7 +98,7 @@ function formatterConfig(props) {
         },
         {
           test: /\.ts$/,
-          use: 'ts-loader',
+          use: "ts-loader",
           exclude: /node_modules/,
         },
         {
@@ -114,9 +114,7 @@ function formatterConfig(props) {
         {
           test: /\.(vue)$/,
           loader: "vue-loader",
-          options: {
-
-          },
+          options: {},
           // include: [comPath, comPath2],
         },
       ],
@@ -149,14 +147,14 @@ function formatterConfig(props) {
         "process.env": { NODE_ENV: `"${config.mode}"` },
       }),
       new MiniCssExtractPlugin({
-        filename: 'static/css/[name].css',
-        chunkFilename: 'static/css/[name].chunk.css',
-      })
+        filename: "static/css/[name].css",
+        chunkFilename: "static/css/[name].chunk.css",
+      }),
     ].filter(Boolean),
     mode: config.mode,
     devtool: "source-map", //"cheap-module-source-map",
     resolve: {
-      extensions: [".vue", ".js", ".mjs", ".jsx", ".json", '.ts'],
+      extensions: [".vue", ".js", ".mjs", ".jsx", ".json", ".ts"],
     },
     optimization: {
       splitChunks: {
@@ -167,10 +165,7 @@ function formatterConfig(props) {
       },
       usedExports: true,
       minimize: true,
-      minimizer: [
-        new CssMinimizerPlugin(),
-        new TerserPlugin(),
-      ],
+      minimizer: [new CssMinimizerPlugin(), new TerserPlugin()],
     },
     devServer: {
       host: "localhost",
@@ -179,11 +174,7 @@ function formatterConfig(props) {
       historyApiFallback: true,
     },
     performance: false,
-
-  }
+  };
 }
 
 module.exports = formatterConfig;
-
-
-

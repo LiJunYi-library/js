@@ -76,11 +76,14 @@ module.exports = {
         type: "asset",
         parser: {
           dataUrlCondition: {
-            maxSize: 10 * 1024,
+            maxSize: 0 * 1024,
           },
         },
       },
-
+      {
+        test: /\.(png|jpg|gif|svg)$/, 
+        type: 'asset/resource', 
+      },
       //
       {
         test: /\.(woff2|ttf)$/,

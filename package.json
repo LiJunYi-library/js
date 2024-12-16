@@ -140,6 +140,7 @@
     "vue-demi": "^0.14.6",
     "vue-router": "^4.0.3",
     "vuex": "^4.1.0",
-    "web-vitals": "^3.5.0"
+    "web-vitals": "^3.5.0",
+    "webpack-hot-middleware": "^2.26.1"
   }
 }

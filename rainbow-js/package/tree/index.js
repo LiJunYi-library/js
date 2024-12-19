@@ -1,5 +1,4 @@
 import { arrayLoop, arrayRemove } from "../array";
-import { d } from "./data";
 
 function fmt(item) {
   return item?.children ?? [];

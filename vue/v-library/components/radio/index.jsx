@@ -1,4 +1,4 @@
-import { ElRadioGroup, ElRadio, RadioProps, ElRadioButton } from "element-plus";
+import { ElRadioGroup, ElRadio, ElRadioButton } from "element-plus";
 import { defineComponent, renderList, renderSlot } from "vue";
 import "./index.scss";
 
@@ -17,7 +17,6 @@ const RadioHoc = (options = {}) => {
       label: String,
       radioType: { type: String, default: "ElRadio" },
       border: Boolean,
-      ...RadioProps,
       listHook: Object,
       nowrap: Boolean,
       className: String,

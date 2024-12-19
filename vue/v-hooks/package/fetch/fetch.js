@@ -278,6 +278,8 @@ export function useFetchHOC(props = {}) {
         loading.value = true;
         config.onRequest(fetchConfig, config);
         events.invoke(params);
+        if(config.isDeleteContentType) delete fetchConfig.headers['Content-Type'];
+        console.log(fetchConfig);
         if (config.fetch) fetchPromise = config.fetch(URL, fetchConfig);
         else fetchPromise = fetch(URL, fetchConfig);
         if (config.isPushQueue) options.fetchQueue?.push?.(fetchPromise, config, params);

@@ -1,6 +1,4 @@
-import { Button } from "./common";
-import { useAsyncConfig } from "@rainbow_ljy/v-hooks";
+import { DefineComponent } from "vue";
 
-export declare const AsyncButton: Button;
-
-export declare function AsyncButtonHoc(config?: useAsyncConfig): AsyncButton;
+export declare const AsyncButton: DefineComponent<any>;
+export declare function AsyncButtonHoc(config?: any): AsyncButton;

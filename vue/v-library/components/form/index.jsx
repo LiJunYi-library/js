@@ -1,4 +1,4 @@
-import { ElForm, ElButton } from "element-plus";
+import { ElForm, ElButton, formContextKey } from "element-plus";
 import { defineComponent, provide, reactive, inject, renderSlot } from "vue";
 import "./index.scss";
 export * from "./item";
@@ -72,6 +72,33 @@ export const FormSubmit = defineComponent({
       }
 
       return renderSlot(context.slots, "default", { onClick, ELFContext });
+    };
+  },
+});
+
+export const FormButton = defineComponent({
+  setup(props, context) {
+    const formContext = inject(formContextKey);
+    console.log(formContext);
+
+
+   async function onClick(params) {
+     const v = await formContext.validateField();
+      console.log(v);
+
+    }
+
+    return () => {
+
+        return (
+          <ElButton {...context.attrs} onClick={onClick}>
+            {renderSlot(context.slots, "default")}
+          </ElButton>
+        );
+
+
+
+      // return renderSlot(context.slots, "default", { onClick, formContext });
     };
   },
 });

@@ -35,6 +35,7 @@ export declare interface FetchHOCConfig<D = ANY> extends RequestInit {
   loading?: boolean = false;
   begin?: boolean = false;
   error?: boolean = false;
+  isDeleteContentType?: boolean = false;
   isFormData?: boolean;
   isFormBody?: boolean;
   isJsonBody?: boolean;

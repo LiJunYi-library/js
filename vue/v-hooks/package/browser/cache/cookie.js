@@ -1,14 +1,17 @@
-import { ref, watch, isRef, } from "vue";
+import { ref, watch, isRef } from "vue";
 import { useLocalStorageRef } from "./localStorage";
 /**
- * 
- * @param  {...any} arg 
- * @returns 
+ *
+ * @param  {...any} arg
+ * @returns
  * const token = useCookie({ key: 'token', cookieAttributes: {domain: 'd2.com'  } });
  * const token = useCookie('token', 'jk )
  */
 export function useCookie(...arg) {
-  if (arg.length === 1) return handleCookie(arg[0]);
+  if (arg.length === 1) {
+    if (typeof arg[0] === "string") return handleCookie({ key: arg[0] });
+    return handleCookie(arg[0]);
+  }
   const [key, defaultValue] = arg;
   return handleCookie({ key, defaultValue });
 }
@@ -27,15 +30,17 @@ function handleCookie({ key, defaultValue, cookieAttributes = {}, onChange }) {
   const storage = useLocalStorageRef(key, defaultValue, { onChange: onListener });
 
   function setCookie(value) {
-    const attrs = { ...cookieAttributes, key, value }
+    const attrs = { ...cookieAttributes, key, value };
     const cookieStr = [
       `${attrs.key}=${attrs.value}`,
       attrs.domain && `domain=${attrs.domain}`,
       attrs.path && `path=${attrs.path}`,
       attrs.maxAge && `max-age=${attrs.maxAge}`,
-      attrs.secure && 'secure',
-      attrs.sameSite && `SameSite=${attrs.sameSite};`
-    ].filter(Boolean).join(';');
+      attrs.secure && "secure",
+      attrs.sameSite && `SameSite=${attrs.sameSite};`,
+    ]
+      .filter(Boolean)
+      .join(";");
     document.cookie = cookieStr;
   }
 
@@ -46,16 +51,18 @@ function handleCookie({ key, defaultValue, cookieAttributes = {}, onChange }) {
     if (onChange) onChange(event);
   }
 
-  watch(val, (newValue) => {
-    const newVal = isRef(newValue) ? newValue.value : newValue;
-    storage.value = newVal;
-    setCookie(JSON.stringify(newVal));
-  }, { deep: true });
+  watch(
+    val,
+    (newValue) => {
+      const newVal = isRef(newValue) ? newValue.value : newValue;
+      storage.value = newVal;
+      setCookie(JSON.stringify(newVal));
+    },
+    { deep: true },
+  );
 
   return val;
 }
-
-
 
 function parseCookie(cookieString) {
   const cookies = {};

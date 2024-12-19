@@ -10,6 +10,7 @@ import {
 import { useLoading } from "@rainbow_ljy/v-hooks";
 import { RILoading } from "../icon";
 import "./index.scss";
+import { RGlobal } from "../../global";
 
 export const loadingProps = {
   skelectonCount: {
@@ -34,7 +35,7 @@ export const loadingProps = {
   },
   emptySrc: {
     type: [Number, String],
-    default: require("./empty.png"),
+    default: RGlobal.loadingProps.emptySrc,
   },
   emptyText: {
     type: [Number, String],

@@ -28,6 +28,7 @@ class SlideEvent extends CustomEvent {
     let pressures = [];
 
     function onPointerdown(event) {
+      console.log('document onPointerdown')
         clearTimeout(timer);
         extendedEventArgs(event);
         dispatchEvent('slideDown', event);
@@ -158,8 +159,8 @@ class SlideEvent extends CustomEvent {
 })()
 
 /**
- * 
- * @param {*} view 
+ *
+ * @param {*} view
  */
 export function extendedSlideEvents(view = document.createElement('div'), options = {}) {
     view.addEventListener('pointerdown', onCapturePointerdown, { passive: false, capture: true });

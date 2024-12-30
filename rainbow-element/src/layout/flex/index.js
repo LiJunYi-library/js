@@ -1,4 +1,4 @@
-import { RainbowElement } from '../base/index.js'
+import { RainbowElement } from '../../base/index.js'
 import './index.css'
 
 export class RFlex extends RainbowElement {

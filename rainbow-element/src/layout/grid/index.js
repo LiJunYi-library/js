@@ -1,5 +1,5 @@
-import { RainbowElement } from "../base/index.js";
-import { resizeObserverIMP } from "../base/imps/index.js";
+import { RainbowElement } from "../../base/index.js";
+import { resizeObserverIMP } from "../../base/imps/index.js";
 import "./index.css";
 
 export class RGrid extends RainbowElement {

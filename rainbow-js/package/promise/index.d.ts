@@ -13,3 +13,6 @@ export declare function useQueue<T = any>(
   remove(current: T): void;
   change(current: T): void;
 };
+
+
+export declare function setTimeoutPromise<T = number>(t:number = 0, v:T = 0) :Promise<T>

@@ -15,7 +15,7 @@
     <!-- <r-rolling-text-num style="margin-left: 100px;" v-model="val" @input="input" ref="text"/> -->
 
     <div></div>
-    <r-rolling-text :r-value="num"></r-rolling-text>
+    <!-- <r-rolling-text :r-value="num"></r-rolling-text> -->
     <!-- <div>val:: {{  val  }} </div>:style=" `--r-value: ${num} `"
     <input type="text"  v-model="value" @input="input"> -->
   </div>
@@ -26,7 +26,7 @@ import { useRadio2 } from "@rainbow_ljy/v-hooks";
 import { ref, onMounted } from "vue";
 import index2 from "./index2.vue";
 
-const val = ref(5);
+const val = ref(2);
 
 const num = ref(987);
 

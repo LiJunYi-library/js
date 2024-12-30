@@ -47,7 +47,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx",
-    "src/main.ts",
+    "src/main.js",
     "src/computed/index.js"  ],
   "exclude": [
     "node_modules"

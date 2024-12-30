@@ -33,3 +33,7 @@ export function useQueue(props = {}) {
 
   return { queue, push, remove, change };
 }
+
+export function setTimeoutPromise(time = 0, resolveValue = time) {
+  return new Promise((resolve) => setTimeout(() => resolve(resolveValue), time));
+}

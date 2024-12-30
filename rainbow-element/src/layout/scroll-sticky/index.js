@@ -1,5 +1,5 @@
 import './index.css';
-import { RainbowElement } from '../base/index.js'
+import { RainbowElement } from '../../base/index.js'
 
 export class RScrollSticky extends RainbowElement {
     static observedAttributes = this.$registerProps({

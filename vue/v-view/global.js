@@ -28,8 +28,8 @@ export const RGlobal = {
     },
   }),
   loadingProps: {
-    errorSrc: require('./image/error.png'),
-    beginSrc: require('./image/skelecton.png'),
-    emptySrc: require('./image/empty.png'),
-  }
+    errorSrc: "", // require('./image/error.png'),
+    beginSrc: "", // require('./image/skelecton.png'),
+    emptySrc: "", // require('./image/empty.png'),
+  },
 };

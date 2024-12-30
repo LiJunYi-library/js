@@ -2,7 +2,7 @@ r-rolling-text-num {
     display: inline-block;
     overflow: hidden;
     vertical-align: bottom;
-    --r-transition: transform 0.8s ;
+    --r-transition:  0.8s;
 }
 
 r-rolling-text-num::part(r-rolling-num-container),
@@ -33,7 +33,7 @@ r-rolling-text-num::part(r-rolling-num-rotate-unnext),
 r-rolling-text-num .r-rolling-num-rotate-unnext,
 r-rolling-text-num::part(r-rolling-num-rotate-unact),
 r-rolling-text-num .r-rolling-num-rotate-unact {
-   opacity: 0;
+    opacity: 0;
 }
 
 

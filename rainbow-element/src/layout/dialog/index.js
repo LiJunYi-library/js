@@ -1,5 +1,5 @@
 import "./index.css";
-import { RainbowElement, createCustomEvent } from "../base/index.js";
+import { RainbowElement, createCustomEvent } from "../../base/index.js";
 function Transition(params = {}) {
   const props = {
     node: document.createElement("div"),

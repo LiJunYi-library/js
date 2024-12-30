@@ -1,0 +1,27 @@
+import { fileURLToPath, URL } from 'node:url'
+
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
+import vueDevTools from 'vite-plugin-vue-devtools'
+
+export default defineConfig({
+  plugins: [vue(), vueJsx(), vueDevTools()],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+  server: {
+    proxy: {
+      'https://spu-test.manmanbuy.com': {
+        target: 'https://spu-test.manmanbuy.com',
+        changeOrigin: true,
+      },
+      'http://120.24.174.221:31300': {
+        target: 'http://120.24.174.221:31300',
+        changeOrigin: true,
+      },
+    },
+  },
+})

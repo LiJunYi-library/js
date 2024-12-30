@@ -9,6 +9,7 @@ export const RGridProps = {
   inline: Boolean,
   minAutoWidth: Number,
   wrap: Boolean,
+  columnWidth:  { type: String, default: '1fr' },
   stretch: Boolean,
 };
 
@@ -24,7 +25,7 @@ export const RGrid = defineComponent({
     });
     const style = computed(() => {
       return {
-        "grid-template-columns": ` repeat(${newColumns.value}, 1fr)`,
+        "grid-template-columns": ` repeat(${newColumns.value}, ${props.columnWidth})`,
         "grid-gap": props.gap + "px",
       }
     });

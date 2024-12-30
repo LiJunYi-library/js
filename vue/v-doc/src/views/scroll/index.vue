@@ -1,38 +1,48 @@
 <template>
-    <div class="page" :class="name">
+  <div class="page" :class="name">
+    <!-- <div style="height: 200px;background: greenyellow;width: 50px;"></div> -->
+
+    <!--<div style="max-height: 100vh;overflow: auto;">
+      <div style="height: 200px;background: yellow;width: 50px;"></div>sticky
+      <div style="height: 50px;width: 100%; background: red;position: fixed;top: 10px;"></div>
+      <div style="height: 1200px;background: cyan;width: 50px;"></div>
+    </div> -->
 
 
-        <r-scroll class="my-scroll" ref="ele">
-            <div slot="bottom">liu六liu六liu六liu六liu六liu六liu六liu六liu六</div>
-            <r-scroll-sticky>
-                <div style="height: 50px;background: cyan;"></div>
-            </r-scroll-sticky>
-            <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
-            <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
-            <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
-            <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
-            <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
-            <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
-            <div>五五五五五五五五五五五五五五五</div>
-            <div style="font-size: 50px;">五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
-                五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
-            </div>
+    <r-scroll class="my-scroll" ref="ele" @scrollrefresh="refresh">
+      <!-- <div slot="bottom">liu六liu六liu六liu六liu六liu六liu六liu六liu六</div>
+      <r-scroll-sticky>
+        <div style="height: 50px;background: cyan;"></div>
+      </r-scroll-sticky> -->
+      <div>{{ text }}</div>
+      <!-- <template solt="top" v-if="bool" >
+        <div> 1****{{ name }} </div>
+        <div > {{ name }} </div>
+        <div> 3****{{ name }} </div>
+        <r-scroll-refresh></r-scroll-refresh>
+      </template> -->
 
-            <r-scroll-memory-bable>
-                <div style="width: 50px;height: 50px;background: cyan;"></div>
-            </r-scroll-memory-bable>
-
-      
-        </r-scroll>
+      <div style="height: 50px;width: 100%; background: red;position: sticky;top: 10px;"></div>
+      <div style="font-size: 50px;">{{ text }}</div>
+      <div style="height: 50px;width: 50px; background: yellowgreen;position: fixed;top: 10px;"></div>
+      <div style="height: 50px;width: 50px; background: pink;position: absolute;top: 100px;right: 0;"></div>
+      <!-- <r-scroll-memory-bable>
+        <div style="width: 50px;height: 50px;background: cyan;"></div>
+      </r-scroll-memory-bable> -->
 
 
+    </r-scroll>
 
-    </div>
+
+
+  </div>
 </template>
 <script setup>
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js';
 import { useRadio2 } from '@rainbow_ljy/v-hooks';
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+
+const text = arrayLoopMap(300, () => '帅').join('');
 
 const ele = ref('ele');
 
@@ -48,7 +58,8 @@ styles.value[0] = { left: '20px' }
 
 styles.value[0] = { left: '40' }
 function refresh(params) {
-    return new Promise(re => setTimeout(re, 2000))
+  // console.log('refresh')
+  return new Promise(re => setTimeout(re, 2000))
 }
 
 const radio = useRadio2({ list: arrayLoopMap(100, (value) => ({ value: 'v' + value, label: value + '*' })) })
@@ -61,65 +72,74 @@ const radio = useRadio2({ list: arrayLoopMap(100, (value) => ({ value: 'v' + val
 
 
 function scroll(params) {
-    // console.log('scroll', params);
+  // console.log('refresh', params);
 }
 
-console.log(radio);
+// console.log(radio);
+
+onMounted(() => {
+
+})
 
 
 setTimeout(() => {
 
-    // bool.value = false
-    name.value = 'right-bottom'
-    gap.value = false
-    columns.value = 5
-    console.log(ele.value);
+  bool.value = false
+  name.value = 'right-bottom'
+  gap.value = false
+  columns.value = 5
+  // console.log(ele.value);
 
-    // ele.value.scrollTop = 500
+
+  // ele.value.scrollTop = 500
 }, 4000);
+
+setInterval(() => {
+  bool.value = !bool.value
+}, 2000);
 
 </script>
 
 <style>
 .long {
-    width: 30px;
-    font-size: 100px;
-    background: linear-gradient(45deg, red, blue);
-    text-wrap: wrap;
-    word-wrap: break-word;
+  width: 30px;
+  font-size: 100px;
+  background: linear-gradient(45deg, red, blue);
+  text-wrap: wrap;
+  word-wrap: break-word;
 }
 
 .r-grid-item {
-    background: gold;
+  background: gold;
 }
 
 .r-scroll-fixed {
-    height: 50px;
-    background: cyan;
+  height: 50px;
+  background: cyan;
 }
 
 .r-scroll-fixed-fixed {
-    /* background: rgb(0, 85, 255); */
+  /* background: rgb(0, 85, 255); */
 }
 
 .my-falls {
-    --r-columns: 3;
-    /* --r-min-auto-width: 100px; */
-    --r-gap: 10px;
-    --r-row-gap: 25px;
-    --r-column-gap: 15px;
+  --r-columns: 3;
+  /* --r-min-auto-width: 100px; */
+  --r-gap: 10px;
+  --r-row-gap: 25px;
+  --r-column-gap: 15px;
 }
 
 .r-falls-item {
-    background: yellow;
+  background: yellow;
 }
 
 .bottom-center .my-grid {
-    /* --r-columns: 9; */
+  /* --r-columns: 9; */
 }
 
 .right-bottom .my-grid {
-    /* --r-columns: 6; */
+  /* --r-columns: 6; */
 }
 
 /* .dsk {

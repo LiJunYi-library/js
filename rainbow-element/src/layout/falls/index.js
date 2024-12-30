@@ -1,6 +1,6 @@
-import { RainbowElement } from "../base/index.js";
+import { RainbowElement } from "../../base/index.js";
 import { arrayLoopMap } from "@rainbow_ljy/rainbow-js";
-import { treeObserverIMP } from "../base/imps/index.js";
+import { treeObserverIMP } from "../../base/imps/index.js";
 import "./index.css";
 
 export class RFalls extends RainbowElement {

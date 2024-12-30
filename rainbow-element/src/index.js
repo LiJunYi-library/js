@@ -1,10 +1,12 @@
-export * from './base/index.js'
-export * from './grid/index.js'
-// export * from './absolute/index.js' // 
-export * from './falls/index.js'
-// export * from './flex/index.js'
-export * from './scroll/index.js'
-export * from './scroll-memory-bable/index.js'
-// export * from './scroll-sticky/index.js'
-export * from './rolling-text/index.js'
-export * from './dialog/index.js'
+export * from "./base/index.js";
+import * as elements from "./element.js";
+
+for (const key in elements) {
+  if (Object.prototype.hasOwnProperty.call(elements, key)) {
+    const element = elements[key];
+    console.log(key);
+
+  }
+}
+
+

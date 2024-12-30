@@ -1,9 +1,9 @@
 import './index.css';
-import { RainbowElement } from '../base/index.js'
+import { RainbowElement } from '../../base/index.js'
 
 export class RScrollMemoryBubble extends RainbowElement {
     static observedAttributes = this.$registerProps({
-        'r-orientation': { type: String, default: "right" },  // "left" "right" "top" "bottom" 
+        'r-orientation': { type: String, default: "right" },  // "left" "right" "top" "bottom"
         'r-init-visibility': { type: String, default: 'visible' }, // 'hidden' 'visible'
         'r-visible-distance': { type: String, default: '100px' }, // px
         'r-visible-reversal': String // 'noReversal' 'reversal'

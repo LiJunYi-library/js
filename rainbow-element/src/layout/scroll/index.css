@@ -1,0 +1,28 @@
+r-scroll {
+    display: block;
+    overflow: hidden;
+    color: white;
+}
+
+.r-scroll-top {
+    background: rebeccapurple;
+}
+
+.r-scroll-top-transition {
+    transition: 0.2s;
+}
+
+r-scroll .r-scroll-content {
+    filter: opacity(1);
+}
+
+r-scroll::part(r-scroll-element),
+r-scroll .r-scroll-element {
+    background: yellow;
+    position: relative;
+    overflow: auto;
+    max-height: 100vh;
+    height: 100vh;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}

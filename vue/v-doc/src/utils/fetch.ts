@@ -5,7 +5,7 @@ import {
   FetchHook,
 } from "@rainbow_ljy/v-hooks";
 import md5 from "js-md5";
-import { RGlobalToast } from "@rainbow_ljy/v-view";
+// import { RGlobalToast } from "@rainbow_ljy/v-view";
 
 interface MYRes<T = any> {
   code: number;

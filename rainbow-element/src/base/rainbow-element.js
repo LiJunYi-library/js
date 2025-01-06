@@ -21,6 +21,22 @@ export class RainbowElement extends HTMLElement {
   IMPS = [treeAttrsChangeIMP];
 
   $ = {
+    self: this,
+    getSlotContainer: (node) => {
+      const soltName = node?.getAttribute?.("solt");
+      if (!soltName) return undefined;
+      const container = this.$slotContainer?.[soltName];
+      return container;
+    },
+    _getSC: (...arg) => this.$.getSlotContainer(...arg),
+    renderSolt: (node) => {
+      if (["r-template", "template"].includes(node.localName)) {
+        const soltName = node.getAttribute("solt");
+        this.$slotContainer?.[soltName]?.append(node);
+        return node;
+      }
+      return false;
+    },
     isInitAttrs: false,
     data: {},
     DATA: new Proxy({}, { get: (target, prop) => this.$.data[camelCaseToKebabCase(prop)] }),
@@ -54,7 +70,6 @@ export class RainbowElement extends HTMLElement {
         return cssVal;
       } catch (error) {
         console.log(error);
-
         return str;
       }
     },
@@ -62,6 +77,9 @@ export class RainbowElement extends HTMLElement {
       data: {},
       style: {},
       class: new Map(),
+    },
+    resolvePercentum: ({perW, perH, node}) => {
+
     },
     setStyle: (fmtStyle = () => ({})) => {
       let ftStyle = fmtStyle(this.$.data) || {};
@@ -127,6 +145,36 @@ export class RainbowElement extends HTMLElement {
     transitionend: () => {
       this.$.isAnimation = false;
     },
+    changePropsRender: (force) => {
+      if (this.$.isAnimation) return;
+      let isChange = false;
+      const css = {};
+      const style = window.getComputedStyle(this);
+      for (const key in this.$.props) {
+        if (Object.prototype.hasOwnProperty.call(this.$.props, key)) {
+          const cssVal = style.getPropertyValue("--" + key).trim();
+          css[key] = this.$.resolveCss(key, cssVal);
+          if (this.$.cache.data[key] !== css[key]) isChange = true;
+        }
+      }
+      this.$.data = css;
+      this.$.cache.data = css;
+      // console.log(isChange);
+      if (isChange || force === true) this.$debouncedRender(css);
+      return css;
+    },
+    append: (...nodes) => {
+      return super.append(...nodes);
+    },
+    appendChild: (...nodes) => {
+      return super.appendChild(...nodes);
+    },
+    insertBefore: (...nodes) => {
+      return super.insertBefore(...nodes);
+    },
+    removeChild: (...nodes) => {
+      return super.removeChild(...nodes);
+    },
   };
 
   constructor(...arg) {
@@ -139,6 +187,36 @@ export class RainbowElement extends HTMLElement {
     this.addEventListener("transitionend", this.$.transitionend);
   }
 
+  $slotContainer = {
+    default: this,
+  };
+
+  append(...nodes) {
+    console.log("append");
+    nodes.forEach((node, index) => {
+      if (this.$._getSC(node)) return this.$._getSC(node)?.append?.(node);
+      this.$slotContainer.default?.append?.(node);
+    });
+  }
+
+  appendChild(node) {
+    console.log("appendChild");
+    if (this.$._getSC(node)) return this.$._getSC(node)?.appendChild?.(node);
+    return this.$slotContainer.default?.appendChild?.(node);
+  }
+
+  insertBefore(node, child) {
+    console.log("insertBefore");
+    if (this.$._getSC(node)) return this.$._getSC(node)?.insertBefore?.(node, child);
+    return this.$slotContainer.default.insertBefore?.(node, child);
+  }
+
+  removeChild(child) {
+    console.log("removeChild");
+    if (this.$._getSC(child)) return this.$._getSC(child)?.removeChild?.(child);
+    return this.$slotContainer.default.removeChild?.(child);
+  }
+
   attributeChangedCallback(name, oldValue, newValue) {
     this.$.props[name] = newValue;
     if (this.$.isInitAttrs === true) this.$onAttributeChanged(name, oldValue, newValue);
@@ -146,13 +224,13 @@ export class RainbowElement extends HTMLElement {
 
   $onAttributeChanged() {
     this.IMPS.map((el) => el?.simult)?.forEach((el) => el?.changeAttr?.call?.(this));
-    this.$changePropsRender();
+    this.$.changePropsRender();
   }
 
   connectedCallback() {
     this.$.isInitAttrs = true;
     this.IMPS.map((el) => el?.simult)?.forEach((el) => el?.connected?.call?.(this));
-    this.$changePropsRender();
+    this.$.changePropsRender();
   }
 
   adoptedCallback() {
@@ -166,28 +244,34 @@ export class RainbowElement extends HTMLElement {
     this.IMPS.map((el) => el?.simult)?.forEach((el) => el?.disconnected?.call?.(this));
   }
 
-  $changePropsRender(force) {
-    if (this.$.isAnimation) return;
-    let isChange = false;
-    const css = {};
-    const style = window.getComputedStyle(this);
-    for (const key in this.$.props) {
-      if (Object.prototype.hasOwnProperty.call(this.$.props, key)) {
-        const cssVal = style.getPropertyValue("--" + key).trim();
-        css[key] = this.$.resolveCss(key, cssVal);
-        if (this.$.cache.data[key] !== css[key]) isChange = true;
-      }
-    }
-    this.$.data = css;
-    this.$.cache.data = css;
-    // console.log(isChange);
-    if (isChange || force === true) this.$debouncedRender(css);
-    return css;
-  }
-
   $onRegisterIMPS() {
     return [];
   }
 
   $render() {}
 }
+
+export class RainbowInput extends HTMLElement {
+  constructor(...arg) {
+    super(...arg);
+    console.log(this);
+  }
+
+  connectedCallback(...arg) {
+    this.classList.add("r-input");
+    console.log(this);
+
+    this.addEventListener("input", (e) => {
+      console.log(">>>>>>>>>>>>>>>>>>>", e);
+      this.value = e.data;
+      console.log(">>>>>>>>>>>>>>>>>>>", this.value);
+    });
+  }
+}
+
+// 定义自定义元素
+customElements.define("r-input", RainbowInput);
+
+// {
+//   /* <r-input type="text"  style="height: 50px;width: 100%;display: block;" /> */
+// }

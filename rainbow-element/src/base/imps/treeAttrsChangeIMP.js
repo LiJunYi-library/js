@@ -11,8 +11,8 @@ new MutationObserver((mutations) => {
 export const treeAttrsChangeIMP = {
     simult: {
         init() {
-            if (!this.$changePropsRender) return;
-            events.set(this, () => this.$changePropsRender())
+            if (!this.$.changePropsRender) return;
+            events.set(this, () => this.$.changePropsRender())
         },
         disconnected() {
             events.delete(this)

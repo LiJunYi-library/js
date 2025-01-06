@@ -3,7 +3,7 @@ import {
   useFetchHOC,
   createFetchApi,
 } from "@rainbow_ljy/v-hooks";
-import { RGlobalToast } from "@rainbow_ljy/v-view";
+// import { RGlobalToast } from "@rainbow_ljy/v-view";
 
 interface MYRes<T = any> {
   Code: number;

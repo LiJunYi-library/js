@@ -13,14 +13,13 @@
         <!-- <RNestedScroll>
             <RScrollMemoryBubble>MemoryBubble</RScrollMemoryBubble>
             <RScrollRefresh @refresh="refresh"></RScrollRefresh>
-    
+
             <div class="long">2222222222222222222222</div>
         </RNestedScroll> -->
     </RNestedScroll>
 </template>
 <script setup>
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js';
-import { RNestedScroll, RScrollRefresh, RScroll, RScrollMemoryBubble, RScrollVirtualGridList } from '@rainbow_ljy/v-view'
 import { ref } from 'vue'
 const bool = ref(true);
 const List = ref(arrayLoopMap(100, (value) => ({ value })))

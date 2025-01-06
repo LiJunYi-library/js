@@ -18,7 +18,6 @@
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js';
 import { useRadio2 } from '@rainbow_ljy/v-hooks';
 import { ref } from 'vue'
-import { RNestedViewPage, RNestedScroll } from '@rainbow_ljy/v-view'
 
 const radio = useRadio2({ index: 0, list: arrayLoopMap(4, () => ({})) })
 

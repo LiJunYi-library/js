@@ -1,7 +1,7 @@
 <template>
     <div class="page" :class="name">
 
-        
+
         <r-grid style=" --r-columns:5;--r-gap:10px" >
             <div>五五</div>
             <div grid-column="3">五五</div>
@@ -31,7 +31,7 @@
 
 
 
-        <!-- 
+        <!--
         <r-scroll @scroll="scroll">
             <r-scroll-fixed opacity-top="500" opacity-delay="200" top="30" opacity-ani="false">123</r-scroll-fixed>
             <r-absolute position="top-center">
@@ -62,7 +62,6 @@
 <script setup>
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js';
 import { useRadio2 } from '@rainbow_ljy/v-hooks';
-import { RNestedScroll, RScrollRefresh, RScrollMemoryBubble, RScrollVirtualGridList } from '@rainbow_ljy/v-view'
 import { ref } from 'vue'
 
 const name = ref('bottom-center');
@@ -132,7 +131,7 @@ setTimeout(() => {
     --r-columns: r-attr(r-columns);
     --r-row-gap: 20px;
     --r-gap: calc(var(--r-row-gap) + 2vw / 4px);
- 
+
     --r-min-auto-width: 100px;
     --r-grid-wrap: wrap;
     --r-grid-stretch: stretch;

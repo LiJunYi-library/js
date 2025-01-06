@@ -44,7 +44,6 @@
 </template>
 <script setup>
 import { arrayLoopMap } from "@rainbow_ljy/rainbow-js";
-// import { RDialog }from '@rainbow_ljy/v-view'
 import { useRadio2 } from "@rainbow_ljy/v-hooks";
 import { ref, onMounted } from "vue";
 

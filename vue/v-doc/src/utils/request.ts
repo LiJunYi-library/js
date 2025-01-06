@@ -1,7 +1,7 @@
 import { FetchHOCConfig, useFetchHOC, createFetchApi, FetchHook } from "@rainbow_ljy/v-hooks";
 import { ElMessage } from "element-plus";
 import md5 from "js-md5";
-import { RGlobalToast } from "@rainbow_ljy/v-view";
+// import { RGlobalToast } from "@rainbow_ljy/v-view";
 
 function dateFormat() {
   const date = new Date();

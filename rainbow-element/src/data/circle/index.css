@@ -1,0 +1,10 @@
+r-circle {
+    display: block;
+    width: 200px;
+    height: 200px;
+    background: red;
+    --r-start-angle: 270;
+    --r-outer-radius: auto;
+    --r-inner-radius: auto;
+    --r-origin: 50% , 40%;
+}

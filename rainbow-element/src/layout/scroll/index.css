@@ -4,14 +4,13 @@ r-scroll {
     color: white;
 }
 
-.r-scroll-top {
+r-scroll::part(r-scroll-top),
+r-scroll .r-scroll-top {
     background: rebeccapurple;
 }
 
-.r-scroll-top-transition {
-    transition: 0.2s;
-}
 
+r-scroll::part(r-scroll-content),
 r-scroll .r-scroll-content {
     filter: opacity(1);
 }

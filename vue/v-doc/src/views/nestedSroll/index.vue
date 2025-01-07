@@ -20,6 +20,7 @@
 </template>
 <script setup>
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js';
+import { setTimeoutPromise } from "@rainbow_ljy/rainbow-js";
 import { ref } from 'vue'
 const bool = ref(true);
 const List = ref(arrayLoopMap(100, (value) => ({ value })))

@@ -51,6 +51,13 @@ export class RScrollRefresh extends RainbowElement {
   }
 
   $$ = {
+    createPromise: () => {
+      return new Promise((resolve) => {
+        this.$$.resolve = resolve;
+      });
+    },
+    resolve: () => 0,
+    promise: undefined,
     scrollParent: this.$.findParentByType("RScroll"),
     loading: false,
     DATA: this.$.DATA,
@@ -118,8 +125,11 @@ export class RScrollRefresh extends RainbowElement {
         this.$$.loading = true;
         this.$$.render();
         scrollParent.$$.disabledScroll();
+        this.$$.promise = this.$$.createPromise();
+        event.resolve = this.$$.resolve;
+        this.dispatchEvent(createCustomEvent("refresh", event));
         await Promise.allSettled(
-          [setTimeoutPromise(rMinTime, true), this.onrefresh()].filter(Boolean),
+          [setTimeoutPromise(rMinTime, true), this.onrefresh(), this.$$.promise].filter(Boolean),
         );
         this.$$.height = 0;
         event.refreshHeight = this.$$.height;

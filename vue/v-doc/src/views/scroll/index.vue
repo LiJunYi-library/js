@@ -3,7 +3,7 @@
     <!-- <r-circle v-model="add">
       <div>123</div>
     </r-circle> -->
-     <!--<div @click="look" id="clippedElement" style="width: 200px; height: 200px; background-color: #6495ED;"></div> -->
+    <!--<div @click="look" id="clippedElement" style="width: 200px; height: 200px; background-color: #6495ED;"></div> -->
     <!-- <div class="circle-clip"></div>
     <div class="circle-clip2"></div> -->
 
@@ -29,7 +29,7 @@
         <r-scroll-refresh  solt="top"></r-scroll-refresh>
       </div> -->
 
-      <r-scroll-refresh solt="top"></r-scroll-refresh>
+      <r-scroll-refresh solt="top" @refresh="refresh"></r-scroll-refresh>
 
       <!-- <div> 1****{{ name }} </div>
         <div> {{ name }} </div>
@@ -60,6 +60,7 @@
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js';
 import { useRadio2 } from '@rainbow_ljy/v-hooks';
 import { ref, onMounted } from 'vue'
+import { setTimeoutPromise } from "@rainbow_ljy/rainbow-js";
 
 const text = arrayLoopMap(300, () => '帅').join('');
 
@@ -81,9 +82,12 @@ const styles = ref([]);
 styles.value[0] = { left: '20px' }
 
 styles.value[0] = { left: '40' }
-function refresh(params) {
-  // console.log('refresh')
-  return new Promise(re => setTimeout(re, 2000))
+async function refresh(event) {
+  console.log(event);
+  await setTimeoutPromise(5000)
+  event.resolve(true)
+  console.log('refresh')
+
 }
 
 const radio = useRadio2({ list: arrayLoopMap(100, (value) => ({ value: 'v' + value, label: value + '*' })) })

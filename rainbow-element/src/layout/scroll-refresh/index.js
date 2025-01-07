@@ -11,7 +11,7 @@ export class RScrollRefresh extends RainbowElement {
   $elementName = "RScrollRefresh";
 
   onrefresh() {
-    return setTimeoutPromise(3000, true);
+    // return setTimeoutPromise(3000, true);
   }
 
   $$renderRefresh() {
@@ -99,17 +99,14 @@ export class RScrollRefresh extends RainbowElement {
       this.$$.height = (moveY / (rMaxRefreshHeignt / 2 + moveY)) * rMaxRefreshHeignt;
       event.refreshHeight = this.$$.height;
       this.style.height = this.$$.height + "px";
-      if (this.onscrollrefresh) this.onscrollrefresh(event);
-      this.dispatchEvent(createCustomEvent("scrollrefresh", event));
       this.$$.render();
     },
     touchend: async (event) => {
       if (this.$$.loading === true) return;
       if (!this.$$.lock) return;
       event.stopPropagation();
+      const { scrollParent } = this.$$;
       const { rRefreshHeignt, rMinTime } = this.$.DATA;
-      console.log("rMinTime", rMinTime);
-
       this.classList.add("r-scroll-refresh-transition");
       const release = this.$$.release;
       this.$$.height = release ? rRefreshHeignt : 0;
@@ -120,6 +117,7 @@ export class RScrollRefresh extends RainbowElement {
       if (release) {
         this.$$.loading = true;
         this.$$.render();
+        scrollParent.$$.disabledScroll();
         await Promise.allSettled(
           [setTimeoutPromise(rMinTime, true), this.onrefresh()].filter(Boolean),
         );
@@ -128,6 +126,7 @@ export class RScrollRefresh extends RainbowElement {
         this.$$.loading = false;
         this.style.height = this.$$.height + "px";
         this.$$.render();
+        scrollParent.$$.unDisabledScroll();
       }
     },
   };

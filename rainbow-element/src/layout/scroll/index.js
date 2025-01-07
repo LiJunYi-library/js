@@ -39,8 +39,12 @@ export class RScroll extends RainbowElement {
       if (event.moveY > 0) this.dispatchEvent(createCustomEvent("scrollDown", event));
       this.$$.prveScrollTop = this.$$.default.scrollTop;
     },
-    disabledScroll: () => {},
-    unDisabledScroll: () => {},
+    disabledScroll: () => {
+      this.$$.default.classList.add("r-scroll-element-disabled-scroll");
+    },
+    unDisabledScroll: () => {
+      this.$$.default.classList.remove("r-scroll-element-disabled-scroll");
+    },
   };
 
   $slotContainer = {

@@ -5,8 +5,8 @@ r-scroll-refresh {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    --r-max-refresh-heignt: 205px;
-    --r-refresh-heignt: 155px;
+    --r-max-refresh-heignt: 175px;
+    --r-refresh-heignt: 125px;
     --r-min-time: 3000;
 }
 

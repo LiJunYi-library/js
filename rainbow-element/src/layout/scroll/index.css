@@ -23,3 +23,8 @@ r-scroll .r-scroll-element {
     max-height: 100vh;
     -webkit-overflow-scrolling: touch;
 }
+
+r-scroll::part(r-scroll-element-disabled-scroll),
+r-scroll .r-scroll-element-disabled-scroll {
+    overflow: hidden;
+}

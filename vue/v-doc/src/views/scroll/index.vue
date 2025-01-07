@@ -1,13 +1,15 @@
 <template>
   <div class="page" :class="name">
-    <r-circle v-model="add"></r-circle>
-    <div @click="look" id="clippedElement" style="width: 200px; height: 200px; background-color: #6495ED;"></div>
+    <!-- <r-circle v-model="add">
+      <div>123</div>
+    </r-circle> -->
+     <!--<div @click="look" id="clippedElement" style="width: 200px; height: 200px; background-color: #6495ED;"></div> -->
     <!-- <div class="circle-clip"></div>
     <div class="circle-clip2"></div> -->
 
-    <r-input v-model="name" :contenteditable="true" type="text" style="height: 50px;width: 100%;display: block;" />
+    <!-- <r-input v-model="name" :contenteditable="true" type="text" style="height: 50px;width: 100%;display: block;" />
     <input type="text" style="height: 50px;width: 100%;display: block;" />
-    <input is="r-input" type="text" style="height: 50px;width: 100%;display: block;" />
+    <input is="r-input" type="text" style="height: 50px;width: 100%;display: block;" /> -->
     <!-- <div style="height: 200px;background: greenyellow;width: 50px;"></div> -->
 
     <!--<div style="max-height: 100vh;overflow: auto;">
@@ -209,7 +211,7 @@ setTimeout(() => {
 
 setInterval(() => {
   bool.value = !bool.value;
-  add.value++;
+  add.value += 2;
   // const element = document.getElementById('clippedElement');
   // element.style.clipPath = arcToClipPathPolygon(100, 100, 100, 0,  add.value, false);
   // element.style.clipPath = arcToClipPathRing(100, 100, 55, 50, 180, 180 + add.value, false);

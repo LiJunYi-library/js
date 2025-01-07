@@ -15,17 +15,33 @@ export class RScrollRefresh extends RainbowElement {
   }
 
   $$renderRefresh() {
+    const circle = document.createElement("r-circle");
+    circle.classList.add("r-scroll-refresh-circle");
     const loadIcon = document.createElement("i");
-    loadIcon.classList.add("loading-icon", "iconfont");
+    loadIcon.classList.add("loading-icon", "iconfont", "r-scroll-refresh-loading");
     loadIcon.innerHTML = "&#xe607;";
     const text = document.createElement("div");
     text.classList.add("r-scroll-refresh-text");
-    const rang = document.createElement("div");
+
+    this.$.append(circle);
     this.$.append(loadIcon);
     this.$.append(text);
-    this.$.append(rang);
+
+    const handleLoading = () => {
+      if (!this.$$.loading) {
+        loadIcon.classList.add("r-scroll-refresh-loading-hide");
+        circle.classList.remove("r-scroll-refresh-circle-hide");
+      } else {
+        loadIcon.classList.remove("r-scroll-refresh-loading-hide");
+        circle.classList.add("r-scroll-refresh-circle-hide");
+      }
+    };
+
+    handleLoading();
     return () => {
-      rang.innerText = `${this.$$.height} /155`;
+      handleLoading();
+      const { rRefreshHeignt } = this.$.DATA;
+      circle.value = (this.$$.height / rRefreshHeignt) * 100;
       text.innerText = (() => {
         if (this.$$.loading) return "正在刷新";
         if (this.$$.release) return "释放刷新";
@@ -37,8 +53,10 @@ export class RScrollRefresh extends RainbowElement {
   $$ = {
     scrollParent: this.$.findParentByType("RScroll"),
     loading: false,
+    DATA: this.$.DATA,
     get release() {
-      return this.height > 155;
+      const { rRefreshHeignt } = this.DATA;
+      return this.height > rRefreshHeignt;
     },
     render: () => {},
     pointerdownEvent: undefined,
@@ -71,13 +89,14 @@ export class RScrollRefresh extends RainbowElement {
     touchmove: (event) => {
       if (this.$$.loading === true) return;
       if (!this.$$.lock) return;
+      const { rMaxRefreshHeignt } = this.$.DATA;
       event.stopPropagation();
       let moveY = event.touches[0].pageY - this.$$.touchstartEvent.pageY;
       event.stopImmediatePropagation();
       event.preventDefault();
       if (moveY < 0) moveY = 0;
       this.classList.remove("r-scroll-refresh-transition");
-      this.$$.height = (moveY / (205 / 2 + moveY)) * 205;
+      this.$$.height = (moveY / (rMaxRefreshHeignt / 2 + moveY)) * rMaxRefreshHeignt;
       event.refreshHeight = this.$$.height;
       this.style.height = this.$$.height + "px";
       if (this.onscrollrefresh) this.onscrollrefresh(event);
@@ -88,9 +107,12 @@ export class RScrollRefresh extends RainbowElement {
       if (this.$$.loading === true) return;
       if (!this.$$.lock) return;
       event.stopPropagation();
+      const { rRefreshHeignt, rMinTime } = this.$.DATA;
+      console.log("rMinTime", rMinTime);
+
       this.classList.add("r-scroll-refresh-transition");
       const release = this.$$.release;
-      this.$$.height = release ? 155 : 0;
+      this.$$.height = release ? rRefreshHeignt : 0;
       this.$$.lock = false;
       event.refreshHeight = this.$$.height;
       this.style.height = this.$$.height + "px";
@@ -98,7 +120,9 @@ export class RScrollRefresh extends RainbowElement {
       if (release) {
         this.$$.loading = true;
         this.$$.render();
-        await this.onrefresh();
+        await Promise.allSettled(
+          [setTimeoutPromise(rMinTime, true), this.onrefresh()].filter(Boolean),
+        );
         this.$$.height = 0;
         event.refreshHeight = this.$$.height;
         this.$$.loading = false;

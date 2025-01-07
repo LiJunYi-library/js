@@ -48,9 +48,9 @@ export class RainbowElement extends HTMLElement {
     },
     resolveCss: (key, str = "") => {
       try {
-        const isAttrFun = /r-attr\([^\)]*?\)/.test(str);
+        const isAttrFun = /r-attr\([^\)]*?\)/.test(str); //如果是r-attr 使用属性参数
         if (isAttrFun) str = this.$.props[key];
-
+        // 解析px  vw vh
         let cssVal = str.replace(/\d+px|\d+vw|\d+vh/g, (len) => {
           if (/\d+px/.test(len)) return Number(len.replaceAll("px", ""));
           if (/\d+vw/.test(len))
@@ -59,14 +59,15 @@ export class RainbowElement extends HTMLElement {
             return (Number(len.replaceAll("vh", "")) / 100) * window.innerHeight;
           return len;
         });
-
-        const isFunstr = /([^\(]*?)\([^\)]*?\)/.test(cssVal);
-        if (isFunstr) return eval(`this.$.resolveFunCss.${cssVal}`);
-
+        // 如果是方法
+        if (/([^\(]*?)\([^\)]*?\)/.test(cssVal)) {
+          return eval(`this.$.resolveFunCss.${cssVal}`);
+        }
+        // 如果可以转换成数字
         let number = Number(cssVal);
         if (!isNaN(number)) return number;
-
-        // console.log(key, cssVal, isFunstr);
+        // 如果可以转换成数组
+        if (/.*?,.*?/.test(cssVal)) return cssVal.trim().split(",").filter(Boolean);
         return cssVal;
       } catch (error) {
         console.log(error);
@@ -78,9 +79,12 @@ export class RainbowElement extends HTMLElement {
       style: {},
       class: new Map(),
     },
-    resolvePercentum: ({perW, perH, node}) => {
-
+    resolvePercentum: (v = "", node = this, fmt = (node) => node.offsetWidth) => {
+      if (/\d+?%/.test(v)) return fmt(node) * (v.replaceAll("%", "") / 100);
+      return v;
     },
+    resolvePercentumH: (v, node, fmt = (node) => node.offsetHeight) =>
+      this.$.resolvePercentum(v, node, fmt),
     setStyle: (fmtStyle = () => ({})) => {
       let ftStyle = fmtStyle(this.$.data) || {};
       let newStyle = ftStyle;
@@ -195,6 +199,7 @@ export class RainbowElement extends HTMLElement {
     console.log("append");
     nodes.forEach((node, index) => {
       if (this.$._getSC(node)) return this.$._getSC(node)?.append?.(node);
+      if (this === this.$slotContainer.default) return super.append?.(node);
       this.$slotContainer.default?.append?.(node);
     });
   }
@@ -202,18 +207,21 @@ export class RainbowElement extends HTMLElement {
   appendChild(node) {
     console.log("appendChild");
     if (this.$._getSC(node)) return this.$._getSC(node)?.appendChild?.(node);
+    if (this === this.$slotContainer.default) return super.appendChild?.(child);
     return this.$slotContainer.default?.appendChild?.(node);
   }
 
   insertBefore(node, child) {
     console.log("insertBefore");
     if (this.$._getSC(node)) return this.$._getSC(node)?.insertBefore?.(node, child);
+    if (this === this.$slotContainer.default) return super.insertBefore?.(node, child);
     return this.$slotContainer.default.insertBefore?.(node, child);
   }
 
   removeChild(child) {
     console.log("removeChild");
     if (this.$._getSC(child)) return this.$._getSC(child)?.removeChild?.(child);
+    if (this === this.$slotContainer.default) return super.removeChild?.(child);
     return this.$slotContainer.default.removeChild?.(child);
   }
 

@@ -1,12 +1,12 @@
 r-scroll {
     display: block;
     overflow: hidden;
-    color: white;
+    max-height: 100vh;
 }
 
 r-scroll::part(r-scroll-top),
 r-scroll .r-scroll-top {
-    background: rebeccapurple;
+    background: transparent;
 }
 
 
@@ -17,11 +17,9 @@ r-scroll .r-scroll-content {
 
 r-scroll::part(r-scroll-element),
 r-scroll .r-scroll-element {
-    background: yellow;
     position: relative;
     overflow: auto;
-    max-height: 100vh;
-    height: 100vh;
     overflow-x: hidden;
+    max-height: 100vh;
     -webkit-overflow-scrolling: touch;
 }

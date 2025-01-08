@@ -125,13 +125,13 @@ export class RainbowElement extends HTMLElement {
       });
       this.$.cache.class = newMap;
     },
-    findParentByType: (name, p = this) => {
+    findParentByLocalName: (name, p = this) => {
       if (!p) return;
       const parent = p.parentNode;
       if (!parent) return;
-      const tName = parent.constructor.name;
-      if (tName === name || parent.$elementName === name) return parent;
-      return this.$.findParentByType(name, parent);
+      if (name instanceof Array && name.includes(parent.localName)) return parent;
+      if (parent.localName === name) return parent;
+      return this.$.findParentByLocalName(name, parent);
     },
     getOffsetTop: (p, num = 0) => {
       let offsetTop = this.offsetTop;

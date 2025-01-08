@@ -1,0 +1,6 @@
+r-nested-scroll {
+    display: block;
+    overflow: hidden;
+    max-height: 100vh;
+}
+

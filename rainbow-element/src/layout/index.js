@@ -7,4 +7,5 @@ export * from './scroll'
 export * from './scroll-refresh'
 export * from './scroll-memory-bable'
 export * from './scroll-sticky'
+export * from './nested-scroll'
 

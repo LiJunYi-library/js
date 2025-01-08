@@ -1,7 +1,7 @@
 <template>
-    <RNestedScroll isRoot>
+    <r-nested-scroll isRoot >
         <!-- <RScrollRefresh @refresh="refresh"></RScrollRefresh> -->
-        <div class="long" v-if="bool">333</div>
+        <!-- <div class="long" v-if="bool">333</div>
         <RScrollVirtualGridList :columns="2" :avgHeight="140" :list="List">
             <template #default="{ item }">
                 <div>
@@ -9,14 +9,16 @@
                 </div>
             </template>
         </RScrollVirtualGridList>
-        <div class="long">1111111111111111111111111111111111</div>
+        <div class="long">1111111111111111111111111111111111</div> -->
         <!-- <RNestedScroll>
             <RScrollMemoryBubble>MemoryBubble</RScrollMemoryBubble>
             <RScrollRefresh @refresh="refresh"></RScrollRefresh>
 
             <div class="long">2222222222222222222222</div>
         </RNestedScroll> -->
-    </RNestedScroll>
+
+        <div class="long" >2222222222222222222222</div>
+    </r-nested-scroll>
 </template>
 <script setup>
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js';
@@ -26,7 +28,7 @@ const bool = ref(true);
 const List = ref(arrayLoopMap(100, (value) => ({ value })))
 
 function refresh(params) {
-    return new Promise(re => setTimeout(re, 2000))
+    console.log(params)
 }
 
 

@@ -55,7 +55,7 @@ export class RScrollRefresh extends RainbowElement {
     },
     resolve: () => 0,
     promise: undefined,
-    scrollParent: this.$.findParentByLocalName("r-scroll"),
+    scrollParent: this.$.findParentByLocalName(["r-scroll", "r-nested-scroll"]),
     loading: false,
     DATA: this.$.DATA,
     get release() {
@@ -69,13 +69,13 @@ export class RScrollRefresh extends RainbowElement {
     height: 0,
     pointerdown: (event) => {
       if (this.$$.loading === true) return;
-      event.stopPropagation();
+      // event.stopPropagation();
       this.$$.pointerdownEvent = event;
       this.$$.lock = false;
     },
     pointermove: (event) => {
       if (this.$$.loading === true) return;
-      event.stopPropagation();
+      // event.stopPropagation();
       const moveY = event.pageY - this.$$.pointerdownEvent.pageY;
       const { scrollParent } = this.$$;
       if (scrollParent.scrollTop > 0) {
@@ -87,14 +87,14 @@ export class RScrollRefresh extends RainbowElement {
     },
     touchstart: (event) => {
       if (this.$$.loading === true) return;
-      event.stopPropagation();
+      // event.stopPropagation();
       this.$$.touchstartEvent = event.touches[0];
     },
     touchmove: (event) => {
       if (this.$$.loading === true) return;
       if (!this.$$.lock) return;
       const { rMaxRefreshHeignt } = this.$.DATA;
-      event.stopPropagation();
+      // event.stopPropagation();
       let moveY = event.touches[0].pageY - this.$$.touchstartEvent.pageY;
       event.stopImmediatePropagation();
       event.preventDefault();
@@ -108,7 +108,7 @@ export class RScrollRefresh extends RainbowElement {
     touchend: async (event) => {
       if (this.$$.loading === true) return;
       if (!this.$$.lock) return;
-      event.stopPropagation();
+      // event.stopPropagation();
       const { scrollParent } = this.$$;
       const { rRefreshHeignt, rMinTime } = this.$.DATA;
       this.classList.add("r-scroll-refresh-transition");
@@ -145,7 +145,7 @@ export class RScrollRefresh extends RainbowElement {
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     this.classList.add("r-scroll-refresh");
-    this.$$.scrollParent = this.$.findParentByLocalName("r-scroll");
+    this.$$.scrollParent = this.$.findParentByLocalName(["r-scroll", "r-nested-scroll"]);
     const { scrollParent } = this.$$;
     const opt = { passive: false, capture: true };
     scrollParent.addEventListener("pointerdown", this.$$.pointerdown, opt);

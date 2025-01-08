@@ -7,9 +7,67 @@ const compute = {
   isGetPdownLock: false,
   srcViews: [],
 };
-class SlideEvent extends CustomEvent {
+export class SlideEvent extends CustomEvent {
+  altKey = undefined;
+  altitudeAngle = undefined;
+  azimuthAngle = undefined;
+  button = undefined;
+  buttons = undefined;
+  clientX = undefined;
+  clientY = undefined;
+  ctrlKey = undefined;
+  currentTime = undefined;
+  deltaAng = undefined;
+  deltaC = undefined;
+  deltaTime = undefined;
+  deltaX = undefined;
+  deltaY = undefined;
+  direction = undefined;
+  fromElement = undefined;
+  getModifierState = undefined;
+  getPredictedEvents = undefined;
+  height = undefined;
+  initMouseEvent = undefined;
+  initUIEvent = undefined;
+  isPrimary = undefined;
+  layerX = undefined;
+  layerY = undefined;
+  metaKey = undefined;
+  moveX = undefined;
+  moveY = undefined;
+  movementX = undefined;
+  movementY = undefined;
+  offsetX = undefined;
+  offsetY = undefined;
+  orientation = undefined;
+  pageX = undefined;
+  pageY = undefined;
+  persistentDeviceId = undefined;
+  pointerId = undefined;
+  pointerType = undefined;
+  pressure = undefined;
+  relatedTarget = undefined;
+  screenX = undefined;
+  screenY = undefined;
+  shiftKey = undefined;
+  sourceCapabilities = undefined;
+  speedX = undefined;
+  speedY = undefined;
+  srcViews = undefined;
+  tangentialPressure = undefined;
+  tiltX = undefined;
+  tiltY = undefined;
+  toElement = undefined;
+  twist = undefined;
+  velocityX = undefined;
+  velocityY = undefined;
+  view = undefined;
+  which = undefined;
+  width = undefined;
+  x = undefined;
+  y = undefined;
   constructor(type, eventInitDict = {}) {
-    super(type, { bubbles: true, cancelable: true, ...eventInitDict });
+    super(type, eventInitDict);
   }
 }
 
@@ -209,7 +267,11 @@ function undefinedReturn(params, def) {
   return params;
 }
 
-function inheritPointerEvent(name, event = {}, eventInitDict = {}) {
+function inheritPointerEvent(
+  name,
+  event = {},
+  eventInitDict = { bubbles: true, cancelable: true },
+) {
   const newEvent = new SlideEvent(name, eventInitDict);
   for (const key in event) {
     try {

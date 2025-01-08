@@ -2,8 +2,6 @@ import "./index.css";
 import { RainbowElement, createCustomEvent } from "../../base/index.js";
 
 export class RScroll extends RainbowElement {
-  $elementName = "RScroll";
-
   $$ = {
     default: document.createElement("div"),
     top: document.createElement("div"),

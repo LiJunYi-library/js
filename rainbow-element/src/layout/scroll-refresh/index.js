@@ -8,11 +8,8 @@ export class RScrollRefresh extends RainbowElement {
     "r-max-refresh-heignt": { type: String, default: "0" },
     "r-min-time": { type: String, default: "500" },
   });
-  $elementName = "RScrollRefresh";
 
-  onrefresh() {
-    // return setTimeoutPromise(3000, true);
-  }
+  onrefresh() {}
 
   $$renderRefresh() {
     const circle = document.createElement("r-circle");
@@ -58,7 +55,7 @@ export class RScrollRefresh extends RainbowElement {
     },
     resolve: () => 0,
     promise: undefined,
-    scrollParent: this.$.findParentByType("RScroll"),
+    scrollParent: this.$.findParentByLocalName("r-scroll"),
     loading: false,
     DATA: this.$.DATA,
     get release() {
@@ -148,7 +145,8 @@ export class RScrollRefresh extends RainbowElement {
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     this.classList.add("r-scroll-refresh");
-    this.$$.scrollParent = this.$.findParentByType("RScroll");
+    this.$$.scrollParent = this.$.findParentByLocalName("r-scroll");
+    console.log([this.$$.scrollParent]);
     const { scrollParent } = this.$$;
     const opt = { passive: false, capture: true };
     scrollParent.addEventListener("pointerdown", this.$$.pointerdown, opt);

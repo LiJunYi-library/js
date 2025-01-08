@@ -146,7 +146,6 @@ export class RScrollRefresh extends RainbowElement {
     super.connectedCallback(...arg);
     this.classList.add("r-scroll-refresh");
     this.$$.scrollParent = this.$.findParentByLocalName("r-scroll");
-    console.log([this.$$.scrollParent]);
     const { scrollParent } = this.$$;
     const opt = { passive: false, capture: true };
     scrollParent.addEventListener("pointerdown", this.$$.pointerdown, opt);

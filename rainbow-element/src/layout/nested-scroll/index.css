@@ -1,6 +1,8 @@
 r-nested-scroll {
-    display: block;
-    overflow: hidden;
     max-height: 100vh;
+    overflow: hidden;
+    touch-action: none;
+    position: relative;
+    display: block;
 }
 

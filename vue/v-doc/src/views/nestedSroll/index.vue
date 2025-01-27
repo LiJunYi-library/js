@@ -1,5 +1,5 @@
 <template>
-  <r-nested-scroll isRoot @scrollBottom="scroll">
+  <r-nested-scroll isRoot @scrollUp="scroll">
     <!-- <RScrollRefresh @refresh="refresh"></RScrollRefresh> -->
     <!-- <div class="long" v-if="bool">333</div>
         <RScrollVirtualGridList :columns="2" :avgHeight="140" :list="List">
@@ -17,10 +17,13 @@
             <div class="long">2222222222222222222222</div>
         </RNestedScroll> -->
     <!-- <r-scroll-refresh solt="top" @refresh="refresh"></r-scroll-refresh> -->
-    <div style="height: 50px;width: 100%; background: cyan;position: sticky;top: 0px;" @click="click"></div>
+     <r-grid>
+      <div></div>
+     </r-grid>
+    <div style="height: 50px;width: 100%; background: cyan;position: sticky;top: 0px;" @touchstart="click"></div>
     <div class="long">{{ name }}</div>
     <r-nested-scroll ref="listscroll"  style="height: calc(100vh - 50px );">
-      <div style="height: 50px;width: 100%; background: red;position: sticky;top: 0px;" @click="click"></div>
+      <div style="height: 50px;width: 100%; background: red;position: sticky;top: 0px;" @touchstart="click"></div>
       <div class="long">333333333333333</div>
     </r-nested-scroll>
   </r-nested-scroll>
@@ -35,7 +38,7 @@ const name = ref('2222222222222222222222222222');
 const listscroll = ref('listscroll');
 
 function scroll(params, www) {
-  console.log(params, www)
+  // console.log(params, www)
 }
 
 

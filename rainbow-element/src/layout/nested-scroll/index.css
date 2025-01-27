@@ -4,5 +4,7 @@ r-nested-scroll {
     touch-action: none;
     position: relative;
     display: block;
-}
+    /* vertical horizontal*/
+    --r-scrolling-direction: vertical;
 
+}

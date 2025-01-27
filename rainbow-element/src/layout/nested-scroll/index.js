@@ -5,6 +5,10 @@ import { inheritSlideEvent } from "../../events/scroll";
 const LOG = (...arg) => console.log(...arg);
 
 export class RNestedScroll extends RainbowElement {
+  static observedAttributes = this.$registerProps({
+    "--r-scrolling-direction": String,
+  });
+
   $slotContainer = {
     default: document.createElement("div"),
   };
@@ -42,19 +46,29 @@ export class RNestedScroll extends RainbowElement {
     this.$$.scrollEvent.destroy();
   }
 }
+customElements.define("r-nested-scroll", RNestedScroll);
 
 function setup(props) {
   const { scrollEl, container, view = scrollEl } = props;
   let ani;
   const coefficient = 20;
   let isScrollToBottomEnd = () =>
-    scrollEl.offsetHeight + Math.ceil(scrollEl.scrollTop) >= container.offsetHeight;
-  let maxScrollTop = () => container.offsetHeight - scrollEl.offsetHeight;
+    scrollEl.offsetHeight + scrollEl.scrollTop >= container.offsetHeight;
   let isScrollToTopEnd = () => scrollEl.scrollTop <= 0;
+  let maxScrollTop = () => container.offsetHeight - scrollEl.offsetHeight;
+  let isScrollRightEnd = () => scrollEl.offsetWidth + scrollEl.scrollLeft >= container.offsetWidth;
+  let isScrollLeftEnd = () => scrollEl.value.scrollLeft <= 0;
+  let maxScrollLeft = () => container.value.offsetWidth - scrollEl.value.offsetWidth;
+
   let child = () => view.$.findChildByLocalName("r-nested-scroll");
   let parent = () => view.$.findParentByLocalName(["r-nested-scroll"]);
 
+  let rollingConflict = (event) => {
+    console.log(event.srcViews[0].$.DATA.rScrollingDirection);
+  };
+
   function slideCaptureTop(event) {
+    rollingConflict(event);
     if (event.orientation !== "vertical") return;
     // 如果滚动到了底部 就不消费事件 return 出去
     // 如果没滚动到底部消费事件 并阻止事件向下传递
@@ -107,7 +121,7 @@ function setup(props) {
       onanimation(v) {
         const moveY = Math.ceil(v * coefficient);
         if (moveY > 0) {
-          doScrollTop(moveY);
+          doScrollTop(moveY, event);
           if (isScrollToBottomEnd()) {
             ani?.stop?.();
             LOG("滚动停止 到底停止");
@@ -142,7 +156,7 @@ function setup(props) {
       onanimation(v) {
         const moveY = Math.ceil(v * coefficient);
         if (moveY < 0) {
-          doScrollBottom(moveY);
+          doScrollBottom(moveY, event);
           if (isScrollToTopEnd()) {
             ani?.stop?.();
             LOG("滚动停止 到顶部停止");
@@ -170,10 +184,10 @@ function setup(props) {
   }
 
   function bindEvents() {
-    scrollEl.addEventListener("slideTop", slideCaptureTop, { passive: false, capture: true });
-    scrollEl.addEventListener("slideBottom", slideBottom, { passive: false, capture: false });
-    scrollEl.addEventListener("slideTopEnd", slideCaptureTopEnd, { passive: false, capture: true });
-    scrollEl.addEventListener("slideBottomEnd", slideBottomEnd, { passive: false, capture: false });
+    scrollEl.addEventListener("slideTop", slideCaptureTop, { passive: true, capture: true });
+    scrollEl.addEventListener("slideBottom", slideBottom, { passive: true, capture: false });
+    scrollEl.addEventListener("slideTopEnd", slideCaptureTopEnd, { passive: true, capture: true });
+    scrollEl.addEventListener("slideBottomEnd", slideBottomEnd, { passive: true, capture: false });
   }
 
   function destroy() {}
@@ -181,13 +195,11 @@ function setup(props) {
   return { bindEvents, destroy, dispatchScrollTopFlying, dispatchScrollBottomFlying };
 }
 
-customElements.define("r-nested-scroll", RNestedScroll);
-
 function cAni(config = {}) {
   let time;
   const opt = {
     velocity: 0,
-    deceleration: 0.03,
+    deceleration: 0.04,
     onanimation: () => undefined,
     onanimationEnd: () => undefined,
     ...config,

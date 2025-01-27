@@ -1,20 +1,20 @@
 <template>
-    <div class="page" :class="name">
+  <div class="page" :class="name">
 
 
-        <r-grid style=" --r-columns:5;--r-gap:10px" >
-            <div>五五</div>
-            <div grid-column="3">五五</div>
-            <div grid-column="2">五五</div>
-            <div>五五</div>
-            <div>五五</div>
-            <div>五五</div>
-            <div>五五</div>
-            <div>五五</div>
-        </r-grid>
+    <r-grid style=" --r-columns:5;">
+      <div>五五</div>
+      <div>五五</div>
+      <div>五五</div>
+      <div>五五</div>
+      <div>五五</div>
+      <div>五五</div>
+      <div>五五</div>
+      <div>五五</div>
+    </r-grid>
 
 
-        <r-grid   style=" --r-columns:2;--r-gap:10px" >
+    <!--    <r-grid   style=" --r-columns:2;--r-gap:10px" >
             <div>五五</div>
             <div grid-column="1">五五</div>
             <div grid-column="1">五五</div>
@@ -23,15 +23,21 @@
             <div>五五</div>
             <div>五五</div>
             <div>五五</div>
-        </r-grid>
+        </r-grid> -->
+
+
+    <!--
+    <div>
+      <div>五五</div>
+      <div>五五</div>
+      <div>五五</div>
+      <div>五五</div>
+      <div>五五</div>
+    </div> -->
 
 
 
-
-
-
-
-        <!--
+    <!--
         <r-scroll @scroll="scroll">
             <r-scroll-fixed opacity-top="500" opacity-delay="200" top="30" opacity-ani="false">123</r-scroll-fixed>
             <r-absolute position="top-center">
@@ -57,7 +63,7 @@
 
 
 
-    </div>
+  </div>
 </template>
 <script setup>
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js';
@@ -76,7 +82,7 @@ styles.value[0] = { left: '20px' }
 
 styles.value[0] = { left: '40' }
 function refresh(params) {
-    return new Promise(re => setTimeout(re, 2000))
+  return new Promise(re => setTimeout(re, 2000))
 }
 
 const radio = useRadio2({ list: arrayLoopMap(100, (value) => ({ value: 'v' + value, label: value + '*' })) })
@@ -89,7 +95,7 @@ const radio = useRadio2({ list: arrayLoopMap(100, (value) => ({ value: 'v' + val
 
 
 function scroll(params) {
-    // console.log('scroll', params);
+  // console.log('scroll', params);
 }
 
 console.log(radio);
@@ -97,56 +103,56 @@ console.log(radio);
 
 setTimeout(() => {
 
-    // bool.value = false
-    name.value = 'right-bottom'
-    gap.value = false
-    columns.value = 5
+  // bool.value = false
+  name.value = 'right-bottom'
+  gap.value = false
+  columns.value = 5
 }, 4000);
 
 </script>
 
 <style>
 .long {
-    width: 30px;
-    font-size: 100px;
-    background: linear-gradient(45deg, red, blue);
-    text-wrap: wrap;
-    word-wrap: break-word;
+  width: 30px;
+  font-size: 100px;
+  background: linear-gradient(45deg, red, blue);
+  text-wrap: wrap;
+  word-wrap: break-word;
 }
 
 .r-grid-item {
-    background: gold;
+  background: gold;
 }
 
 .r-scroll-fixed {
-    height: 50px;
-    background: cyan;
+  height: 50px;
+  background: cyan;
 }
 
 .r-scroll-fixed-fixed {
-    /* background: rgb(0, 85, 255); */
+  /* background: rgb(0, 85, 255); */
 }
 
 .my-grid {
-    --r-columns: r-attr(r-columns);
-    --r-row-gap: 20px;
-    --r-gap: calc(var(--r-row-gap) + 2vw / 4px);
+  --r-columns: r-attr(r-columns);
+  --r-row-gap: 20px;
+  --r-gap: calc(var(--r-row-gap) + 2vw / 4px);
 
-    --r-min-auto-width: 100px;
-    --r-grid-wrap: wrap;
-    --r-grid-stretch: stretch;
+  --r-min-auto-width: 100px;
+  --r-grid-wrap: wrap;
+  --r-grid-stretch: stretch;
 }
 
 .my-grid div {
-    background: yellow;
+  background: yellow;
 }
 
 .bottom-center .my-grid {
-    /* --r-columns: 9; */
+  /* --r-columns: 9; */
 }
 
 .right-bottom .my-grid {
-    /* --r-columns: 6; */
+  /* --r-columns: 6; */
 }
 
 /* .dsk {

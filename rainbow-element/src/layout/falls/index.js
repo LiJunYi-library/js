@@ -69,4 +69,4 @@ function getMaxHeightItem(list) {
   });
   return item;
 }
-customElements.define("r-falls", RFalls);
+

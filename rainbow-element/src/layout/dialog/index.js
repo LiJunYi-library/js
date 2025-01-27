@@ -220,4 +220,3 @@ export class RDialog extends RainbowElement {
   }
 }
 
-customElements.define("r-dialog", RDialog);

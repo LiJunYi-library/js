@@ -10,7 +10,7 @@
       <button @click="add">add</button>
       <button @click="min">--</button>
     </div>
-    <r-rolling-text :r-value="val" ></r-rolling-text>
+    <r-rolling-text v-model="val" ></r-rolling-text>
 
     <!-- <r-rolling-text-num style="margin-left: 100px;" v-model="val" @input="input" ref="text"/> -->
 

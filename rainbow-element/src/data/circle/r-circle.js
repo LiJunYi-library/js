@@ -171,5 +171,3 @@ export class RCircle extends RainbowElement {
     );
   }
 }
-
-customElements.define("r-circle", RCircle);

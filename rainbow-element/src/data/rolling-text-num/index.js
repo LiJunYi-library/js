@@ -113,4 +113,3 @@ export class RRollingTextNum extends RainbowElement {
   }
 }
 
-customElements.define("r-rolling-text-num", RRollingTextNum);

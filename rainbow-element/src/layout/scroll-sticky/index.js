@@ -102,7 +102,7 @@ export class RScrollSticky extends RainbowElement {
 
 }
 
-customElements.define('r-scroll-sticky', RScrollSticky);
+
 
 // export class RScrollFixed extends RScrollSticky {
 //     $bindClass() {

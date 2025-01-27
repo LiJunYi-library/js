@@ -59,4 +59,4 @@ export class RSvgCircle extends RainbowElement {
   }
 }
 
-customElements.define("r-svg-circle", RSvgCircle);
+

@@ -74,4 +74,4 @@ export class RGrid extends RainbowElement {
   }
 }
 
-customElements.define("r-grid", RGrid);
+

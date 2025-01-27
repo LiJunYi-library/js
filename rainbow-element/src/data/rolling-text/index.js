@@ -53,4 +53,4 @@ export class RRollingText extends RainbowElement {
   }
 }
 
-customElements.define("r-rolling-text", RRollingText);
+

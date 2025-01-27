@@ -1,7 +1,7 @@
 import { RainbowElement } from "../base/index.js";
 
 
-export class testD extends RainbowElement {
+export class RTestD extends RainbowElement {
   $$ = {
     value: "",
   };
@@ -16,5 +16,3 @@ export class testD extends RainbowElement {
     return this.$$.value;
   }
 }
-
-customElements.define("r-test-d", testD);

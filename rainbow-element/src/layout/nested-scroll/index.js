@@ -46,7 +46,6 @@ export class RNestedScroll extends RainbowElement {
     this.$$.scrollEvent.destroy();
   }
 }
-customElements.define("r-nested-scroll", RNestedScroll);
 
 function setup(props) {
   const { scrollEl, container, view = scrollEl } = props;

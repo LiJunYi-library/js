@@ -44,4 +44,4 @@ export class RFlex extends RainbowElement {
 
 }
 
-customElements.define("r-flex", RFlex);
+

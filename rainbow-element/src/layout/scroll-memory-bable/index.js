@@ -63,4 +63,3 @@ export class RScrollMemoryBubble extends RainbowElement {
     }
 }
 
-customElements.define('r-scroll-memory-bable', RScrollMemoryBubble);

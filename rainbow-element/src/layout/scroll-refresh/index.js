@@ -167,4 +167,4 @@ export class RScrollRefresh extends RainbowElement {
   }
 }
 
-customElements.define("r-scroll-refresh", RScrollRefresh);
+

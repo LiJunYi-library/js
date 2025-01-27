@@ -67,4 +67,3 @@ export class RScroll extends RainbowElement {
   }
 }
 
-customElements.define("r-scroll", RScroll);

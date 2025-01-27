@@ -1,10 +1,19 @@
 r-falls {
-    display: block;
-    position: relative;
-    overflow: hidden;
+  display: block;
+  position: relative;
+  overflow: hidden;
 }
 
-
 .r-falls-item {
-    position: absolute;
+  position: absolute;
+}
+
+r-falls.useAttrs {
+  --r-columns: r-attr(r-columns);
+  --r-min-auto-width: r-attr(r-min-auto-width);
+  --r-gap: r-attr(r-gap);
+  --r-row-gap: r-attr(r-row-gap);
+  --r-column-gap: r-attr(r-column-gap);
+  --r-grid-wrap: r-attr(r-grid-wrap);
+  --r-grid-stretch: r-attr(r-grid-stretch);
 }

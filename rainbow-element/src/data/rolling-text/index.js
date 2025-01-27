@@ -2,20 +2,30 @@ import "./index.css";
 import { RainbowElement, renderChildren } from "../../base/index.js";
 import { arrayLoop, arrayLoopMap } from "@rainbow_ljy/rainbow-js";
 
-import { RRollingTextNum } from "../rolling-text-num";
-
 export class RRollingText extends RainbowElement {
   static observedAttributes = this.$registerProps({
-    "r-value": String,
+    // "r-value": String,
     "r-math-type": String, // 'floor' , 'none'
   });
 
-  $$renderNumNodes = renderChildren({
-    parentNode: this,
-  });
+  $$renderNumNodes = renderChildren({ parentNode: this });
+
+  $$ = {
+    value: "",
+  };
+
+  get value() {
+    return this.$$.value;
+  }
+
+  set value(v) {
+    this.$$.value = v;
+    this.$debouncedRender()
+  }
 
   $render() {
-    let { rValue, rMathType } = this.$.DATA;
+    let { rMathType } = this.$.DATA;
+    let rValue = this.value;
     console.log("rValue $render", rValue);
     let rValueStr = String(rValue);
     let values = (() => {

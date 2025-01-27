@@ -213,7 +213,7 @@ export class RainbowElement extends HTMLElement {
   appendChild(node) {
     console.log("appendChild");
     if (this.$._getSC(node)) return this.$._getSC(node)?.appendChild?.(node);
-    if (this === this.$slotContainer.default) return super.appendChild?.(child);
+    if (this === this.$slotContainer.default) return super.appendChild?.(node);
     return this.$slotContainer.default?.appendChild?.(node);
   }
 

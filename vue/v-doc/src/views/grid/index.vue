@@ -2,7 +2,7 @@
   <div class="page" :class="name">
 
 
-    <r-grid style=" --r-columns:5;">
+    <r-grid class="my-grid" r-columns="4">
       <div>五五</div>
       <div>五五</div>
       <div>五五</div>
@@ -138,7 +138,7 @@ setTimeout(() => {
   --r-row-gap: 20px;
   --r-gap: calc(var(--r-row-gap) + 2vw / 4px);
 
-  --r-min-auto-width: 100px;
+  /* --r-min-auto-width: 100px; */
   --r-grid-wrap: wrap;
   --r-grid-stretch: stretch;
 }

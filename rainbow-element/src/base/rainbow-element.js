@@ -83,8 +83,9 @@ export class RainbowElement extends HTMLElement {
       if (/\d+?%/.test(v)) return fmt(node) * (v.replaceAll("%", "") / 100);
       return v;
     },
-    resolvePercentumH: (v, node, fmt = (node) => node.offsetHeight) =>
-      this.$.resolvePercentum(v, node, fmt),
+    resolvePercentumH: (v, node, fmt = (node) => node.offsetHeight) => {
+      return this.$.resolvePercentum(v, node, fmt);
+    },
     setStyle: (fmtStyle = () => ({})) => {
       let ftStyle = fmtStyle(this.$.data) || {};
       let newStyle = ftStyle;
@@ -135,7 +136,7 @@ export class RainbowElement extends HTMLElement {
     },
     findChildByLocalName: (name, c = this) => {
       if (!c) return;
-      const child =  c.getElementsByTagName(name);
+      const child = c.getElementsByTagName(name);
       return child;
     },
     getOffsetTop: (p, num = 0) => {
@@ -264,27 +265,4 @@ export class RainbowElement extends HTMLElement {
   $render() {}
 }
 
-export class RainbowInput extends HTMLElement {
-  constructor(...arg) {
-    super(...arg);
-    console.log(this);
-  }
 
-  connectedCallback(...arg) {
-    this.classList.add("r-input");
-    console.log(this);
-
-    this.addEventListener("input", (e) => {
-      console.log(">>>>>>>>>>>>>>>>>>>", e);
-      this.value = e.data;
-      console.log(">>>>>>>>>>>>>>>>>>>", this.value);
-    });
-  }
-}
-
-// 定义自定义元素
-customElements.define("r-input", RainbowInput);
-
-// {
-//   /* <r-input type="text"  style="height: 50px;width: 100%;display: block;" /> */
-// }

@@ -8,7 +8,7 @@ export class RScrollVirtualGridList extends RainbowElement {
     "r-gap": [Number, String],
     "r-row-gap": [Number, String],
     "r-column-gap": [Number, String],
-    "r-item-height": [Number, String],
+    "r-avg-height": [Number, String],
   });
 
   get $$columns() {
@@ -38,14 +38,14 @@ export class RScrollVirtualGridList extends RainbowElement {
       this.$$.layout(false);
     },
     layout: (isForce = true) => {
-      const { rItemHeight, rGap, rColumnGap, rRowGap } = this.$.DATA;
+      const { rAvgHeight, rGap, rColumnGap, rRowGap } = this.$.DATA;
       const columnGap = rColumnGap || rGap || 0;
       const rowGap = rRowGap || rGap || 0;
       // console.log(columnGap);
       const offsetTop = this.$.getOffsetTop(this.$$.scrollParent);
       const scrollTop = this.$$.scrollParent.scrollTop;
-      let recycleCount = Math.ceil(window.innerHeight / (rItemHeight + columnGap)) * this.$$columns;
-      let nth = Math.ceil((scrollTop - offsetTop) / (rItemHeight + columnGap)) * this.$$columns;
+      let recycleCount = Math.ceil(window.innerHeight / (rAvgHeight + columnGap)) * this.$$columns;
+      let nth = Math.ceil((scrollTop - offsetTop) / (rAvgHeight + columnGap)) * this.$$columns;
       let index = nth - recycleCount;
       let start = index < 0 ? 0 : index;
       let end = index + recycleCount * 3;
@@ -67,15 +67,15 @@ export class RScrollVirtualGridList extends RainbowElement {
           // console.log( this.$$.recycle.divs.length);
           node.setAttribute("key", key);
           node.classList.add("r-scroll-virtual-grid-list-item");
-          node.style.height = `${rItemHeight}px`;
+          node.style.height = `${rAvgHeight}px`;
           node.style.position = "absolute";
-          this.$$.measure(node, val, rItemHeight, rowGap, columnGap);
+          this.$$.measure(node, val, rAvgHeight, rowGap, columnGap);
           this.dispatchEvent(createCustomEvent("renderList", { ele: node, ...val, key }));
           return node;
         },
         onCacheNode: (node, val, index, key) => {
           node.setAttribute("key", key);
-          this.$$.measure(node, val, rItemHeight, rowGap, columnGap);
+          this.$$.measure(node, val, rAvgHeight, rowGap, columnGap);
           this.dispatchEvent(createCustomEvent("renderList", { ele: node, ...val, key }));
           return node;
         },
@@ -86,21 +86,21 @@ export class RScrollVirtualGridList extends RainbowElement {
         },
       });
     },
-    measure: (node, val, rItemHeight, rowGap, columnGap) => {
+    measure: (node, val, rAvgHeight, rowGap, columnGap) => {
       let columns = this.$$columns;
       let rem = val.index % columns;
       let ret = Math.floor(val.index / columns);
       node.style.width = `calc( ${100 / columns}% - ${((columns - 1) * columnGap) / columns}px )`;
       node.style.left = `calc( ${(100 / columns) * rem}% - ${(((columns - 1) * columnGap) / columns) * rem}px + ${rem * columnGap}px )`;
-      node.style.top = ret * (rItemHeight + rowGap) + "px";
+      node.style.top = ret * (rAvgHeight + rowGap) + "px";
     },
   };
 
   set value(v) {
     this.$$.value = v;
-    const { rItemHeight, rGap, rColumnGap } = this.$.DATA;
+    const { rAvgHeight, rGap, rColumnGap } = this.$.DATA;
     const columnGap = rColumnGap || rGap || 0;
-    this.style.height = this.value.length * (rItemHeight + columnGap) + "px";
+    this.style.height = this.value.length * (rAvgHeight + columnGap) + "px";
     this.$$.layout();
   }
 

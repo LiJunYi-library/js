@@ -68,6 +68,7 @@ export function renderChildren(props = {}) {
   const options = { parentNode: undefined, ...props };
   let cacheMap = new Map();
   let pointer = undefined;
+  let recycle = [];
 
   function renderList(source = [], p) {
     const config = {
@@ -75,6 +76,8 @@ export function renderChildren(props = {}) {
       keyExtractor: (item, index) => index,
       onCacheNode: () => 0,
       onCreateNode: () => 0,
+      onDeleteNode: () => 0,
+      onRemoveNode: () => 0,
       ...p,
     };
     const map = new Map();
@@ -95,6 +98,7 @@ export function renderChildren(props = {}) {
         }
         pointer = node;
         cacheMap.delete(key);
+        config.onDeleteNode(node, item, index, key);
       } else {
         node = config.onCreateNode(item, index, key);
         if (!pointer) options.parentNode.insertBefore(node, options.parentNode?.firstChild);
@@ -104,7 +108,10 @@ export function renderChildren(props = {}) {
 
       map.set(key, node);
     });
-    cacheMap.forEach((node) => node.remove());
+    cacheMap.forEach((node, key) => {
+      node.remove();
+      config.onRemoveNode(node, key);
+    });
     pointer = undefined;
     cacheMap = map;
   }

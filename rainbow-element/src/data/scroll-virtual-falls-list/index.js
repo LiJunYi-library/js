@@ -1,7 +1,7 @@
 import { RainbowElement, createCustomEvent, renderChildren } from "../../base/index.js";
 import "./index.css";
 
-export class RScrollVirtualGridList extends RainbowElement {
+export class RScrollVirtualFallsList extends RainbowElement {
   static observedAttributes = this.$registerProps({
     "r-columns": { type: Number, default: 1 },
     "r-min-auto-width": Number,
@@ -11,7 +11,7 @@ export class RScrollVirtualGridList extends RainbowElement {
     "r-avg-height": [Number, String],
   });
 
-  keyExtractor = (val) => val.item;
+  keyExtractor = (val) => val;
 
   get $$columns() {
     let { rColumns, rMinAutoWidth } = this.$.DATA;
@@ -35,6 +35,7 @@ export class RScrollVirtualGridList extends RainbowElement {
       return document.createElement("div");
     },
     scrollParent: undefined,
+    items: new Map(),
     onScroll: (event) => {
       this.$$.layout(false);
     },
@@ -52,12 +53,11 @@ export class RScrollVirtualGridList extends RainbowElement {
       let end = index + recycleCount * 3;
       if (end < 0) end = 0;
       let list = this.value.slice(start, end);
-      let renderList = list.map((item, sub) => ({ index: start + sub, item, data: item }));
+      let renderList = list.map((data, sub) => ({ index: start + sub, data }));
       let count = renderList.length;
       let isRender = !(this.$$.cache.start === start && this.$$.cache.end === end);
       this.$$.cache.start = start;
       this.$$.cache.end = end;
-      this.style.height = `${(rAvgHeight + columnGap) * Math.ceil(this.value.length / this.$$columns) - columnGap}px`
       if (isForce === false && isRender === false) return;
       // console.log(start, end);
       // console.log(count, renderList);
@@ -96,11 +96,13 @@ export class RScrollVirtualGridList extends RainbowElement {
       node.style.left = `calc( ${(100 / columns) * rem}% - ${(((columns - 1) * columnGap) / columns) * rem}px + ${rem * columnGap}px )`;
       node.style.top = ret * (rAvgHeight + rowGap) + "px";
     },
-
   };
 
   set value(v) {
     this.$$.value = v;
+    const { rAvgHeight, rGap, rColumnGap } = this.$.DATA;
+    const columnGap = rColumnGap || rGap || 0;
+    this.style.height = this.value.length * (rAvgHeight + columnGap) + "px";
     this.$$.layout();
   }
 

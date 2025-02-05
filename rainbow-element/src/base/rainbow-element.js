@@ -140,9 +140,9 @@ export class RainbowElement extends HTMLElement {
       return child;
     },
     getOffsetTop: (p, num = 0) => {
+      if (this.offsetParent === p) return num;
       let offsetTop = this.offsetTop;
       let top = num + offsetTop;
-      if (this.offsetParent === p) return top;
       return this.$.getOffsetTop(this.offsetParent, top);
     },
     isAnimation: false,

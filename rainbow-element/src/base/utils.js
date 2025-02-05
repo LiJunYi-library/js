@@ -97,7 +97,7 @@ export function renderChildren(props = {}) {
         cacheMap.delete(key);
       } else {
         node = config.onCreateNode(item, index, key);
-        if (pointer) options.parentNode.insertBefore(node, undefined);
+        if (!pointer) options.parentNode.insertBefore(node, options.parentNode?.firstChild);
         else options.parentNode.insertBefore(node, pointer?.nextSibling);
         pointer = node;
       }

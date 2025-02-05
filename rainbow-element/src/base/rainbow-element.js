@@ -202,7 +202,7 @@ export class RainbowElement extends HTMLElement {
   };
 
   append(...nodes) {
-    console.log("append");
+    // console.log("append");
     nodes.forEach((node, index) => {
       if (this.$._getSC(node)) return this.$._getSC(node)?.append?.(node);
       if (this === this.$slotContainer.default) return super.append?.(node);
@@ -211,21 +211,21 @@ export class RainbowElement extends HTMLElement {
   }
 
   appendChild(node) {
-    console.log("appendChild");
+    // console.log("appendChild");
     if (this.$._getSC(node)) return this.$._getSC(node)?.appendChild?.(node);
     if (this === this.$slotContainer.default) return super.appendChild?.(node);
     return this.$slotContainer.default?.appendChild?.(node);
   }
 
   insertBefore(node, child) {
-    console.log("insertBefore");
+    // console.log("insertBefore");
     if (this.$._getSC(node)) return this.$._getSC(node)?.insertBefore?.(node, child);
     if (this === this.$slotContainer.default) return super.insertBefore?.(node, child);
     return this.$slotContainer.default.insertBefore?.(node, child);
   }
 
   removeChild(child) {
-    console.log("removeChild");
+    // console.log("removeChild");
     if (this.$._getSC(child)) return this.$._getSC(child)?.removeChild?.(child);
     if (this === this.$slotContainer.default) return super.removeChild?.(child);
     return this.$slotContainer.default.removeChild?.(child);

@@ -11,6 +11,8 @@ export class RScrollVirtualGridList extends RainbowElement {
     "r-avg-height": [Number, String],
   });
 
+  keyExtractor = (val) => val;
+
   get $$columns() {
     let { rColumns, rMinAutoWidth } = this.$.DATA;
     if (rMinAutoWidth) return Math.floor(this.offsetWidth / rMinAutoWidth);
@@ -60,7 +62,7 @@ export class RScrollVirtualGridList extends RainbowElement {
       // console.log(start, end);
       // console.log(count, renderList);
       this.$$.renderChildren.renderList(renderList, {
-        keyExtractor: (val) => val.index,
+        keyExtractor: this.keyExtractor,
         onCreateNode: (val, index, key) => {
           let node = this.$$.createElement();
           // console.log(ret);
@@ -116,7 +118,7 @@ export class RScrollVirtualGridList extends RainbowElement {
   }
 
   disconnectedCallback(...arg) {
-    super.connectedCallback(...arg);
+    super.disconnectedCallback(...arg);
     this.$$.scrollParent.removeEventListener("scroll", this.$$.onScroll.bind(this));
   }
 }

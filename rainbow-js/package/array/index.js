@@ -23,6 +23,7 @@ const testArr = [
 ];
 
 export * from "./sql.js";
+export * from "./ListArray.js";
 
 if (!Array.prototype.at) {
   Array.prototype.at = function (...arg) {
@@ -75,7 +76,7 @@ export function arrayBubbleMin(list = [], formatter) {
   return arrayBubble(
     list,
     formatter,
-    (value, item, index, list) => formatter(item, index, list) < value
+    (value, item, index, list) => formatter(item, index, list) < value,
   );
 }
 //冒泡倒数查找最小
@@ -83,7 +84,7 @@ export function arrayBubbleLastMin(list = [], formatter) {
   return arrayBubble(
     list,
     formatter,
-    (value, item, index, list) => formatter(item, index, list) <= value
+    (value, item, index, list) => formatter(item, index, list) <= value,
   );
 }
 //冒泡查找最大
@@ -91,7 +92,7 @@ export function arrayBubbleMax(list = [], formatter) {
   return arrayBubble(
     list,
     formatter,
-    (value, item, index, list) => formatter(item, index, list) > value
+    (value, item, index, list) => formatter(item, index, list) > value,
   );
 }
 //冒泡倒数查找最大
@@ -99,7 +100,7 @@ export function arrayBubbleLastMax(list = [], formatter) {
   return arrayBubble(
     list,
     formatter,
-    (value, item, index, list) => formatter(item, index, list) >= value
+    (value, item, index, list) => formatter(item, index, list) >= value,
   );
 }
 // 删除数组中的第n个 改变数组
@@ -156,8 +157,7 @@ export function arrayWipeRepetition(list = [], formatter) {
   const map = new Map();
   return list.filter(
     (item, index) =>
-      !map.has(formatter(item, index).toString()) &&
-      map.set(formatter(item, index).toString())
+      !map.has(formatter(item, index).toString()) && map.set(formatter(item, index).toString()),
   );
 }
 // 数组 根据某个属性 去重 从后面
@@ -193,32 +193,32 @@ export function arrayExtractSame(list = [], formatter) {
 
 // 数组排序 根据属性正序
 export function arraySort(list = [], formatter, formatter2) {
-  let fmt = formatter2 || formatter
-  list.sort((a, b) => formatter(a) - fmt(b))
+  let fmt = formatter2 || formatter;
+  list.sort((a, b) => formatter(a) - fmt(b));
   return list;
 }
 
 export function arraySortMin(...arg) {
-  return arraySort(...arg)[0]
+  return arraySort(...arg)[0];
 }
 
 export function arraySortMax(list = [], ...arg) {
-  return arraySort(list, ...arg)[list.length - 1]
+  return arraySort(list, ...arg)[list.length - 1];
 }
 
 // 数组排序  根据属性倒序
 export function arrayReverseSort(list = [], formatter, formatter2) {
-  let fmt = formatter2 || formatter
-  list.sort((a, b) => fmt(b) - formatter(a))
+  let fmt = formatter2 || formatter;
+  list.sort((a, b) => fmt(b) - formatter(a));
   return list;
 }
 
 export function arrayReverseSortMin(...arg) {
-  return arrayReverseSort(...arg)[list.length - 1]
+  return arrayReverseSort(...arg)[list.length - 1];
 }
 
 export function arrayReverseSortMax(list = [], ...arg) {
-  return arrayReverseSort(list, ...arg)[0]
+  return arrayReverseSort(list, ...arg)[0];
 }
 
 /**
@@ -285,18 +285,23 @@ export function arrayEvents() {
 }
 
 /* 二分查找 */
-export function arrayBinarySearch(setPointer = (args, index) => (args.right = index - 1), arr = [], formatter, compare) {
+export function arrayBinarySearch(
+  setPointer = (args, index) => (args.right = index - 1),
+  arr = [],
+  formatter,
+  compare,
+) {
   const fg = {
     left: 0,
     right: arr.length - 1,
     result: -1,
-  }
+  };
   while (fg.left <= fg.right) {
     const index = Math.floor((fg.left + fg.right) / 2);
-    const item = arr[index]
+    const item = arr[index];
     if (formatter(item)) {
       fg.result = index;
-      setPointer(fg, index, item)
+      setPointer(fg, index, item);
     } else if (compare(item)) {
       fg.left = index + 1;
     } else {
@@ -307,26 +312,70 @@ export function arrayBinarySearch(setPointer = (args, index) => (args.right = in
 }
 /* 二分查找到符合条件的第一个元素的下标 没有找到返回-1 compare<*/
 export function arrayBinaryFindIndex(arr = [], formatter, compare) {
-  return arrayBinarySearch((args, index) => {
-    args.right = index - 1
-  }, arr, formatter, compare);
+  return arrayBinarySearch(
+    (args, index) => {
+      args.right = index - 1;
+    },
+    arr,
+    formatter,
+    compare,
+  );
 }
 /* 二分查找到符合条件的第一个元素 没有找到返回undefined compare<*/
 export function arrayBinaryFind(arr = [], formatter, compare) {
   const index = arrayBinaryFindIndex(arr, formatter, compare);
-  return index === -1 ? undefined : arr[index]
+  return index === -1 ? undefined : arr[index];
 }
 /* 二分查找到符合条件的最后一个元素的下标 没有找到返回-1 compare<*/
 export function arrayBinaryFindLastIndex(arr = [], formatter, compare) {
-  return arrayBinarySearch((args, index) => {
-    args.left = index + 1;
-  }, arr, formatter, compare);
+  return arrayBinarySearch(
+    (args, index) => {
+      args.left = index + 1;
+    },
+    arr,
+    formatter,
+    compare,
+  );
 }
 /* 二分查找到符合条件的最后一个元素 没有找到返回undefined compare<*/
 export function arrayBinaryFindLast(arr = [], formatter, compare) {
   const index = arrayBinaryFindLastIndex(arr, formatter, compare);
-  return index === -1 ? undefined : arr[index]
+  return index === -1 ? undefined : arr[index];
 }
 
+// 重新改变数组的方法 原来监听数组变化
+export function arrayRewriteFunction(arr = [], arg) {
+  const funName = [
+    "copyWithin",
+    "fill",
+    "push",
+    "pop",
+    "shift",
+    "unshift",
+    "splice",
+    "sort",
+    "reverse",
+  ];
+  const original = {};
 
+  funName.forEach((name) => {
+    original[name] = arr[name];
+  });
 
+  function push(...args) {
+    const res = original.push.call(arr, ...args);
+    arg?.("push", ...args);
+    return res;
+  }
+
+  Object.defineProperties(arr, {
+    push: {
+      value: push,
+      writable: true,
+    },
+  });
+
+  console.log(arr);
+
+  return arr;
+}

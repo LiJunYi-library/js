@@ -115,6 +115,24 @@ export declare function arrayBinaryFindLastIndex<T>(list: T[], formatter: (item:
 
 export declare function rrayBinaryFindLast<T>(list: T[], formatter: (item: T) => boolean, compare: (item: T) => boolean): T;
 
+export declare function arrayRewriteFunction<T>(list: T[], callbackfn: (name: string, ...args: any) => void): T[];
+
+export declare function arrayRewriteFunction<T>(list: T[], args: {
+  onChange?: (name: string, ...args: any) => void;
+  oncopyWithin?: (...args: any) => void;
+  onfill?: (...args: any) => void;
+  onpush?: (...args: any) => void;
+  onpop?: (...args: any) => void;
+  onshift?: (...args: any) => void;
+  onunshift?: (...args: any) => void;
+  onsplice?: (...args: any) => void;
+  onsort?: (...args: any) => void;
+  onreverse?: (...args: any) => void;
+}): T[];
+
+export class ListArray extends Array {}
+
+
 // 模仿sql查询  //
 export declare function WHERE(compare: any, val: any): boolean;
 

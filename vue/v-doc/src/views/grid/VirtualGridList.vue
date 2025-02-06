@@ -1,9 +1,9 @@
 <template>
-  <r-scroll-virtual-grid-list ref="virtualList" v-model="props.modelValue" @renderList="onRenderList" />
+  <r-scroll-virtual-grid-list  v-model="props.modelValue" @renderList="onRenderList" />
 </template>
 
 <script setup lang="jsx">
-import { ref, render, defineComponent, watch } from 'vue'
+import { ref, render, defineComponent, watch, onMounted } from 'vue'
 
 const slots = defineSlots();
 const props = defineProps({
@@ -23,16 +23,8 @@ const Item = defineComponent({
   }
 })
 
-const virtualList = ref('virtualList')
-
 function onRenderList(event) {
   render(<Item item={event.item} index={event.index} slots={slots}></Item>, event.ele)
 }
-
-watch(() => props.modelValue.length, () => {
-  virtualList.value.$$.layout();
-
-})
-
 
 </script>

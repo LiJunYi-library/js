@@ -1,3 +1,4 @@
+import { arrayRewriteFunction, ListArray } from "@rainbow_ljy/rainbow-js";
 import { RainbowElement, createCustomEvent, renderChildren } from "../../base/index.js";
 import "./index.css";
 
@@ -53,19 +54,16 @@ export class RScrollVirtualGridList extends RainbowElement {
       if (end < 0) end = 0;
       let list = this.value.slice(start, end);
       let renderList = list.map((item, sub) => ({ index: start + sub, item, data: item }));
-      let count = renderList.length;
       let isRender = !(this.$$.cache.start === start && this.$$.cache.end === end);
       this.$$.cache.start = start;
       this.$$.cache.end = end;
-      this.style.height = `${(rAvgHeight + columnGap) * Math.ceil(this.value.length / this.$$columns) - columnGap}px`
+      this.style.height = `${(rAvgHeight + columnGap) * Math.ceil(this.value.length / this.$$columns) - columnGap}px`;
       if (isForce === false && isRender === false) return;
       // console.log(start, end);
-      // console.log(count, renderList);
       this.$$.renderChildren.renderList(renderList, {
         keyExtractor: this.keyExtractor,
         onCreateNode: (val, index, key) => {
           let node = this.$$.createElement();
-          // console.log(ret);
           // console.log( this.$$.recycle.divs.length);
           node.setAttribute("key", key);
           node.classList.add("r-scroll-virtual-grid-list-item");
@@ -96,10 +94,17 @@ export class RScrollVirtualGridList extends RainbowElement {
       node.style.left = `calc( ${(100 / columns) * rem}% - ${(((columns - 1) * columnGap) / columns) * rem}px + ${rem * columnGap}px )`;
       node.style.top = ret * (rAvgHeight + rowGap) + "px";
     },
-
+    onValueChange: () => {
+      this.$$.layout();
+    },
   };
 
   set value(v) {
+    if (v instanceof ListArray) {
+      v.removeEventListener("change", this.$$.onValueChange);
+      v.addEventListener("change", this.$$.onValueChange);
+    }
+    // arrayRewriteFunction(v, () => this.$$.layout());
     this.$$.value = v;
     this.$$.layout();
   }

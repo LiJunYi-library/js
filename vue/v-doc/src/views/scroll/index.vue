@@ -41,7 +41,7 @@
         <r-scroll-refresh></r-scroll-refresh>
       </div> -->
 
-      <div style="height: 50px;width: 100%; background: red;position: sticky;top: 10px;"></div>
+      <div style="height: 50px;width: 100%; background: red;position: sticky;top: 0px;"></div>
       <div style="font-size: 50px;">{{ text }}</div>
       <div style="height: 50px;width: 50px; background: yellowgreen;position: fixed;top: 10px;"></div>
       <div style="height: 50px;width: 50px; background: pink;position: absolute;top: 100px;right: 0;"></div>

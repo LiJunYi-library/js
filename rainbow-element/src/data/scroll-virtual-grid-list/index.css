@@ -6,3 +6,8 @@ r-scroll-virtual-grid-list {
     --r-column-gap: 10px;
     --r-row-gap: 10px;
 }
+
+.r-scroll-virtual-grid-list-item {
+    box-sizing: border-box;
+    word-wrap: break-word;
+}

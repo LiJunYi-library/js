@@ -1,117 +1,137 @@
 <template>
   <div class="page" :class="name">
+    <r-scroll>
+      <div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+      </div>
 
 
-    <r-grid class="my-grid" r-columns="4">
-      <div>五五</div>
-      <div>五五</div>
-      <div>五五</div>
-      <div>五五</div>
-      <div>五五</div>
-      <div>五五</div>
-      <div>五五</div>
-      <div>五五</div>
-    </r-grid>
+      <VirtualGridList v-model="List">
+        <template #default="{ item, index, key }">
+          <div @click="changeIndex(index)">{{ item.value }}</div>
+          <div> {{ key }}</div>
+        </template>
+      </VirtualGridList>
 
 
-    <!--    <r-grid   style=" --r-columns:2;--r-gap:10px" >
-            <div>五五</div>
-            <div grid-column="1">五五</div>
-            <div grid-column="1">五五</div>
-            <div>五五</div>
-            <div>五五</div>
-            <div>五五</div>
-            <div>五五</div>
-            <div>五五</div>
-        </r-grid> -->
-
-
-    <!--
-    <div>
-      <div>五五</div>
-      <div>五五</div>
-      <div>五五</div>
-      <div>五五</div>
-      <div>五五</div>
-    </div> -->
+      <div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+        <div>五五</div>
+      </div>
+    </r-scroll>
 
 
 
-    <!--
-        <r-scroll @scroll="scroll">
-            <r-scroll-fixed opacity-top="500" opacity-delay="200" top="30" opacity-ani="false">123</r-scroll-fixed>
-            <r-absolute position="top-center">
-                top-center
-            </r-absolute>
-
-            <div slot="top" class="s-top">Welcome to My Card {{ name }}</div>
-            <div class="s-top">Welcome to My Card {{ name }}</div>
-            <div class="s-top">Welcome to My Card {{ name }}</div>
-            <div class="s-top" style="font-size: 100px;">My {{ name }}</div>
-
-            <div style="width: 20px;font-size: 104px;word-wrap: break-word;">
-                Thisisasimplecardcomponentwithnamedslots.
-            </div>
-
-
-            <r-scroll-memory-bable top="100px">456789</r-scroll-memory-bable>
-
-
-
-        </r-scroll> -->
 
 
 
 
   </div>
 </template>
-<script setup>
-import { arrayLoopMap } from '@rainbow_ljy/rainbow-js';
+<script setup lang="jsx">
+import { arrayLoopMap, ListArray } from '@rainbow_ljy/rainbow-js';
 import { useRadio2 } from '@rainbow_ljy/v-hooks';
-import { ref } from 'vue'
+import { ref, render, defineComponent, toRaw, watch } from 'vue'
+import VirtualGridList from './VirtualGridList.vue'
+
 
 const name = ref('bottom-center');
 const bool = ref(true);
-const List = ref(arrayLoopMap(100, (value) => ({ value })))
+const arr = arrayLoopMap(5, (value) => ({ value, id: Math.random() }))
+const List = ref(new ListArray(...arr))
 const gap = ref(10);
 const columns = ref(4);
-
 const styles = ref([]);
+
 
 styles.value[0] = { left: '20px' }
 
 styles.value[0] = { left: '40' }
+
 function refresh(params) {
   return new Promise(re => setTimeout(re, 2000))
 }
 
 const radio = useRadio2({ list: arrayLoopMap(100, (value) => ({ value: 'v' + value, label: value + '*' })) })
 
-// const div = document.createElement('div')
-// document.body.append(div)
-// div.style.width= 'calc(100vh - 20px)';
-// const style = window.getComputedStyle(div);
-// console.log(style.getPropertyValue('width'));
-
-
 function scroll(params) {
   // console.log('scroll', params);
 }
 
-console.log(radio);
+
+function changeIndex(index) {
+  // console.log(index);
+  List.value.splice(index, 1, { value: 9999, id: Math.random() })
+}
+
+watch(() => List.value.length, () => {
+  console.log('watch', 'watch');
+})
 
 
 setTimeout(() => {
-
   // bool.value = false
   name.value = 'right-bottom'
   gap.value = false
   columns.value = 5
+
+  List.value.push(...arrayLoopMap(15, (value) => ({ value, id: Math.random() })))
 }, 4000);
 
 </script>
 
 <style>
+.page {
+  font-size: 30px;
+}
+
 .long {
   width: 30px;
   font-size: 100px;

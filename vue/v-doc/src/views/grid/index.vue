@@ -85,7 +85,7 @@ import VirtualGridList from './VirtualGridList.vue'
 const name = ref('bottom-center');
 const bool = ref(true);
 const arr = arrayLoopMap(5, (value) => ({ value, id: Math.random() }))
-const List = ref(new ListArray(...arr))
+const List = ref(arr)
 const gap = ref(10);
 const columns = ref(4);
 const styles = ref([]);

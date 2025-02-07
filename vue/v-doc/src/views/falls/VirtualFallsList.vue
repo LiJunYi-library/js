@@ -6,12 +6,11 @@
 import { render, defineComponent, toRaw, computed } from 'vue'
 
 const slots = defineSlots();
+const emit = defineEmits(['update:modelValue'])
 const props = defineProps({
   modelValue: { type: Array, default: () => [] },
   keyExtractor: { type: Function, default: (val) => val.item.id },
 })
-
-const emit = defineEmits(['update:modelValue'])
 
 const list = computed({
   set(val) {

@@ -1,14 +1,24 @@
 <template>
-  <r-scroll-virtual-grid-list :ref="onRef" v-model="props.modelValue" @renderList="onRenderList" />
+  <r-scroll-virtual-grid-list :ref="onRef" v-model="list" @renderList="onRenderList" />
 </template>
 
 <script setup lang="jsx">
-import { render, defineComponent } from 'vue'
+import { render, defineComponent, computed, toRaw } from 'vue'
 
 const slots = defineSlots();
+const emit = defineEmits(['update:modelValue'])
 const props = defineProps({
   modelValue: { type: Array, default: () => [] },
   keyExtractor: { type: Function, default: (val) => val.item.id },
+})
+
+const list = computed({
+  set(val) {
+    emit("update:modelValue", val);
+  },
+  get() {
+    return toRaw(props.modelValue)
+  }
 })
 
 const Item = defineComponent({
@@ -35,7 +45,7 @@ function onRenderList(event) {
 </script>
 
 <style>
-.r-scroll-virtual-grid-list-item-content{
+.r-scroll-virtual-grid-list-item-content {
   height: 100%;
   box-sizing: border-box;
 }

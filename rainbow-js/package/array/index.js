@@ -344,7 +344,7 @@ export function arrayBinaryFindLast(arr = [], formatter, compare) {
 }
 
 // 重新改变数组的方法 原来监听数组变化
-export function arrayRewriteFunction(arr = [], arg) {
+export function arrayRewriteFunction(arr = [], props) {
   const funName = [
     "copyWithin",
     "fill",
@@ -357,25 +357,24 @@ export function arrayRewriteFunction(arr = [], arg) {
     "reverse",
   ];
   const original = {};
+  const defineProperties = {};
 
   funName.forEach((name) => {
     original[name] = arr[name];
-  });
 
-  function push(...args) {
-    const res = original.push.call(arr, ...args);
-    arg?.("push", ...args);
-    return res;
-  }
-
-  Object.defineProperties(arr, {
-    push: {
-      value: push,
+    defineProperties[name] = {
+      value: function (...args) {
+        const res = original[name].call(arr, ...args);
+        if (props instanceof Function) props?.("name", ...args);
+        return res;
+      },
       writable: true,
-    },
+      enumerable: false,
+      configurable: false,
+    };
   });
 
-  console.log(arr);
+  Object.defineProperties(arr, defineProperties);
 
   return arr;
 }

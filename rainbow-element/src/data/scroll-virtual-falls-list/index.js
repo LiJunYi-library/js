@@ -221,8 +221,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
     if (v instanceof ListArray) {
       v.removeEventListener("change", this.$$.onValueChange);
       v.addEventListener("change", this.$$.onValueChange);
-    }
-    // arrayRewriteFunction(v, () => this.$$.layout());
+    } else arrayRewriteFunction(v, () => this.$$.layout());
     this.$$.value = v;
     this.$$.layout();
   }

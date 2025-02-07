@@ -1,14 +1,25 @@
 <template>
-  <r-scroll-virtual-falls-list :ref="onRef" v-model="props.modelValue" @renderList="onRenderList" />
+  <r-scroll-virtual-falls-list :ref="onRef" v-model="list" @renderList="onRenderList" />
 </template>
 
 <script setup lang="jsx">
-import { render, defineComponent } from 'vue'
+import { render, defineComponent, toRaw, computed } from 'vue'
 
 const slots = defineSlots();
 const props = defineProps({
   modelValue: { type: Array, default: () => [] },
   keyExtractor: { type: Function, default: (val) => val.item.id },
+})
+
+const emit = defineEmits(['update:modelValue'])
+
+const list = computed({
+  set(val) {
+    emit("update:modelValue", val);
+  },
+  get() {
+    return toRaw(props.modelValue)
+  }
 })
 
 const Item = defineComponent({
@@ -35,7 +46,5 @@ function onRenderList(event) {
 </script>
 
 <style>
-.r-scroll-virtual-falls-list-item-content{
-
-}
+.r-scroll-virtual-falls-list-item-content {}
 </style>

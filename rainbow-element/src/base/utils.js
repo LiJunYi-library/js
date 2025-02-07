@@ -78,6 +78,8 @@ export function renderChildren(props = {}) {
       onCreateNode: () => 0,
       onDeleteNode: () => 0,
       onRemoveNode: () => 0,
+      onBeforeInsertNode: () => 0,
+      onInsertBeforeNode: () => 0,
       ...p,
     };
     const map = new Map();
@@ -86,6 +88,7 @@ export function renderChildren(props = {}) {
     source.forEach((item, index) => {
       const key = config.keyExtractor(item, index);
       let node;
+      config.onBeforeInsertNode(item, index, key);
       if (cacheMap.has(key)) {
         node = cacheMap.get(key);
         config.onCacheNode(node, item, index, key);
@@ -105,7 +108,7 @@ export function renderChildren(props = {}) {
         else options.parentNode.insertBefore(node, pointer?.nextSibling);
         pointer = node;
       }
-
+      config.onInsertBeforeNode(node, item, index, key);
       map.set(key, node);
     });
     cacheMap.forEach((node, key) => {

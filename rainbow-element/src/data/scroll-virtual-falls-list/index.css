@@ -1,8 +1,14 @@
-r-scroll-virtual-grid-list {
+r-scroll-virtual-falls-list {
     display: block;
     position: relative;
     --r-columns: 2;
     --r-avg-height: 130px;
-    --r-column-gap: 10px;
-    --r-row-gap: 10px;
+    --r-column-gap: 8px;
+    --r-row-gap: 12px;
+    background: chartreuse;
+}
+
+.r-scroll-virtual-falls-list-item {
+    background: coral;
+    word-wrap: break-word;
 }

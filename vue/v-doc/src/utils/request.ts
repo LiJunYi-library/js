@@ -68,7 +68,7 @@ const opt: MYFetchConfig = {
     console.log("interceptResponseSuccess",res, data);
 
     if (data?.code !== 2000) {
-      RGlobalToast.show({ text: data.msg });
+      // RGlobalToast.show({ text: data.msg });
       return Promise.reject(data);
     }
 
@@ -77,13 +77,13 @@ const opt: MYFetchConfig = {
       text: data.msg,
       ...config.successToast,
     };
-    if (successToast.visible) RGlobalToast.show(successToast);
+    // if (successToast.visible) RGlobalToast.show(successToast);
     return Promise.resolve(data.data);
   },
   interceptResponseError(errorRes, config) {
     let message = errorRes.message || errorRes.error;
     if (errorRes?.code === 41) message = "正在加载中";
-    RGlobalToast.show({ text: message });
+    // RGlobalToast.show({ text: message });
   },
   loadingToast: {},
   toast: {},

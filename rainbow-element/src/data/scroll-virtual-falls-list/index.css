@@ -2,7 +2,7 @@ r-scroll-virtual-falls-list {
     display: block;
     position: relative;
     --r-columns: 2;
-    --r-avg-height: 130px;
+    --r-avg-height: 200px;
     --r-column-gap: 8px;
     --r-row-gap: 12px;
     background: chartreuse;
@@ -11,4 +11,5 @@ r-scroll-virtual-falls-list {
 .r-scroll-virtual-falls-list-item {
     background: coral;
     word-wrap: break-word;
+    min-height: 200px;
 }

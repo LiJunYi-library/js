@@ -1,5 +1,6 @@
 import {
   arrayRewriteFunction,
+  animationDebounced,
   arrayLoopMap,
   ListArray,
   arrayBinaryFindIndex,
@@ -38,6 +39,15 @@ export class RScrollVirtualFallsList extends RainbowElement {
   }
 
   $$ = {
+    resizeObserver: new ResizeObserver((entries) => {
+      entries.forEach((entrie) => {
+        const offset = getBoundingClientRect(entrie.target);
+        if (entrie.target?.__bindData__?.__cache__) {
+          entrie.target.__bindData__.__cache__.height = offset.height;
+        }
+      });
+      this.$$.layout();
+    }),
     renderChildren: renderChildren({ parentNode: this }),
     value: [],
     preLoadIndex: 0,
@@ -45,13 +55,15 @@ export class RScrollVirtualFallsList extends RainbowElement {
       start: undefined,
       end: undefined,
     },
-    recycle: {
-      divs: [],
-    },
+    // recycle: {
+    //   divs: [],
+    // },
     createElement: () => {
-      let node = this.$$.recycle.divs.shift();
-      if (node) return node;
-      return document.createElement("div");
+      // let node = this.$$.recycle.divs.shift();
+      // if (node) return node;
+      let node = document.createElement("div");
+      this.$$.resizeObserver.observe(node);
+      return node;
     },
     scrollParent: undefined,
     onScroll: (event) => {
@@ -96,6 +108,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
       if (isForce === false && isRender === false) return;
       // console.log(start);
       let startItem = this.value[start];
+      if (!startItem) return;
       let list = this.value.slice(start, end);
       let renderList = list.map((item, sub) => ({ index: start + sub, item, data: item }));
       if (startItem.__cache__) this.$$.falls.list = startItem.__cache__.list;
@@ -129,7 +142,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
           ele.style.width = minColumn.width;
           ele.style.left = minColumn.left;
           ele.style.top = minColumn.height + "px";
-          const offset = ele.getBoundingClientRect();
+          const offset = getBoundingClientRect(ele);
           __cache__.height = offset.height;
           __cache__.width = ele.offsetWidth;
           __cache__.top = minColumn.height;
@@ -139,11 +152,13 @@ export class RScrollVirtualFallsList extends RainbowElement {
           __cache__.bottom = minColumn.height;
           __cache__.vBottom = minColumn.height + recycleBottom;
           __cache__.calculateList = this.$$.falls.list.map((el) => ({ ...el }));
+          ele.__bindData__ = val.item;
           // console.log(__cache__);
         },
         onRemoveNode: (ele, key) => {
           ele.setAttribute("key", "");
-          this.$$.recycle.divs.push(ele);
+          // this.$$.recycle.divs.push(ele);
+          this.$$.resizeObserver.unobserve(ele);
         },
       });
       this.$$.preLoads();
@@ -287,4 +302,11 @@ function createBackstage(callback, stopFmt) {
   }
 
   return { start, stop, reStart };
+}
+
+function getBoundingClientRect(ele = document.createElement("div")) {
+  let offset = ele.getBoundingClientRect();
+  return {
+    height: Number(offset.height.toFixed(2)),
+  };
 }

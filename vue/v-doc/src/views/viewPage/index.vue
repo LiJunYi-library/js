@@ -45,13 +45,13 @@ const radio = useRadio2({ index: 0, list: arrayLoopMap(4, () => ({})) })
     /* background: rgb(0, 85, 255); */
 }
 
-.my-falls {
+/* .my-falls {
     --r-columns: 3;
     --r-min-auto-width: 200px;
     --r-gap: 10px;
     --r-row-gap: 25px;
     --r-column-gap: 15px;
-}
+} */
 
 .r-falls-item {
     background: yellow;

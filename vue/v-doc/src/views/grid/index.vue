@@ -175,6 +175,10 @@ setTimeout(() => {
   /* --r-columns: 6; */
 }
 
+.r-scroll-virtual-grid-list-item {
+  background: rgb(179, 255, 0);
+}
+
 /* .dsk {
     width: calc(100vw - 50px);
 }

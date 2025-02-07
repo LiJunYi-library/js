@@ -88,7 +88,4 @@ async function refresh(event) {
   word-wrap: break-word;
 }
 
-.r-scroll-virtual-grid-list-item {
-  background: gold;
-}
 </style>

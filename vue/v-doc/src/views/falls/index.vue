@@ -1,121 +1,101 @@
 <template>
-    <div class="page" :class="name">
+  <r-scroll class="VirtualFallsList-page" :class="name">
+    <VirtualFallsList v-model="List">
+      <template #default="{ item, index, key }">
+        <img :src="item.image" width="90%">
+        <div @click="changeIndex(index)">{{ item.id }}</div>
+        <div>{{ key }}</div>
+        <div>{{ item.title }}</div>
+        <div>{{ item.name }}</div>
+      </template>
+    </VirtualFallsList>
 
-
-        <r-falls class="my-falls">
-            <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
-            <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
-            <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
-            <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
-            <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
-            <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
-            <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
-            <div>五五五五五五五五五五五五五五五</div>
-            <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
-                五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
-            </div>
-        </r-falls>
-
-
-
-    </div>
+    <!-- <r-falls class="my-falls">
+      <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
+      <div>
+        五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
+      </div>
+      <div>
+        五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
+      </div>
+      <div>
+        五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
+      </div>
+      <div>
+        五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
+      </div>
+      <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
+      <div>
+        五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
+      </div>
+      <div>五五五五五五五五五五五五五五五</div>
+      <div>
+        五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
+        五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
+      </div>
+    </r-falls> -->
+  </r-scroll>
 </template>
 <script setup>
-import { arrayLoopMap } from '@rainbow_ljy/rainbow-js';
-import { useRadio2 } from '@rainbow_ljy/v-hooks';
+import { arrayLoopMap, ListArray } from '@rainbow_ljy/rainbow-js'
+import { useRadio2 } from '@rainbow_ljy/v-hooks'
 import { ref } from 'vue'
+import VirtualFallsList from './VirtualFallsList.vue'
+import { useFetch } from '@/utils/request'
 
-const name = ref('bottom-center');
-const bool = ref(true);
-const List = ref(arrayLoopMap(100, (value) => ({ value })))
-const gap = ref(10);
-const columns = ref(4);
+const spuList = useFetch({
+  url: 'https://spu.manmanbuy.com/spu/list',
+  method: 'post',
+  body: { page: 1, rows: 1000 }
+})
 
-const styles = ref([]);
+const name = ref('bottom-center')
+const bool = ref(true)
+const arrays = new ListArray()
+// arrays.push(
+//   ...arrayLoopMap(10, (value) => ({
+//     value,
+//     id: Math.random(),
+//     title: arrayLoopMap(Math.floor(Math.random() * 100), (i) => '我').join(''),
+//   })),
+// )
+const List = ref([])
+const gap = ref(10)
+const columns = ref(4)
+
+const styles = ref([])
 
 styles.value[0] = { left: '20px' }
 
 styles.value[0] = { left: '40' }
 function refresh(params) {
-    return new Promise(re => setTimeout(re, 2000))
+  return new Promise((re) => setTimeout(re, 2000))
 }
 
-const radio = useRadio2({ list: arrayLoopMap(100, (value) => ({ value: 'v' + value, label: value + '*' })) })
+function changeIndex(index) {
+  // console.log(index);
+  List.value.splice(index, 1, { value: 9999, id: Math.random() })
+}
 
-// const div = document.createElement('div')
-// document.body.append(div)
-// div.style.width= 'calc(100vh - 20px)';
-// const style = window.getComputedStyle(div);
-// console.log(style.getPropertyValue('width'));
-
+const radio = useRadio2({
+  list: arrayLoopMap(100, (value) => ({ value: 'v' + value, label: value + '*' })),
+})
 
 function scroll(params) {
-    // console.log('scroll', params);
+  // console.log('scroll', params);
 }
+setTimeout(async () => {
+  await spuList.nextSend();
+  const d = (spuList.data?.records ?? []);
+  List.value.push(...d)
+}, 0)
 
-console.log(radio);
-
-
-setTimeout(() => {
-
-    // bool.value = false
-    name.value = 'right-bottom'
-    gap.value = false
-    columns.value = 5
-}, 4000);
-
+// setTimeout(() => {
+//   // bool.value = false
+//   name.value = 'right-bottom'
+//   gap.value = false
+//   columns.value = 5
+// }, 4000)
 </script>
 
-<style>
-.long {
-    width: 30px;
-    font-size: 100px;
-    background: linear-gradient(45deg, red, blue);
-    text-wrap: wrap;
-    word-wrap: break-word;
-}
-
-.r-grid-item {
-    background: gold;
-}
-
-.r-scroll-fixed {
-    height: 50px;
-    background: cyan;
-}
-
-.r-scroll-fixed-fixed {
-    /* background: rgb(0, 85, 255); */
-}
-
-.my-falls {
-    --r-columns: 3;
-    --r-min-auto-width: 200px;
-    --r-gap: 10px;
-    --r-row-gap: 25px;
-    --r-column-gap: 15px;
-}
-
-.r-falls-item {
-    background: yellow;
-}
-
-.bottom-center .my-grid {
-    /* --r-columns: 9; */
-}
-
-.right-bottom .my-grid {
-    /* --r-columns: 6; */
-}
-
-/* .dsk {
-    width: calc(100vw - 50px);
-}
-
-.page .dsk {
-    --r-absolute: top;
-    flex-wrap: wrap;
-    column-width: 30px;
-
-} */
-</style>
+<style></style>

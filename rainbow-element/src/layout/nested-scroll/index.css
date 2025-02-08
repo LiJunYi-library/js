@@ -5,6 +5,6 @@ r-nested-scroll {
     position: relative;
     display: block;
     /* vertical horizontal*/
-    --r-scrolling-direction: vertical;
+    --r-scroll-direction: vertical;
 
 }

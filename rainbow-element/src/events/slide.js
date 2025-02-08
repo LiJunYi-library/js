@@ -1,6 +1,8 @@
 const COMPUTE_INTERVAL = 30;
 let currentView = document.createElement("div");
 let srcViews = [];
+let nestedParent;
+let nestedChild;
 let timer;
 export const customEventNameMap = new Map();
 const compute = {
@@ -221,22 +223,37 @@ export class SlideEvent extends CustomEvent {
  * @param {*} view
  */
 export function extendedSlideEvents(view = document.createElement("div"), options = {}) {
-  let _r_slide_, config;
-
-  function onCapturePointerdown(event) {
-    srcViews.push(event.currentTarget);
-    _r_slide_.parentViews = [...srcViews];
-    compute.isGetPdownLock = false;
+  function $set(name, value) {
+    if (!view.$$) return;
+    view.$$[name] = value;
   }
 
-  function onPointerdown() {
+  function onCapturePointerdown(event) {
+    $set("parentViews", [...srcViews]);
+    $set("nestedParent", nestedParent);
+    nestedParent = view;
+    srcViews.push(event.currentTarget);
+    $set("srcViews", [...srcViews]);
+    compute.isGetPdownLock = false;
+    nestedChild = undefined;
+  }
+
+  function onCapturePointerdownFinsh(event) {
+    compute.srcViews = [...srcViews];
+    currentView = srcViews.at(-1);
+    srcViews = [];
+    nestedParent = undefined;
+  }
+
+  function onPointerdown(event) {
     if (!compute.isGetPdownLock) {
-      compute.srcViews = [...srcViews];
-      _r_slide_.srcViews = [...srcViews];
-      currentView = srcViews.at(-1);
-      srcViews = [];
+      onCapturePointerdownFinsh(event);
       compute.isGetPdownLock = true;
     }
+    $set("slideEventViews", [...compute.srcViews]);
+    $set("nestedChild", nestedChild);
+    nestedChild = view;
+    console.log(event.currentTarget.$$);
   }
 
   function destroy() {
@@ -250,12 +267,11 @@ export function extendedSlideEvents(view = document.createElement("div"), option
   function bindEvents() {
     view.addEventListener("pointerdown", onCapturePointerdown, { passive: false, capture: true });
     view.addEventListener("pointerdown", onPointerdown);
-    if (!view.__r_slide__) view.__r_slide__ = {};
-    _r_slide_ = view.__r_slide__;
-    config = { customEventName: "", direction: "", ...options };
-    if (config.customEventName)
+    let config = { customEventName: "", direction: "", ...options };
+    if (config.customEventName) {
       customEventNameMap.set(config.customEventName, config.customEventName);
-    _r_slide_.customEventName = config.customEventName;
+      $set("slideCustomEventName", config.customEventName);
+    }
   }
 
   return { bindEvents, destroy };

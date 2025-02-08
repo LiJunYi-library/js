@@ -2,11 +2,12 @@ import "./index.css";
 import { RainbowElement, createCustomEvent } from "../../base/index.js";
 import { extendedSlideEvents } from "../../events/slide";
 import { inheritSlideEvent } from "../../events/scroll";
+import { arrayRemove } from "@rainbow_ljy/rainbow-js";
 const LOG = (...arg) => console.log(...arg);
 
 export class RNestedScroll extends RainbowElement {
   static observedAttributes = this.$registerProps({
-    "--r-scrolling-direction": String,
+    "r-scroll-direction": String,
   });
 
   $slotContainer = {
@@ -14,9 +15,33 @@ export class RNestedScroll extends RainbowElement {
   };
 
   $$ = {
+    nestedChild: undefined,
+    nestedChildren: [],
+    nestedParent: undefined,
+    setNestedChild: () => {
+      if (this.$$.nestedChildren.length === 1) {
+        this.$$.nestedChild = this.$$.nestedChildren[0];
+        return;
+      }
+      if (!this.$$.nestedChildren.length) return;
+      const mOffset = this.getBoundingClientRect();
+      // console.log(mOffset);
+      //   this.$$.nestedChildren.forEach(element => {
+      //     const offset = element.getBoundingClientRect()
+      //    console.log(offset);
+      //  });
+      this.$$.nestedChild = this.$$.nestedChildren.find((ele) => {
+        const offset = ele.getBoundingClientRect();
+        return offset.left - mOffset.left >= -1 && offset.right <= mOffset.right + 1;
+      });
+
+      // console.log( "this.$$.nestedChild");
+      // console.log( this.$$.nestedChild);
+    },
+
     captureOptions: { passive: false, capture: true },
     slideEvent: extendedSlideEvents(this, {
-      direction: ["top", "bottom"],
+      // direction: ["top", "bottom"],
       // customEventName: "scroll",
     }),
     scrollEvent: setup({
@@ -34,6 +59,9 @@ export class RNestedScroll extends RainbowElement {
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     this.$.appendChild(this.$slotContainer.default);
+    this.$$.nestedParent = this.$.findParentByLocalName(["r-nested-scroll"]);
+    if (this.$$.nestedParent) this.$$.nestedParent.$$.nestedChildren.push(this);
+    this.$$.setNestedChild();
     this.$slotContainer.default.classList.add("r-nested-scroll-content");
     this.classList.add("r-nested-scroll");
     this.$$.slideEvent.bindEvents();
@@ -42,6 +70,7 @@ export class RNestedScroll extends RainbowElement {
 
   disconnectedCallback(...arg) {
     super.disconnectedCallback(...arg);
+    if (this.$$.nestedParent) arrayRemove(this.$$.nestedParent.$$.nestedChildren, this);
     this.$$.slideEvent.destroy();
     this.$$.scrollEvent.destroy();
   }
@@ -56,14 +85,13 @@ function setup(props) {
   let isScrollToTopEnd = () => scrollEl.scrollTop <= 0;
   let maxScrollTop = () => container.offsetHeight - scrollEl.offsetHeight;
   let isScrollRightEnd = () => scrollEl.offsetWidth + scrollEl.scrollLeft >= container.offsetWidth;
-  let isScrollLeftEnd = () => scrollEl.value.scrollLeft <= 0;
-  let maxScrollLeft = () => container.value.offsetWidth - scrollEl.value.offsetWidth;
+  let isScrollLeftEnd = () => scrollEl.scrollLeft <= 0;
+  let maxScrollLeft = () => container.offsetWidth - scrollEl.offsetWidth;
 
-  let child = () => view.$.findChildByLocalName("r-nested-scroll");
   let parent = () => view.$.findParentByLocalName(["r-nested-scroll"]);
 
   let rollingConflict = (event) => {
-    console.log(event.srcViews[0].$.DATA.rScrollingDirection);
+    // console.log(event.srcViews);
   };
 
   function slideCaptureTop(event) {
@@ -124,9 +152,7 @@ function setup(props) {
           if (isScrollToBottomEnd()) {
             ani?.stop?.();
             LOG("滚动停止 到底停止");
-            console.log(child());
-            child()?.[0]?.$$?.scrollEvent?.dispatchScrollTopFlying?.(v, event);
-            // expose.child?.dispatchScrollTopFlying?.(v)
+            view.$$.nestedChild?.$$?.scrollEvent?.dispatchScrollTopFlying?.(v, event);
           }
         }
       },
@@ -182,11 +208,55 @@ function setup(props) {
     dispatchScrollBottomFlying(event.velocityY, event);
   }
 
+  function slideLeft(event) {
+    if (event.orientation !== "horizontal") return;
+    // 如果没有滚动到了最右边 就不消费事件 return 出去
+    // 如果滚动到了最右边 就去消费事件 并阻止事件向上冒泡
+    if (isScrollRightEnd()) return;
+    event.stopPropagation();
+
+    let scrollLeft = scrollEl.scrollLeft + event.moveX;
+    if (scrollLeft > maxScrollLeft()) scrollLeft = maxScrollLeft() + 2;
+    scrollEl.scrollLeft = scrollLeft;
+    view.$$.setNestedChild();
+  }
+
+  function slideRight(event) {
+    if (event.orientation !== "horizontal") return;
+    // 如果没有滚动到了最左边 就不消费事件 return 出去
+    // 如果滚动到了最左边 就去消费事件 并阻止事件向上冒泡
+    if (isScrollLeftEnd()) return;
+    event.stopPropagation();
+
+    let scrollLeft = scrollEl.scrollLeft + event.moveX;
+    if (scrollLeft < 0) scrollLeft = 0;
+    scrollEl.scrollLeft = scrollLeft;
+    view.$$.setNestedChild();
+  }
+
+  function slideLeftEnd(event) {}
+
+  function slideRightEnd(event) {}
+
   function bindEvents() {
-    scrollEl.addEventListener("slideTop", slideCaptureTop, { passive: true, capture: true });
-    scrollEl.addEventListener("slideBottom", slideBottom, { passive: true, capture: false });
-    scrollEl.addEventListener("slideTopEnd", slideCaptureTopEnd, { passive: true, capture: true });
-    scrollEl.addEventListener("slideBottomEnd", slideBottomEnd, { passive: true, capture: false });
+    const { rScrollDirection } = scrollEl.$.DATA;
+    const bubble = { passive: true, capture: false };
+    const capture = { passive: true, capture: true };
+    console.log("rScrollDirection", rScrollDirection);
+
+    if (rScrollDirection === "vertical") {
+      scrollEl.addEventListener("slideTop", slideCaptureTop, capture);
+      scrollEl.addEventListener("slideBottom", slideBottom, bubble);
+      scrollEl.addEventListener("slideTopEnd", slideCaptureTopEnd, capture);
+      scrollEl.addEventListener("slideBottomEnd", slideBottomEnd, bubble);
+    }
+
+    if (rScrollDirection === "horizontal") {
+      scrollEl.addEventListener("slideLeft", slideLeft, bubble);
+      scrollEl.addEventListener("slideRight", slideRight, bubble);
+      scrollEl.addEventListener("slideLeftEnd", slideLeftEnd, bubble);
+      scrollEl.addEventListener("slideRightEnd", slideRightEnd, bubble);
+    }
   }
 
   function destroy() {}

@@ -1,8 +1,6 @@
 const COMPUTE_INTERVAL = 30;
 let currentView = document.createElement("div");
 let srcViews = [];
-let nestedParent;
-let nestedChild;
 let timer;
 export const customEventNameMap = new Map();
 const compute = {
@@ -230,19 +228,15 @@ export function extendedSlideEvents(view = document.createElement("div"), option
 
   function onCapturePointerdown(event) {
     $set("parentViews", [...srcViews]);
-    $set("nestedParent", nestedParent);
-    nestedParent = view;
     srcViews.push(event.currentTarget);
     $set("srcViews", [...srcViews]);
     compute.isGetPdownLock = false;
-    nestedChild = undefined;
   }
 
   function onCapturePointerdownFinsh(event) {
     compute.srcViews = [...srcViews];
     currentView = srcViews.at(-1);
     srcViews = [];
-    nestedParent = undefined;
   }
 
   function onPointerdown(event) {
@@ -251,9 +245,6 @@ export function extendedSlideEvents(view = document.createElement("div"), option
       compute.isGetPdownLock = true;
     }
     $set("slideEventViews", [...compute.srcViews]);
-    $set("nestedChild", nestedChild);
-    nestedChild = view;
-    console.log(event.currentTarget.$$);
   }
 
   function destroy() {

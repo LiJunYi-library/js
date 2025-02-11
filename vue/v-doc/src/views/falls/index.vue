@@ -3,8 +3,10 @@
     <VirtualFallsList v-model="List">
       <template #default="{ item, index, key }">
         <img :src="item.image" width="90%">
-        <div @click="changeIndex(index)">{{ item.id }}</div>
+        <button @click="changeIndex(index)">修改</button>
+        <button @click="List.splice(index, 1)">删除</button>
         <div>{{ key }}</div>
+        <div>{{ item.id }}</div>
         <div>{{ item.title }}</div>
         <div>{{ item.name }}</div>
       </template>

@@ -6,5 +6,6 @@ r-nested-scroll {
     display: block;
     /* vertical horizontal*/
     --r-scroll-direction: vertical;
-
+    /*  adsorb  none*/
+    --r-scroll-snap: adsorb;
 }

@@ -2,7 +2,7 @@ import "./index.css";
 import { RainbowElement, createCustomEvent } from "../../base/index.js";
 import { extendedSlideEvents } from "../../events/slide";
 import { inheritSlideEvent } from "../../events/scroll";
-import { arrayRemove } from "@rainbow_ljy/rainbow-js";
+import { arrayRemove, arrayWipeRepetition } from "@rainbow_ljy/rainbow-js";
 const LOG = (...arg) => console.log(...arg);
 
 export class RNestedScroll extends RainbowElement {
@@ -79,9 +79,10 @@ export class RNestedScroll extends RainbowElement {
 function setup(props) {
   const { scrollEl, container, view = scrollEl } = props;
   let ani;
+  let adsorbAni;
   const coefficient = 20;
   let isScrollToBottomEnd = () =>
-    scrollEl.offsetHeight + scrollEl.scrollTop >= container.offsetHeight;
+    scrollEl.offsetHeight + Math.ceil(scrollEl.scrollTop) >= container.offsetHeight;
   let isScrollToTopEnd = () => scrollEl.scrollTop <= 0;
   let maxScrollTop = () => container.offsetHeight - scrollEl.offsetHeight;
   let isScrollRightEnd = () => scrollEl.offsetWidth + scrollEl.scrollLeft >= container.offsetWidth;
@@ -90,27 +91,49 @@ function setup(props) {
 
   let parent = () => view.$.findParentByLocalName(["r-nested-scroll"]);
 
-  let rollingConflict = (event) => {
-    // console.log(event.srcViews);
+  let rollingConflict = (event, orientation = "vertical") => {
+    let conflict = event.srcViews.every((el) => el.$.DATA.rScrollDirection === orientation);
+    if (!conflict && event.orientation !== orientation) return true;
+    return false;
   };
 
   function slideCaptureTop(event) {
-    rollingConflict(event);
-    if (event.orientation !== "vertical") return;
+    if (rollingConflict(event, "vertical")) return;
     // 如果滚动到了底部 就不消费事件 return 出去
     // 如果没滚动到底部消费事件 并阻止事件向下传递
+    // console.log(view.className, isScrollToBottomEnd());
     if (isScrollToBottomEnd()) return;
     event.stopPropagation();
     doScrollTop(event.moveY, event);
   }
 
   function slideBottom(event) {
-    if (event.orientation !== "vertical") return;
+    if (rollingConflict(event, "vertical")) return;
     // 如果滚动到了顶部 就不消费事件 return 出去
     // 如果没滚动顶部 就去消费事件 并阻止事件向上冒泡
     if (isScrollToTopEnd()) return;
     event.stopPropagation();
     doScrollBottom(event.moveY);
+  }
+
+  function slideCaptureTopEnd(event) {
+    if (rollingConflict(event, "vertical")) return;
+    // 如果滚动到了底部 就不消费事件 return 出去
+    // 如果没滚动到底部消费事件 并阻止事件向下传递
+    if (isScrollToBottomEnd()) return;
+    event.stopPropagation();
+    // LOG('清除动画 滚动结束并产生速度 slideCaptureTopEnd', event.velocityY);
+    dispatchScrollTopFlying(event.velocityY, event);
+  }
+
+  function slideBottomEnd(event) {
+    if (rollingConflict(event, "vertical")) return;
+    // 如果滚动到了顶部 就不消费事件 return 出去
+    // 如果没滚动顶部 就去消费事件 并阻止事件向上冒泡
+    if (isScrollToTopEnd()) return;
+    event.stopPropagation();
+    // LOG('清除动画 滚动结束并产生速度 slideBottomEnd', event.velocityY);
+    dispatchScrollBottomFlying(event.velocityY, event);
   }
 
   function doScrollBottom(moveY, event) {
@@ -164,16 +187,6 @@ function setup(props) {
     ani.start();
   }
 
-  function slideCaptureTopEnd(event) {
-    if (event.orientation !== "vertical") return;
-    // 如果滚动到了底部 就不消费事件 return 出去
-    // 如果没滚动到底部消费事件 并阻止事件向下传递
-    if (isScrollToBottomEnd()) return;
-    event.stopPropagation();
-    // LOG('清除动画 滚动结束并产生速度 slideCaptureTopEnd', event.velocityY);
-    dispatchScrollTopFlying(event.velocityY, event);
-  }
-
   function dispatchScrollBottomFlying(velocity, event) {
     ani?.stop?.();
     ani = cAni({
@@ -196,16 +209,6 @@ function setup(props) {
       },
     });
     ani.start();
-  }
-
-  function slideBottomEnd(event) {
-    if (event.orientation !== "vertical") return;
-    // 如果滚动到了顶部 就不消费事件 return 出去
-    // 如果没滚动顶部 就去消费事件 并阻止事件向上冒泡
-    if (isScrollToTopEnd()) return;
-    event.stopPropagation();
-    // LOG('清除动画 滚动结束并产生速度 slideBottomEnd', event.velocityY);
-    dispatchScrollBottomFlying(event.velocityY, event);
   }
 
   function slideLeft(event) {
@@ -234,9 +237,44 @@ function setup(props) {
     view.$$.setNestedChild();
   }
 
-  function slideLeftEnd(event) {}
+  function slideLeftEnd(event) {
+    slideLeftRightEnd(event);
+  }
 
-  function slideRightEnd(event) {}
+  function slideRightEnd(event) {
+    slideLeftRightEnd(event);
+  }
+
+  function slideLeftRightEnd(event) {
+    if (event.orientation !== "horizontal") return;
+    if (isScrollRightEnd()) return;
+    if (isScrollLeftEnd()) return;
+    event.stopPropagation();
+
+    const from = scrollEl.scrollLeft;
+    const index = Math.floor(from / scrollEl.offsetWidth);
+    const roundIndex = Math.round(from / scrollEl.offsetWidth);
+    let adsIndex = roundIndex;
+    if (event.velocityX > 0.4) adsIndex = index + 1;
+    if (event.velocityX < -0.4) adsIndex = index;
+    console.log(index, roundIndex);
+    const to = scrollEl.offsetWidth * adsIndex;
+    adsorbAni = Animation({
+      from: from,
+      to: to,
+      avg: 30,
+      onanimation(aLeft) {
+        scrollEl.scrollLeft = aLeft;
+        view.$$.setNestedChild();
+      },
+      onanimationend() {
+        //   expose.index = index;
+        //   if (parent) parent.child = expose?.children?.[expose.index];
+        //   props.listHook?.updateIndex?.(expose.index);
+      },
+    });
+    adsorbAni.start();
+  }
 
   function bindEvents() {
     const { rScrollDirection } = scrollEl.$.DATA;
@@ -326,6 +364,61 @@ function cAni(config = {}) {
   function start() {
     stopAction = false;
     anima();
+  }
+
+  return { start, stop };
+}
+
+function Animation(config = {}) {
+  let timer;
+  let stopAction = false;
+  const opt = {
+    from: 0,
+    to: 300,
+    avg: 10,
+    duration: 500,
+    onanimationend: () => undefined,
+    onanimation: () => undefined,
+    ...config,
+  };
+  let value = opt.from;
+
+  function flash() {
+    if (opt.from < opt.to) {
+      value = value + opt.avg;
+      if (value >= opt.to) value = opt.to;
+      opt.onanimation(value);
+      if (value >= opt.to) {
+        opt.onanimationend(value);
+        stop();
+        return;
+      }
+    }
+
+    if (opt.from > opt.to) {
+      value = value - opt.avg;
+      if (value <= opt.to) value = opt.to;
+      opt.onanimation(value);
+      if (value <= opt.to) {
+        opt.onanimationend(value);
+        stop();
+        return;
+      }
+    }
+  }
+
+  function start() {
+    if (stopAction) return cancelAnimationFrame(timer);
+    timer = requestAnimationFrame(() => {
+      if (stopAction) return cancelAnimationFrame(timer);
+      flash();
+      start();
+    });
+  }
+
+  function stop() {
+    stopAction = true;
+    cancelAnimationFrame(timer);
   }
 
   return { start, stop };

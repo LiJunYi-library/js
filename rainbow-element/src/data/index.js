@@ -4,3 +4,4 @@ export * from "./circle";
 export * from "./test-d";
 export * from "./scroll-virtual-grid-list";
 export * from "./scroll-virtual-falls-list";
+export * from "./fold-text";

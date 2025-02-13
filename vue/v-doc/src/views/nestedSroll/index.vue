@@ -38,46 +38,68 @@
       <div class="long">root2-12346789</div>
     </r-scroll>
   </r-scroll> -->
-  <div>
-    <template v-for="item in List" :key="item.pid">
-      <div>
-        <div>____________________</div>
-        <div>{{ item.name }} {{ item.pid }}</div>
-        <div>____________________</div>
+  <r-grid style="--r-columns:2">
+    <div>
+      <template v-for="item in List" :key="item.pid">
         <div>
-          <template v-for="ele in item.values" :key="ele.vid">
-            <div v-if="disabled(item, ele)">
-              <a> {{ ele.name }} {{ ele.vid }}-- {{ ele.reg }}</a>
-            </div>
-            <div v-else @click="active(item, ele)" :class="[item.active === ele.vid && 'act']">
-              {{ ele.name }} {{ ele.vid }}-- {{ ele.reg }}
-            </div>
-          </template>
+          <div>____________________</div>
+          <div>{{ item.name }} {{ item.pid }}</div>
+          <div>____________________</div>
+          <div>
+            <template v-for="ele in item.values" :key="ele.vid">
+              <div v-if="disabled(item, ele)">
+                <a> {{ ele.name }} {{ ele.vid }}-- {{ ele.reg }}</a>
+              </div>
+              <div style="margin:10px" v-else @click="active(item, ele)" :class="[item.active === ele.vid && 'act']">
+                {{ ele.name }} {{ ele.vid }}-- {{ ele.reg }}
+              </div>
+            </template>
+          </div>
         </div>
-      </div>
-    </template>
-  </div>
+      </template>
+    </div>
+    <div>
+      <r-grid style="--r-columns:3">
+        <template v-for="(ele) in data.result.skuMap" :key="ele.propPath">
+          <div :class="[propPathdd(ele.propPath) && 'act']">{{ ele.propPath }}</div>
+        </template>
+      </r-grid>
+
+    </div>
+  </r-grid>
 </template>
 <script setup>
 import { arrayLoopMap, arrayWipeRepetition } from '@rainbow_ljy/rainbow-js'
 import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
 import { ref } from 'vue'
 import data from './data.json'
+import { columns } from 'element-plus/es/components/table-v2/src/common'
 
-function disabled(item, ele) {
-  ele.reg =  data.result.skuProperties.map(val=>{
-    if( val.pid ===item.pid )   return `${val.pid}:${ele.vid}`
-    if( val.active ) return `${val.pid}:${val.active}`
+function propPathdd(propPath) {
+  let reg = data.result.skuProperties.map(val => {
+    if (val.active) return `${val.pid}:${val.active}`
     return '.*?'
   }).filter(Boolean).join(';')
-  let reg  = new RegExp( ele.reg );
-  return !data.result.skuMap.some(el=>reg.test(el.propPath));
+  return new RegExp(reg).test(propPath)
 }
+
+function disabled(item, ele) {
+  ele.reg = data.result.skuProperties.map(val => {
+    if (val.pid === item.pid) return `${val.pid}:${ele.vid}`
+    const active = currData.value.find(el => el.vid.split(":")?.[0] === val.pid)
+    if (active) return active.vid
+    return '.*?'
+  }).filter(Boolean).join(';')
+  return !data.result.skuMap.some(el => new RegExp(ele.reg).test(el.propPath));
+}
+
 
 function active(item, ele) {
+  if (item.active === ele.vid) return item.active = ''
   item.active = ele.vid
+  currData.value.push({ vid: `${item.pid}:${ele.vid}` })
 }
-
+const currData = ref([])
 const List = ref(data.result.skuProperties)
 const name = ref('11111111111111111111111111')
 const listscroll = ref('listscroll')

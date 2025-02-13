@@ -1,0 +1,10 @@
+r-fold-text {
+    word-wrap: break-word;
+    display: inline-block;
+    overflow: hidden;
+    transition: 0.2s;
+}
+
+.r-fold-text-default {
+    line-height: 1px;
+}

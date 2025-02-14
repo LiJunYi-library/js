@@ -10,10 +10,10 @@
       <button @click="add">add</button>
       <button @click="min">--</button>
     </div>
-    <r-rolling-text v-model="val" ></r-rolling-text>
-
+    <!-- <r-rolling-text v-model="val" ></r-rolling-text> -->
+    <!-- <div>{{ JSON.stringify(riles) }}</div> -->
     <!-- <r-rolling-text-num style="margin-left: 100px;" v-model="val" @input="input" ref="text"/> -->
-
+    <button v-riles="'sdf'">权限</button>
     <div></div>
     <!-- <r-rolling-text :r-value="num"></r-rolling-text> -->
     <!-- <div>val:: {{  val  }} </div>:style=" `--r-value: ${num} `"
@@ -25,9 +25,9 @@ import { arrayLoopMap } from "@rainbow_ljy/rainbow-js";
 import { useRadio2 } from "@rainbow_ljy/v-hooks";
 import { ref, onMounted } from "vue";
 import index2 from "./index2.vue";
-
+import { useLocalStorageRef } from '@rainbow_ljy/v-hooks'
 const val = ref(2);
-
+// const riles = useLocalStorageRef('riles', [])
 const num = ref(987);
 
 const text = ref("text");

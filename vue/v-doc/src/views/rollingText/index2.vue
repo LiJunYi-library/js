@@ -5,28 +5,38 @@
     </div>
     <span solt="fold">~</span>
     <span solt="unfold">^</span>
- <!-- <span solt="end">...</span> -->
-    <r-fold-text  v-model="valuev" >
-    </r-fold-text>
+    <!-- <span solt="end">...</span> -->
+    <!-- <r-fold-text  v-model="valuev" >
+    </r-fold-text> -->
 
-    <div style="height: 200px;background: chartreuse;">
+    <button v-riles="'sdf'" v-if="bool">权限</button>
+    <button @click="addRules">权限</button>
+    <button @click="bool=!bool">bool</button>
+    <div>{{ JSON.stringify(riles) }}</div>
+    <div style="height: 200px; background: chartreuse">
       <span solt="end" class="iconfont">&#xe745;---&#xe745;</span>
     </div>
   </div>
 </template>
 <script setup>
-
 import { ref } from 'vue'
 
-const ov ="哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇"
-const hv ="哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇"
+import { useLocalStorageRef } from '@rainbow_ljy/v-hooks'
+
+const ov =
+  '哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇'
+const hv =
+  '哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇哇'
 
 const valuev = ref(hv)
 
-// setTimeout(() => {
-//   valuev.value = ov
-// }, 1000);
+const bool = ref(true)
 
+const riles = useLocalStorageRef('riles', [])
 
-
+function addRules(params) {
+  // riles.value =
+  console.log(riles.value)
+  riles.value.push({user:'ljy'})
+}
 </script>

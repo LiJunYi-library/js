@@ -3,16 +3,16 @@
   "name": "@rainbow_ljy/rainbow-element",
   "version": "1.0.2",
   "description": "",
-  "main": "index.js",
-  "module": "index.esm.js",
+  "main": "build/index.js",
+  "module": "build/index.esm.js",
   "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "files": [
-    "index.js",
-    "index.esm.js",
-    "index.css"
+    "build/index.js",
+    "build/index.esm.js",
+    "build/index.css"
   ],
   "scripts": {
     "dev": "rollup -c -w",

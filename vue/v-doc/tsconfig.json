@@ -48,7 +48,7 @@
     "tests/**/*.ts",
     "tests/**/*.tsx",
     "src/main.js",
-    "src/computed/index.js"  ],
+    "src/computed/index.js", "src/global/index.js"  ],
   "exclude": [
     "node_modules"
   ]

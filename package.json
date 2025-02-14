@@ -125,7 +125,12 @@
     "react-native": "^0.73.5",
     "react-native-webview": "^13.8.4",
     "react-scripts": "^5.0.1",
+<<<<<<< Updated upstream
     "rollup": "^4.18.0",
+=======
+    "rollup-plugin-livereload": "^2.0.5",
+    "rollup-plugin-serve": "^3.0.0",
+>>>>>>> Stashed changes
     "vant": "^4.8.1",
     "vue": "^3.3.13",
     "vue-demi": "^0.14.6",

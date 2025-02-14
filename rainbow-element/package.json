@@ -3,8 +3,8 @@
   "name": "@rainbow_ljy/rainbow-element",
   "version": "1.0.2",
   "description": "",
-  "main": "index.js", 
-  "module": "index.esm.js", 
+  "main": "index.js",
+  "module": "index.esm.js",
   "type": "module",
   "keywords": [],
   "author": "",
@@ -15,6 +15,7 @@
     "index.css"
   ],
   "scripts": {
+    "dev": "rollup -c -w",
     "build": "rollup -c"
   }
 }

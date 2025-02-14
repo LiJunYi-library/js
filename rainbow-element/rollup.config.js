@@ -4,28 +4,34 @@ import commonjs from '@rollup/plugin-commonjs'; // 将 CommonJS 转换为 ES6 �
 import { terser } from 'rollup-plugin-terser'; // 压缩 JavaScript 代码
 import postcss from 'rollup-plugin-postcss';
 import cssnano from 'cssnano';
+import serve from 'rollup-plugin-serve';
+import livereload from 'rollup-plugin-livereload';
 
 export default {
     input: 'src/index.js', // 入口文件
-    output: [
-        {
-            file: 'index.esm.js', 
-            format: 'esm',
-            sourcemap: true
-        },
-        {
-            file: 'index.js',
-            format: 'esm',
-            name: 'rainbowElement',
-            sourcemap: true
-        },
-        {
-            file: 'index.main.js',
-            format: 'iife',
-            name: 'rainbowElement',
-            sourcemap: true
-        },
-    ],
+    // output: [
+    //     {
+    //         file: 'index.esm.js',
+    //         format: 'esm',
+    //         sourcemap: true
+    //     },
+    //     {
+    //         file: 'index.js',
+    //         format: 'esm',
+    //         name: 'rainbowElement',
+    //         sourcemap: true
+    //     },
+    //     {
+    //         file: 'index.main.js',
+    //         format: 'iife',
+    //         name: 'rainbowElement',
+    //         sourcemap: true
+    //     },
+    // ],
+    output: {
+      file: 'dist/bundle.js', // 输出文件
+      format: 'es' // 输出格式
+    },
     plugins: [
         resolve(), // 查找外部模块
         commonjs(), // 将 CommonJS 转换为 ES6 模块
@@ -40,5 +46,11 @@ export default {
                 })
             ]
         }),
+        serve({
+          contentBase: 'dist', // 静态文件目录
+          port: 3000, // 端口号
+          open: true // 自动打开浏览器
+        }),
+        livereload({ watch: 'dist' }) // 监听 dist 文件夹并触发重载
     ]
 };

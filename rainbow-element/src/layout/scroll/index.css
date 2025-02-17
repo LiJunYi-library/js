@@ -1,30 +1,26 @@
 r-scroll {
-    display: block;
-    overflow: hidden;
-    max-height: 100vh;
+  display: block;
+  overflow: hidden;
+  max-height: 100vh;
+  --r-element-style: r-prop;
+  --r-content-style: r-prop;
 }
-
-r-scroll::part(r-scroll-top),
-r-scroll .r-scroll-top {
-    background: transparent;
-}
-
 
 r-scroll::part(r-scroll-content),
 r-scroll .r-scroll-content {
-    filter: opacity(1);
+  filter: opacity(1);
 }
 
 r-scroll::part(r-scroll-element),
 r-scroll .r-scroll-element {
-    position: relative;
-    overflow: auto;
-    overflow-x: hidden;
-    max-height: 100vh;
-    -webkit-overflow-scrolling: touch;
+  position: relative;
+  overflow: auto;
+  overflow-x: hidden;
+  max-height: 100vh;
+  -webkit-overflow-scrolling: touch;
 }
 
 r-scroll::part(r-scroll-element-disabled-scroll),
 r-scroll .r-scroll-element-disabled-scroll {
-    overflow: hidden;
+  overflow: hidden;
 }

@@ -121,3 +121,16 @@ export function renderChildren(props = {}) {
 
   return { renderList };
 }
+
+export function createElement(name = "div", className = "") {
+  const ele = document.createElement(name);
+  ele.setAttribute("part", className);
+  ele.className = className;
+  return ele;
+}
+
+export function createSlot(name = "slot", className = "", slotName = className) {
+  const ele = createElement(name, className);
+  ele.setAttribute("name", slotName);
+  return ele;
+}

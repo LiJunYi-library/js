@@ -1,11 +1,17 @@
 import "./index.css";
-import { RainbowElement, createCustomEvent } from "../../base/index.js";
+import { RainbowElement, createCustomEvent, createElement, createSlot } from "../../base/index.js";
 
 export class RScroll extends RainbowElement {
+  static observedAttributes = this.$registerProps({
+    "r-element-style": String,
+    "r-content-style": String,
+  });
+
   $$ = {
-    default: document.createElement("div"),
-    top: document.createElement("div"),
-    content: document.createElement("div"),
+    top: createSlot("slot", "r-scroll-top"),
+    content: createElement("div", "r-scroll-content"),
+    default: createElement("div", "r-scroll-element"),
+    defaultSlot: createSlot("slot", "r-scroll-element-slot", ""),
     prveScrollTop: 0,
     onScroll: (event) => {
       event.scrollTop = this.$$.default.scrollTop;
@@ -22,11 +28,6 @@ export class RScroll extends RainbowElement {
     unDisabledScroll: () => {
       this.$$.default.classList.remove("r-scroll-element-disabled-scroll");
     },
-  };
-
-  $slotContainer = {
-    default: this.$$.default,
-    top: this.$$.top,
   };
 
   get scrollTop() {
@@ -47,7 +48,17 @@ export class RScroll extends RainbowElement {
 
   constructor(...arg) {
     super(...arg);
+    this.attachShadow({ mode: "open" });
+    this.$$.default.append(this.$$.defaultSlot);
+    this.$$.content.append(this.$$.default);
+    this.shadowRoot.appendChild(this.$$.top);
+    this.shadowRoot.appendChild(this.$$.content);
+  }
+
+  connectedCallback(...arg) {
+    super.connectedCallback(...arg);
     this.$$.default.addEventListener("scroll", this.$$.onScroll);
+    this.$$.prveScrollTop = this.$$.default.scrollTop;
   }
 
   disconnectedCallback(...arg) {
@@ -55,15 +66,9 @@ export class RScroll extends RainbowElement {
     this.$$.default.removeEventListener("scroll", this.$$.onScroll);
   }
 
-  connectedCallback(...arg) {
-    super.connectedCallback(...arg);
-    this.$$.top.classList.add("r-scroll-top");
-    this.$$.content.classList.add("r-scroll-content");
-    this.$$.default.classList.add("r-scroll-element");
-    this.$$.content.append(this.$$.default);
-    this.$.append(this.$$.top);
-    this.$.append(this.$$.content);
-    this.$$.prveScrollTop = this.$$.default.scrollTop;
+  $render() {
+    const { rElementStyle, rContentStyle } = this.$.DATA;
+    this.$$.default.setAttribute("style", rElementStyle);
+    this.$$.content.setAttribute("style", rContentStyle);
   }
 }
-

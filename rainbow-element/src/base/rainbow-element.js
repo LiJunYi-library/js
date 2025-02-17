@@ -48,6 +48,8 @@ export class RainbowElement extends HTMLElement {
     },
     resolveCss: (key, str = "") => {
       try {
+        if (str === "r-prop") return this.$.props[key];
+        //
         const isAttrFun = /r-attr\([^\)]*?\)/.test(str); //如果是r-attr 使用属性参数
         if (isAttrFun) str = this.$.props[key];
         // 解析px  vw vh
@@ -70,7 +72,7 @@ export class RainbowElement extends HTMLElement {
         if (/.*?,.*?/.test(cssVal)) return cssVal.trim().split(",").filter(Boolean);
         return cssVal;
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         return str;
       }
     },
@@ -201,35 +203,35 @@ export class RainbowElement extends HTMLElement {
     default: this,
   };
 
-  append(...nodes) {
-    console.log("append");
-    nodes.forEach((node, index) => {
-      if (this.$._getSC(node)) return this.$._getSC(node)?.append?.(node);
-      if (this === this.$slotContainer.default) return super.append?.(node);
-      this.$slotContainer.default?.append?.(node);
-    });
-  }
+  // append(...nodes) {
+  //   // console.log("append");
+  //   nodes.forEach((node, index) => {
+  //     if (this.$._getSC(node)) return this.$._getSC(node)?.append?.(node);
+  //     if (this === this.$slotContainer.default) return super.append?.(node);
+  //     this.$slotContainer.default?.append?.(node);
+  //   });
+  // }
 
-  appendChild(node) {
-    console.log("appendChild");
-    if (this.$._getSC(node)) return this.$._getSC(node)?.appendChild?.(node);
-    if (this === this.$slotContainer.default) return super.appendChild?.(node);
-    return this.$slotContainer.default?.appendChild?.(node);
-  }
+  // appendChild(node) {
+  //   // console.log("appendChild");
+  //   if (this.$._getSC(node)) return this.$._getSC(node)?.appendChild?.(node);
+  //   if (this === this.$slotContainer.default) return super.appendChild?.(node);
+  //   return this.$slotContainer.default?.appendChild?.(node);
+  // }
 
-  insertBefore(node, child) {
-    console.log("insertBefore");
-    if (this.$._getSC(node)) return this.$._getSC(node)?.insertBefore?.(node, child);
-    if (this === this.$slotContainer.default) return super.insertBefore?.(node, child);
-    return this.$slotContainer.default.insertBefore?.(node, child);
-  }
+  // insertBefore(node, child) {
+  //   // console.log("insertBefore");
+  //   if (this.$._getSC(node)) return this.$._getSC(node)?.insertBefore?.(node, child);
+  //   if (this === this.$slotContainer.default) return super.insertBefore?.(node, child);
+  //   return this.$slotContainer.default.insertBefore?.(node, child);
+  // }
 
-  removeChild(child) {
-    // console.log("removeChild");
-    if (this.$._getSC(child)) return this.$._getSC(child)?.removeChild?.(child);
-    if (this === this.$slotContainer.default) return super.removeChild?.(child);
-    return this.$slotContainer.default.removeChild?.(child);
-  }
+  // removeChild(child) {
+  //   // console.log("removeChild");
+  //   if (this.$._getSC(child)) return this.$._getSC(child)?.removeChild?.(child);
+  //   if (this === this.$slotContainer.default) return super.removeChild?.(child);
+  //   return this.$slotContainer.default.removeChild?.(child);
+  // }
 
   attributeChangedCallback(name, oldValue, newValue) {
     this.$.props[name] = newValue;
@@ -264,5 +266,3 @@ export class RainbowElement extends HTMLElement {
 
   $render() {}
 }
-
-

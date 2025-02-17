@@ -8,9 +8,10 @@
     <!-- <span solt="end">...</span> -->
     <!-- <r-fold-text  v-model="valuev" >
     </r-fold-text> -->
-
-    <button v-riles="'sdf'" v-if="bool">权限</button>
+    <button v-riles="'sdf'" v-if="bool">权限xs</button>
+    <button v-riles="'sdf'" v-if="bool">权限2222</button>
     <button @click="addRules">权限</button>
+    <button @click="empty">清空</button>
     <button @click="bool=!bool">bool</button>
     <div>{{ JSON.stringify(riles) }}</div>
     <div style="height: 200px; background: chartreuse">
@@ -33,6 +34,10 @@ const valuev = ref(hv)
 const bool = ref(true)
 
 const riles = useLocalStorageRef('riles', [])
+
+function empty(params) {
+  riles.value.length = 0
+}
 
 function addRules(params) {
   // riles.value =

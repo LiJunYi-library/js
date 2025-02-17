@@ -1,7 +1,7 @@
 import "./index.css";
 import { RainbowElement, createCustomEvent } from "../../base/index.js";
-import { extendedSlideEvents } from "../../events/slide";
-import { inheritSlideEvent } from "../../events/scroll";
+import { extendedSlideEvents } from "../../events/slide.js";
+import { inheritSlideEvent } from "../../events/scroll.js";
 import { arrayRemove, arrayWipeRepetition } from "@rainbow_ljy/rainbow-js";
 const LOG = (...arg) => console.log(...arg);
 

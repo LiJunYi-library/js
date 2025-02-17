@@ -1,6 +1,6 @@
-export * from './treeAttrsChangeIMP';
-export * from './resizeObserverIMP';
-export * from './treeObserverIMP';
+export * from './treeAttrsChangeIMP.js';
+export * from './resizeObserverIMP.js';
+export * from './treeObserverIMP.js';
 
 const imps = {
     simult: {

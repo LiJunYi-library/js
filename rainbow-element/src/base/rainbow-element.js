@@ -1,4 +1,4 @@
-import { camelCaseToKebabCase, assignStyle, convertToCamelCase, RainbowEvent } from "./utils";
+import { camelCaseToKebabCase, assignStyle, convertToCamelCase, RainbowEvent } from "./utils.js";
 import { treeAttrsChangeIMP } from "../base/imps/index.js";
 import { animationDebounced } from "@rainbow_ljy/rainbow-js";
 
@@ -225,7 +225,7 @@ export class RainbowElement extends HTMLElement {
   }
 
   removeChild(child) {
-    console.log("removeChild");
+    // console.log("removeChild");
     if (this.$._getSC(child)) return this.$._getSC(child)?.removeChild?.(child);
     if (this === this.$slotContainer.default) return super.removeChild?.(child);
     return this.$slotContainer.default.removeChild?.(child);

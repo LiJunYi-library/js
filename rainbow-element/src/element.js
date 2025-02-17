@@ -1,2 +1,2 @@
-export * from './layout'
-export * from './data'
+export * from './layout/index.js'
+export * from './data/index.js'

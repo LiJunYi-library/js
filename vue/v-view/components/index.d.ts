@@ -30,3 +30,4 @@ export * from "./falls";
 export * from "./rollingText";
 export * from "./nestedViewPage";
 export * from "./nestedSroll";
+export * from "./layout";

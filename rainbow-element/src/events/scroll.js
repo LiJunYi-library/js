@@ -1,4 +1,4 @@
-import { SlideEvent } from "./slide";
+import { SlideEvent } from "./slide.js";
 
 export class ScrollEvent extends SlideEvent {
   scrollTop = undefined;

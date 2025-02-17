@@ -123,4 +123,8 @@ export class RScrollVirtualGridList extends RainbowElement {
     super.disconnectedCallback(...arg);
     this.$$.scrollParent.removeEventListener("scroll", this.$$.onScroll.bind(this));
   }
+
+  $render(){
+    this.$$.layout();
+  }
 }

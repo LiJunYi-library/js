@@ -1,3 +1,3 @@
 import "./index.css";
-import "./r-circle";
-import "./r-svg-circle";
+import "./r-circle.js";
+import "./r-svg-circle.js";

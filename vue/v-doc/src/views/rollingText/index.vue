@@ -14,6 +14,7 @@
     <!-- <div>{{ JSON.stringify(riles) }}</div> -->
     <!-- <r-rolling-text-num style="margin-left: 100px;" v-model="val" @input="input" ref="text"/> -->
     <button v-riles="'sdf'">权限</button>
+    <button @click="addRules">addRules</button>
     <div></div>
     <!-- <r-rolling-text :r-value="num"></r-rolling-text> -->
     <!-- <div>val:: {{  val  }} </div>:style=" `--r-value: ${num} `"
@@ -27,9 +28,11 @@ import { ref, onMounted } from "vue";
 import index2 from "./index2.vue";
 import { useLocalStorageRef } from '@rainbow_ljy/v-hooks'
 const val = ref(2);
-// const riles = useLocalStorageRef('riles', [])
+const riles = useLocalStorageRef('riles', [])
 const num = ref(987);
-
+function addRules(params) {
+  riles.value.push({user:'yyyy'})
+}
 const text = ref("text");
 
 // setTimeout(() => {

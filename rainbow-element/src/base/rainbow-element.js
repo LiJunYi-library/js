@@ -1,4 +1,10 @@
-import { camelCaseToKebabCase, assignStyle, convertToCamelCase, RainbowEvent } from "./utils.js";
+import {
+  camelCaseToKebabCase,
+  assignStyle,
+  convertToCamelCase,
+  RainbowEvent,
+  wipePX,
+} from "./utils.js";
 import { treeAttrsChangeIMP } from "../base/imps/index.js";
 import { animationDebounced } from "@rainbow_ljy/rainbow-js";
 
@@ -164,8 +170,13 @@ export class RainbowElement extends HTMLElement {
       const style = window.getComputedStyle(this);
       for (const key in this.$.props) {
         if (Object.prototype.hasOwnProperty.call(this.$.props, key)) {
-          const cssVal = style.getPropertyValue("--" + key).trim();
-          css[key] = this.$.resolveCss(key, cssVal);
+          if (key.startsWith("r-")) {
+            const cssVal = style.getPropertyValue("--" + key).trim();
+            css[key] = this.$.resolveCss(key, cssVal);
+          } else {
+            const cssVal = style.getPropertyValue(key).trim();
+            css[key] = wipePX(cssVal);
+          }
           if (this.$.cache.data[key] !== css[key]) isChange = true;
         }
       }

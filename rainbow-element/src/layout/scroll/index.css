@@ -1,7 +1,6 @@
 r-scroll {
   display: block;
   overflow: hidden;
-  max-height: 100vh;
   --r-element-style: r-prop;
   --r-content-style: r-prop;
 }

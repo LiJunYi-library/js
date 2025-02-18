@@ -134,3 +134,20 @@ export function createSlot(name = "slot", className = "", slotName = className) 
   ele.setAttribute("name", slotName);
   return ele;
 }
+
+export function wipePX(str = "") {
+  if (typeof str === "number") return str;
+  if (/px/.test(str)) str = str.replace(/px/g, "");
+  if (/\d+/.test(str)) return Number(str);
+  return str;
+}
+
+export function toggleClass(node, bool, addClass = "", removeClass = "") {
+  if (bool) {
+    node.classList.add(addClass);
+    node.classList.remove(removeClass);
+  } else {
+    node.classList.add(removeClass);
+    node.classList.remove(addClass);
+  }
+}

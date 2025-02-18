@@ -1,26 +1,103 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Slide Down Event Example</title>
-    <style>
-      :root {
-        --first-size: calc(100vh - 50px);
-        --second-color: #ffff8c;
-      }
-    </style>
-  </head>
-  <link rel="stylesheet" href="./index.css" />
-  <script src="./index.main.js"></script>
-  <div></div>
 
-  <body>
-    <r-scroll>
-      <r-fold-text>
-        14578963244
-        <span solt="end">...</span>
-      </r-fold-text>
-    </r-scroll>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slide Down Event Example</title>
+  <style>
+    :root {
+      --first-size: calc(100vh - 50px);
+      --second-color: #ffff8c;
+    }
+  </style>
+</head>
+
+<div></div>
+
+<body>
+  <script>
+class RCircle extends HTMLElement {
+  constructor() {
+    super();
+
+    // 创建 r-circle-border 容器
+    const borderDiv = document.createElement("div");
+    borderDiv.classList.add("r-circle-border");
+
+    // 创建 r-circle-content 容器
+    const contentDiv = document.createElement("div");
+    contentDiv.classList.add("r-circle-content");
+
+    // 确保 contentDiv 是干净的
+    while (contentDiv.firstChild) {
+      contentDiv.removeChild(contentDiv.firstChild);
+    }
+
+    // 为 contentDiv 创建 Shadow DOM
+    const shadowRoot = this.attachShadow({ mode: "open" });
+
+    // 添加样式和插槽
+    const style = document.createElement("style");
+    style.textContent = `
+      .r-circle-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        border: 2px solid green;
+      }
+      slot {
+        color: blue;
+      }
+    `;
+    const slot = document.createElement("slot");
+    slot.setAttribute("name", "content");
+
+    shadowRoot.appendChild(style);
+    shadowRoot.appendChild(slot);
+
+    // 将 r-circle-border 和 r-circle-content 添加到组件中
+    shadowRoot.appendChild(borderDiv);
+    shadowRoot.appendChild(contentDiv);
+  }
+
+
+  connectedCallback(){
+    console.log(this.children);
+    debugger
+
+    
+  }
+
+}
+
+
+
+customElements.define("r-circle", RCircle);
+  </script>
+
+
+<div>
+  <r-circle>
+    <div slot="content">这是插入到 r-circle 内容中的文本</div>
+  </r-circle>
+
+  <style>
+          .r-circle-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        border: 2px solid green;
+      }
+      slot {
+        color: blue;
+      }
+  </style>
+</div>
+</body>
+
 </html>

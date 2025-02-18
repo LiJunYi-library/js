@@ -23,10 +23,10 @@ export class RScroll extends RainbowElement {
       this.$$.prveScrollTop = this.$$.default.scrollTop;
     },
     disabledScroll: () => {
-      this.$$.default.classList.add("r-scroll-element-disabled-scroll");
+      this.classList.add("r-scroll-disabled-scroll");
     },
     unDisabledScroll: () => {
-      this.$$.default.classList.remove("r-scroll-element-disabled-scroll");
+      this.classList.remove("r-scroll-disabled-scroll");
     },
   };
 

@@ -1,4 +1,4 @@
-import { RainbowElement } from "../../base/index.js";
+import { RainbowElement, createSlot, createElement } from "../../base/index.js";
 import { resizeObserverIMP } from "../../base/imps/index.js";
 
 export class RCircle extends RainbowElement {
@@ -19,23 +19,11 @@ export class RCircle extends RainbowElement {
     return [resizeObserverIMP()];
   }
 
-  $slotContainer = {
-    default: document.createElement("div"),
-  };
-
-  connectedCallback(...arg) {
-    super.connectedCallback(...arg);
-    this.$$.borderDiv.classList.add("r-circle-border");
-    this.$$.layerDiv.classList.add("r-circle-layer");
-    this.$slotContainer.default.classList.add("r-circle-content");
-    this.$.append(this.$$.layerDiv);
-    this.$.append(this.$$.borderDiv);
-    this.$.append(this.$slotContainer.default);
-  }
-
   $$ = {
-    borderDiv: document.createElement("div"),
-    layerDiv: document.createElement("div"),
+    defaultSlot: createSlot("slot", "content", "content"),
+    default: createElement("div", "r-circle-content"),
+    borderDiv: createElement("div", "r-circle-border"),
+    layerDiv: createElement("div", "r-circle-layer"),
     value: 0,
     toRadians: (angle) => (angle * Math.PI) / 180,
     getAngleDiff: (startAng, endAng) => {
@@ -121,6 +109,16 @@ export class RCircle extends RainbowElement {
     this.$debouncedRender();
   }
 
+  connectedCallback(...arg) {
+    super.connectedCallback(...arg);
+
+    this.attachShadow({ mode: "open" });
+    this.$$.default.appendChild(this.$$.defaultSlot);
+    this.shadowRoot.append(this.$$.layerDiv);
+    this.shadowRoot.append(this.$$.borderDiv);
+    this.shadowRoot.append(this.$$.default);
+  }
+
   $render() {
     let {
       rStartAngle,
@@ -161,7 +159,7 @@ export class RCircle extends RainbowElement {
       rDirection,
     );
 
-    this.$slotContainer.default.style.clipPath = this.$$.getcirclePath(
+    this.$$.default.style.clipPath = this.$$.getcirclePath(
       rOriginX,
       rOriginY,
       rInnerRadius - rLayerStrokeWidth - rStrokeWidth - rLayerStrokeWidth,

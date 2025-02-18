@@ -20,7 +20,8 @@ r-scroll .r-scroll-element {
   -webkit-overflow-scrolling: touch;
 }
 
-r-scroll::part(r-scroll-element-disabled-scroll),
-r-scroll .r-scroll-element-disabled-scroll {
+
+r-scroll.r-scroll-disabled-scroll::part(r-scroll-element),
+r-scroll.r-scroll-disabled-scroll .r-scroll-element {
   overflow: hidden;
 }

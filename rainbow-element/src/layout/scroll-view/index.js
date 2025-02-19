@@ -4,12 +4,12 @@ import { RainbowElement, createCustomEvent, createElement, createSlot } from "..
 export class RScrollView extends RainbowElement {
   static observedAttributes = this.$registerProps({
     "r-element-style": String,
-    "r-content-style": String,
+    "r-container-style": String,
   });
 
   $$ = {
     top: createSlot("slot", "r-scroll-top"),
-    content: createElement("div", "r-scroll-content"),
+    container: createElement("div", "r-scroll-container"),
     default: createElement("div", "r-scroll-element"),
     defaultSlot: createSlot("slot", "r-scroll-element-slot", ""),
     prveScrollTop: 0,
@@ -50,9 +50,9 @@ export class RScrollView extends RainbowElement {
     super(...arg);
     this.attachShadow({ mode: "open" });
     this.$$.default.append(this.$$.defaultSlot);
-    this.$$.content.append(this.$$.default);
+    this.$$.container.append(this.$$.default);
     this.shadowRoot.appendChild(this.$$.top);
-    this.shadowRoot.appendChild(this.$$.content);
+    this.shadowRoot.appendChild(this.$$.container);
   }
 
   connectedCallback(...arg) {
@@ -67,9 +67,9 @@ export class RScrollView extends RainbowElement {
   }
 
   $render() {
-    const { rElementStyle, rContentStyle } = this.$.DATA;
+    const { rElementStyle, rContainerStyle } = this.$.DATA;
     this.$$.default.setAttribute("style", rElementStyle);
-    this.$$.content.setAttribute("style", rContentStyle);
+    this.$$.container.setAttribute("style", rContainerStyle);
   }
 }
 

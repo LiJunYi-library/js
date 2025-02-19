@@ -2,11 +2,11 @@ r-scroll-view {
   display: block;
   overflow: hidden;
   --r-element-style: r-prop;
-  --r-content-style: r-prop;
+  --r-container-style: r-prop;
 }
 
-r-scroll-view::part(r-scroll-content),
-r-scroll-view .r-scroll-content {
+r-scroll-view::part(r-scroll-container),
+r-scroll-view .r-scroll-container {
   filter: opacity(1);
 }
 

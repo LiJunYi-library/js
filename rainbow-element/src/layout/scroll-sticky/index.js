@@ -32,7 +32,7 @@ export class RScrollSticky extends RainbowElement {
     scrollParent: document.createElement("div"),
     onScroll: (event) => {
       let { scrollTop } = event;
-      const offsetTop = this.$.getOffsetTop(this.$$.scrollParent);
+      const offsetTop = this.$.getOffsetTop(this);
       this.$$.stickyBottom(scrollTop, offsetTop);
       this.$$.stickyTop(scrollTop, offsetTop);
     },
@@ -137,7 +137,7 @@ export class RScrollFixed extends RScrollSticky {
 //   // if (this.$attrs.top === undefined) return;
 //   // const { scrollTop, } = this.$scrollParent;
 //   // const { top, opacityDelay } = this.$attrs;
-//   // let oTop = Math.round(this.$getOffsetTop(this.$scrollParent) - scrollTop);
+//   // let oTop = Math.round(this.$getOffsetTop(this) - scrollTop);
 //   // this.$$isSticky = top === oTop;
 //   // this.$$isStickyTop = top >= oTop;
 //   // this.$$isStickyBottom = top <= oTop;

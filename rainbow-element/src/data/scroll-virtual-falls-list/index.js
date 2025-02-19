@@ -89,7 +89,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
       const { rAvgHeight, rGap, rColumnGap, rRowGap } = this.$.DATA;
       const columnGap = rColumnGap || rGap || 0;
       const rowGap = rRowGap || rGap || 0;
-      const offsetTop = this.$.getOffsetTop(this.$$.scrollParent);
+      const offsetTop = this.$.getOffsetTop(this);
       const recycleTop = -window.innerHeight + offsetTop;
       const recycleBottom = window.innerHeight * 2 + offsetTop;
       const scrollTop = this.$$.scrollParent.scrollTop;

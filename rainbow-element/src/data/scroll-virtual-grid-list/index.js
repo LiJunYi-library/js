@@ -27,6 +27,10 @@ export class RScrollVirtualGridList extends RainbowElement {
       end: 0,
       start: 0,
     },
+    visible: {
+      end: 0,
+      start: 0,
+    },
     recycle: {
       divs: [],
     },
@@ -47,9 +51,12 @@ export class RScrollVirtualGridList extends RainbowElement {
       const offsetTop = this.$.getOffsetTop(this);
       const scrollTop = this.$$.scrollParent.scrollTop;
       let recycleCount = Math.ceil(window.innerHeight / (rAvgHeight + columnGap)) * this.$$columns;
-      let nth = Math.ceil((scrollTop - offsetTop) / (rAvgHeight + columnGap)) * this.$$columns;
+      let nth = Math.floor((scrollTop - offsetTop) / (rAvgHeight + columnGap)) * this.$$columns;
       let index = nth - recycleCount;
       let start = index < 0 ? 0 : index;
+      this.$$.visible.start = nth < 0 ? 0 : nth;
+      this.$$.visible.end = nth + recycleCount;
+      // console.log(this.$$.visible.start, this.$$.visible.end);
       let end = index + recycleCount * 3;
       if (end < 0) end = 0;
       let list = this.value.slice(start, end);
@@ -128,7 +135,7 @@ export class RScrollVirtualGridList extends RainbowElement {
     this.$$.scrollParent.removeEventListener("scroll", this.$$.onScroll.bind(this));
   }
 
-  $render(){
+  $render() {
     this.$$.layout();
   }
 }

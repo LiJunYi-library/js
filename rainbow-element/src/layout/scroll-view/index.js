@@ -1,4 +1,4 @@
-
+import "./index.css";
 import { RainbowElement, createCustomEvent, createElement, createSlot } from "../../base/index.js";
 
 export class RScrollView extends RainbowElement {
@@ -23,10 +23,10 @@ export class RScrollView extends RainbowElement {
       this.$$.prveScrollTop = this.$$.default.scrollTop;
     },
     disabledScroll: () => {
-      this.classList.add("r-scroll-disabled-scroll");
+      this.classList.add("r-scroll-view-disabled");
     },
     unDisabledScroll: () => {
-      this.classList.remove("r-scroll-disabled-scroll");
+      this.classList.remove("r-scroll-view-disabled");
     },
   };
 
@@ -72,3 +72,4 @@ export class RScrollView extends RainbowElement {
     this.$$.content.setAttribute("style", rContentStyle);
   }
 }
+

@@ -8,29 +8,6 @@ r-scroll {
 }
 
 
-r-scroll-view {
-  display: block;
-  overflow: hidden;
-  --r-element-style: r-prop;
-  --r-content-style: r-prop;
-}
-
-r-scroll-view ::part(r-scroll-content),
-r-scroll-view .r-scroll-content {
-  filter: opacity(1);
-}
-
-r-scroll-view ::part(r-scroll-element),
-r-scroll-view .r-scroll-element {
-  position: relative;
-  overflow: auto;
-  overflow-x: hidden;
-  max-height: 100vh;
-  -webkit-overflow-scrolling: touch;
-}
-
-
-r-scroll-view .r-scroll-disabled-scroll::part(r-scroll-element),
-r-scroll-view .r-scroll-disabled-scroll .r-scroll-element {
+r-scroll.r-scroll-disabled {
   overflow: hidden;
 }

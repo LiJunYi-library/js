@@ -157,7 +157,7 @@ export class RScrollRefresh extends RainbowElement {
   }
 
   disconnectedCallback(...arg) {
-    super.connectedCallback(...arg);
+    super.disconnectedCallback(...arg);
     const { scrollParent } = this.$$;
     scrollParent.removeEventListener("pointerdown", this.$$.pointerdown);
     scrollParent.removeEventListener("pointermove", this.$$.pointermove);

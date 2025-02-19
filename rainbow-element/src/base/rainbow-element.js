@@ -143,9 +143,11 @@ export class RainbowElement extends HTMLElement {
       return this.$.findParentByLocalName(name, parent);
     },
     findChildByLocalName: (name, c = this) => {
-      if (!c) return;
-      const child = c.getElementsByTagName(name);
-      return child;
+      if (!c) return [];
+      if (name instanceof Array) {
+        return name.map((val) => c.getElementsByTagName(val)).flat(Infinity);
+      }
+      return c.getElementsByTagName(name);
     },
     getOffsetTop: (p, num = 0) => {
       if (this.offsetParent === p) return num;

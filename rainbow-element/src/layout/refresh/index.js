@@ -1,8 +1,8 @@
 import "./index.css";
-import { RainbowElement, createCustomEvent } from "../../base/index.js";
+import { RainbowElement, createCustomEvent, createElement } from "../../base/index.js";
 import { setTimeoutPromise } from "@rainbow_ljy/rainbow-js";
 
-export class RScrollRefresh extends RainbowElement {
+export class RRefresh extends RainbowElement {
   static observedAttributes = this.$registerProps({
     "r-refresh-heignt": { type: String, default: "0" },
     "r-max-refresh-heignt": { type: String, default: "0" },
@@ -55,7 +55,7 @@ export class RScrollRefresh extends RainbowElement {
     },
     resolve: () => 0,
     promise: undefined,
-    scrollParent: this.$.findParentByLocalName(["r-scroll", "r-nested-scroll"]),
+    scrollView: createElement("div"),
     loading: false,
     DATA: this.$.DATA,
     get release() {
@@ -77,13 +77,13 @@ export class RScrollRefresh extends RainbowElement {
       if (this.$$.loading === true) return;
       // event.stopPropagation();
       const moveY = event.pageY - this.$$.pointerdownEvent.pageY;
-      const { scrollParent } = this.$$;
-      if (scrollParent.scrollTop > 0) {
-        scrollParent.removeEventListener("pointermove", this.$$.pointermove);
+      const { scrollView } = this.$$;
+      if (scrollView.scrollTop > 0) {
+        scrollView.removeEventListener("pointermove", this.$$.pointermove);
         this.$$.lock = false;
         return;
       }
-      if (moveY >= 8 && scrollParent.scrollTop <= 0) this.$$.lock = true;
+      if (moveY >= 8 && scrollView.scrollTop <= 0) this.$$.lock = true;
     },
     touchstart: (event) => {
       if (this.$$.loading === true) return;
@@ -109,7 +109,7 @@ export class RScrollRefresh extends RainbowElement {
       if (this.$$.loading === true) return;
       if (!this.$$.lock) return;
       // event.stopPropagation();
-      const { scrollParent } = this.$$;
+      const { scrollView } = this.$$;
       const { rRefreshHeignt, rMinTime } = this.$.DATA;
       this.classList.add("r-scroll-refresh-transition");
       const release = this.$$.release;
@@ -121,7 +121,7 @@ export class RScrollRefresh extends RainbowElement {
       if (release) {
         this.$$.loading = true;
         this.$$.render();
-        scrollParent.$$.disabledScroll();
+        scrollView.$$.disabledScroll();
         this.$$.promise = this.$$.createPromise();
         event.resolve = this.$$.resolve;
         this.dispatchEvent(createCustomEvent("refresh", event));
@@ -133,7 +133,7 @@ export class RScrollRefresh extends RainbowElement {
         this.$$.loading = false;
         this.style.height = this.$$.height + "px";
         this.$$.render();
-        scrollParent.$$.unDisabledScroll();
+        scrollView.$$.unDisabledScroll();
       }
     },
   };
@@ -144,27 +144,28 @@ export class RScrollRefresh extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.classList.add("r-scroll-refresh");
-    this.$$.scrollParent = this.$.findParentByLocalName(["r-scroll", "r-nested-scroll"]);
-    const { scrollParent } = this.$$;
-    const opt = { passive: false, capture: true };
-    scrollParent.addEventListener("pointerdown", this.$$.pointerdown, opt);
-    scrollParent.addEventListener("pointermove", this.$$.pointermove, opt);
-    scrollParent.addEventListener("touchstart", this.$$.touchstart);
-    scrollParent.addEventListener("touchmove", this.$$.touchmove);
-    scrollParent.addEventListener("touchend", this.$$.touchend);
-    this.$$.render = this.$$renderRefresh();
+    this.$$.scrollView = this.$.findChildByLocalName(["r-scroll"]);
+
+    // const child = document.getElementsByTagName("r-scroll");
+    console.log( this.$$.scrollView);
+
+    // const { scrollView } = this.$$;
+    // const opt = { passive: false, capture: true };
+    // scrollView.addEventListener("pointerdown", this.$$.pointerdown, opt);
+    // scrollView.addEventListener("pointermove", this.$$.pointermove, opt);
+    // scrollView.addEventListener("touchstart", this.$$.touchstart);
+    // scrollView.addEventListener("touchmove", this.$$.touchmove);
+    // scrollView.addEventListener("touchend", this.$$.touchend);
+    // this.$$.render = this.$$renderRefresh();
   }
 
   disconnectedCallback(...arg) {
-    super.connectedCallback(...arg);
-    const { scrollParent } = this.$$;
-    scrollParent.removeEventListener("pointerdown", this.$$.pointerdown);
-    scrollParent.removeEventListener("pointermove", this.$$.pointermove);
-    scrollParent.removeEventListener("touchstart", this.$$.touchstart);
-    scrollParent.removeEventListener("touchmove", this.$$.touchmove);
-    scrollParent.removeEventListener("touchend", this.$$.touchend);
+    super.disconnectedCallback(...arg);
+    const { scrollView } = this.$$;
+    scrollView.removeEventListener("pointerdown", this.$$.pointerdown);
+    scrollView.removeEventListener("pointermove", this.$$.pointermove);
+    scrollView.removeEventListener("touchstart", this.$$.touchstart);
+    scrollView.removeEventListener("touchmove", this.$$.touchmove);
+    scrollView.removeEventListener("touchend", this.$$.touchend);
   }
 }
-
-

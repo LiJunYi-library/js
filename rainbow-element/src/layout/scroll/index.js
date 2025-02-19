@@ -23,5 +23,4 @@ export class RScroll extends RainbowElement {
     super(...arg);
     this.addEventListener("scroll", this.$$.onScroll);
   }
-
 }

@@ -1,13 +1,13 @@
 r-refresh {
     display: block;
-    height: 0px;
+    /* height: 0px;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     --r-max-refresh-heignt: 175px;
     --r-refresh-heignt: 125px;
-    --r-min-time: 3000;
+    --r-min-time: 3000; */
 }
 
 .r-scroll-refresh-transition {

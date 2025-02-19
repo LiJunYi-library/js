@@ -151,3 +151,7 @@ export function toggleClass(node, bool, addClass = "", removeClass = "") {
     node.classList.remove(addClass);
   }
 }
+
+export function isNum(d) {
+  return typeof d === "number";
+}

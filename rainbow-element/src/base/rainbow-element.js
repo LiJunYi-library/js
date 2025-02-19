@@ -72,8 +72,7 @@ export class RainbowElement extends HTMLElement {
           return eval(`this.$.resolveFunCss.${cssVal}`);
         }
         // 如果可以转换成数字
-        let number = Number(cssVal);
-        if (!isNaN(number)) return number;
+        if (/^-?\d+(\.\d+)?$/.test(cssVal)) return Number(cssVal);
         // 如果可以转换成数组
         if (/.*?,.*?/.test(cssVal)) return cssVal.trim().split(",").filter(Boolean);
         return cssVal;
@@ -166,7 +165,7 @@ export class RainbowElement extends HTMLElement {
       this.$.isAnimation = false;
     },
     changePropsRender: (force) => {
-      if (this.$.isAnimation) return;
+      // if (this.$.isAnimation) return;
       let isChange = false;
       const css = {};
       const style = window.getComputedStyle(this);

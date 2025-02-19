@@ -136,6 +136,24 @@ export class RRefresh extends RainbowElement {
         scrollView.$$.unDisabledScroll();
       }
     },
+    bindEvents: (scrollView) => {
+      this.$$.scrollView = scrollView;
+      const opt = { passive: false, capture: true };
+      scrollView.addEventListener("pointerdown", this.$$.pointerdown, opt);
+      scrollView.addEventListener("pointermove", this.$$.pointermove, opt);
+      scrollView.addEventListener("touchstart", this.$$.touchstart);
+      scrollView.addEventListener("touchmove", this.$$.touchmove);
+      scrollView.addEventListener("touchend", this.$$.touchend);
+      this.$$.render = this.$$renderRefresh();
+    },
+    unbindEvents: () => {
+      const { scrollView } = this.$$;
+      scrollView.removeEventListener("pointerdown", this.$$.pointerdown);
+      scrollView.removeEventListener("pointermove", this.$$.pointermove);
+      scrollView.removeEventListener("touchstart", this.$$.touchstart);
+      scrollView.removeEventListener("touchmove", this.$$.touchmove);
+      scrollView.removeEventListener("touchend", this.$$.touchend);
+    },
   };
 
   constructor(...arg) {
@@ -144,11 +162,9 @@ export class RRefresh extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.$$.scrollView = this.$.findChildByLocalName(["r-scroll"]);
-
+    // this.$$.scrollView = this.$.findChildByLocalName(["r-scroll"]);
     // const child = document.getElementsByTagName("r-scroll");
-    console.log( this.$$.scrollView);
-
+    // console.log(this.$$.scrollView);
     // const { scrollView } = this.$$;
     // const opt = { passive: false, capture: true };
     // scrollView.addEventListener("pointerdown", this.$$.pointerdown, opt);
@@ -161,11 +177,11 @@ export class RRefresh extends RainbowElement {
 
   disconnectedCallback(...arg) {
     super.disconnectedCallback(...arg);
-    const { scrollView } = this.$$;
-    scrollView.removeEventListener("pointerdown", this.$$.pointerdown);
-    scrollView.removeEventListener("pointermove", this.$$.pointermove);
-    scrollView.removeEventListener("touchstart", this.$$.touchstart);
-    scrollView.removeEventListener("touchmove", this.$$.touchmove);
-    scrollView.removeEventListener("touchend", this.$$.touchend);
+    // const { scrollView } = this.$$;
+    // scrollView.removeEventListener("pointerdown", this.$$.pointerdown);
+    // scrollView.removeEventListener("pointermove", this.$$.pointermove);
+    // scrollView.removeEventListener("touchstart", this.$$.touchstart);
+    // scrollView.removeEventListener("touchmove", this.$$.touchmove);
+    // scrollView.removeEventListener("touchend", this.$$.touchend);
   }
 }

@@ -1,5 +1,6 @@
 r-refresh {
     display: block;
+    filter: opacity(1);
     /* height: 0px;
     display: flex;
     justify-content: center;

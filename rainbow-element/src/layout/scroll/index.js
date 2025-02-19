@@ -3,6 +3,7 @@ import { RainbowElement, createCustomEvent, createElement, createSlot } from "..
 
 export class RScroll extends RainbowElement {
   $$ = {
+    refreshView: undefined,
     prveScrollTop: 0,
     onScroll: (event) => {
       event.scrollTop = this.scrollTop;
@@ -22,5 +23,16 @@ export class RScroll extends RainbowElement {
   constructor(...arg) {
     super(...arg);
     this.addEventListener("scroll", this.$$.onScroll);
+  }
+
+  connectedCallback(...arg) {
+    super.connectedCallback(...arg);
+    this.$$.refreshView = this.$.findParentByLocalName("r-refresh");
+    this.$$.refreshView?.$$?.bindEvents?.(this);
+  }
+
+  disconnectedCallback(...arg) {
+    super.disconnectedCallback(...arg);
+    this.$$.refreshView?.$$?.unbindEvents?.();
   }
 }

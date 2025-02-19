@@ -114,7 +114,11 @@ export class RScrollVirtualGridList extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.$$.scrollParent = this.$.findParentByLocalName("r-scroll");
+    this.$$.scrollParent = this.$.findParentByLocalName([
+      "r-scroll",
+      "r-scroll-view",
+      "r-nested-scroll",
+    ]);
     this.$$.scrollParent.addEventListener("scroll", this.$$.onScroll.bind(this));
     this.$$.layout();
   }

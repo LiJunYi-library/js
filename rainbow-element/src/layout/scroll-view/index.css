@@ -5,12 +5,12 @@ r-scroll-view {
   --r-content-style: r-prop;
 }
 
-r-scroll-view ::part(r-scroll-content),
+r-scroll-view::part(r-scroll-content),
 r-scroll-view .r-scroll-content {
   filter: opacity(1);
 }
 
-r-scroll-view ::part(r-scroll-element),
+r-scroll-view::part(r-scroll-element),
 r-scroll-view .r-scroll-element {
   position: relative;
   overflow: auto;
@@ -20,7 +20,7 @@ r-scroll-view .r-scroll-element {
 }
 
 
-r-scroll-view .r-scroll-view-disabled::part(r-scroll-element),
-r-scroll-view .r-scroll-view-disabled .r-scroll-element {
+r-scroll-view.r-scroll-view-disabled::part(r-scroll-element),
+r-scroll-view.r-scroll-view-disabled .r-scroll-element {
   overflow: hidden;
 }

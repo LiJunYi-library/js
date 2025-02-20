@@ -44,6 +44,7 @@ export class RScrollVirtualGridList extends RainbowElement {
       this.$$.layout(false);
     },
     layout: (isForce = true) => {
+      if (!this.$$.scrollParent) return;
       const { rAvgHeight, rGap, rColumnGap, rRowGap } = this.$.DATA;
       const columnGap = rColumnGap || rGap || 0;
       const rowGap = rRowGap || rGap || 0;

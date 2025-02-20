@@ -15,7 +15,8 @@ r-grid[inline="false"] {
   display: grid;
 }
 
-r-grid.useAttrs {
+r-grid[useAttrs="true"],
+r-grid[useAttrs] {
   --r-columns: r-attr(r-columns);
   --r-min-auto-width: r-attr(r-min-auto-width);
   --r-gap: r-attr(r-gap);

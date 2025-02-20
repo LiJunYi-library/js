@@ -8,7 +8,8 @@ r-falls {
   position: absolute;
 }
 
-r-falls.useAttrs {
+r-falls[useAttrs="true"],
+r-falls[useAttrs] {
   --r-columns: r-attr(r-columns);
   --r-min-auto-width: r-attr(r-min-auto-width);
   --r-gap: r-attr(r-gap);

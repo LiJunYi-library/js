@@ -96,6 +96,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
       return { scrollTop, recycleBottom, recycleTop, offsetTop, rowGap, columnGap, rAvgHeight };
     },
     layout: (isForce = true) => {
+      if (!this.$$.scrollParent) return;
       const { scrollTop, recycleBottom, recycleTop, rowGap } = this.$$.getCssValues();
       let start = this.$$.findIndex(scrollTop);
       if (start === -1) start = 0;
@@ -239,6 +240,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
     ]);
     this.$$.scrollParent.addEventListener("scroll", this.$$.onScroll.bind(this));
     this.$$.falls.list = initList.call(this);
+    this.$$.layout();
   }
 
   disconnectedCallback(...arg) {

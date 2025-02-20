@@ -117,6 +117,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
     "@rainbow_ljy/r-hooks": "workspace:^",
+    "@rainbow_ljy/r-view": "workspace:^",
     "@rainbow_ljy/rainbow-element": "workspace:^",
     "@rainbow_ljy/rainbow-js": "workspace:^",
     "@rainbow_ljy/v-hooks": "workspace:^",

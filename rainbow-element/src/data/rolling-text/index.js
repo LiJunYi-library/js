@@ -4,7 +4,6 @@ import { arrayLoop, arrayLoopMap } from "@rainbow_ljy/rainbow-js";
 
 export class RRollingText extends RainbowElement {
   static observedAttributes = this.$registerProps({
-    // "r-value": String,
     "r-math-type": String, // 'floor' , 'none'
   });
 

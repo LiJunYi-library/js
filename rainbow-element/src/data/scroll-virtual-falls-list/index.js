@@ -107,7 +107,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
       this.$$.cache.end = end;
       this.$$.preLoadIndex = end;
       if (isForce === false && isRender === false) return;
-      // console.log(start);
+      console.log("start",start);
       let startItem = this.value[start];
       if (!startItem) return;
       let list = this.value.slice(start, end);

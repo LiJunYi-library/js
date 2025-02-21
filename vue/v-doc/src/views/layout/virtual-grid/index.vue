@@ -79,6 +79,8 @@
         <div style="color: azure">这里可以和滚动吸附布局一起使用<a></a></div>
       </r-scroll-sticky>
 
+      <r-rolling-text v-model="nums" :num="nums"></r-rolling-text>
+
       <div>宫格布局 回收列表</div>
       <div>宫格布局 回收列表</div>
       <div>宫格布局 回收列表</div>
@@ -94,11 +96,14 @@
       <div>宫格布局 回收列表</div>
 
       <RLoadingLoad :promiseHook="ListLoad">
-        <VRVirtualGridList v-model="ListLoad.list" :style="`--r-columns: ${columns};`">
+        <VRVirtualFallsList v-model="ListLoad.list" :style="`--r-columns: ${columns};`">
           <template #default="{ item, index, key }">
             <div>index- :{{ index }}</div>
             <div>id:{{ item.id }}</div>
             <div>nth:{{ item.value }}</div>
+            <div>{{ item.name }}</div>
+            <div>{{ item.name }}</div>
+            <div>{{ item.name }}</div>
             <div>{{ item.name }}</div>
             <r-grid style="--r-columns: 4">
               <button @click="insert(item, index)">插入</button>
@@ -107,14 +112,14 @@
               <button @click="transposal(item, index)">置顶</button>
             </r-grid>
           </template>
-        </VRVirtualGridList>
+        </VRVirtualFallsList>
       </RLoadingLoad>
     </r-scroll-view>
   </div>
 </template>
 <script setup lang="jsx">
 import { arrayLoopMap, ListArray, setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
-import { VRVirtualGridList, RLoadingLoad } from '@rainbow_ljy/v-view'
+import { VRVirtualGridList,VRVirtualFallsList, RLoadingLoad } from '@rainbow_ljy/v-view'
 import { useRadio2, useListLoad2 } from '@rainbow_ljy/v-hooks'
 import { ref, render, defineComponent, toRaw, computed,onMounted } from 'vue'
 import { useFetch } from '@/utils/request'
@@ -127,13 +132,13 @@ const List = ref(
   })),
 )
 
-const columns = ref(1)
+const columns = ref(2)
 const nums = ref(60)
 
 let ListLoad
 const body = computed(() => ({
   page: ListLoad.currentPage,
-  rows: 10,
+  rows: 60,
 }))
 const f = useFetch({
   method: 'post',
@@ -149,7 +154,7 @@ ListLoad = useListLoad2({
 
 onMounted(()=>{
   ListLoad.nextBeginSend()
-  // console.log(ListLoad);
+  console.log(ListLoad);
 
 })
 
@@ -174,6 +179,9 @@ function remove(item, index) {
 
 function change(item, index) {
   item.title = '修改item'
+  item.name= '修改item'
+  console.log(item);
+
 }
 
 function transposal(item, index) {

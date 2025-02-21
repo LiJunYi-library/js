@@ -11,5 +11,4 @@ r-scroll-virtual-falls-list {
 .r-scroll-virtual-falls-list-item {
     background: coral;
     word-wrap: break-word;
-    min-height: 200px;
 }

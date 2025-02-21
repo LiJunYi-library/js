@@ -107,7 +107,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
       this.$$.cache.end = end;
       this.$$.preLoadIndex = end;
       if (isForce === false && isRender === false) return;
-      console.log("start",start);
+      // console.log("start", start);
       let startItem = this.value[start];
       if (!startItem) return;
       let list = this.value.slice(start, end);
@@ -283,22 +283,24 @@ function getMaxHeightItem(list) {
 
 function createBackstage(callback, stopFmt) {
   let timer;
+  let requestTimer = requestIdleCallback || requestAnimationFrame;
+  let cancelRequestTimer = requestIdleCallback ? cancelIdleCallback : cancelAnimationFrame;
 
   function idleCallback(deadline) {
     stop();
     if (stopFmt()) return;
     if (deadline.timeRemaining() > 0) {
       callback();
-      if (!deadline.didTimeout) timer = requestIdleCallback(idleCallback);
+      if (!deadline.didTimeout) timer = requestTimer(idleCallback);
     }
   }
 
   function start() {
-    timer = requestIdleCallback(idleCallback);
+    timer = requestTimer(idleCallback);
   }
 
   function stop() {
-    cancelIdleCallback(timer);
+    cancelRequestTimer(timer);
   }
 
   function reStart() {

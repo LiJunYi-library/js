@@ -25,7 +25,7 @@ export class RRollingText extends RainbowElement {
   $render() {
     let { rMathType } = this.$.DATA;
     let rValue = this.value;
-    console.log("rValue $render", rValue);
+    // console.log("rValue $render", rValue);
     let rValueStr = String(rValue);
     let values = (() => {
       return arrayLoopMap(rValueStr.length, (index) => {

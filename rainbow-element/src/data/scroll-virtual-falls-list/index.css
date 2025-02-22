@@ -5,10 +5,9 @@ r-scroll-virtual-falls-list {
     --r-avg-height: 200px;
     --r-column-gap: 8px;
     --r-row-gap: 12px;
-    background: chartreuse;
 }
 
 .r-scroll-virtual-falls-list-item {
-    background: coral;
+    box-sizing: border-box;
     word-wrap: break-word;
 }

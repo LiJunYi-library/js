@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="jsx">
-import { render, defineComponent, computed, toRaw ,onMounted} from "vue";
+import { render, defineComponent, computed, toRaw, onMounted } from "vue";
 
 const slots = defineSlots();
 const emit = defineEmits(["update:modelValue"]);
@@ -24,25 +24,22 @@ const list = computed({
   },
 });
 
-const refList = computed(()=>{
+const refList = computed(() => {
   if (props.listHook.list) return props.listHook.list;
   return props.modelValue;
 })
 
 const Item = defineComponent({
+  inheritAttrs: false,
   props: {
     event: Object,
     slots: Object,
   },
   setup(props) {
-    onMounted(()=>{
+    onMounted(() => {
     })
     return () => {
-      return (
-        <div class="r-scroll-virtual-falls-list-item-content">
-          {props?.slots?.default?.(props.event)}
-        </div>
-      );
+      return props?.slots?.default?.(props.event);
     };
   },
 });
@@ -65,5 +62,4 @@ function onRenderList(event) {
 }
 </script>
 
-<style>
-</style>
+<style></style>

@@ -61,5 +61,3 @@ function onRenderList(event) {
   );
 }
 </script>
-
-<style></style>

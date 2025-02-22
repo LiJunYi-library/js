@@ -10,7 +10,7 @@ import {
   defineComponent,
   inject,
 } from "vue";
-import { RResize } from "../../resize";
+import { RResize } from '@rainbow_ljy/v-view';
 
 /**
  *

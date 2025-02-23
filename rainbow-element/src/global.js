@@ -6,6 +6,7 @@ const rainbow = (() => {
   return {
     overlay,
     zIndex: 100,
+    zIndexAdd: 3,
     overlayQueue: useQueue(),
   };
 })();

@@ -1,9 +1,9 @@
 import "./index.css";
 import { RainbowElement, createElement, createSlot, Transition } from "../../base/index.js";
 
-export class RDialog extends RainbowElement {
+export class RTransition extends RainbowElement {
   static observedAttributes = this.$registerProps({
-    "r-orientation": String, // "left" "right" "top" "bottom" "center"
+    "r-transition-name": String,
   });
 
   $$ = (() => {
@@ -14,20 +14,16 @@ export class RDialog extends RainbowElement {
       defaultSlot: createSlot("slot", "", ""),
       transition: Transition({
         node: this,
-        dispatchNode: this,
-        eventNode: content,
-        name: "r-dialog",
-        hideClassName: "r-dialog-hide",
+        eventNode: this,
+        name: "r-transition",
       }),
     };
   })();
 
   set value(v) {
-    if (this.$$.value === v) return;
     this.$$.value = v;
     if (this.$$.value) this.$$.transition.show();
     else this.$$.transition.hide();
-    // console.log(" set value ");
   }
 
   get value() {
@@ -46,36 +42,9 @@ export class RDialog extends RainbowElement {
     const { rOrientation } = this.$.DATA;
     this.classList.add(`r-dialog-${rOrientation}`);
     if (this.value === false) this.classList.add("r-dialog-hide");
-    this.$$.transition = Transition({
-      node: this,
-      dispatchNode: this,
-      eventNode: this.$$.content,
-      name: "r-dialog-" + rOrientation,
-      hideClassName: "r-dialog-hide",
-    });
-    console.log(" connectedCallback ", rOrientation);
   }
 
   disconnectedCallback(...arg) {
     super.disconnectedCallback(...arg);
   }
-}
-
-export function createDialog(params) {
-  const dialog = document.createElement("r-dialog");
-  document.body.appendChild(dialog);
-
-  function fun(node) {
-    dialog.innerHTML = "";
-    dialog.append(node);
-    dialog.value = true;
-  }
-
-  fun.ele = dialog;
-
-  fun.close = () => {
-    dialog.value = false;
-  };
-
-  return fun;
 }

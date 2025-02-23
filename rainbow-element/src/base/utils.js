@@ -155,3 +155,64 @@ export function toggleClass(node, bool, addClass = "", removeClass = "") {
 export function isNum(d) {
   return typeof d === "number";
 }
+
+export function Transition(props = {}) {
+  const config = {
+    node: createElement(),
+    eventNode: createElement(),
+    dispatchNode: createElement(),
+    name: "",
+    ...props,
+  };
+
+  const args = {
+    value: false,
+    onTransitionend: () => {
+      config.node.classList.remove(`${config.name}-enter-active`);
+      config.node.classList.remove(`${config.name}-leave-active`);
+      if (args.value) {
+        config.node.classList.remove(`${config.hideClassName}`);
+        config.dispatchNode.dispatchEvent(createCustomEvent("after-enter"));
+      } else {
+        config.node.classList.add(`${config.hideClassName}`);
+        config.dispatchNode.dispatchEvent(createCustomEvent("after-leave"));
+      }
+    },
+    show() {
+      args.value = true;
+      config.node.classList.remove(`${config.hideClassName}`);
+      config.node.classList.add(`${config.name}-enter-from`);
+      config.node.classList.remove(`${config.name}-leave-from`);
+      config.node.classList.remove(`${config.name}-leave-active`);
+      config.node.classList.remove(`${config.name}-leave-to`);
+      config.dispatchNode.dispatchEvent(createCustomEvent("before-enter"));
+      requestAnimationFrame(() => {
+        config.node.classList.remove(`${config.name}-enter-from`);
+        config.node.classList.add(`${config.name}-enter-active`);
+        config.node.classList.add(`${config.name}-enter-to`);
+        config.dispatchNode.dispatchEvent(createCustomEvent("enter"));
+        config.eventNode.removeEventListener("transitionend", this.onTransitionend);
+        config.eventNode.addEventListener("transitionend", this.onTransitionend);
+      });
+    },
+
+    hide() {
+      args.value = false;
+      config.node.classList.remove(`${config.name}-enter-from`);
+      config.node.classList.remove(`${config.name}-enter-active`);
+      config.node.classList.remove(`${config.name}-enter-to`);
+      config.node.classList.add(`${config.name}-leave-from`);
+      config.dispatchNode.dispatchEvent(createCustomEvent("before-leave"));
+      requestAnimationFrame(() => {
+        config.node.classList.remove(`${config.name}-leave-from`);
+        config.node.classList.add(`${config.name}-leave-active`);
+        config.node.classList.add(`${config.name}-leave-to`);
+        config.dispatchNode.dispatchEvent(createCustomEvent("leave"));
+        config.eventNode.removeEventListener("transitionend", this.onTransitionend);
+        config.eventNode.addEventListener("transitionend", this.onTransitionend);
+      });
+    },
+  };
+
+  return args;
+}

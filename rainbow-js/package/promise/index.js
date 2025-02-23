@@ -16,6 +16,7 @@ export function useQueue(props = {}) {
   function push(current) {
     if (queue.length === 0) options.onBegin(queue, current);
     options.onPush(queue, current);
+    if (queue.includes(current)) arrayRemove(queue, current);
     queue.push(current);
     options.onPushed(queue, current);
   }

@@ -172,10 +172,10 @@ export function Transition(props = {}) {
       config.node.classList.remove(`${config.name}-leave-active`);
       if (args.value) {
         config.node.classList.remove(`${config.hideClassName}`);
-        config.dispatchNode.dispatchEvent(createCustomEvent("after-enter"));
+        config.dispatchNode.dispatchEvent(createCustomEvent("afterEnter"));
       } else {
         config.node.classList.add(`${config.hideClassName}`);
-        config.dispatchNode.dispatchEvent(createCustomEvent("after-leave"));
+        config.dispatchNode.dispatchEvent(createCustomEvent("afterLeave"));
       }
     },
     show() {
@@ -185,7 +185,7 @@ export function Transition(props = {}) {
       config.node.classList.remove(`${config.name}-leave-from`);
       config.node.classList.remove(`${config.name}-leave-active`);
       config.node.classList.remove(`${config.name}-leave-to`);
-      config.dispatchNode.dispatchEvent(createCustomEvent("before-enter"));
+      config.dispatchNode.dispatchEvent(createCustomEvent("beforeEnter"));
       requestAnimationFrame(() => {
         config.node.classList.remove(`${config.name}-enter-from`);
         config.node.classList.add(`${config.name}-enter-active`);
@@ -202,7 +202,7 @@ export function Transition(props = {}) {
       config.node.classList.remove(`${config.name}-enter-active`);
       config.node.classList.remove(`${config.name}-enter-to`);
       config.node.classList.add(`${config.name}-leave-from`);
-      config.dispatchNode.dispatchEvent(createCustomEvent("before-leave"));
+      config.dispatchNode.dispatchEvent(createCustomEvent("beforeLeave"));
       requestAnimationFrame(() => {
         config.node.classList.remove(`${config.name}-leave-from`);
         config.node.classList.add(`${config.name}-leave-active`);

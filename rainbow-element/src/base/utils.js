@@ -195,7 +195,6 @@ export function Transition(props = {}) {
       config.node.classList.remove(`${config.name}-leave-to`);
       config.node.classList.add(`${config.name}-enter-from`);
       config.dispatchNode.dispatchEvent(createCustomEvent("beforeEnter"));
-      console.log(args.animateSymbol === args.finishSymbol);
       if (args.animateSymbol === args.finishSymbol) {
         args.animateSymbol = Symbol();
         await requestAnimationFramePromise();

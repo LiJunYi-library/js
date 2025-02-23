@@ -5,6 +5,7 @@ const rainbow = (() => {
   document.body.append(overlay);
   return {
     overlay,
+    zIndex: 100,
     overlayQueue: useQueue(),
   };
 })();

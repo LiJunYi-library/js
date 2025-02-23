@@ -56,7 +56,7 @@ r-dialog .r-dialog-content {
 
 .r-dialog-top-enter-active::part(r-dialog-content),
 .r-dialog-top-enter-active .r-dialog-content {
-    transition: 3s;
+    transition: 0.3s;
 }
 
 .r-dialog-top-enter-to::part(r-dialog-content),
@@ -71,7 +71,7 @@ r-dialog .r-dialog-content {
 
 .r-dialog-top-leave-active::part(r-dialog-content),
 .r-dialog-top-leave-active .r-dialog-content {
-    transition: 3s;
+    transition: 0.3s;
 }
 
 .r-dialog-top-leave-to::part(r-dialog-content),
@@ -87,7 +87,7 @@ r-dialog .r-dialog-content {
 
 .r-dialog-bottom-enter-active::part(r-dialog-content),
 .r-dialog-bottom-enter-active .r-dialog-content {
-    transition: 3s;
+    transition: 0.3s;
 }
 
 .r-dialog-bottom-enter-to::part(r-dialog-content),
@@ -102,7 +102,7 @@ r-dialog .r-dialog-content {
 
 .r-dialog-bottom-leave-active::part(r-dialog-content),
 .r-dialog-bottom-leave-active .r-dialog-content {
-    transition: 3s;
+    transition: 0.3s;
 }
 
 .r-dialog-bottom-leave-to::part(r-dialog-content),
@@ -118,7 +118,7 @@ r-dialog .r-dialog-content {
 
 .r-dialog-left-enter-active::part(r-dialog-content),
 .r-dialog-left-enter-active .r-dialog-content {
-    transition: 3s;
+    transition: 0.3s;
 }
 
 .r-dialog-left-enter-to::part(r-dialog-content),
@@ -133,7 +133,7 @@ r-dialog .r-dialog-content {
 
 .r-dialog-left-leave-active::part(r-dialog-content),
 .r-dialog-left-leave-active .r-dialog-content {
-    transition: 3s;
+    transition: 0.3s;
 }
 
 .r-dialog-left-leave-to::part(r-dialog-content),
@@ -149,7 +149,7 @@ r-dialog .r-dialog-content {
 
 .r-dialog-right-enter-active::part(r-dialog-content),
 .r-dialog-right-enter-active .r-dialog-content {
-    transition: 3s;
+    transition: 0.3s;
 }
 
 .r-dialog-right-enter-to::part(r-dialog-content),
@@ -164,7 +164,7 @@ r-dialog .r-dialog-content {
 
 .r-dialog-right-leave-active::part(r-dialog-content),
 .r-dialog-right-leave-active .r-dialog-content {
-    transition: 3s;
+    transition: 0.3s;
 }
 
 .r-dialog-right-leave-to::part(r-dialog-content),
@@ -181,7 +181,7 @@ r-dialog .r-dialog-content {
 
 .r-dialog-center-enter-active::part(r-dialog-content),
 .r-dialog-center-enter-active .r-dialog-content {
-    transition: 3s;
+    transition: 0.3s;
 }
 
 .r-dialog-center-enter-to::part(r-dialog-content),
@@ -198,7 +198,7 @@ r-dialog .r-dialog-content {
 
 .r-dialog-center-leave-active::part(r-dialog-content),
 .r-dialog-center-leave-active .r-dialog-content {
-    transition: 3s;
+    transition: 0.3s;
 }
 
 .r-dialog-center-leave-to::part(r-dialog-content),
@@ -227,7 +227,7 @@ r-overlay {
 }
 
 .r-overlay-enter-active {
-    transition: 3s;
+    transition: 0.3s;
 }
 
 .r-overlay-enter-to {
@@ -239,7 +239,7 @@ r-overlay {
 }
 
 .r-overlay-leave-active {
-    transition: 3s;
+    transition: 0.3s;
 }
 
 .r-overlay-leave-to {

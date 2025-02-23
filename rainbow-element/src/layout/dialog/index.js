@@ -1,5 +1,53 @@
 import "./index.css";
-import { RainbowElement, createElement, createSlot, Transition } from "../../base/index.js";
+import {
+  RainbowElement,
+  createElement,
+  createSlot,
+  Transition,
+  createCustomEvent,
+} from "../../base/index.js";
+
+export class ROverlay extends RainbowElement {
+  $$ = (() => {
+    return {
+      value: false,
+      transition: Transition({
+        node: this,
+        dispatchNode: this,
+        eventNode: this,
+        name: "r-overlay",
+        hideClassName: "r-overlay-hide",
+      }),
+    };
+  })();
+
+  set value(v) {
+    if (this.$$.value === v) return;
+    this.$$.value = v;
+    if (this.$$.value) this.$$.transition.show();
+    else this.$$.transition.hide();
+  }
+
+  get value() {
+    return this.$$.value;
+  }
+
+  connectedCallback(...arg) {
+    super.connectedCallback(...arg);
+    if (this.value === false) this.classList.add("r-overlay-hide");
+    this.$$.transition = Transition({
+      node: this,
+      dispatchNode: this,
+      eventNode: this,
+      name: "r-overlay",
+      hideClassName: "r-overlay-hide",
+    });
+  }
+
+  disconnectedCallback(...arg) {
+    super.disconnectedCallback(...arg);
+  }
+}
 
 export class RDialog extends RainbowElement {
   static observedAttributes = this.$registerProps({
@@ -19,15 +67,31 @@ export class RDialog extends RainbowElement {
         name: "r-dialog",
         hideClassName: "r-dialog-hide",
       }),
+      onOverlayClick: (event) => {
+        if (window.rainbow.overlayQueue.queue.at(-1) !== this) return;
+        this.value = false;
+        this.dispatchEvent(createCustomEvent("input", { value: false }));
+      },
+      open: () => {
+        this.$$.transition.show();
+        window.rainbow.overlay.value = true;
+        window.rainbow.overlayQueue.push(this);
+        window.rainbow.overlay.addEventListener("click", this.$$.onOverlayClick);
+      },
+      close: () => {
+        this.$$.transition.hide();
+        window.rainbow.overlayQueue.remove(this);
+        if (window.rainbow.overlayQueue.queue.length === 0) window.rainbow.overlay.value = false;
+        window.rainbow.overlay.removeEventListener("click", this.$$.onOverlayClick);
+      },
     };
   })();
 
   set value(v) {
     if (this.$$.value === v) return;
     this.$$.value = v;
-    if (this.$$.value) this.$$.transition.show();
-    else this.$$.transition.hide();
-    // console.log(" set value ");
+    if (this.$$.value) this.$$.open();
+    else this.$$.close();
   }
 
   get value() {

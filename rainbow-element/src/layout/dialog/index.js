@@ -74,7 +74,7 @@ export class RDialog extends RainbowElement {
         this.dispatchEvent(createCustomEvent("input", { value: false }));
       },
       open: () => {
-        rainbow.zIndex = rainbow.zIndex + 3;
+        rainbow.zIndex = rainbow.zIndex + rainbow.zIndexAdd;
         this.style.zIndex = rainbow.zIndex;
         this.$$.transition.show();
         rainbow.overlay.value = true;

@@ -8,6 +8,11 @@ const rainbow = (() => {
     zIndex: 100,
     zIndexAdd: 3,
     overlayQueue: useQueue(),
+    dialogQueue: useQueue(),
+    customRender(node, dialog) {
+      dialog.innerHTML = "";
+      dialog.append(node);
+    },
   };
 })();
 window.rainbow = rainbow;

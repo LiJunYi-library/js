@@ -69,26 +69,32 @@ export class RDialog extends RainbowElement {
       }),
       onOverlayClick: (event) => {
         if (window.rainbow.overlayQueue.queue.at(-1) !== this) return;
+        console.log("onOverlayClick");
         this.value = false;
         this.dispatchEvent(createCustomEvent("input", { value: false }));
       },
       open: () => {
+        rainbow.zIndex = rainbow.zIndex + 3;
+        this.style.zIndex = rainbow.zIndex;
         this.$$.transition.show();
-        window.rainbow.overlay.value = true;
-        window.rainbow.overlayQueue.push(this);
-        window.rainbow.overlay.addEventListener("click", this.$$.onOverlayClick);
+        rainbow.overlay.value = true;
+        rainbow.overlayQueue.push(this);
+        rainbow.overlay.addEventListener("click", this.$$.onOverlayClick);
+        rainbow.overlay.style.zIndex = rainbow.overlayQueue.queue.at(-1).style.zIndex - 1;
       },
       close: () => {
         this.$$.transition.hide();
-        window.rainbow.overlayQueue.remove(this);
-        if (window.rainbow.overlayQueue.queue.length === 0) window.rainbow.overlay.value = false;
-        window.rainbow.overlay.removeEventListener("click", this.$$.onOverlayClick);
+        rainbow.overlayQueue.remove(this);
+        if (rainbow.overlayQueue.queue.length === 0) rainbow.overlay.value = false;
+        rainbow.overlay.removeEventListener("click", this.$$.onOverlayClick);
+      },
+      afterLeave: () => {
+        rainbow.overlay.style.zIndex = (rainbow.overlayQueue.queue.at(-1)?.style?.zIndex ?? 1) - 1;
       },
     };
   })();
 
   set value(v) {
-    if (this.$$.value === v) return;
     this.$$.value = v;
     if (this.$$.value) this.$$.open();
     else this.$$.close();
@@ -103,6 +109,7 @@ export class RDialog extends RainbowElement {
     this.attachShadow({ mode: "open" });
     this.$$.content.append(this.$$.defaultSlot);
     this.shadowRoot.appendChild(this.$$.content);
+    this.addEventListener("afterLeave", this.$$.afterLeave);
   }
 
   connectedCallback(...arg) {

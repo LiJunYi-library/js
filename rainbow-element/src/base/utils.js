@@ -163,19 +163,22 @@ export function Transition(props = {}) {
     node: createElement(),
     eventNode: createElement(),
     dispatchNode: createElement(),
+    formatterVisible: (node) => node.value,
     name: "",
     ...props,
   };
 
   const args = {
-    value: false,
+    value: undefined,
     animateSymbol: 1,
     finishSymbol: 1,
     onTransitionend: () => {
       args.finishSymbol = args.animateSymbol;
       config.node.classList.remove(`${config.name}-enter-active`);
       config.node.classList.remove(`${config.name}-leave-active`);
-      if (args.value) {
+      config.node.classList.remove(`${config.name}-enter-to`);
+      config.node.classList.remove(`${config.name}-leave-to`);
+      if (config.formatterVisible(config.node)) {
         config.node.classList.remove(`${config.hideClassName}`);
         config.dispatchNode.dispatchEvent(createCustomEvent("afterEnter"));
       } else {
@@ -184,6 +187,7 @@ export function Transition(props = {}) {
       }
     },
     async show() {
+      if (args.value === true) return;
       args.value = true;
       config.node.classList.remove(`${config.hideClassName}`);
       config.node.classList.remove(`${config.name}-leave-from`);
@@ -191,6 +195,7 @@ export function Transition(props = {}) {
       config.node.classList.remove(`${config.name}-leave-to`);
       config.node.classList.add(`${config.name}-enter-from`);
       config.dispatchNode.dispatchEvent(createCustomEvent("beforeEnter"));
+      console.log(args.animateSymbol === args.finishSymbol);
       if (args.animateSymbol === args.finishSymbol) {
         args.animateSymbol = Symbol();
         await requestAnimationFramePromise();
@@ -204,6 +209,7 @@ export function Transition(props = {}) {
     },
 
     async hide() {
+      if (args.value === false) return;
       args.value = false;
       config.node.classList.remove(`${config.name}-enter-from`);
       config.node.classList.remove(`${config.name}-enter-active`);

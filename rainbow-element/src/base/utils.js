@@ -1,3 +1,5 @@
+import { requestAnimationFramePromise } from "@rainbow_ljy/rainbow-js";
+
 export function deleteKey(target, source, bool) {
   for (const key in target) {
     if (Object.prototype.hasOwnProperty.call(target, key)) {
@@ -167,7 +169,10 @@ export function Transition(props = {}) {
 
   const args = {
     value: false,
+    animateSymbol: 1,
+    finishSymbol: 1,
     onTransitionend: () => {
+      args.finishSymbol = args.animateSymbol;
       config.node.classList.remove(`${config.name}-enter-active`);
       config.node.classList.remove(`${config.name}-leave-active`);
       if (args.value) {
@@ -178,39 +183,43 @@ export function Transition(props = {}) {
         config.dispatchNode.dispatchEvent(createCustomEvent("afterLeave"));
       }
     },
-    show() {
+    async show() {
       args.value = true;
       config.node.classList.remove(`${config.hideClassName}`);
-      config.node.classList.add(`${config.name}-enter-from`);
       config.node.classList.remove(`${config.name}-leave-from`);
       config.node.classList.remove(`${config.name}-leave-active`);
       config.node.classList.remove(`${config.name}-leave-to`);
+      config.node.classList.add(`${config.name}-enter-from`);
       config.dispatchNode.dispatchEvent(createCustomEvent("beforeEnter"));
-      requestAnimationFrame(() => {
-        config.node.classList.remove(`${config.name}-enter-from`);
-        config.node.classList.add(`${config.name}-enter-active`);
-        config.node.classList.add(`${config.name}-enter-to`);
-        config.dispatchNode.dispatchEvent(createCustomEvent("enter"));
-        config.eventNode.removeEventListener("transitionend", this.onTransitionend);
-        config.eventNode.addEventListener("transitionend", this.onTransitionend);
-      });
+      if (args.animateSymbol === args.finishSymbol) {
+        args.animateSymbol = Symbol();
+        await requestAnimationFramePromise();
+      }
+      config.node.classList.remove(`${config.name}-enter-from`);
+      config.node.classList.add(`${config.name}-enter-active`);
+      config.node.classList.add(`${config.name}-enter-to`);
+      config.dispatchNode.dispatchEvent(createCustomEvent("enter"));
+      config.eventNode.removeEventListener("transitionend", this.onTransitionend);
+      config.eventNode.addEventListener("transitionend", this.onTransitionend);
     },
 
-    hide() {
+    async hide() {
       args.value = false;
       config.node.classList.remove(`${config.name}-enter-from`);
       config.node.classList.remove(`${config.name}-enter-active`);
       config.node.classList.remove(`${config.name}-enter-to`);
       config.node.classList.add(`${config.name}-leave-from`);
       config.dispatchNode.dispatchEvent(createCustomEvent("beforeLeave"));
-      requestAnimationFrame(() => {
-        config.node.classList.remove(`${config.name}-leave-from`);
-        config.node.classList.add(`${config.name}-leave-active`);
-        config.node.classList.add(`${config.name}-leave-to`);
-        config.dispatchNode.dispatchEvent(createCustomEvent("leave"));
-        config.eventNode.removeEventListener("transitionend", this.onTransitionend);
-        config.eventNode.addEventListener("transitionend", this.onTransitionend);
-      });
+      if (args.animateSymbol === args.finishSymbol) {
+        args.animateSymbol = Symbol();
+        await requestAnimationFramePromise();
+      }
+      config.node.classList.remove(`${config.name}-leave-from`);
+      config.node.classList.add(`${config.name}-leave-active`);
+      config.node.classList.add(`${config.name}-leave-to`);
+      config.dispatchNode.dispatchEvent(createCustomEvent("leave"));
+      config.eventNode.removeEventListener("transitionend", this.onTransitionend);
+      config.eventNode.addEventListener("transitionend", this.onTransitionend);
     },
   };
 

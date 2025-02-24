@@ -45,8 +45,6 @@ export default YaxiHoc({
     option: { type: Object, default: () => option() },
     interceptOption: {
       type: Function, default: (config, rest) => {
-        console.log(config.minInterval);
-        console.log(rest);
         let max = Math.max(...config.data);
         let min = Math.min(...config.data);
         let avg = (max - min) / Math.max((config.splitNumber - 2), 1);

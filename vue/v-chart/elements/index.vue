@@ -169,6 +169,7 @@ export const Hoc = (options = {}) => {
           const config = el.attrs;
           if (el?.context?.data?.length) config.data = el.context.data;
           if (el?.props?.property || el?.props?.formatter) config.data = data;
+          el?.props?.interceptOption?.(config, el,)
           return config;
         });
         props.option.xAxis = optionXAxis;
@@ -185,6 +186,7 @@ export const Hoc = (options = {}) => {
           const config = el.attrs;
           if (el?.context?.data?.length) config.data = el.context.data;
           if (el?.props?.property || el?.props?.formatter) config.data = data;
+          el?.props?.interceptOption?.(config, el,)
           return config;
         });
         props.option.yAxis = optionYAxis;

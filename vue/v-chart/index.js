@@ -52,6 +52,7 @@ export const {
   RChartSerieMoneyLinear,
   RChartSerieTreeCake,
   RChartSerieHistoryLine,
+  RChartXaxiHistory,
   RChartXaxiBubble,
   RChartXaxiHoc,
   RChartXaxi,

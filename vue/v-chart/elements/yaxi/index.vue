@@ -26,11 +26,13 @@ export function YaxiHoc(options = {}) {
       option: { type: [Object, Function], default: (...arg) => option(...arg) },
       property: { type: String, default: '' },
       formatter: Function,
+      interceptOption: Function,
       ...config.props,
     },
     setup(props, ctx) {
       const yAxi = reactive({
         props,
+        data: [],
         attrs: merge(props.option, ctx.attrs),
       });
 

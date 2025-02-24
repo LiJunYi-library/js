@@ -31,6 +31,7 @@ export function XaxiHoc(options = {}) {
     props: {
       option: {type: Object, default: (...arg) => option(...arg)},
       property: {type: String, default: ''},
+      interceptOption: Function,
       formatter: Function,
       rotate: {type: Number, default: 0},
       ...config.props,
@@ -38,6 +39,7 @@ export function XaxiHoc(options = {}) {
     setup(props, ctx) {
       const xAxi = reactive({
         props,
+        data: [],
         attrs: merge(props.option, ctx.attrs),
       });
 

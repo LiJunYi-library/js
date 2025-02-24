@@ -40,6 +40,7 @@ export const {
   RChartmerge,
   RChart,
   RChartLinear,
+  RChartHistory,
   RChartSerieLinear,
   RChartSerieAnnular,
   RChartSerieAvg,

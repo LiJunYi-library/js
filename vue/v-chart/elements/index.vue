@@ -108,6 +108,7 @@ export const Hoc = (options = {}) => {
     listHook: { type: Object, default: () => ({}) },
     list: { type: Array, default: () => [] },
     loading: Boolean,
+    interceptOption: Function,
     options: { type: Object, default: () => ({}) },
     emptyText: { type: String, default: '暂无数据' },
     width: [String, Number],
@@ -119,7 +120,7 @@ export const Hoc = (options = {}) => {
 
   const Context = defineComponent({
     props: defProps,
-    setup(props) {
+    setup(props, ctx) {
       const ChartContext = inject('ChartContext') || {};
 
       const List = computed(() => props.listHook.list || props.list);
@@ -199,11 +200,12 @@ export const Hoc = (options = {}) => {
             const val = row[el.props.property];
             return val;
           });
-          const config = { ...el.attrs };
+          const config = el.attrs;
           if (el?.context?.data?.length) config.data = el?.context?.data?.map(ct => ct.attrs);
           if (el?.props?.property || el?.props?.formatter) config.data = data;
           if (el.props.name !== undefined) config.name = el.props.name;
           if (el.props.data !== undefined) config.data = el.props.data;
+          el?.props?.interceptOption?.(config, el,)
           return config;
         });
         props.option.series = optionSerie;
@@ -215,7 +217,7 @@ export const Hoc = (options = {}) => {
 
       function setOption() {
         console.log(props.option);
-
+        props?.interceptOption?.(List.value, props, ctx);
         if (props.option) chart?.setOption?.(props.option);
       }
 

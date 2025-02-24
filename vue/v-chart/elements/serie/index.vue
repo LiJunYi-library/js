@@ -20,6 +20,7 @@ export const SerieHoc = (options = {}) => {
       option: {type: Object, default: (...arg) => option(...arg)},
       property: {type: String, default: ''},
       formatter: Function,
+      interceptOption: Function,
       name: String,
       data: [Array, Object],
       ...config.props,

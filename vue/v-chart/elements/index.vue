@@ -19,7 +19,7 @@ import {
   inject,
   computed,
 } from 'vue';
-import {RResize} from '@rainbow_ljy/v-view';
+import { RResize } from '@rainbow_ljy/v-view';
 
 /**
  *
@@ -28,7 +28,7 @@ import {RResize} from '@rainbow_ljy/v-view';
  * @param {*} options assignKeys
  * @return target
  */
-export function merge(target = {}, source = {}, options = {assignKeys: []}) {
+export function merge(target = {}, source = {}, options = { assignKeys: [] }) {
   const assignKeys = options.assignKeys || [];
   for (const key in source) {
     if (Object.hasOwnProperty.call(source, key)) {
@@ -104,15 +104,15 @@ export const Hoc = (options = {}) => {
     ...options,
   };
   const defProps = {
-    option: {type: Object, default: (...arg) => defaultOption(...arg)},
-    listHook: {type: Object, default: () => ({})},
-    list: {type: Array, default: () => []},
+    option: { type: Object, default: (...arg) => defaultOption(...arg) },
+    listHook: { type: Object, default: () => ({}) },
+    list: { type: Array, default: () => [] },
     loading: Boolean,
-    options: {type: Object, default: () => ({})},
-    emptyText: {type: String, default: '暂无数据'},
+    options: { type: Object, default: () => ({}) },
+    emptyText: { type: String, default: '暂无数据' },
     width: [String, Number],
     height: [String, Number],
-    minHeight: {type: [String, Number], default: '500'},
+    minHeight: { type: [String, Number], default: '500' },
     title: String,
     ...config.props,
   };
@@ -161,12 +161,13 @@ export const Hoc = (options = {}) => {
       function habdlerXAxis() {
         const optionXAxis = ChartContext.xAxis.map((el, index) => {
           const data = List.value.map(row => {
-            if (el.props.formatter) return el.props.formatter({row});
+            if (el.props.formatter) return el.props.formatter({ row });
             const val = row[el.props.property];
             return val;
           });
-          const config = {...el.attrs};
-          if (el?.context?.data?.length) config.data = el?.context?.data;
+          el.data = data;
+          const config = el.attrs;
+          if (el?.context?.data?.length) config.data = el.context.data;
           if (el?.props?.property || el?.props?.formatter) config.data = data;
           return config;
         });
@@ -176,11 +177,13 @@ export const Hoc = (options = {}) => {
       function habdlerYAxis() {
         const optionYAxis = ChartContext.yAxis.map((el, index) => {
           const data = List.value.map(row => {
-            if (el.props.formatter) return el.props.formatter({row});
+            if (el.props.formatter) return el.props.formatter({ row });
             const val = row[el.props.property];
             return val;
           });
-          const config = {...el.attrs};
+          el.data = data;
+          const config = el.attrs;
+          if (el?.context?.data?.length) config.data = el.context.data;
           if (el?.props?.property || el?.props?.formatter) config.data = data;
           return config;
         });
@@ -190,11 +193,11 @@ export const Hoc = (options = {}) => {
       function habdlerSeries() {
         const optionSerie = ChartContext.series.map((el, index) => {
           const data = List.value.map((row, index) => {
-            if (el.props.formatter) return el.props.formatter({row, index});
+            if (el.props.formatter) return el.props.formatter({ row, index });
             const val = row[el.props.property];
             return val;
           });
-          const config = {...el.attrs};
+          const config = { ...el.attrs };
           if (el?.context?.data?.length) config.data = el?.context?.data?.map(ct => ct.attrs);
           if (el?.props?.property || el?.props?.formatter) config.data = data;
           if (el.props.name !== undefined) config.name = el.props.name;
@@ -205,7 +208,7 @@ export const Hoc = (options = {}) => {
       }
 
       function onResize(offset) {
-        chart.resize({width: offset.width, height: offset.height});
+        chart.resize({ width: offset.width, height: offset.height });
       }
 
       function setOption() {

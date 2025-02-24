@@ -1,19 +1,19 @@
+<!-- eslint-disable no-undef -->
 <script lang="jsx">
-import { SerieHoc } from "./index.vue";
-import * as echarts from "echarts";
+import {SerieHoc} from './index.vue';
 
 const option = () => ({
-  name: "价格带分析",
+  name: '价格带分析',
   data: [],
-  type: "scatter",
+  type: 'scatter',
   symbolSize(data) {
-    let size = Math.log(data[2]) * 1.5;
+    const size = Math.log(data[2]) * 1.5;
     return size;
   },
   markLine: {
     silent: true,
     lineStyle: {
-      color: "#01fef9",
+      color: '#01fef9',
     },
     data: [
       {
@@ -24,24 +24,24 @@ const option = () => ({
       },
     ],
     label: {
-      formatter: () => "均值",
+      formatter: () => '均值',
     },
   },
   emphasis: {
-    focus: "series",
+    focus: 'series',
   },
   itemStyle: {
     shadowBlur: 10,
-    shadowColor: "rgba(120, 36, 50, 0.5)",
+    shadowColor: 'rgba(120, 36, 50, 0.5)',
     shadowOffsetY: 5,
     color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [
       {
         offset: 0,
-        color: "rgb(251, 118, 123)",
+        color: 'rgb(251, 118, 123)',
       },
       {
         offset: 1,
-        color: "rgb(204, 46, 72)",
+        color: 'rgb(204, 46, 72)',
       },
     ]),
   },
@@ -49,7 +49,7 @@ const option = () => ({
 
 export default SerieHoc({
   props: {
-    option: { type: Object, default: () => option() },
+    option: {type: Object, default: () => option()},
   },
 });
 </script>

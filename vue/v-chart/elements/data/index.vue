@@ -1,5 +1,6 @@
+<!-- eslint-disable no-unused-expressions -->
 <script lang="jsx">
-import { onBeforeUnmount, provide, reactive, inject, defineComponent } from "vue";
+import {onBeforeUnmount, provide, reactive, inject, defineComponent} from 'vue';
 
 export default defineComponent({
   inheritAttrs: false,
@@ -7,14 +8,14 @@ export default defineComponent({
     formatter: Function,
   },
   setup(props, ctx) {
-    const data = reactive({ attrs: ctx.attrs });
+    const data = reactive({attrs: ctx.attrs});
 
-    const SerieContext = inject("SerieContext") || {};
+    const SerieContext = inject('SerieContext') || {};
 
     SerieContext?.data.push(data);
 
     onBeforeUnmount(() => {
-      SerieContext.data = SerieContext?.data.filter((el) => el !== data);
+      SerieContext.data = SerieContext?.data.filter(el => el !== data);
     });
 
     return () => {

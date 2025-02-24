@@ -1,18 +1,18 @@
 <script lang="jsx">
-import { Hoc } from "./index.vue";
+import {Hoc} from './index.vue';
 
 const option = () => ({
   tooltip: {
-    trigger: "item",
+    trigger: 'item',
   },
   legend: {
-    top: "30",
+    top: '30',
   },
 });
 
 export default Hoc({
   props: {
-    option: { type: Object, default: () => option() },
+    option: {type: Object, default: () => option()},
   },
 });
 </script>

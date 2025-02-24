@@ -1,23 +1,23 @@
 <script lang="jsx">
-import { Hoc } from "./index.vue";
+import {Hoc} from './index.vue';
 
 const option = () => ({
   tooltip: {
-    trigger: "axis",
+    trigger: 'axis',
     axisPointer: {
-      type: "shadow",
+      type: 'shadow',
     },
   },
   title: {
-    top: "15",
-    left: "0",
+    top: '15',
+    left: '0',
   },
-  legend: { bottom: "0", top: "auto", right: "auto" },
+  legend: {bottom: '0', top: 'auto', right: 'auto'},
   grid: {
-    top: "90",
-    left: "10",
-    right: "10",
-    bottom: "30",
+    top: '90',
+    left: '10',
+    right: '10',
+    bottom: '30',
     containLabel: true,
   },
   xAxis: [],
@@ -27,7 +27,7 @@ const option = () => ({
 
 export default Hoc({
   props: {
-    option: { type: Object, default: () => option() },
+    option: {type: Object, default: () => option()},
   },
 });
 </script>

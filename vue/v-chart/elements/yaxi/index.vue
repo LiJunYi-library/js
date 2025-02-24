@@ -1,14 +1,15 @@
+<!-- eslint-disable no-unused-expressions -->
 <script lang="jsx">
-import { onBeforeUnmount, inject, reactive, defineComponent } from "vue";
-import { merge } from "../index.vue";
+import { onBeforeUnmount, inject, reactive, defineComponent } from 'vue';
+import { merge } from '../index.vue';
 
 const option = () => ({
-  type: "value",
+  type: 'value',
   axisLabel: {
-    formatter: function (value) {
-      const val = value + "";
-      if (val.length > 8) return value / 100000000 + "亿";
-      if (val.length > 4) return value / 10000 + "万";
+    formatter(value) {
+      const val = `${value}`;
+      if (val.length > 8) return `${value / 100000000}亿`;
+      if (val.length > 4) return `${value / 10000}万`;
       return value;
     },
   },
@@ -22,8 +23,8 @@ export function YaxiHoc(options = {}) {
   return defineComponent({
     inheritAttrs: false,
     props: {
-      option: { type: Object, default: (...arg) => option(...arg) },
-      property: { type: String, default: "" },
+      option: { type: [Object, Function], default: (...arg) => option(...arg) },
+      property: { type: String, default: '' },
       formatter: Function,
       ...config.props,
     },
@@ -33,12 +34,13 @@ export function YaxiHoc(options = {}) {
         attrs: merge(props.option, ctx.attrs),
       });
 
-      const ChartContext = inject("ChartContext") || {};
+
+      const ChartContext = inject('ChartContext') || {};
 
       ChartContext?.yAxis.push(yAxi);
 
       onBeforeUnmount(() => {
-        ChartContext.yAxis = ChartContext?.yAxis.filter((el) => el !== yAxi);
+        ChartContext.yAxis = ChartContext?.yAxis.filter(el => el !== yAxi);
       });
 
       return () => {

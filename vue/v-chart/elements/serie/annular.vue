@@ -1,27 +1,27 @@
 <script lang="jsx">
-import { onBeforeUnmount, inject, defineComponent } from "vue";
-import { SerieHoc } from "./index.vue";
+import {onBeforeUnmount, inject, defineComponent} from 'vue';
+import {SerieHoc} from './index.vue';
 
 const option = () => ({
   top: 20,
-  name: "Access From",
-  type: "pie",
-  radius: ["40%", "70%"],
+  name: 'Access From',
+  type: 'pie',
+  radius: ['40%', '70%'],
   avoidLabelOverlap: true,
   itemStyle: {
     borderRadius: 5,
-    borderColor: "#fff",
+    borderColor: '#fff',
     borderWidth: 2,
   },
   label: {
     show: false,
-    position: "center",
+    position: 'center',
   },
   emphasis: {
     label: {
       show: true,
       fontSize: 40,
-      fontWeight: "bold",
+      fontWeight: 'bold',
     },
   },
   labelLine: {
@@ -32,7 +32,7 @@ const option = () => ({
 
 export default SerieHoc({
   props: {
-    option: { type: Object, default: () => option() },
+    option: {type: Object, default: () => option()},
   },
 });
 </script>

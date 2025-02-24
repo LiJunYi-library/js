@@ -1,5 +1,13 @@
+<!-- eslint-disable no-undef -->
+<!-- eslint-disable import/no-unresolved -->
+<!-- eslint-disable no-unused-expressions -->
+<!-- eslint-disable no-use-before-define -->
+<!-- eslint-disable no-shadow -->
+<!-- eslint-disable vue/no-mutating-props -->
+<!-- eslint-disable no-param-reassign -->
+<!-- eslint-disable no-restricted-syntax -->
+<!-- eslint-disable @typescript-eslint/explicit-module-boundary-types -->
 <script lang="jsx">
-import * as echarts from "echarts";
 import {
   onMounted,
   onUpdated,
@@ -9,8 +17,9 @@ import {
   reactive,
   defineComponent,
   inject,
-} from "vue";
-import { RResize } from '@rainbow_ljy/v-view';
+  computed,
+} from 'vue';
+import {RResize} from '@rainbow_ljy/v-view';
 
 /**
  *
@@ -19,8 +28,8 @@ import { RResize } from '@rainbow_ljy/v-view';
  * @param {*} options assignKeys
  * @return target
  */
-export function merge(target = {}, source = {}, options = { assignKeys: [] }) {
-  let assignKeys = options.assignKeys || [];
+export function merge(target = {}, source = {}, options = {assignKeys: []}) {
+  const assignKeys = options.assignKeys || [];
   for (const key in source) {
     if (Object.hasOwnProperty.call(source, key)) {
       const targetEle = target[key];
@@ -37,17 +46,17 @@ export function merge(target = {}, source = {}, options = { assignKeys: [] }) {
           return;
         }
 
-        if (typeof sourceEle !== "object") {
+        if (typeof sourceEle !== 'object') {
           target[key] = sourceEle;
           return;
         }
 
-        if (typeof sourceEle === "object" && !targetEle) {
+        if (typeof sourceEle === 'object' && !targetEle) {
           target[key] = sourceEle;
           return;
         }
 
-        if (typeof targetEle === "object" && typeof sourceEle === "object") {
+        if (typeof targetEle === 'object' && typeof sourceEle === 'object') {
           merge(targetEle, sourceEle, options);
         }
       })();
@@ -58,30 +67,30 @@ export function merge(target = {}, source = {}, options = { assignKeys: [] }) {
 
 function formatter(params = []) {
   return params.reduce((add, el) => {
-    return add + `<div>${el.marker} ${el.seriesName} ${el.value}</div>`;
-  }, "");
+    return `${add}<div>${el.marker} ${el.seriesName} ${el.value}</div>`;
+  }, '');
 }
 
 const defaultOption = () => ({
   tooltip: {
-    trigger: "axis",
+    trigger: 'axis',
     axisPointer: {
-      type: "shadow",
+      type: 'shadow',
     },
     // formatter: formatter,
   },
   title: {
-    top: "15",
-    left: "0",
+    top: '15',
+    left: '0',
   },
   legend: {
-    top: "15",
-    right: "0",
+    top: '15',
+    right: '0',
   },
   grid: {
-    left: "0",
-    right: "0",
-    bottom: "0",
+    left: '0',
+    right: '0',
+    bottom: '0',
     containLabel: true,
   },
   xAxis: [],
@@ -95,13 +104,15 @@ export const Hoc = (options = {}) => {
     ...options,
   };
   const defProps = {
-    option: { type: Object, default: (...arg) => defaultOption(...arg) },
-    listHook: { type: Object, default: () => ({}) },
-    options: { type: Object, default: () => ({}) },
-    emptyText: { type: String, default: "暂无数据" },
+    option: {type: Object, default: (...arg) => defaultOption(...arg)},
+    listHook: {type: Object, default: () => ({})},
+    list: {type: Array, default: () => []},
+    loading: Boolean,
+    options: {type: Object, default: () => ({})},
+    emptyText: {type: String, default: '暂无数据'},
     width: [String, Number],
     height: [String, Number],
-    minHeight: { type: [String, Number], default: "500" },
+    minHeight: {type: [String, Number], default: '500'},
     title: String,
     ...config.props,
   };
@@ -109,7 +120,10 @@ export const Hoc = (options = {}) => {
   const Context = defineComponent({
     props: defProps,
     setup(props) {
-      const ChartContext = inject("ChartContext") || {};
+      const ChartContext = inject('ChartContext') || {};
+
+      const List = computed(() => props.listHook.list || props.list);
+      const Loading = computed(() => props.listHook.loading || props.loading);
 
       const chartOptions = {
         title: {
@@ -123,14 +137,14 @@ export const Hoc = (options = {}) => {
       let chartHeml;
       let chart;
 
-      watch(() => props.listHook.list, updateOption);
+      watch(() => List.value, updateOption);
 
       watch(
-        () => props.listHook.loading,
-        (val) => {
+        () => Loading.value,
+        val => {
           if (val) chart?.showLoading();
           if (!val) chart?.hideLoading();
-        }
+        },
       );
 
       function updateOption() {
@@ -146,12 +160,12 @@ export const Hoc = (options = {}) => {
 
       function habdlerXAxis() {
         const optionXAxis = ChartContext.xAxis.map((el, index) => {
-          const data = props.listHook.list.map((row) => {
-            if (el.props.formatter) return el.props.formatter({ row });
+          const data = List.value.map(row => {
+            if (el.props.formatter) return el.props.formatter({row});
             const val = row[el.props.property];
             return val;
           });
-          const config = { ...el.attrs };
+          const config = {...el.attrs};
           if (el?.context?.data?.length) config.data = el?.context?.data;
           if (el?.props?.property || el?.props?.formatter) config.data = data;
           return config;
@@ -161,12 +175,12 @@ export const Hoc = (options = {}) => {
 
       function habdlerYAxis() {
         const optionYAxis = ChartContext.yAxis.map((el, index) => {
-          const data = props.listHook.list.map((row) => {
-            if (el.props.formatter) return el.props.formatter({ row });
+          const data = List.value.map(row => {
+            if (el.props.formatter) return el.props.formatter({row});
             const val = row[el.props.property];
             return val;
           });
-          const config = { ...el.attrs };
+          const config = {...el.attrs};
           if (el?.props?.property || el?.props?.formatter) config.data = data;
           return config;
         });
@@ -175,13 +189,13 @@ export const Hoc = (options = {}) => {
 
       function habdlerSeries() {
         const optionSerie = ChartContext.series.map((el, index) => {
-          const data = props.listHook.list.map((row, index) => {
-            if (el.props.formatter) return el.props.formatter({ row, index });
+          const data = List.value.map((row, index) => {
+            if (el.props.formatter) return el.props.formatter({row, index});
             const val = row[el.props.property];
             return val;
           });
-          const config = { ...el.attrs };
-          if (el?.context?.data?.length) config.data = el?.context?.data?.map((ct) => ct.attrs);
+          const config = {...el.attrs};
+          if (el?.context?.data?.length) config.data = el?.context?.data?.map(ct => ct.attrs);
           if (el?.props?.property || el?.props?.formatter) config.data = data;
           if (el.props.name !== undefined) config.name = el.props.name;
           if (el.props.data !== undefined) config.data = el.props.data;
@@ -191,10 +205,12 @@ export const Hoc = (options = {}) => {
       }
 
       function onResize(offset) {
-        chart.resize({ width: offset.width, height: offset.height });
+        chart.resize({width: offset.width, height: offset.height});
       }
 
       function setOption() {
+        console.log(props.option);
+
         if (props.option) chart?.setOption?.(props.option);
       }
 
@@ -208,9 +224,9 @@ export const Hoc = (options = {}) => {
       onMounted(Mounted);
 
       function emptyShow() {
-        if (props.listHook.loading === true) return false;
-        if (!props.listHook.list) return true;
-        if (!props.listHook.list.length) return true;
+        if (Loading.value === true) return false;
+        if (!List.value) return true;
+        if (!List.value.length) return true;
         return false;
       }
 
@@ -219,19 +235,18 @@ export const Hoc = (options = {}) => {
           <div
             class="chart"
             style={{
-              width: props.width + "px",
-              height: props.height + "px",
-              minHeight: props.minHeight + "px",
-            }}
-          >
+              width: `${props.width}px`,
+              height: `${props.height}px`,
+              minHeight: `${props.minHeight}px`,
+            }}>
             {emptyShow() && (
               <div class="chart-empty">
-                {renderSlot(ChartContext.slots, "empty", {}, () => [<div>{props.emptyText}</div>])}
+                {renderSlot(ChartContext.slots, 'empty', {}, () => [<div>{props.emptyText}</div>])}
               </div>
             )}
 
             <RResize
-              ref={(el) => {
+              ref={el => {
                 chartHeml = el;
               }}
               class="chart-resize"
@@ -256,10 +271,10 @@ export const Hoc = (options = {}) => {
         yAxis: [],
         xAxis: [],
       });
-      provide("ChartContext", ChartContext);
+      provide('ChartContext', ChartContext);
 
       return () => {
-        return [renderSlot(ctx.slots, "default"), <Context {...ctx.attrs} {...props}></Context>];
+        return [renderSlot(ctx.slots, 'default'), <Context {...ctx.attrs} {...props}></Context>];
       };
     },
   });

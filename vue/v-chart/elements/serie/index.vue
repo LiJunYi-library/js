@@ -1,9 +1,10 @@
+<!-- eslint-disable no-unused-expressions -->
 <script lang="jsx">
-import { onBeforeUnmount, provide, reactive, renderSlot, inject, defineComponent } from "vue";
-import { merge } from "../index.vue";
+import {onBeforeUnmount, provide, reactive, renderSlot, inject, defineComponent} from 'vue';
+import {merge} from '../index.vue';
 
 const option = () => ({
-  type: "bar",
+  type: 'bar',
   barMaxWidth: 30,
 });
 
@@ -16,8 +17,8 @@ export const SerieHoc = (options = {}) => {
   return defineComponent({
     inheritAttrs: false,
     props: {
-      option: { type: Object, default: (...arg) => option(...arg) },
-      property: { type: String, default: "" },
+      option: {type: Object, default: (...arg) => option(...arg)},
+      property: {type: String, default: ''},
       formatter: Function,
       name: String,
       data: [Array, Object],
@@ -34,18 +35,18 @@ export const SerieHoc = (options = {}) => {
         attrs: merge(props.option, ctx.attrs),
       });
 
-      provide("SerieContext", SerieContext);
+      provide('SerieContext', SerieContext);
 
-      const ChartContext = inject("ChartContext") || {};
+      const ChartContext = inject('ChartContext') || {};
 
       ChartContext?.series.push(serie);
 
       onBeforeUnmount(() => {
-        ChartContext.series = ChartContext?.series.filter((el) => el !== serie);
+        ChartContext.series = ChartContext?.series.filter(el => el !== serie);
       });
 
       return () => {
-        return renderSlot(ctx.slots, "default");
+        return renderSlot(ctx.slots, 'default');
       };
     },
   });

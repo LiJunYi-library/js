@@ -1,18 +1,19 @@
+<!-- eslint-disable no-unused-expressions -->
 <script lang="jsx">
-import { onBeforeUnmount, inject, reactive, defineComponent } from "vue";
-import { merge } from "../index.vue";
+import {onBeforeUnmount, inject, reactive, defineComponent} from 'vue';
+import {merge} from '../index.vue';
 
-const option = (props) => {
+const option = props => {
   return {
-    nameLocation: "start",
+    nameLocation: 'start',
     axisLabel: {
       rotate: props.rotate,
       hideOverlap: false,
       fontSize: 10,
-      overflow: "break",
+      overflow: 'break',
     },
-    type: "category",
-    boundaryGap: "0%",
+    type: 'category',
+    boundaryGap: '0%',
     axisTick: {
       alignWithLabel: true,
     },
@@ -28,10 +29,10 @@ export function XaxiHoc(options = {}) {
   return defineComponent({
     inheritAttrs: false,
     props: {
-      option: { type: Object, default: (...arg) => option(...arg) },
-      property: { type: String, default: "" },
+      option: {type: Object, default: (...arg) => option(...arg)},
+      property: {type: String, default: ''},
       formatter: Function,
-      rotate: { type: Number, default: 0 },
+      rotate: {type: Number, default: 0},
       ...config.props,
     },
     setup(props, ctx) {
@@ -40,12 +41,12 @@ export function XaxiHoc(options = {}) {
         attrs: merge(props.option, ctx.attrs),
       });
 
-      const ChartContext = inject("ChartContext") || {};
+      const ChartContext = inject('ChartContext') || {};
 
-      ChartContext?.xAxis.push(xAxi);
+      ChartContext?.xAxis?.push?.(xAxi);
 
       onBeforeUnmount(() => {
-        ChartContext.xAxis = ChartContext?.xAxis.filter((el) => el !== xAxi);
+        ChartContext.xAxis = ChartContext?.xAxis.filter(el => el !== xAxi);
       });
 
       return () => {

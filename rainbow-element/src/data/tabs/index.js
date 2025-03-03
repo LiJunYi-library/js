@@ -1,3 +1,4 @@
+import { arrayForEachFindIndex } from "@rainbow_ljy/rainbow-js";
 import {
   RainbowElement,
   toggleClass,
@@ -41,7 +42,8 @@ export class RTabs extends RainbowElement {
           this.$$.active.style.top = `${0}px`;
           return;
         }
-        const index = Array.from(this.children).findIndex((child, index) => {
+        const index = arrayForEachFindIndex(Array.from(this.children), (child) => {
+          if (child.localName !== "r-tab-item") return false;
           const bool = this.value === child.value;
           toggleClass(child, bool, "r-tab-item-act");
           return bool;

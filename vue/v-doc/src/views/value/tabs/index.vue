@@ -1,10 +1,13 @@
 <template>
   <div>
-    <r-tabs v-model="activeVal" :class="tabclass">
-      <template v-for="(item, index) in list" :key="item.value">
-        <r-tab-item :value="item" class="item" :class="'item' + index"> {{ item.label }} </r-tab-item>
-      </template>
+    <r-tabs value="2" :class="tabclass">
       <div slot="active" class="item-active">123</div>
+      <!-- <template v-for="(item, index) in list" :key="item.value">
+        <r-tab-item :value="item" class="item" :class="'item' + index"> {{ item.label }} </r-tab-item>
+      </template> -->
+      <r-tab-item value="1" class="item" > label1 </r-tab-item>
+      <r-tab-item value="2" class="item" :key="2" > label2 </r-tab-item>
+
     </r-tabs>
 
     <div>{{ hook.value }}</div>

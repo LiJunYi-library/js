@@ -378,3 +378,14 @@ export function arrayRewriteFunction(arr = [], props) {
 
   return arr;
 }
+
+//
+export function arrayForEachFindIndex(arr = [], formatter) {
+  let i = -1;
+  arr.forEach((value, index, array) => {
+    if (formatter?.(value, index, array)) {
+      i = index;
+    }
+  });
+  return i;
+}

@@ -1,4 +1,4 @@
-import { requestAnimationFramePromise } from "@rainbow_ljy/rainbow-js";
+import { numFixed, requestAnimationFramePromise } from "@rainbow_ljy/rainbow-js";
 
 export function deleteKey(target, source, bool) {
   for (const key in target) {
@@ -35,8 +35,6 @@ export function convertToCamelCase(str) {
 export function camelCaseToKebabCase(str) {
   return str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
 }
-
-// bubbles: true, cancelable: true,
 
 export class RainbowEvent extends Event {
   constructor(type, eventInitDict, event) {
@@ -146,11 +144,11 @@ export function wipePX(str = "") {
 
 export function toggleClass(node, bool, addClass = "", removeClass = "") {
   if (bool) {
-    node.classList.add(addClass);
-    node.classList.remove(removeClass);
+    if (addClass) node.classList.add(addClass);
+    if (removeClass) node.classList.remove(removeClass);
   } else {
-    node.classList.add(removeClass);
-    node.classList.remove(addClass);
+    if (removeClass) node.classList.add(removeClass);
+    if (addClass) node.classList.remove(addClass);
   }
 }
 
@@ -158,7 +156,7 @@ export function isNum(d) {
   return typeof d === "number";
 }
 
-export function Transition(props = {}) {
+export function transition(props = {}) {
   const config = {
     node: createElement(),
     eventNode: createElement(),
@@ -229,4 +227,45 @@ export function Transition(props = {}) {
   };
 
   return args;
+}
+
+export function resizeObserver(callBack) {
+  let obs = {
+    disconnect: () => undefined,
+    observe: () => undefined,
+    unobserve: () => undefined,
+  };
+
+  try {
+    obs = new ResizeObserver(async (...arg) => {
+      await callBack(...arg);
+    });
+  } catch (error) {}
+
+  return obs;
+}
+
+export function getBoundingClientRect(node) {
+  if (!node)
+    return {
+      bottom: undefined,
+      height: undefined,
+      left: undefined,
+      right: undefined,
+      top: undefined,
+      width: undefined,
+      x: undefined,
+      y: undefined,
+    };
+  const offset = node.getBoundingClientRect();
+  return {
+    bottom: numFixed(offset.bottom),
+    height: numFixed(offset.height),
+    left: numFixed(offset.left),
+    right: numFixed(offset.right),
+    top: numFixed(offset.top),
+    width: numFixed(offset.width),
+    x: numFixed(offset.x),
+    y: numFixed(offset.y),
+  };
 }

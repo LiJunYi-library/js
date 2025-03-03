@@ -61,5 +61,4 @@ export const {
   RChartYaxiBubble,
   RChartYaxiHoc,
   RChartYaxi,
-
 } = elements;

@@ -33,8 +33,8 @@ export class RFalls extends RainbowElement {
       return rColumns;
     })();
     // console.log(col);
-    let colGap = rColumnGap || rGap;
-    let rowGap = rRowGap || rGap;
+    let colGap = rColumnGap || rGap || 0;
+    let rowGap = rRowGap || rGap || 0;
     let left = (i) =>
       `calc( ${(100 / col) * i}% - ${(((col - 1) * colGap) / col) * i}px + ${i * colGap}px )`;
     const list = arrayLoopMap(col, (i) => ({ height: 0, left: left(i), top: 0, index: i }));

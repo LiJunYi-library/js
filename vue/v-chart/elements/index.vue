@@ -216,9 +216,10 @@ export const Hoc = (options = {}) => {
       }
 
       function setOption() {
-        console.log(props.option);
-        props?.interceptOption?.(List.value, props, ctx);
-        if (props.option) chart?.setOption?.(props.option);
+        const config = props.option
+        console.log(config);
+        props?.interceptOption?.(config, List.value, props, ChartContext, ctx);
+        if (config) chart?.setOption?.(config);
       }
 
       function Mounted() {

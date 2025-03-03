@@ -11,4 +11,4 @@ export * from './scroll-refresh/index.js'
 export * from './scroll-memory-bable/index.js'
 export * from './scroll-sticky/index.js'
 export * from './scroll-view/index.js'
-
+export * from './pulldown/index.js'

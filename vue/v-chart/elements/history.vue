@@ -1,10 +1,11 @@
 <script lang="jsx">
+import { render } from 'vue';
 import { Hoc } from './index.vue';
 
 const option = () => {
   const config = ({
     tooltip: {
-      extraCssText: 'max-width: 100%; word-break: break-all;white-space:pre-wrap',
+      extraCssText: 'max-width: 100%; word-break: break-all;',
       trigger: 'axis',
       transitionDuration: 0,
       confine: true,
@@ -26,12 +27,6 @@ const option = () => {
       position(point, params, dom) {
         const width = dom.clientWidth;
         return [point[0] - width / 2, 0];
-      },
-      formatter: (data) => {
-        // console.log('formatter',data);
-        // console.log(config.data);
-        const item = data[0] || {};
-        console.log('formatter',item.dataIndex);
       },
     },
     grid: {

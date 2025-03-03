@@ -34,13 +34,13 @@
 			"discounts": ""
 		}, {
 			"date": "2024-11-04 00:00:00",
-			"originalPrice": "6199",
-			"actualPrice": "6199",
+			"originalPrice": "2199",
+			"actualPrice": "2199",
 			"discounts": ""
 		}, {
 			"date": "2024-11-05 00:00:00",
-			"originalPrice": "6199",
-			"actualPrice": "6199",
+			"originalPrice": "6299",
+			"actualPrice": "6299",
 			"discounts": ""
 		}, {
 			"date": "2024-11-06 00:00:00",
@@ -591,21 +591,25 @@
 		"listLower": [{
 			"days": 0,
 			"dayText": "全部",
+			"title": "历史最低",
 			"lowerPrice": "5299.00",
 			"lowerDate": "2025-02-21 05:29:37"
 		}, {
 			"days": 180,
 			"dayText": "180天",
+			"title": "180天最低",
 			"lowerPrice": "5299.00",
 			"lowerDate": "2025-02-21 05:29:37"
 		}, {
 			"days": 60,
 			"dayText": "60天",
+			"title": "60天最低",
 			"lowerPrice": "5299.00",
 			"lowerDate": "2025-02-21 05:29:37"
 		}, {
 			"days": 30,
 			"dayText": "30天",
+			"title": "30天最低",
 			"lowerPrice": "5299.00",
 			"lowerDate": "2025-02-21 05:29:37"
 		}]

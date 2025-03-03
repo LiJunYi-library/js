@@ -1,0 +1,32 @@
+r-tabs {
+  display: flex;
+  max-width: 100%;
+  overflow: auto;
+  position: relative;
+}
+
+.r-tab-item-act {
+  color: red;
+  font-size: 20px;
+}
+
+r-tabs::part(r-tab-active),
+r-tabs .r-tab-active {
+  position: absolute;
+}
+
+.r-tab-active-transition::part(r-tab-active),
+.r-tab-active-transition .r-tab-active {
+  transition: 0.2s;
+}
+
+r-tabs::part(r-tab-active-line),
+r-tabs .r-tab-active-line {
+  background: cyan;
+  position: absolute;
+  width: 60%;
+  height: 3px;
+  left: 50%;
+  bottom: 6px;
+  transform: translateX(-50%);
+}

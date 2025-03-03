@@ -9,8 +9,8 @@ export class RGrid extends RainbowElement {
     "r-gap": [Number, String],
     "r-row-gap": [Number, String],
     "r-column-gap": [Number, String],
-    "r-grid-wrap": String,
-    "r-grid-stretch": String,
+    "r-grid-wrap": String, // wrap
+    "r-grid-stretch": String, // stretch
   });
 
   $onRegisterIMPS() {

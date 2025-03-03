@@ -30,26 +30,26 @@
 import { arrayLoopMap, ListArray, setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
 import { VRVirtualGridList,VRVirtualFallsList, RLoadingLoad } from '@rainbow_ljy/v-view'
 import { useRadio2, useListLoad2 } from '@rainbow_ljy/v-hooks'
-import { ref, render, defineComponent, toRaw, computed,onMounted } from 'vue'
+import {shallowRef, ref, render, defineComponent, toRaw, computed,onMounted } from 'vue'
 import { useFetch } from '@/utils/request'
 
-const d = arrayLoopMap(50, (value) => ({
+const d = arrayLoopMap(500, (value) => ({
   value,
   id: Math.random(),
   title: arrayLoopMap(Math.floor(Math.random() * 80), () => "标题").join(""),
 }));
 
-const List = ref(
-  d
-)
+const List = ref(d)
+
+
 
 const columns = ref(2)
-const nums = ref(60)
+const nums = ref(100)
 
 let ListLoad
 const body = computed(() => ({
   page: ListLoad.currentPage,
-  rows: 60,
+  rows: 200,
 }))
 const f = useFetch({
   method: 'post',

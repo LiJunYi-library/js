@@ -1,4 +1,4 @@
-function numFomatterThousand(num, Fixed = 1, unit = "万") {
+export function numFomatterThousand(num, Fixed = 1, unit = "万") {
   if (num < 10000) return num;
   let sum = num / 10000;
   sum = sum.toFixed(Fixed);
@@ -14,4 +14,8 @@ function numFomatterThousand(num, Fixed = 1, unit = "万") {
     decimals +
     unit
   );
+}
+
+export function numFixed(num, decimalPlaces = 2) {
+  return parseFloat(num.toFixed(decimalPlaces));
 }

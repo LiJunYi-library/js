@@ -19,7 +19,7 @@
     </div> -->
 
 
-    <r-scroll class="my-scroll" ref="ele" @scrollrefresh="refresh">
+    <r-scroll-view class="my-scroll" ref="ele" @scrollrefresh="refresh">
       <!-- <div slot="bottom">liu六liu六liu六liu六liu六liu六liu六liu六liu六</div>
       <r-scroll-sticky>
         <div style="height: 50px;background: cyan;"></div>
@@ -50,7 +50,7 @@
       </r-scroll-memory-bable> -->
 
 
-    </r-scroll>
+    </r-scroll-view>
 
 
 

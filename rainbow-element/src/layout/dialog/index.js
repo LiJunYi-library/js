@@ -3,7 +3,7 @@ import {
   RainbowElement,
   createElement,
   createSlot,
-  Transition,
+  transition,
   createCustomEvent,
 } from "../../base/index.js";
 
@@ -11,7 +11,7 @@ export class ROverlay extends RainbowElement {
   $$ = (() => {
     return {
       value: false,
-      transition: Transition({
+      transition: transition({
         node: this,
         dispatchNode: this,
         eventNode: this,
@@ -35,7 +35,7 @@ export class ROverlay extends RainbowElement {
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     if (this.value === false) this.classList.add("r-overlay-hide");
-    this.$$.transition = Transition({
+    this.$$.transition = transition({
       node: this,
       dispatchNode: this,
       eventNode: this,
@@ -60,7 +60,7 @@ export class RDialog extends RainbowElement {
       value: false,
       content,
       defaultSlot: createSlot("slot", "", ""),
-      transition: Transition({
+      transition: transition({
         node: this,
         dispatchNode: this,
         eventNode: content,
@@ -68,33 +68,60 @@ export class RDialog extends RainbowElement {
         hideClassName: "r-dialog-hide",
       }),
       onOverlayClick: (event) => {
-        if (window.rainbow.overlayQueue.queue.at(-1) !== this) return;
+        event.stopPropagation();
         console.log("onOverlayClick");
+        if (window.rainbow.overlayQueue.queue.at(-1) !== this) return;
         this.value = false;
         this.dispatchEvent(createCustomEvent("input", { value: false }));
       },
+      onDocumentClick: (event) => {
+        console.log("onDocumentClick", window.rainbow.overlayQueue.queue.length);
+        this.value = false;
+        this.dispatchEvent(createCustomEvent("input", { value: false }));
+      },
+      click: (event) => {
+        event.stopPropagation();
+        console.log("click");
+      },
       open: () => {
+        const prveDialog = rainbow.dialogQueue.queue.at(-1);
         rainbow.zIndex = rainbow.zIndex + rainbow.zIndexAdd;
         this.style.zIndex = rainbow.zIndex;
+        this.style.top = "50px";
+        rainbow.overlay.style.top = "50px";
         this.$$.transition.show();
         rainbow.overlay.value = true;
         rainbow.overlayQueue.push(this);
+        if (prveDialog && prveDialog !== this) {
+          prveDialog.value = false;
+          prveDialog.dispatchEvent(createCustomEvent("input", { value: false }));
+        }
+        rainbow.dialogQueue.push(this);
+        rainbow.overlay.style.zIndex = (rainbow.overlayQueue.queue.at(-1)?.style?.zIndex ?? 1) - 1;
         rainbow.overlay.addEventListener("click", this.$$.onOverlayClick);
-        rainbow.overlay.style.zIndex = rainbow.overlayQueue.queue.at(-1).style.zIndex - 1;
+
+        document.removeEventListener("click", this.$$.onDocumentClick);
       },
       close: () => {
         this.$$.transition.hide();
         rainbow.overlayQueue.remove(this);
+        rainbow.dialogQueue.remove(this);
         if (rainbow.overlayQueue.queue.length === 0) rainbow.overlay.value = false;
         rainbow.overlay.removeEventListener("click", this.$$.onOverlayClick);
+        document.removeEventListener("click", this.$$.onDocumentClick);
       },
       afterLeave: () => {
         rainbow.overlay.style.zIndex = (rainbow.overlayQueue.queue.at(-1)?.style?.zIndex ?? 1) - 1;
+      },
+      afterEnter: () => {
+        // document.addEventListener("click", this.$$.onDocumentClick);
+        // console.log("afterEnter");
       },
     };
   })();
 
   set value(v) {
+    if (this.$$.value === v) return;
     this.$$.value = v;
     if (this.$$.value) this.$$.open();
     else this.$$.close();
@@ -109,7 +136,9 @@ export class RDialog extends RainbowElement {
     this.attachShadow({ mode: "open" });
     this.$$.content.append(this.$$.defaultSlot);
     this.shadowRoot.appendChild(this.$$.content);
+    this.addEventListener("afterEnter", this.$$.afterEnter);
     this.addEventListener("afterLeave", this.$$.afterLeave);
+    this.addEventListener("click", this.$$.click);
   }
 
   connectedCallback(...arg) {
@@ -117,7 +146,7 @@ export class RDialog extends RainbowElement {
     const { rOrientation } = this.$.DATA;
     this.classList.add(`r-dialog-${rOrientation}`);
     if (this.value === false) this.classList.add("r-dialog-hide");
-    this.$$.transition = Transition({
+    this.$$.transition = transition({
       node: this,
       dispatchNode: this,
       eventNode: this.$$.content,
@@ -137,8 +166,7 @@ export function createDialog(params) {
   document.body.appendChild(dialog);
 
   function fun(node) {
-    dialog.innerHTML = "";
-    dialog.append(node);
+    rainbow.customRender(node, dialog);
     dialog.value = true;
   }
 

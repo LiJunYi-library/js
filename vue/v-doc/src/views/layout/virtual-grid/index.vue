@@ -21,10 +21,13 @@
         </r-move>
       </div>
 
+
       <div>
         <div>css</div>
         <div @click="changeColumns(2)">changeColumns</div>
       </div>
+
+
 
       <div>
         <div>属性</div>
@@ -59,7 +62,7 @@
           <div style="color: azure;">这里可以和滚动吸附布局一起使用<a></a></div>
         </r-scroll-sticky>
       </div> -->
-<!--
+      <!--
       <VRVirtualGridList v-model="List" :style="`--r-columns: ${columns};`">
         <template #default="{ item, index, key }">
           <div>index:{{ index }}</div>
@@ -95,40 +98,44 @@
       <div>宫格布局 回收列表</div>
       <div>宫格布局 回收列表</div>
 
-      <RLoadingLoad :promiseHook="ListLoad">
-        <VRVirtualFallsList v-model="ListLoad.list" :style="`--r-columns: ${columns};`">
-          <template #default="{ item, index, key }">
-            <div>index- :{{ index }}</div>
-            <div>id:{{ item.id }}</div>
-            <div>nth:{{ item.value }}</div>
-            <div>{{ item.name }}</div>
-            <div>{{ item.name }}</div>
-            <div>{{ item.name }}</div>
-            <div>{{ item.name }}</div>
-            <r-grid style="--r-columns: 4">
-              <button @click="insert(item, index)">插入</button>
-              <button @click="remove(item, index)">删</button>
-              <button @click="change(item, index)">改</button>
-              <button @click="transposal(item, index)">置顶</button>
-            </r-grid>
-          </template>
-        </VRVirtualFallsList>
-      </RLoadingLoad>
+      <!-- <RLoadingLoad :promiseHook="ListLoad"> -->
+      <VRVirtualFallsList
+        v-model="List"
+        :style="`--r-columns: ${columns};`"
+        :keyExtractor="({ item }) => item.id"
+      >
+        <template #default="{ item, index, key }">
+          <div>index- :{{ index }}</div>
+          <div>id:{{ item.id }}</div>
+          <div>nth:{{ item.value }}</div>
+          <div>{{ item.title }}</div>
+          <div>{{ item.name }}</div>
+          <div>{{ item.name }}</div>
+          <div>{{ item.name }}</div>
+          <r-grid style="--r-columns: 4">
+            <button @click="insert(item, index)">插入</button>
+            <button @click="remove(item, index)">删</button>
+            <button @click="change(item, index)">改</button>
+            <button @click="transposal(item, index)">置顶</button>
+          </r-grid>
+        </template>
+      </VRVirtualFallsList>
+      <!-- </RLoadingLoad> -->
     </r-scroll-view>
   </div>
 </template>
 <script setup lang="jsx">
 import { arrayLoopMap, ListArray, setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
-import { VRVirtualGridList,VRVirtualFallsList, RLoadingLoad } from '@rainbow_ljy/v-view'
+import { VRVirtualGridList, VRVirtualFallsList, RLoadingLoad } from '@rainbow_ljy/v-view'
 import { useRadio2, useListLoad2 } from '@rainbow_ljy/v-hooks'
-import { ref, render, defineComponent, toRaw, computed,onMounted } from 'vue'
+import { ref, render, defineComponent, toRaw, computed, onMounted } from 'vue'
 import { useFetch } from '@/utils/request'
 
 const List = ref(
-  arrayLoopMap(20, (value) => ({
+  arrayLoopMap(100, (value) => ({
     value,
     id: Math.random(),
-    title: arrayLoopMap(Math.floor(Math.random() * 10), () => '标题').join(''),
+    title: arrayLoopMap(Math.floor(Math.random() * 50), () => '标题').join(''),
   })),
 )
 
@@ -138,7 +145,7 @@ const nums = ref(60)
 let ListLoad
 const body = computed(() => ({
   page: ListLoad.currentPage,
-  rows: 60,
+  rows: 100,
 }))
 const f = useFetch({
   method: 'post',
@@ -152,10 +159,9 @@ ListLoad = useListLoad2({
   setTotal: (res) => res.total,
 })
 
-onMounted(()=>{
+onMounted(() => {
   ListLoad.nextBeginSend()
-  console.log(ListLoad);
-
+  console.log(ListLoad)
 })
 
 const background = ref('yellow')
@@ -171,6 +177,7 @@ function insert(item, index) {
     id: Math.random(),
     title: arrayLoopMap(Math.floor(Math.random() * 5), () => 'insert').join(''),
   })
+  console.log('insert')
 }
 
 function remove(item, index) {
@@ -179,14 +186,17 @@ function remove(item, index) {
 
 function change(item, index) {
   item.title = '修改item'
-  item.name= '修改item'
-  console.log(item);
-
+  item.name = '修改item'
+  console.log(item)
 }
 
 function transposal(item, index) {
   List.value.splice(index, 1)
-  List.value.unshift(item)
+  item.__cache__={...List.value[0].__cache__}
+  console.log(item)
+  List.value.splice(0, 0, item)
+  // List.value.unshift(item)
+
 }
 
 async function refresh(event) {

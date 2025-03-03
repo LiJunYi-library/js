@@ -204,7 +204,7 @@ export class RainbowElement extends HTMLElement {
   constructor(...arg) {
     super(...arg);
     this.IMPS.push(...(this.$onRegisterIMPS?.() || []));
-    this.$debouncedRender = animationDebounced((...pop) => this.$render(...pop));
+    this.$debouncedRender = this.$render // animationDebounced((...pop) => this.$render(...pop));
     this.IMPS.map((el) => el?.simult)?.forEach((el) => el?.init?.call?.(this));
     this.addEventListener("transitionrun", this.$.transitionrun);
     this.addEventListener("transitioncancel", this.$.transitioncancel);

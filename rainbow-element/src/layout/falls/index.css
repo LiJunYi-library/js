@@ -2,6 +2,7 @@ r-falls {
   display: block;
   position: relative;
   overflow: hidden;
+  --r-columns: 2;
 }
 
 .r-falls-item {
@@ -15,6 +16,4 @@ r-falls[useAttrs] {
   --r-gap: r-attr(r-gap);
   --r-row-gap: r-attr(r-row-gap);
   --r-column-gap: r-attr(r-column-gap);
-  --r-grid-wrap: r-attr(r-grid-wrap);
-  --r-grid-stretch: r-attr(r-grid-stretch);
 }

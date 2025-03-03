@@ -19,11 +19,6 @@ const option = () => {
       color: '#555555',
       showMinLabel: true,
       showMaxLabel: true,
-      formatter(value, index) {
-        if (!value) return ''
-        const date = new Date(value * 1);
-        return [date.getMonth() + 1, date.getDate()].join('-');
-      },
     },
     splitNumber: 6,
     splitLine: {

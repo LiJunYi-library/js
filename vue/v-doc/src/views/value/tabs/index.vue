@@ -1,13 +1,17 @@
 <template>
   <div>
-    <r-tabs value="2" :class="tabclass">
-      <div slot="active" class="item-active">123</div>
-      <!-- <template v-for="(item, index) in list" :key="item.value">
+    <r-tabs v-model="activeVal" :class="tabclass">
+      <template v-for="(item, index) in list" :key="item.value">
         <r-tab-item :value="item" class="item" :class="'item' + index"> {{ item.label }} </r-tab-item>
-      </template> -->
-      <r-tab-item value="1" class="item" > label1 </r-tab-item>
-      <r-tab-item value="2" class="item" :key="2" > label2 </r-tab-item>
+      </template>
+      <div slot="active" class="item-active">123</div>
+    </r-tabs>
 
+    <r-tabs value="2" :class="tabclass">
+      <r-tab-item value="1" class="item"> label1 </r-tab-item>
+      <r-tab-item value="2" class="item"> label2 </r-tab-item>
+      <r-tab-item value="3" class="item"> label3 </r-tab-item>
+      <div slot="active" class="item-active">123</div>
     </r-tabs>
 
     <div>{{ hook.value }}</div>
@@ -19,7 +23,7 @@
 <script setup>
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js';
 import { useRadio2 } from '@rainbow_ljy/v-hooks';
-import { ref, onMounted ,watch} from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { setTimeoutPromise } from "@rainbow_ljy/rainbow-js";
 class List {
   __value = undefined;
@@ -130,6 +134,14 @@ class VList extends List {
 
 
 
+window.addEventListener('beforeunload', (event) => {
+  // 设置提示信息
+  const message = '-----likai';
+  event.preventDefault();
+  // 兼容性处理：某些浏览器需要设置 returnValue 才会显示提示框
+  event.returnValue = message;
+  return message;
+});
 
 const d = arrayLoopMap(10, (value) => ({
   value,
@@ -147,7 +159,7 @@ const tabclass = ref('');
 const hook = new VList({ value: 5, list: d });
 console.log(hook);
 
-watch(hook.__value,()=>{
+watch(hook.__value, () => {
   console.log("watch  hook.value");
 })
 
@@ -168,22 +180,24 @@ function setH() {
   margin: 0 10px;
   background: rgba(255, 255, 0, 0.5);
 }
-.item-active{
+
+.item-active {
   width: 100%;
   height: 100%;
   background: rgba(0, 255, 0, 0.5);
 }
 
-.my-tab{
+.my-tab {
   .item {
-  padding: 20px;
-  margin: 0 5px;
-  background: rgba(255, 100, 0, 0.5);
-}
-.item-active{
-  width: 100%;
-  height: 100%;
-  background: rgba(100, 0, 255, 0.5);
-}
+    padding: 20px;
+    margin: 0 5px;
+    background: rgba(255, 100, 0, 0.5);
+  }
+
+  .item-active {
+    width: 100%;
+    height: 100%;
+    background: rgba(100, 0, 255, 0.5);
+  }
 }
 </style>

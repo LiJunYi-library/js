@@ -48,12 +48,14 @@ export class RTabs extends RainbowElement {
           toggleClass(child, bool, "r-tab-item-act");
           return bool;
         });
+        if (index === -1) return;
         this.$$.resizeObserver.unobserve(this.$$.activeChild);
         this.$$.activeChild = this.children[index];
         this.$$.setActiveStyle(behavior);
       },
       setActiveStyle: (behavior = "smooth") => {
         const { activeChild } = this.$$;
+        if (!activeChild) return;
         const activeOffset = activeChild.getBoundingClientRect();
         const parentOffset = this.getBoundingClientRect();
         const scrollLeft = activeChild.offsetLeft - (parentOffset.width - activeOffset.width) / 2;
@@ -88,6 +90,7 @@ export class RTabs extends RainbowElement {
     this.shadowRoot.appendChild(this.$$.defSlot);
     this.shadowRoot.appendChild(this.$$.active);
     this.$$.resizeObserver.observe(this);
+    this.value = this.getAttribute("value");
   }
 
   connectedCallback(...arg) {
@@ -126,6 +129,7 @@ export class RTabItem extends RainbowElement {
   constructor(...arg) {
     super(...arg);
     this.addEventListener("click", this.$$.click);
+    this.value = this.getAttribute("value");
   }
 
   connectedCallback(...arg) {

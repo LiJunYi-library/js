@@ -5,6 +5,8 @@
 !.vscode/extensions.json
 
 .DS_Store
+/rainbow-element/build/
+/rainbow-element/dist/
 /node_modules
 /vue/doc/node_modules/
 /vue/v-doc/node_modules/

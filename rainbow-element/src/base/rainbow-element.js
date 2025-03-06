@@ -27,7 +27,6 @@ export class RainbowElement extends HTMLElement {
   IMPS = [treeAttrsChangeIMP];
 
   $ = {
-    self: this,
     getSlotContainer: (node) => {
       const soltName = node?.getAttribute?.("solt");
       if (!soltName) return undefined;
@@ -209,6 +208,10 @@ export class RainbowElement extends HTMLElement {
     this.addEventListener("transitionrun", this.$.transitionrun);
     this.addEventListener("transitioncancel", this.$.transitioncancel);
     this.addEventListener("transitionend", this.$.transitionend);
+
+  let obs =  new ResizeObserver((...arg) => {
+    console.log('ResizeObserver');
+    });
   }
 
   $slotContainer = {

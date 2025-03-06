@@ -14,6 +14,7 @@ class SlideEvent extends CustomEvent {
 }
 
 (() => {
+  return
     // **TODO pointercancel
     document.addEventListener('pointerdown', onPointerdown);
     document.addEventListener('pointermove', onPointermove);

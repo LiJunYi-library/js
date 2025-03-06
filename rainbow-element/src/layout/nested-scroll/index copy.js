@@ -50,35 +50,10 @@ export class RNestedScroll extends RainbowElement {
     }),
     disabledScroll: () => {},
     unDisabledScroll: () => {},
-    pointerdown: (event) => {
-      event.stopImmediatePropagation();
-      event.preventDefault();
-      console.log('--pointerdown')
-    },
-    pointermove: (event) => {
-      event.stopImmediatePropagation();
-      event.preventDefault();
-      console.log('--pointermove')
-    },
-    touchstart: (event) => {
-      event.stopImmediatePropagation();
-      event.preventDefault();
-      console.log('--touchstart')
-    },
-    touchmove: (event) => {
-      event.stopImmediatePropagation();
-      event.preventDefault();
-      console.log('--touchmove')
-    },
   };
 
   constructor(...arg) {
     super(...arg);
-    const opt = { passive: true, capture: true };
-    this.addEventListener("pointerdown", this.$$.pointerdown, opt);
-    this.addEventListener("pointermove", this.$$.pointermove, opt);
-    this.addEventListener('touchstart', this.$$.touchstart, opt);
-    this.addEventListener('touchmove', this.$$.touchmove, opt);
   }
 
   connectedCallback(...arg) {

@@ -4,101 +4,41 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Slide Down Event Example</title>
-    <style>
-      :root {
-        --first-size: calc(100vh - 50px);
-        --second-color: #ffff8c;
-      }
-    </style>
+    <link rel="stylesheet" href="./build/index.css" />
   </head>
 
-  <div></div>
-
   <body>
-    <select>
-      <option value="1111">
-        <div>1</div>
-        <div style="color: blue;">*</div>
-      </option>
-      <option value="2222">
-        <div>2</div>
-      </option>
-    </select>
-    
-    <script>
-      class RCircle extends HTMLElement {
-        constructor() {
-          super();
+     <r-nested-scroll>
+      
 
-          // 创建 r-circle-border 容器
-          const borderDiv = document.createElement("div");
-          borderDiv.classList.add("r-circle-border");
+     
+    <r-tabs value="2" class="tabclass">
+      <r-tab-item value="1" class="item"> label1 </r-tab-item>
+      <r-tab-item value="2" class="item"> label2 </r-tab-item>
+      <r-tab-item value="3" class="item"> label3 </r-tab-item>
+      <r-tab-item value="4" class="item"> label4 </r-tab-item>
+      <r-tab-item value="5" class="item"> label5 </r-tab-item>
+      <r-tab-item value="6" class="item"> label6 </r-tab-item>
+      <r-tab-item value="7" class="item"> label7 </r-tab-item>
+      <div slot="active" class="item-active">123</div>
+    </r-tabs>
 
-          // 创建 r-circle-content 容器
-          const contentDiv = document.createElement("div");
-          contentDiv.classList.add("r-circle-content");
-
-          // 确保 contentDiv 是干净的
-          while (contentDiv.firstChild) {
-            contentDiv.removeChild(contentDiv.firstChild);
-          }
-
-          // 为 contentDiv 创建 Shadow DOM
-          const shadowRoot = this.attachShadow({ mode: "open" });
-
-          // 添加样式和插槽
-          const style = document.createElement("style");
-          style.textContent = `
-      .r-circle-content {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 100%;
-        border: 2px solid green;
-      }
-      slot {
-        color: blue;
-      }
-    `;
-          const slot = document.createElement("slot");
-          slot.setAttribute("name", "content");
-
-          shadowRoot.appendChild(style);
-          shadowRoot.appendChild(slot);
-
-          // 将 r-circle-border 和 r-circle-content 添加到组件中
-          shadowRoot.appendChild(borderDiv);
-          shadowRoot.appendChild(contentDiv);
-        }
-
-        connectedCallback() {
-          console.log(this.children);
-          debugger;
-        }
-      }
-
-      customElements.define("r-circle", RCircle);
-    </script>
-
-    <div>
-      <r-circle>
-        <div slot="content">这是插入到 r-circle 内容中的文本</div>
-      </r-circle>
-
-      <style>
-        .r-circle-content {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-          height: 100%;
-          border: 2px solid green;
-        }
-        slot {
-          color: blue;
-        }
-      </style>
-    </div>
+    <div style="width: 30px;font-size: 80px;height: 1500px;word-wrap: break-word;">123456789</div>
+  </r-nested-scroll>
   </body>
+  <script   src="./build/index.main.js"></script>
+
+  <style>
+    .item {
+      padding: 10px;
+      margin: 0 10px;
+      background: rgba(255, 255, 0, 0.5);
+    }
+
+    .item-active {
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 255, 0, 0.5);
+    }
+  </style>
 </html>

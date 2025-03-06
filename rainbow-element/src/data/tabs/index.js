@@ -90,7 +90,7 @@ export class RTabs extends RainbowElement {
     this.shadowRoot.appendChild(this.$$.defSlot);
     this.shadowRoot.appendChild(this.$$.active);
     this.$$.resizeObserver.observe(this);
-    this.value = this.getAttribute("value");
+    if (this.getAttribute("value") !== null) this.value = this.getAttribute("value");
   }
 
   connectedCallback(...arg) {
@@ -129,7 +129,7 @@ export class RTabItem extends RainbowElement {
   constructor(...arg) {
     super(...arg);
     this.addEventListener("click", this.$$.click);
-    this.value = this.getAttribute("value");
+    if (this.getAttribute("value") !== null) this.value = this.getAttribute("value");
   }
 
   connectedCallback(...arg) {

@@ -148,10 +148,15 @@ export declare function arrayRewriteFunction<T>(
 
 export declare function arrayForEachFindIndex<T>(
   list: T[],
-  callbackfn: (value: any, index: number, array: any[]) => Boolean,
-);
+  callbackfn: (value: T, index: number, array: T[]) => Boolean,
+): number;
 
-export class ListArray extends Array {}
+export declare function arrayForEachFind<T>(
+  list: T[],
+  callbackfn: (value: T, index: number, array: T[]) => Boolean,
+): T;
+
+export class ListArray extends Array { }
 
 // 模仿sql查询  //
 export declare function WHERE(compare: any, val: any): boolean;

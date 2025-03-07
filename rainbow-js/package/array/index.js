@@ -389,3 +389,13 @@ export function arrayForEachFindIndex(arr = [], formatter) {
   });
   return i;
 }
+//
+export function arrayForEachFind(arr = [], formatter) {
+  let val = undefined;
+  arr.forEach((value, index, array) => {
+    if (formatter?.(value, index, array)) {
+      val = value;
+    }
+  });
+  return val;
+}

@@ -57,7 +57,7 @@ export class RTabs extends RainbowElement {
             return;
           }
           if (this.$$.cache.value === this.value) return;
-          if (this.$$.cache.value === undefined && this.$$.isRenderFinish === false) {
+          if (this.$$.isRenderFinish === false) {
             this.$$.setActiveStyle("instant", forceBehavior);
             return;
           }

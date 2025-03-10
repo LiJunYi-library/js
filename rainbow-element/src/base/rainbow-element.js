@@ -27,6 +27,9 @@ export class RainbowElement extends HTMLElement {
   IMPS = [treeAttrsChangeIMP];
 
   $ = {
+    isRenderFinish: false,
+    renderFinish: () => (this.$.isRenderFinish = true),
+    renderFinishAnimationFrame: false,
     getSlotContainer: (node) => {
       const soltName = node?.getAttribute?.("solt");
       if (!soltName) return undefined;
@@ -262,6 +265,8 @@ export class RainbowElement extends HTMLElement {
     this.$.isInitAttrs = true;
     this.IMPS.map((el) => el?.simult)?.forEach((el) => el?.connected?.call?.(this));
     this.$.changePropsRender();
+    cancelAnimationFrame(this.$.renderFinishAnimationFrame);
+    this.$.renderFinishAnimationFrame = requestAnimationFrame(this.$.renderFinish);
   }
 
   adoptedCallback() {
@@ -273,6 +278,7 @@ export class RainbowElement extends HTMLElement {
     this.removeEventListener("transitioncancel", this.$.transitioncancel);
     this.removeEventListener("transitionend", this.$.transitionend);
     this.IMPS.map((el) => el?.simult)?.forEach((el) => el?.disconnected?.call?.(this));
+    this.$.isRenderFinish = false;
   }
 
   $onRegisterIMPS() {

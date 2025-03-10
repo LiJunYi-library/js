@@ -21,9 +21,6 @@ export class RTabs extends RainbowElement {
       this.$$.setActiveStyle("instant");
     };
     return {
-      isRenderFinish: false,
-      renderFinish: () => (this.$$.isRenderFinish = true),
-      renderFinishAnimationFrame: false,
       isActiveTransition: false,
       cache: { value: undefined },
       value: undefined,
@@ -57,7 +54,7 @@ export class RTabs extends RainbowElement {
             return;
           }
           if (this.$$.cache.value === this.value) return;
-          if (this.$$.isRenderFinish === false) {
+          if (this.$.isRenderFinish === false) {
             this.$$.setActiveStyle("instant", forceBehavior);
             return;
           }
@@ -87,6 +84,7 @@ export class RTabs extends RainbowElement {
       onActiveTransitionend: () => {
         this.$$.isActiveTransition = false;
         this.classList.remove("r-tab-active-transition");
+        this.$$.active.removeEventListener("transitionend", this.$$.onActiveTransitionend);
       },
       onResize,
       resizeObserver: resizeObserver(onResize),
@@ -116,14 +114,11 @@ export class RTabs extends RainbowElement {
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     this.$$.setChildrenClass();
-    cancelAnimationFrame(this.$$.renderFinishAnimationFrame);
-    this.$$.renderFinishAnimationFrame = requestAnimationFrame(this.$$.renderFinish);
   }
 
   disconnectedCallback(...arg) {
     super.disconnectedCallback(...arg);
     this.$$.resizeObserver.disconnect();
-    this.$$.isRenderFinish = false;
   }
 
   $render() {}

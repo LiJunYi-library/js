@@ -10,7 +10,7 @@ export * from "./aspectRatio";
 export * from "./dropdown";
 export * from "./popup";
 export * from "./pulldown";
-export * from "./list";
+export * from "./listSelect";
 export * from "./img";
 export * from "./resize";
 export * from "./grid";

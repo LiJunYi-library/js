@@ -10,7 +10,7 @@ import {
 } from "../../base/index.js";
 import "./index.css";
 
-export class RTabs extends RainbowElement {
+export class RSwiper extends RainbowElement {
   static observedAttributes = this.$registerProps({});
 
   $$ = (() => {
@@ -124,7 +124,7 @@ export class RTabs extends RainbowElement {
   $render() {}
 }
 
-export class RTabItem extends RainbowElement {
+export class RSwiperItem extends RainbowElement {
   static observedAttributes = this.$registerProps({});
 
   $$ = {

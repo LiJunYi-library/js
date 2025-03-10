@@ -14,7 +14,7 @@ r-tabs .r-tab-active {
 
 .r-tab-active-transition::part(r-tab-active),
 .r-tab-active-transition .r-tab-active {
-  transition: 0.2s;
+  transition: 0.25s;
 }
 
 r-tabs::part(r-tab-active-line),

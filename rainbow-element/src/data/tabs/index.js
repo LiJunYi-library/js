@@ -33,7 +33,7 @@ export class RTabs extends RainbowElement {
       updateValue: (value) => {
         this.value = value;
         this.dispatchEvent(createCustomEvent("input", { value }));
-        this.dispatchEvent(createCustomEvent("change", value));
+        this.dispatchEvent(createCustomEvent("change", { value }));
       },
       setChildrenClass: (forceBehavior) => {
         this.$$.activeChild = (() => {

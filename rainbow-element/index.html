@@ -8,11 +8,18 @@
   </head>
 
   <body>
-     <r-nested-scroll>
-      
+    <!-- <r-nested-scroll> -->
 
-     
-    <r-tabs value="2" class="tabclass">
+    <select name="pets" id="petSelect" value="cat">
+      <option value="dog">Dog</option>
+      <option value="cat">Cat</option>
+      <option value="hamster">Hamster</option>
+      <option value="parrot">Parrot</option>
+      <option value="spider">Spider</option>
+      <option value="goldfish">Goldfish</option>
+    </select>
+
+    <r-tabs value="2" class="tabclass" id="my-tab">
       <r-tab-item value="1" class="item"> label1 </r-tab-item>
       <r-tab-item value="2" class="item"> label2 </r-tab-item>
       <r-tab-item value="3" class="item"> label3 </r-tab-item>
@@ -23,10 +30,31 @@
       <div slot="active" class="item-active">123</div>
     </r-tabs>
 
-    <div style="width: 30px;font-size: 80px;height: 1500px;word-wrap: break-word;">123456789</div>
-  </r-nested-scroll>
+    <div
+      style="
+        width: 30px;
+        font-size: 80px;
+        height: 1500px;
+        word-wrap: break-word;
+      "
+    >
+      123456789
+    </div>
+    <!-- </r-nested-scroll> -->
   </body>
-  <script   src="./build/index.main.js"></script>
+  <script src="./build/index.main.js"></script>
+
+  <script>
+    //  let   myTab = document.getElementById('my-tab')
+    //  myTab.innerHTML=`<r-tab-item value="1" class="item"> label1 </r-tab-item>
+    //     <r-tab-item value="2" class="item"> label2 </r-tab-item>
+    //     <r-tab-item value="3" class="item"> label3 </r-tab-item>
+    //     <r-tab-item value="4" class="item"> label4 </r-tab-item>
+    //     <r-tab-item value="5" class="item"> label5 </r-tab-item>
+    //     <r-tab-item value="6" class="item"> label6 </r-tab-item>
+    //     <r-tab-item value="7" class="item"> label7 </r-tab-item>`
+    //     myTab.value = "4"
+  </script>
 
   <style>
     .item {

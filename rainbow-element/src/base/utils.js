@@ -122,16 +122,16 @@ export function renderChildren(props = {}) {
   return { renderList };
 }
 
-export function createElement(name = "div", className = "") {
+export function createElement(name = "div", className = "", part = className) {
   const ele = document.createElement(name);
-  ele.setAttribute("part", className);
+  if (part) ele.setAttribute("part", part);
   ele.className = className;
   return ele;
 }
 
 export function createSlot(name = "slot", className = "", slotName = className) {
   const ele = createElement(name, className);
-  ele.setAttribute("name", slotName);
+  if (slotName) ele.setAttribute("name", slotName);
   return ele;
 }
 
@@ -270,7 +270,6 @@ export function getBoundingClientRect(node) {
   };
 }
 
-
 export function createDialog(params) {
   const dialog = document.createElement("r-dialog");
   document.body.appendChild(dialog);
@@ -289,4 +288,4 @@ export function createDialog(params) {
   return fun;
 }
 
-window.rainbow.createDialog=createDialog
+window.rainbow.createDialog = createDialog;

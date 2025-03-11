@@ -129,6 +129,12 @@ export function createElement(name = "div", className = "", part = className) {
   return ele;
 }
 
+export function createElementCB(name = "div", cb) {
+  const ele = document.createElement(name);
+  if (cb) cb(ele);
+  return ele;
+}
+
 export function createSlot(name = "slot", className = "", slotName = className) {
   const ele = createElement(name, className);
   if (slotName) ele.setAttribute("name", slotName);

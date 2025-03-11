@@ -44,6 +44,8 @@ export function treeObserverIMP(props = {}) {
                 mObserver = new MutationObserver((mutations, ...arg) => {
                     for (let mutation of mutations) {
                         if (mutation.type === "childList") {
+                          console.log('childList', mutation);
+
                             const addedNodes = Array.from(mutation.addedNodes).filter(el => el.style);
                             const removedNodes = Array.from(mutation.removedNodes).filter(el => el.style);
                             addedNodes.forEach(ele => rObserver.observe(ele, config.childrenResizeOptions));

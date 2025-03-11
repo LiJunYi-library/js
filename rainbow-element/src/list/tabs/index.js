@@ -21,6 +21,7 @@ export class RTabs extends RainbowElement {
       this.$$.setActiveStyle("instant");
     };
     return {
+      controller: {},
       isActiveTransition: false,
       cache: { value: undefined },
       value: undefined,
@@ -98,6 +99,14 @@ export class RTabs extends RainbowElement {
 
   get value() {
     return this.$$.value;
+  }
+
+  set controller(controller) {
+    this.$$.controller = controller;
+  }
+
+  get controller() {
+    return this.$$.controller;
   }
 
   constructor(...arg) {

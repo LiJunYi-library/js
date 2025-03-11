@@ -44,7 +44,7 @@ import { useRadio2 } from '@rainbow_ljy/v-hooks'
 import { RGridListSelect } from '@rainbow_ljy/v-view'
 import { ref, render } from 'vue'
 import { useFetch } from '@/utils/request'
-import { createDialog } from '@rainbow_ljy/rainbow-element'
+// import { createDialog } from '@rainbow_ljy/rainbow-element'
 import mData from './data.json'
 
 console.log(mData.result.listPrices[60]);

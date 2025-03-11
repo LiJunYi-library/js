@@ -40,8 +40,9 @@ import { arrayLoopMap, ListArray } from '@rainbow_ljy/rainbow-js'
 import { useRadio2 } from '@rainbow_ljy/v-hooks'
 import { ref, render } from 'vue'
 import { useFetch } from '@/utils/request'
-import { createDialog } from '@rainbow_ljy/rainbow-element'
+// import { createDialog } from '@rainbow_ljy/rainbow-element'
 
+const {createDialog} = rainbow
 
 const name = ref('bottom-center')
 const bool = ref(false)

@@ -1,4 +1,4 @@
-import { arrayForEachFind } from "@rainbow_ljy/rainbow-js";
+import { arrayForEachFindIndex } from "@rainbow_ljy/rainbow-js";
 import {
   RainbowElement,
   toggleClass,
@@ -14,80 +14,29 @@ export class RSwiper extends RainbowElement {
   static observedAttributes = this.$registerProps({});
 
   $$ = (() => {
-    const onResize = (ets) => {
-      const Offset = getBoundingClientRect(this.$$.activeChild);
-      const activeOffset = getBoundingClientRect(this.$$.active);
-      if (Offset.width === activeOffset.width && Offset.height === activeOffset.height) return;
-      this.$$.setActiveStyle("instant");
-    };
     return {
-      isActiveTransition: false,
-      cache: { value: undefined },
+      cache: { scrollLeft: 0 },
       value: undefined,
-      active: createElement("div", "r-tab-active"),
-      activeSlot: createSlot("slot", "r-tab-active-solt", "active"),
-      def: createElement("div", "r-tab-def"),
-      defSlot: createSlot("slot"),
-      activeChild: createElement("div"),
-      activeLine: createElement("div", "r-tab-active-line"),
       updateValue: (value) => {
         this.value = value;
         this.dispatchEvent(createCustomEvent("input", { value }));
         this.dispatchEvent(createCustomEvent("change", value));
       },
-      setChildrenClass: (forceBehavior) => {
-        this.$$.activeChild = (() => {
-          if (this.value === undefined) return undefined;
-          return arrayForEachFind(Array.from(this.children), (child) => {
-            if (child.localName !== "r-tab-item") return false;
+      setChildrenClass: () => {
+        const index = (() => {
+          if (this.value === undefined) return -1;
+          return arrayForEachFindIndex(Array.from(this.children), (child) => {
             const bool = this.value === child.value;
-            toggleClass(child, bool, "r-tab-item-act");
+            toggleClass(child, bool, "r-swiper-item-act");
             return bool;
           });
         })();
-        (() => {
-          if (this.value === undefined) {
-            this.$$.active.style.width = 0 + "px";
-            this.$$.active.style.height = 0 + "px";
-            this.$$.active.style.left = `${0}px`;
-            this.$$.active.style.top = `${0}px`;
-            return;
-          }
-          if (this.$$.cache.value === this.value) return;
-          if (this.$.isRenderFinish === false) {
-            this.$$.setActiveStyle("instant", forceBehavior);
-            return;
-          }
-          this.$$.setActiveStyle("smooth", forceBehavior);
-        })();
-        this.$$.cache.value = this.value;
-      },
-      setActiveStyle: (behavior = "smooth", forceBehavior) => {
-        const { activeChild } = this.$$;
-        if (!activeChild) return;
-        if (this.$$.isActiveTransition === true) behavior = "smooth";
-        if (forceBehavior) behavior = forceBehavior;
-        toggleClass(this, behavior === "smooth", "r-tab-active-transition");
-        if (behavior === "smooth") this.$$.isActiveTransition = true;
-        const activeOffset = activeChild.getBoundingClientRect();
-        const parentOffset = this.getBoundingClientRect();
-        const scrollLeft = activeChild.offsetLeft - (parentOffset.width - activeOffset.width) / 2;
-        this.$$.active.style.width = activeOffset.width + "px";
-        this.$$.active.style.height = activeOffset.height + "px";
-        this.$$.active.style.left = `${activeChild.offsetLeft}px`;
-        this.$$.active.style.top = `${activeOffset.top - parentOffset.top}px`;
+        const offset = this.getBoundingClientRect();
+        const scrollLeft = offset.width * index;
+        let behavior = "smooth";
+        if (this.$.isRenderFinish === false) behavior = "instant";
         this.scrollTo({ left: scrollLeft, behavior });
-        this.$$.resizeObserver.observe(activeChild);
-        this.$$.active.removeEventListener("transitionend", this.$$.onActiveTransitionend);
-        this.$$.active.addEventListener("transitionend", this.$$.onActiveTransitionend);
       },
-      onActiveTransitionend: () => {
-        this.$$.isActiveTransition = false;
-        this.classList.remove("r-tab-active-transition");
-        this.$$.active.removeEventListener("transitionend", this.$$.onActiveTransitionend);
-      },
-      onResize,
-      resizeObserver: resizeObserver(onResize),
     };
   })();
 
@@ -102,13 +51,17 @@ export class RSwiper extends RainbowElement {
 
   constructor(...arg) {
     super(...arg);
-    this.attachShadow({ mode: "open" });
-    this.$$.active.appendChild(this.$$.activeLine);
-    this.$$.active.appendChild(this.$$.activeSlot);
-    this.shadowRoot.appendChild(this.$$.defSlot);
-    this.shadowRoot.appendChild(this.$$.active);
-    this.$$.resizeObserver.observe(this);
     if (this.getAttribute("value") !== null) this.value = this.getAttribute("value");
+    this.addEventListener("scrollend", (event) => {
+      const index = Math.round(this.scrollLeft / this.offsetWidth);
+      const child = this.children[index];
+      this.$$.updateValue(child.value);
+      this.$$.cache.scrollLeft = this.scrollLeft;
+      console.log(child.value);
+    });
+    this.addEventListener("scroll", (event) => {
+      console.log((this.scrollLeft - this.$$.cache.scrollLeft) / this.offsetWidth);
+    });
   }
 
   connectedCallback(...arg) {
@@ -118,7 +71,6 @@ export class RSwiper extends RainbowElement {
 
   disconnectedCallback(...arg) {
     super.disconnectedCallback(...arg);
-    this.$$.resizeObserver.disconnect();
   }
 
   $render() {}
@@ -127,17 +79,27 @@ export class RSwiper extends RainbowElement {
 export class RSwiperItem extends RainbowElement {
   static observedAttributes = this.$registerProps({});
 
+  insertBefore(...arg) {
+    console.log("insertBefore");
+    super.insertBefore(...arg);
+  }
+
+  append(...arg) {
+    console.log("append");
+    super.append(...arg);
+  }
+
+  appendChild(...arg) {
+    console.log("appendChild");
+    super.appendChild(...arg);
+  }
+
   $$ = {
     value: undefined,
     valueParent: undefined,
-    click: () => {
-      this.$$.valueParent?.$$?.updateValue?.(this.value);
-    },
     setActive: () => {
-      toggleClass(this, this.value === this.$$.valueParent?.value, "r-tab-item-act");
-      if (this.value === this.$$.valueParent?.value) {
-        this.$$.valueParent?.$$?.setChildrenClass?.();
-      }
+      toggleClass(this, this.value === this.$$.valueParent?.value, "r-swiper-item-act");
+      if (this.value === this.$$.valueParent?.value) this.$$.valueParent?.$$?.setChildrenClass?.();
     },
   };
 
@@ -152,14 +114,12 @@ export class RSwiperItem extends RainbowElement {
 
   constructor(...arg) {
     super(...arg);
-    const trigger = this.getAttribute("trigger") || "click";
-    if (trigger !== "none") this.addEventListener("click", this.$$.click);
     if (this.getAttribute("value") !== null) this.value = this.getAttribute("value");
   }
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.$$.valueParent = this.$.findParentByLocalName("r-tabs");
+    this.$$.valueParent = this.$.findParentByLocalName("r-swiper");
     this.$$.setActive();
   }
 

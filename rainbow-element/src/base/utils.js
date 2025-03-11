@@ -269,3 +269,24 @@ export function getBoundingClientRect(node) {
     y: numFixed(offset.y),
   };
 }
+
+
+export function createDialog(params) {
+  const dialog = document.createElement("r-dialog");
+  document.body.appendChild(dialog);
+
+  function fun(node) {
+    rainbow.customRender(node, dialog);
+    dialog.value = true;
+  }
+
+  fun.ele = dialog;
+
+  fun.close = () => {
+    dialog.value = false;
+  };
+
+  return fun;
+}
+
+window.rainbow.createDialog=createDialog

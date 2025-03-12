@@ -48,7 +48,7 @@ export class RSwiper extends RainbowElement {
     this.addEventListener("scrollend", (event) => {
       const index = Math.round(this.scrollLeft / this.offsetWidth);
       const child = this.children[index];
-      this.$$.updateValue(child.value);
+      // this.$$.updateValue(child.value);
       this.$$.cache.scrollLeft = this.scrollLeft;
       console.log(child.value);
     });

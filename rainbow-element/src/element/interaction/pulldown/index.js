@@ -1,11 +1,6 @@
 import "./index.css";
-import {
-  RainbowElement,
-  createElement,
-  createSlot,
-  toggleClass,
-  createElementCB,
-} from "../../base/index.js";
+import { RainbowElement } from "../../base/index.js";
+import { createElement, createSlot, toggleClass, createElementCB } from "../../../utils/index.js";
 
 export class RPulldown extends RainbowElement {
   $$ = {

@@ -1,0 +1,13 @@
+r-scroll-virtual-falls-list {
+    display: block;
+    position: relative;
+    --r-columns: 2;
+    --r-avg-height: 200px;
+    --r-column-gap: 8px;
+    --r-row-gap: 12px;
+}
+
+.r-scroll-virtual-falls-list-item {
+    box-sizing: border-box;
+    word-wrap: break-word;
+}

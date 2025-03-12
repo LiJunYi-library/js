@@ -26,7 +26,7 @@
     <button @click="dialog.close()">close</button>
     <button @click="bool = !bool">bool</button>
     <!-- <Teleport to="body"> -->
-      <r-dialog v-model="bool" class="my-dialog" @input="input">
+      <r-dialog v-model="bool" :class="classname" @input="input">
         <div>
           <div>属性</div>
           <div>属性</div>
@@ -35,6 +35,8 @@
         </div>
       </r-dialog>
     <!-- </Teleport> -->
+
+    <button @click="classname = 'my-dialog'">classname</button>
   </div>
 </template>
 <script setup lang="jsx">
@@ -52,6 +54,10 @@ const arrays = new ListArray()
 const List = ref([])
 const gap = ref(10)
 const columns = ref(4)
+
+const classname = ref('my-dialog-bottom')
+
+
 
 const dialog = createDialog()
 dialog.show = (sss) => {
@@ -128,6 +134,10 @@ function input(event) {
 
 <style>
 .my-dialog {
+  --r-orientation: top;
+}
+
+.my-dialog-bottom {
   --r-orientation: bottom;
 }
 </style>

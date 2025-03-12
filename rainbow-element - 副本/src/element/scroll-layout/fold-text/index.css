@@ -1,0 +1,37 @@
+r-fold-text {
+    word-wrap: break-word;
+    display: inline-block;
+    overflow: hidden;
+    transition: 0.2s;
+}
+
+.r-fold-text-default {
+    line-height: 1px;
+}
+
+.r-fold-text-end {
+    transition: 0.2s;
+    display: inline-block;
+}
+
+.r-fold-text-end-fold {
+   transform: rotate(0deg);
+}
+
+.r-fold-text-end-unfold {
+    transform: rotate(180deg);
+}
+
+.r-fold-text-end-none {
+    display: none;
+}
+
+
+
+.r-fold-text-end-fold-solt {
+    display: none;
+}
+
+.r-fold-text-end-unfold-solt {
+    display: none;
+}

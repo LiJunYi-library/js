@@ -18,4 +18,9 @@ export function objectIsEmpty(object) {
   return !Object.keys(object).length;
 }
 
-
+export function objectEqualitys(o1 = {}, o2 = {}) {
+  for (const key in o1) {
+    if (o1[key] !== o2[key]) return false;
+  }
+  return true;
+}

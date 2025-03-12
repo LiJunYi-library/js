@@ -1,6 +1,6 @@
 import { useQueue } from "@rainbow_ljy/rainbow-js";
 
-window.rainbow = (() => {
+const rainbow = (() => {
   const overlay = document.createElement("r-overlay");
   document.body.append(overlay);
   return {
@@ -15,3 +15,5 @@ window.rainbow = (() => {
     },
   };
 })();
+window.rainbow = rainbow;
+export { rainbow };

@@ -1,0 +1,207 @@
+r-dialog {
+  position: fixed;
+  overflow: hidden;
+  --r-orientation: top;
+}
+
+r-dialog.r-dialog-hide {
+  display: none;
+}
+
+r-dialog.r-dialog-top {
+  left: 0;
+  top: 0;
+  width: 100vw;
+}
+
+r-dialog.r-dialog-bottom {
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+}
+
+r-dialog.r-dialog-left {
+  left: 0;
+  top: 0;
+  height: 100vh;
+}
+
+r-dialog.r-dialog-right {
+  right: 0;
+  top: 0;
+  height: 100vh;
+}
+
+r-dialog.r-dialog-center {
+  left: 50%;
+  top: 50%;
+  transform-origin: 50% 50%;
+  transform: translate(-50%, -50%);
+}
+
+r-dialog::part(r-dialog-content),
+r-dialog .r-dialog-content {
+  background: red;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 50%;
+}
+
+/**********************/
+.r-dialog-top-enter-from::part(r-dialog-content),
+.r-dialog-top-enter-from .r-dialog-content {
+  transform: translateY(-100%);
+}
+
+.r-dialog-top-enter-active::part(r-dialog-content),
+.r-dialog-top-enter-active .r-dialog-content {
+  transition: 0.3s;
+}
+
+.r-dialog-top-enter-to::part(r-dialog-content),
+.r-dialog-top-enter-to .r-dialog-content {
+  transform: translateY(0%);
+}
+
+.r-dialog-top-leave-from::part(r-dialog-content),
+.r-dialog-top-leave-from .r-dialog-content {
+  transform: translateY(0%);
+}
+
+.r-dialog-top-leave-active::part(r-dialog-content),
+.r-dialog-top-leave-active .r-dialog-content {
+  transition: 0.3s;
+}
+
+.r-dialog-top-leave-to::part(r-dialog-content),
+.r-dialog-top-leave-to .r-dialog-content {
+  transform: translateY(-100%);
+}
+
+/**********************/
+.r-dialog-bottom-enter-from::part(r-dialog-content),
+.r-dialog-bottom-enter-from .r-dialog-content {
+  transform: translateY(100%);
+}
+
+.r-dialog-bottom-enter-active::part(r-dialog-content),
+.r-dialog-bottom-enter-active .r-dialog-content {
+  transition: 0.3s;
+}
+
+.r-dialog-bottom-enter-to::part(r-dialog-content),
+.r-dialog-bottom-enter-to .r-dialog-content {
+  transform: translateY(0%);
+}
+
+.r-dialog-bottom-leave-from::part(r-dialog-content),
+.r-dialog-bottom-leave-from .r-dialog-content {
+  transform: translateY(0%);
+}
+
+.r-dialog-bottom-leave-active::part(r-dialog-content),
+.r-dialog-bottom-leave-active .r-dialog-content {
+  transition: 0.3s;
+}
+
+.r-dialog-bottom-leave-to::part(r-dialog-content),
+.r-dialog-bottom-leave-to .r-dialog-content {
+  transform: translateY(100%);
+}
+
+/**********************/
+.r-dialog-left-enter-from::part(r-dialog-content),
+.r-dialog-left-enter-from .r-dialog-content {
+  transform: translateX(-100%);
+}
+
+.r-dialog-left-enter-active::part(r-dialog-content),
+.r-dialog-left-enter-active .r-dialog-content {
+  transition: 0.3s;
+}
+
+.r-dialog-left-enter-to::part(r-dialog-content),
+.r-dialog-left-enter-to .r-dialog-content {
+  transform: translateX(0%);
+}
+
+.r-dialog-left-leave-from::part(r-dialog-content),
+.r-dialog-left-leave-from .r-dialog-content {
+  transform: translateX(0%);
+}
+
+.r-dialog-left-leave-active::part(r-dialog-content),
+.r-dialog-left-leave-active .r-dialog-content {
+  transition: 0.3s;
+}
+
+.r-dialog-left-leave-to::part(r-dialog-content),
+.r-dialog-left-leave-to .r-dialog-content {
+  transform: translateX(-100%);
+}
+
+/**********************/
+.r-dialog-right-enter-from::part(r-dialog-content),
+.r-dialog-right-enter-from .r-dialog-content {
+  transform: translateX(100%);
+}
+
+.r-dialog-right-enter-active::part(r-dialog-content),
+.r-dialog-right-enter-active .r-dialog-content {
+  transition: 0.3s;
+}
+
+.r-dialog-right-enter-to::part(r-dialog-content),
+.r-dialog-right-enter-to .r-dialog-content {
+  transform: translateX(0%);
+}
+
+.r-dialog-right-leave-from::part(r-dialog-content),
+.r-dialog-right-leave-from .r-dialog-content {
+  transform: translateX(0%);
+}
+
+.r-dialog-right-leave-active::part(r-dialog-content),
+.r-dialog-right-leave-active .r-dialog-content {
+  transition: 0.3s;
+}
+
+.r-dialog-right-leave-to::part(r-dialog-content),
+.r-dialog-right-leave-to .r-dialog-content {
+  transform: translateX(100%);
+}
+
+/**********************/
+.r-dialog-center-enter-from::part(r-dialog-content),
+.r-dialog-center-enter-from .r-dialog-content {
+  /* transform: scale(0); */
+  opacity: 0;
+}
+
+.r-dialog-center-enter-active::part(r-dialog-content),
+.r-dialog-center-enter-active .r-dialog-content {
+  transition: 0.3s;
+}
+
+.r-dialog-center-enter-to::part(r-dialog-content),
+.r-dialog-center-enter-to .r-dialog-content {
+  /* transform: scale(1); */
+  opacity: 1;
+}
+
+.r-dialog-center-leave-from::part(r-dialog-content),
+.r-dialog-center-leave-from .r-dialog-content {
+  /* transform: scale(1); */
+  opacity: 1;
+}
+
+.r-dialog-center-leave-active::part(r-dialog-content),
+.r-dialog-center-leave-active .r-dialog-content {
+  transition: 0.3s;
+}
+
+.r-dialog-center-leave-to::part(r-dialog-content),
+.r-dialog-center-leave-to .r-dialog-content {
+  /* transform: scale(0); */
+  opacity: 0;
+}

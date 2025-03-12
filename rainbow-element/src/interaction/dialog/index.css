@@ -1,7 +1,7 @@
 r-dialog {
     position: fixed;
     overflow: hidden;
-    --r-orientation: top;
+    --r-orientation: center;
     z-index: 10;
 }
 

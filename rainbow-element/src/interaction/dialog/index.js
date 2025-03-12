@@ -84,6 +84,8 @@ export class RDialog extends RainbowElement {
         console.log("click");
       },
       open: () => {
+        console.log('event open')
+        this.dispatchEvent(createCustomEvent("open"));
         const prveDialog = rainbow.dialogQueue.queue.at(-1);
         rainbow.zIndex = rainbow.zIndex + rainbow.zIndexAdd;
         this.style.zIndex = rainbow.zIndex;
@@ -99,11 +101,12 @@ export class RDialog extends RainbowElement {
         rainbow.dialogQueue.push(this);
         rainbow.overlay.style.zIndex = (rainbow.overlayQueue.queue.at(-1)?.style?.zIndex ?? 1) - 1;
         rainbow.overlay.addEventListener("click", this.$$.onOverlayClick);
-
         document.removeEventListener("click", this.$$.onDocumentClick);
       },
       close: () => {
         this.$$.transition.hide();
+        console.log('event close')
+        this.dispatchEvent(createCustomEvent("close"));
         rainbow.overlayQueue.remove(this);
         rainbow.dialogQueue.remove(this);
         if (rainbow.overlayQueue.queue.length === 0) rainbow.overlay.value = false;
@@ -114,7 +117,9 @@ export class RDialog extends RainbowElement {
         rainbow.overlay.style.zIndex = (rainbow.overlayQueue.queue.at(-1)?.style?.zIndex ?? 1) - 1;
       },
       afterEnter: () => {
-        // document.addEventListener("click", this.$$.onDocumentClick);
+        document.addEventListener("click", this.$$.onDocumentClick);
+        console.log('event opened')
+        this.dispatchEvent(createCustomEvent("opened"));
         // console.log("afterEnter");
       },
     };
@@ -160,4 +165,3 @@ export class RDialog extends RainbowElement {
     super.disconnectedCallback(...arg);
   }
 }
-

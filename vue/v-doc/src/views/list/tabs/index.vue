@@ -4,7 +4,7 @@
       <r-tab-item value="1" class="item"> label1 </r-tab-item>
       <r-tab-item value="2" class="item"> label2 </r-tab-item>
       <r-tab-item value="3" class="item"> label3 </r-tab-item>
-      <r-tab-item value="4" class="item"> label4 </r-tab-item>
+      <r-tab-item value="4" class="item" v-if="bool"> label4 </r-tab-item>
       <r-tab-item value="5" class="item"> label5 </r-tab-item>
       <div slot="active" class="item-active">123</div>
     </r-tabs>
@@ -38,9 +38,9 @@
 
     <div>{{ hook.value }}</div>
     <button @click="setH">hook</button>
-
-    <button @click="hook.value = 50 + hook.value">log</button>
     <div style="width: 30px; font-size: 80px; height: 1500px; word-wrap: break-word">123456789</div>
+    <button @click="bool=!bool">bool</button>
+
   </div>
 </template>
 <script setup>
@@ -177,6 +177,7 @@ const list = ref(d)
 const activeVal = ref(list.value[2])
 const index = ref(0)
 const tabclass = ref('')
+const bool = ref(true)
 
 const Radio2 = useRadio2({ value: 3, list: d })
 

@@ -42,7 +42,22 @@ export default defineConfig({
                 { text: "grid", link: "/element/layout/grid" },
                 { text: "flex", link: "/element/layout/flex" },
                 { text: "falls", link: "/element/layout/falls" },
-                { text: "scroll", link: "/element/layout/scroll" }
+                { text: "row", link: "/element/layout/scroll" },
+                { text: "column", link: "/element/layout/scroll" }
+              ],
+            },
+            {
+              text: "滚动布局",
+              items: [
+                { text: "指南", link: "/element/layout/handbook" },
+                { text: "scroll", link: "/element/layout/grid" },
+                { text: "nested-scroll", link: "/element/layout/flex" },
+                { text: "scroll-refresh", link: "/element/layout/falls" },
+                { text: "scroll-memory-bable", link: "/element/layout/scroll" },
+                { text: "scroll-sticky", link: "/element/layout/scroll" },
+                { text: "scroll-fixed", link: "/element/layout/scroll" },
+                { text: "scroll-flotage", link: "/element/layout/scroll" },
+                { text: "scroll-top", link: "/element/layout/scroll" },
               ],
             },
             {

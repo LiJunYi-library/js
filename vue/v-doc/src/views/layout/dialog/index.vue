@@ -25,14 +25,16 @@
     <button @click="dialog.show('haha')">show</button>
     <button @click="dialog.close()">close</button>
     <button @click="bool = !bool">bool</button>
-    <r-dialog v-model="bool" class="my-dialog" @input="input">
-      <div>
-        <div>属性</div>
-        <div>属性</div>
-        <button @click="dialog.show('2222')">show</button>
-        <button @click="bool = !bool">bool</button>
-      </div>
-    </r-dialog>
+    <!-- <Teleport to="body"> -->
+      <r-dialog v-model="bool" class="my-dialog" @input="input">
+        <div>
+          <div>属性</div>
+          <div>属性</div>
+          <button @click="dialog.show('2222')">show</button>
+          <button @click="bool = !bool">bool</button>
+        </div>
+      </r-dialog>
+    <!-- </Teleport> -->
   </div>
 </template>
 <script setup lang="jsx">
@@ -42,7 +44,7 @@ import { ref, render } from 'vue'
 import { useFetch } from '@/utils/request'
 // import { createDialog } from '@rainbow_ljy/rainbow-element'
 
-const {createDialog} = rainbow
+const { createDialog } = rainbow
 
 const name = ref('bottom-center')
 const bool = ref(false)
@@ -88,7 +90,7 @@ dialog2.show = (sss) => {
   )
 }
 
-const dialog3 = createDialog();
+const dialog3 = createDialog()
 dialog3.show = (sss) => {
   return dialog3(
     <div>

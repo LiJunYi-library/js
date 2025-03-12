@@ -7,15 +7,15 @@
       <div>4444</div>
     </rainbow-element> -->
 
-    <r-falls>
-      <div>111</div>
-      <div>222</div>
+    <r-grid :class="name" :r-columns="3" useAttrs r-gap="10px">
+      <div>111<div>111</div></div>
+      <div>222<div>222</div></div>
       <div>333
         <div v-if="name==='name'">4444</div>
       </div>
       <div v-if="name==='name'">4444</div>
       <div v-if="name==='name'">55555</div>
-    </r-falls>
+    </r-grid>
 
 
     <button @click="name='name'">classname</button>
@@ -30,3 +30,9 @@ const name = ref('asd')
 
 
 </script>
+
+<style >
+  .name{
+    --r-columns:3
+  }
+</style>

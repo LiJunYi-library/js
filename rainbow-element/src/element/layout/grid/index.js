@@ -1,5 +1,4 @@
 import { RainbowElement } from "../../base/index.js";
-// import { resizeObserverIMP } from "../../base/imps/index.js";
 import "./index.css";
 
 export class RGrid extends RainbowElement {
@@ -13,35 +12,46 @@ export class RGrid extends RainbowElement {
     "r-grid-stretch": String, // stretch
   });
 
-
-
-  $render() {
-    // console.log([this], this.$.data);
-    const { rGap, rRowGap, rColumnGap } = this.$.DATA;
-    this.$.setStyle(() => [
-      {
-        "grid-template-columns": `repeat(${this.$$columns}, 1fr)`,
-        "grid-gap": rGap + "px",
-        "row-gap": (rRowGap || rGap) + "px",
-        "column-gap": (rColumnGap || rGap) + "px",
-      },
-    ]);
-    this.$$doLayout();
+  connectedCallback(...arg) {
+    super.connectedCallback(...arg);
+    this.$onRender();
   }
 
-  get $$columns() {
-    let { rColumns, rMinAutoWidth } = this.$.DATA;
-    if (rMinAutoWidth) return Math.floor(this.offsetWidth / rMinAutoWidth);
-    return rColumns;
+  $onWidthChange(...arg) {
+    super.$onWidthChange(...arg);
+    this.$onRender();
   }
 
-  $$doLayout() {
-    const { rGridWrap, rGridStretch } = this.$.DATA;
+  $onStyleChang(...arg) {
+    super.$onChildrenChanage(...arg);
+    this.$onRender();
+  }
+
+  $onChildrenChanage(...arg) {
+    super.$onChildrenChanage(...arg);
+    this.$onRender();
+  }
+
+  $onRender() {
+    let { rMinAutoWidth, rColumns, rGap, rRowGap, rColumnGap, rGridWrap, rGridStretch } =
+      this.$.DATA;
+    let colGap = rColumnGap || rGap || 0;
+    let rowGap = rRowGap || rGap || 0;
+    const columns = (() => {
+      if (rMinAutoWidth) return Math.floor(this.offsetWidth / rMinAutoWidth);
+      return rColumns;
+    })();
+
+    this.style["grid-template-columns"] = `repeat(${columns}, 1fr)`;
+    this.style["gap"] = rGap + "px";
+    this.style["row-gap"] = colGap + "px";
+    this.style["column-gap"] = rowGap + "px";
+
     let children = Array.from(this.children);
     let clumnList = children.map((el) => el.getAttribute("grid-column") * 1 || 1);
     let start = 1;
     let gridColumns = [];
-    let maxColumn = this.$$columns + 1;
+    let maxColumn = columns + 1;
     clumnList.forEach((num, index) => {
       let end = start + num;
       if (rGridWrap === "wrap") {
@@ -62,7 +72,7 @@ export class RGrid extends RainbowElement {
         index,
       });
       start = start + num;
-      if (start > this.$$columns) start = 1;
+      if (start > columns) start = 1;
     });
     children.forEach((el, index) => {
       el.classList.add("r-grid-item");
@@ -71,5 +81,3 @@ export class RGrid extends RainbowElement {
     });
   }
 }
-
-

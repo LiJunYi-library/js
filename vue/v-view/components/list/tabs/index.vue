@@ -19,6 +19,6 @@
 const props = defineProps({
   trigger: { type: String, default: "click" },
   keyExtractor: { type: Function, default: (item, index) => index },
-  listHook: { type: Array, default: () => ({}) },
+  listHook: { type: Object, default: () => ({}) },
 });
 </script>

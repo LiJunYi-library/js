@@ -1,6 +1,5 @@
 import { RainbowElement } from "../../base/index.js";
 import { arrayLoopMap } from "@rainbow_ljy/rainbow-js";
-// import { treeObserverIMP } from "../../base/imps/index.js";
 import "./index.css";
 
 export class RFalls extends RainbowElement {
@@ -12,20 +11,32 @@ export class RFalls extends RainbowElement {
     "r-column-gap": { type: Number, default: 0 },
   });
 
-  // $onRegisterIMPS() {
-  //   return [
-  //     treeObserverIMP({
-  //       onWidthChange() {
-  //         this.$debouncedRender(this.$?.data);
-  //       },
-  //       onChildrenSizeChange() {
-  //         this.$debouncedRender(this.$?.data);
-  //       },
-  //     }),
-  //   ];
-  // }
+  connectedCallback(...arg) {
+    super.connectedCallback(...arg);
+    this.$onRender();
+  }
 
-  $render() {
+  $onWidthChange(...arg) {
+    super.$onWidthChange(...arg);
+    this.$onRender();
+  }
+
+  $onChildrenHeightChange(...arg) {
+    super.$onChildrenHeightChange(...arg);
+    this.$onRender();
+  }
+
+  $onChildrenChanage(...arg) {
+    super.$onChildrenChanage(...arg);
+    this.$onRender();
+  }
+
+  $onStyleChang(...arg) {
+    super.$onChildrenChanage(...arg);
+    this.$onRender();
+  }
+
+  $onRender() {
     let { rMinAutoWidth, rColumns, rGap, rRowGap, rColumnGap } = this.$.DATA;
     // console.log(rMinAutoWidth, rColumns, rGap, rRowGap, rColumnGap);
     const col = (() => {
@@ -69,4 +80,3 @@ function getMaxHeightItem(list) {
   });
   return item;
 }
-

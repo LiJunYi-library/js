@@ -1,13 +1,13 @@
 import { arrayForEachFind } from "@rainbow_ljy/rainbow-js";
+import { RainbowElement } from "../../base/index.js";
 import {
-  RainbowElement,
   toggleClass,
   createCustomEvent,
   createElement,
   createSlot,
   resizeObserver,
   getBoundingClientRect,
-} from "../../base/index.js";
+} from "../../../utils/index.js";
 import "./index.css";
 
 export class RTabs extends RainbowElement {

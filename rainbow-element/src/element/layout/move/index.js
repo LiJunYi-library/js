@@ -1,5 +1,6 @@
 import "./index.css";
-import { RainbowElement, wipePX, createElement, isNum } from "../../base/index.js";
+import { RainbowElement } from "../../base/index.js";
+import { wipePX, isNum } from "../../../utils/index.js";
 
 export class RMove extends RainbowElement {
   static observedAttributes = this.$registerProps({

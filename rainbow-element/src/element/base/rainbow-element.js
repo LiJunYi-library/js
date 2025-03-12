@@ -18,7 +18,6 @@ export class RainbowElement extends HTMLElement {
         else props[key] = types[key]?.default;
       }
     }
-    this.prototype.$types = types;
     this.prototype.$props = props;
     return keys;
   }
@@ -27,11 +26,9 @@ export class RainbowElement extends HTMLElement {
     mutationOptions: { childList: true },
   };
 
-  $events = {
-    documentMutation: (events) => {
-      console.log(events);
-    },
-  };
+  $events = {};
+
+  $watchStyle = {};
 
   $ = (() => {
     const onResizeObserver = (...arg) => this.$onResizeObserver(...arg);
@@ -45,14 +42,47 @@ export class RainbowElement extends HTMLElement {
       resizeObserver: resizeObserver(onResizeObserver),
       childResizeObserver: resizeObserver(onChildrenResizeObserver),
       mutationObserver: new MutationObserver(onMutationObserver),
+      props: { ...this.constructor.prototype.$props },
       cache: {
         offset: {},
       },
-      //
       data: {},
       DATA: new Proxy({}, { get: (target, prop) => this.$.data[camelCaseToKebabCase(prop)] }),
-      props: { ...this.constructor.prototype.$props },
-
+      documentMutation: (events) => {
+        this.$.listenerStyle();
+      },
+      listenerStyle: () => {
+        const parms = this.$.getStyles();
+        const { isChange, changeCss, oldCss } = parms;
+        if (isChange) this.$onStyleChang(parms);
+        for (const key in changeCss) {
+          this.$watchStyle?.[key]?.(changeCss[key], oldCss[key]);
+        }
+      },
+      getStyles: () => {
+        let isChange = false;
+        const changeCss = {};
+        const oldCss = { ...this.$.data };
+        const css = {};
+        const style = window.getComputedStyle(this);
+        for (const key in this.$.props) {
+          if (Object.prototype.hasOwnProperty.call(this.$.props, key)) {
+            if (key.startsWith("r-")) {
+              const cssVal = style.getPropertyValue("--" + key).trim();
+              css[key] = this.$.resolveCss(key, cssVal);
+            } else {
+              const cssVal = style.getPropertyValue(key).trim();
+              css[key] = wipePX(cssVal);
+            }
+            if (oldCss[key] !== css[key]) {
+              changeCss[key] = css[key];
+              isChange = true;
+            }
+          }
+        }
+        this.$.data = css;
+        return { changeCss, css, oldCss, isChange };
+      },
       append: (...nodes) => {
         return super.append(...nodes);
       },
@@ -64,6 +94,48 @@ export class RainbowElement extends HTMLElement {
       },
       removeChild: (...nodes) => {
         return super.removeChild(...nodes);
+      },
+      resolveFunCss: {
+        calc: (v, ...arg) => {
+          return v;
+        },
+      },
+      findParentByLocalName: (name, p = this) => {
+        if (!p) return;
+        const parent = p.parentNode;
+        if (!parent) return;
+        if (name instanceof Array && name.includes(parent.localName)) return parent;
+        if (parent.localName === name) return parent;
+        return this.$.findParentByLocalName(name, parent);
+      },
+      resolveCss: (key, str = "") => {
+        try {
+          if (str === "r-prop") return this.$.props[key];
+          //
+          const isAttrFun = /r-attr\([^\)]*?\)/.test(str); //如果是r-attr 使用属性参数
+          if (isAttrFun) str = this.$.props[key];
+          // 解析px  vw vh
+          let cssVal = str.replace(/\d+px|\d+vw|\d+vh/g, (len) => {
+            if (/\d+px/.test(len)) return Number(len.replaceAll("px", ""));
+            if (/\d+vw/.test(len))
+              return (Number(len.replaceAll("vw", "")) / 100) * window.innerWidth;
+            if (/\d+vh/.test(len))
+              return (Number(len.replaceAll("vh", "")) / 100) * window.innerHeight;
+            return len;
+          });
+          // 如果是方法
+          if (/([^\(]*?)\([^\)]*?\)/.test(cssVal)) {
+            return eval(`this.$.resolveFunCss.${cssVal}`);
+          }
+          // 如果可以转换成数字
+          if (/^-?\d+(\.\d+)?$/.test(cssVal)) return Number(cssVal);
+          // 如果可以转换成数组
+          if (/.*?,.*?/.test(cssVal)) return cssVal.trim().split(",").filter(Boolean);
+          return cssVal;
+        } catch (error) {
+          // console.log(error);
+          return str;
+        }
       },
     };
   })();
@@ -80,11 +152,12 @@ export class RainbowElement extends HTMLElement {
   }
 
   connectedCallback() {
-    // console.log('connectedCallback')
+    this.$.getStyles();
+    // console.log("connectedCallback", this.$.data);
     this.$.isConnected = true;
     const offset = getBoundingClientRect(this);
     this.$.cache.offset = { ...offset, __c__: 0 };
-    window.addEventListener("documentMutation", this.$events.documentMutation);
+    window.addEventListener("documentMutation", this.$.documentMutation);
     this.$.resizeObserver.observe(this);
     this.$.mutationObserver.observe(this, this.$config.mutationOptions);
     Array.from(this.children)
@@ -99,7 +172,7 @@ export class RainbowElement extends HTMLElement {
 
   disconnectedCallback() {
     // console.log('disconnectedCallback')
-    window.removeEventListener("documentMutation", this.$events.documentMutation);
+    window.removeEventListener("documentMutation", this.$.documentMutation);
     this.$.resizeObserver.disconnect();
     this.$.mutationObserver.disconnect();
     this.$.childResizeObserver.disconnect();
@@ -109,6 +182,7 @@ export class RainbowElement extends HTMLElement {
 
   $onAttributeChanged() {
     // console.log('onAttributeChanged')
+    this.$.listenerStyle();
   }
 
   adoptedCallback() {
@@ -116,7 +190,7 @@ export class RainbowElement extends HTMLElement {
   }
 
   $onStyleChang() {
-    // console.log('onStyleChang')
+    // console.log("onStyleChang");
   }
 
   $onResizeObserver(...args) {

@@ -1,5 +1,6 @@
 import "./index.css";
-import { RainbowElement, toggleClass } from "../../base/index.js";
+import { RainbowElement } from "../../base/index.js";
+import { findParentByLocalName, toggleClass } from "../../../utils/index.js";
 
 export class RScrollSticky extends RainbowElement {
   static observedAttributes = this.$registerProps({
@@ -90,11 +91,11 @@ export class RScrollSticky extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.$$.scrollParent = this.$.findParentByLocalName([
+    this.$$.scrollParent = findParentByLocalName([
       "r-scroll",
       "r-scroll-view",
       "r-nested-scroll",
-    ]);
+    ],this);
     this.$$.scrollParent.addEventListener("scroll", this.$$.onScroll.bind(this));
   }
 

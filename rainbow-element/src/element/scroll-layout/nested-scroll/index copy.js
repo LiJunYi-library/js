@@ -1,8 +1,9 @@
 import "./index.css";
-import { RainbowElement, createCustomEvent } from "../../base/index.js";
+import { RainbowElement } from "../../base/index.js";
 import { extendedSlideEvents } from "../../events/slide.js";
 import { inheritSlideEvent } from "../../events/scroll.js";
 import { arrayRemove, arrayWipeRepetition } from "@rainbow_ljy/rainbow-js";
+import { findParentByLocalName } from "../../../utils/index.js";
 const LOG = (...arg) => console.log(...arg);
 
 export class RNestedScroll extends RainbowElement {
@@ -59,7 +60,7 @@ export class RNestedScroll extends RainbowElement {
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     this.$.appendChild(this.$slotContainer.default);
-    this.$$.nestedParent = this.$.findParentByLocalName(["r-nested-scroll"]);
+    this.$$.nestedParent = findParentByLocalName(["r-nested-scroll"], this);
     if (this.$$.nestedParent) this.$$.nestedParent.$$.nestedChildren.push(this);
     this.$$.setNestedChild();
     this.$slotContainer.default.classList.add("r-nested-scroll-content");
@@ -119,7 +120,7 @@ function setup(props) {
   let isScrollLeftEnd = () => scrollEl.scrollLeft <= 0;
   let maxScrollLeft = () => container.offsetWidth - scrollEl.offsetWidth;
 
-  let parent = () => view.$.findParentByLocalName(["r-nested-scroll"]);
+  let parent = () => (["r-nested-scroll"], view);
 
   let rollingConflict = (event, orientation = "vertical") => {
     let conflict = event.srcViews.every((el) => el.$.DATA.rScrollDirection === orientation);

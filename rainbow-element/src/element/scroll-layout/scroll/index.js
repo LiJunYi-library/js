@@ -1,5 +1,6 @@
 import "./index.css";
-import { RainbowElement, createCustomEvent, createElement, createSlot } from "../../base/index.js";
+import { RainbowElement } from "../../base/index.js";
+import { findParentByLocalName, createCustomEvent } from "../../../utils/index.js";
 
 export class RScroll extends RainbowElement {
   $$ = {
@@ -27,7 +28,7 @@ export class RScroll extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.$$.refreshView = this.$.findParentByLocalName("r-refresh");
+    this.$$.refreshView = findParentByLocalName("r-refresh", this);
     this.$$.refreshView?.$$?.bindEvents?.(this);
   }
 

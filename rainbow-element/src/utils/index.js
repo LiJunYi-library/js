@@ -1,4 +1,5 @@
 import { numFixed, requestAnimationFramePromise } from "@rainbow_ljy/rainbow-js";
+window.rainbow.createDialog = createDialog;
 
 export function deleteKey(target, source, bool) {
   for (const key in target) {
@@ -294,4 +295,11 @@ export function createDialog(params) {
   return fun;
 }
 
-window.rainbow.createDialog = createDialog;
+export function findParentByLocalName(name, node) {
+  if (!node) return;
+  const parent = node.parentNode;
+  if (!parent) return;
+  if (name instanceof Array && name.includes(parent.localName)) return parent;
+  if (parent.localName === name) return parent;
+  return findParentByLocalName(name, parent);
+}

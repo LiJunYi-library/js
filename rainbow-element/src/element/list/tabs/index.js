@@ -7,6 +7,7 @@ import {
   createSlot,
   resizeObserver,
   getBoundingClientRect,
+  findParentByLocalName,
 } from "../../../utils/index.js";
 import "./index.css";
 
@@ -168,7 +169,7 @@ export class RTabItem extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.$$.valueParent = this.$.findParentByLocalName("r-tabs");
+    this.$$.valueParent = findParentByLocalName("r-tabs", this);
     this.$$.setActive();
   }
 

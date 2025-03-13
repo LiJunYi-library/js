@@ -1,5 +1,6 @@
 import "./index.css";
 import { RainbowElement, createElement, createSlot, Transition } from "../../base/index.js";
+import {createElement, createSlot, Transition } from "../../../utils/index.js";
 
 export class RTransition extends RainbowElement {
   static observedAttributes = this.$registerProps({

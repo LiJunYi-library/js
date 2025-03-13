@@ -1,5 +1,10 @@
 import { arrayRewriteFunction, ListArray } from "@rainbow_ljy/rainbow-js";
-import { RainbowElement, createCustomEvent, renderChildren } from "../../base/index.js";
+import {
+  RainbowElement,
+  createCustomEvent,
+  renderChildren,
+  findParentByLocalName,
+} from "../../base/index.js";
 import "./index.css";
 
 export class RScrollVirtualGridList extends RainbowElement {
@@ -122,11 +127,10 @@ export class RScrollVirtualGridList extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.$$.scrollParent = this.$.findParentByLocalName([
-      "r-scroll",
-      "r-scroll-view",
-      "r-nested-scroll",
-    ]);
+    this.$$.scrollParent = findParentByLocalName(
+      ["r-scroll", "r-scroll-view", "r-nested-scroll"],
+      this,
+    );
     this.$$.scrollParent.addEventListener("scroll", this.$$.onScroll);
     this.$$.layout();
   }
@@ -149,6 +153,4 @@ export class RScrollVirtualGridList extends RainbowElement {
   $onRender() {
     this.$$.layout();
   }
-
-
 }

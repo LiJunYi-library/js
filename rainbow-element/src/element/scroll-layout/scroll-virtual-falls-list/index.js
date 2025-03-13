@@ -1,12 +1,12 @@
 import {
   arrayRewriteFunction,
-  animationDebounced,
   arrayLoopMap,
   ListArray,
   arrayBinaryFindIndex,
   arrayLoop,
 } from "@rainbow_ljy/rainbow-js";
-import { RainbowElement, createCustomEvent, renderChildren } from "../../base/index.js";
+import { RainbowElement } from "../../base/index.js";
+import { findParentByLocalName, createCustomEvent, renderChildren } from "../../../utils/index.js";
 import "./index.css";
 
 class ItemCache {
@@ -233,20 +233,23 @@ export class RScrollVirtualFallsList extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.$$.scrollParent = this.$.findParentByLocalName([
-      "r-scroll",
-      "r-scroll-view",
-      "r-nested-scroll",
-    ]);
-    this.$$.scrollParent.addEventListener("scroll", this.$$.onScroll.bind(this));
+    this.$$.scrollParent = findParentByLocalName(
+      ["r-scroll", "r-scroll-view", "r-nested-scroll"],
+      this,
+    );
+    this.$$.scrollParent.addEventListener("scroll", this.$$.onScroll);
     this.$$.falls.list = initList.call(this);
     this.$$.layout();
   }
 
   disconnectedCallback(...arg) {
     super.disconnectedCallback(...arg);
-    this.$$.scrollParent.removeEventListener("scroll", this.$$.onScroll.bind(this));
+    this.$$.scrollParent.removeEventListener("scroll", this.$$.onScroll);
     this.$$.backstage.stop();
+  }
+
+  $onRender() {
+    this.$$.layout();
   }
 }
 

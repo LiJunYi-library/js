@@ -1,6 +1,6 @@
 import { arrayForEachFindIndex } from "@rainbow_ljy/rainbow-js";
 import { RainbowElement } from "../../base/index.js";
-import { toggleClass, createCustomEvent } from "../../../utils/index.js";
+import { toggleClass, createCustomEvent, findParentByLocalName } from "../../../utils/index.js";
 import "./index.css";
 
 export class RSwiper extends RainbowElement {
@@ -112,7 +112,7 @@ export class RSwiperItem extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.$$.valueParent = this.$.findParentByLocalName("r-swiper");
+    this.$$.valueParent = findParentByLocalName("r-swiper", this);
     this.$$.setActive();
   }
 

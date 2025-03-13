@@ -1,5 +1,5 @@
 import "./index.css";
-import { RainbowElement, createCustomEvent } from "../../base/index.js";
+import { RainbowElement, createCustomEvent ,findParentByLocalName} from "../../base/index.js";
 import { setTimeoutPromise } from "@rainbow_ljy/rainbow-js";
 
 export class RScrollRefresh extends RainbowElement {
@@ -145,11 +145,11 @@ export class RScrollRefresh extends RainbowElement {
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     this.classList.add("r-scroll-refresh");
-    this.$$.scrollParent = this.$.findParentByLocalName([
+    this.$$.scrollParent = findParentByLocalName([
       "r-scroll",
       "r-scroll-view",
       "r-nested-scroll",
-    ]);
+    ],this);
     const { scrollParent } = this.$$;
     const opt = { passive: false, capture: true };
     scrollParent.addEventListener("pointerdown", this.$$.pointerdown, opt);

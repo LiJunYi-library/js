@@ -100,14 +100,6 @@ export class RainbowElement extends HTMLElement {
           return v;
         },
       },
-      findParentByLocalName: (name, p = this) => {
-        if (!p) return;
-        const parent = p.parentNode;
-        if (!parent) return;
-        if (name instanceof Array && name.includes(parent.localName)) return parent;
-        if (parent.localName === name) return parent;
-        return this.$.findParentByLocalName(name, parent);
-      },
       resolveCss: (key, str = "") => {
         try {
           if (str === "r-prop") return this.$.props[key];

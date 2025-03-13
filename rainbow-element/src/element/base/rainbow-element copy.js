@@ -113,14 +113,6 @@ export class RainbowElement extends HTMLElement {
       });
       this.$.cache.class = newMap;
     },
-    findParentByLocalName: (name, p = this) => {
-      if (!p) return;
-      const parent = p.parentNode;
-      if (!parent) return;
-      if (name instanceof Array && name.includes(parent.localName)) return parent;
-      if (parent.localName === name) return parent;
-      return this.$.findParentByLocalName(name, parent);
-    },
     findChildByLocalName: (name, c = this) => {
       if (!c) return [];
       if (name instanceof Array) {

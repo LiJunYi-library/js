@@ -90,8 +90,8 @@ export class RDialog extends RainbowElement {
         const prveDialog = rainbow.dialogQueue.queue.at(-1);
         rainbow.zIndex = rainbow.zIndex + rainbow.zIndexAdd;
         this.style.zIndex = rainbow.zIndex;
-        this.style.top = "50px";
-        rainbow.overlay.style.top = "50px";
+        // this.style.top = "50px";
+        // rainbow.overlay.style.top = "50px";
         this.$$.transition.show();
         rainbow.overlay.value = true;
         rainbow.overlayQueue.push(this);

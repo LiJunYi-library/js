@@ -175,7 +175,6 @@ r-dialog .r-dialog-content {
 /**********************/
 .r-dialog-center-enter-from::part(r-dialog-content),
 .r-dialog-center-enter-from .r-dialog-content {
-    /* transform: scale(0); */
     opacity: 0;
 }
 
@@ -186,13 +185,11 @@ r-dialog .r-dialog-content {
 
 .r-dialog-center-enter-to::part(r-dialog-content),
 .r-dialog-center-enter-to .r-dialog-content {
-    /* transform: scale(1); */
     opacity: 1;
 }
 
 .r-dialog-center-leave-from::part(r-dialog-content),
 .r-dialog-center-leave-from .r-dialog-content {
-    /* transform: scale(1); */
     opacity: 1;
 }
 
@@ -203,7 +200,6 @@ r-dialog .r-dialog-content {
 
 .r-dialog-center-leave-to::part(r-dialog-content),
 .r-dialog-center-leave-to .r-dialog-content {
-    /* transform: scale(0); */
     opacity: 0;
 }
 

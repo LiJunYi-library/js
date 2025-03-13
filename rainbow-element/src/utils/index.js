@@ -208,8 +208,12 @@ export function transition(props = {}) {
       config.node.classList.add(`${config.name}-enter-active`);
       config.node.classList.add(`${config.name}-enter-to`);
       config.dispatchNode.dispatchEvent(createCustomEvent("enter"));
-      config.eventNode.removeEventListener("transitionend", this.onTransitionend);
-      config.eventNode.addEventListener("transitionend", this.onTransitionend);
+      if (hasTransitionDuration(config.eventNode)) {
+        config.eventNode.removeEventListener("transitionend", this.onTransitionend);
+        config.eventNode.addEventListener("transitionend", this.onTransitionend);
+      } else {
+        this.onTransitionend();
+      }
     },
 
     async hide() {
@@ -228,8 +232,12 @@ export function transition(props = {}) {
       config.node.classList.add(`${config.name}-leave-active`);
       config.node.classList.add(`${config.name}-leave-to`);
       config.dispatchNode.dispatchEvent(createCustomEvent("leave"));
-      config.eventNode.removeEventListener("transitionend", this.onTransitionend);
-      config.eventNode.addEventListener("transitionend", this.onTransitionend);
+      if (hasTransitionDuration(config.eventNode)) {
+        config.eventNode.removeEventListener("transitionend", this.onTransitionend);
+        config.eventNode.addEventListener("transitionend", this.onTransitionend);
+      } else {
+        this.onTransitionend();
+      }
     },
   };
 
@@ -312,7 +320,7 @@ export function getOffsetTop(node, p, num = 0) {
 }
 
 export function findFixedParent(node) {
-  if (node=== document.body) return document.body;
+  if (node === document.body) return document.body;
   if (!node) return document.body;
   const parent = node.parentNode;
   if (!parent) return document.body;
@@ -326,4 +334,16 @@ export function findFixedParent(node) {
 export function findPositionParent(node) {
   if (node.offsetParent) return node.offsetParent;
   return findFixedParent(node);
+}
+
+export function getComputedStyleProperty(node, property) {
+  const style = window.getComputedStyle(node);
+  return style.getPropertyValue(property).trim();
+}
+
+export function hasTransitionDuration(node) {
+  let duration = getComputedStyleProperty(node, "transition-duration");
+  if (duration === "0s") return false;
+  if (duration === "0") return false;
+  return true;
 }

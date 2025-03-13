@@ -116,6 +116,8 @@ export class RDialog extends RainbowElement {
       },
       afterLeave: () => {
         rainbow.overlay.style.zIndex = (rainbow.overlayQueue.queue.at(-1)?.style?.zIndex ?? 1) - 1;
+        console.log("event closed");
+        this.dispatchEvent(createCustomEvent("closed"));
       },
       afterEnter: () => {
         document.addEventListener("click", this.$$.onDocumentClick);

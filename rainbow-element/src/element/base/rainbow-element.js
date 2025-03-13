@@ -256,6 +256,7 @@ export class RainbowElement extends HTMLElement {
       if (!objectEqualitys(offset, cacheOffset)) rc.push(ele);
       if (offset.width !== cacheOffset.width) wc.push(ele);
       if (offset.height !== cacheOffset.height) hc.push(ele);
+      ele.$cacheOffset = { ...getBoundingClientRect(ele) };
     });
     if (rc.length) this.$onChildrenResize(rc, obs, ...args);
     if (wc.length) this.$onChildrenWidthChange(wc, obs, ...args);

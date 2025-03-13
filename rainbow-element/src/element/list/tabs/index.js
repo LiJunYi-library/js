@@ -18,7 +18,7 @@ export class RTabs extends RainbowElement {
       const Offset = getBoundingClientRect(this.$$.activeChild);
       const activeOffset = getBoundingClientRect(this.$$.active);
       if (Offset.width === activeOffset.width && Offset.height === activeOffset.height) return;
-      this.$$.setActiveStyle("instant");
+      this.$layout("instant");
     };
     return {
       controller: {},
@@ -36,52 +36,6 @@ export class RTabs extends RainbowElement {
         this.dispatchEvent(createCustomEvent("input", { value }));
         this.dispatchEvent(createCustomEvent("change", { value }));
       },
-      setChildrenClass: (forceBehavior) => {
-        this.$$.activeChild = (() => {
-          if (this.value === undefined) return undefined;
-          return arrayForEachFind(Array.from(this.children), (child) => {
-            if (child.localName !== "r-tab-item") return false;
-            const bool = this.value === child.value;
-            toggleClass(child, bool, "r-tab-item-act");
-            return bool;
-          });
-        })();
-        (() => {
-          if (this.value === undefined) {
-            this.$$.active.style.width = 0 + "px";
-            this.$$.active.style.height = 0 + "px";
-            this.$$.active.style.left = `${0}px`;
-            this.$$.active.style.top = `${0}px`;
-            return;
-          }
-          if (this.$$.cache.value === this.value) return;
-          if (this.$.isRenderFinish === false) {
-            this.$$.setActiveStyle("instant", forceBehavior);
-            return;
-          }
-          this.$$.setActiveStyle("smooth", forceBehavior);
-        })();
-        this.$$.cache.value = this.value;
-      },
-      setActiveStyle: (behavior = "smooth", forceBehavior) => {
-        const { activeChild } = this.$$;
-        if (!activeChild) return;
-        if (this.$$.isActiveTransition === true) behavior = "smooth";
-        if (forceBehavior) behavior = forceBehavior;
-        toggleClass(this, behavior === "smooth", "r-tab-active-transition");
-        if (behavior === "smooth") this.$$.isActiveTransition = true;
-        const activeOffset = activeChild.getBoundingClientRect();
-        const parentOffset = this.getBoundingClientRect();
-        const scrollLeft = activeChild.offsetLeft - (parentOffset.width - activeOffset.width) / 2;
-        this.$$.active.style.width = activeOffset.width + "px";
-        this.$$.active.style.height = activeOffset.height + "px";
-        this.$$.active.style.left = `${activeChild.offsetLeft}px`;
-        this.$$.active.style.top = `${activeOffset.top - parentOffset.top}px`;
-        this.scrollTo({ left: scrollLeft, behavior });
-        this.$$.resizeObserver.observe(activeChild);
-        this.$$.active.removeEventListener("transitionend", this.$$.onActiveTransitionend);
-        this.$$.active.addEventListener("transitionend", this.$$.onActiveTransitionend);
-      },
       onActiveTransitionend: () => {
         this.$$.isActiveTransition = false;
         this.classList.remove("r-tab-active-transition");
@@ -94,7 +48,7 @@ export class RTabs extends RainbowElement {
 
   set value(v) {
     this.$$.value = v;
-    this.$$.setChildrenClass();
+    this.$onRender();
   }
 
   get value() {
@@ -122,7 +76,7 @@ export class RTabs extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.$$.setChildrenClass();
+    this.$onRender();
   }
 
   disconnectedCallback(...arg) {
@@ -130,7 +84,53 @@ export class RTabs extends RainbowElement {
     this.$$.resizeObserver.disconnect();
   }
 
-  $render() {}
+  $onRender(forceBehavior) {
+    this.$$.activeChild = (() => {
+      if (this.value === undefined) return undefined;
+      return arrayForEachFind(Array.from(this.children), (child) => {
+        if (child.localName !== "r-tab-item") return false;
+        const bool = this.value === child.value;
+        toggleClass(child, bool, "r-tab-item-act");
+        return bool;
+      });
+    })();
+    (() => {
+      if (this.value === undefined) {
+        this.$$.active.style.width = 0 + "px";
+        this.$$.active.style.height = 0 + "px";
+        this.$$.active.style.left = `${0}px`;
+        this.$$.active.style.top = `${0}px`;
+        return;
+      }
+      if (this.$$.cache.value === this.value) return;
+      if (this.$.isRenderFinish === false) {
+        this.$layout("instant", forceBehavior);
+        return;
+      }
+      this.$layout("smooth", forceBehavior);
+    })();
+    this.$$.cache.value = this.value;
+  }
+
+  $layout(behavior = "smooth", forceBehavior) {
+    const { activeChild } = this.$$;
+    if (!activeChild) return;
+    if (this.$$.isActiveTransition === true) behavior = "smooth";
+    if (forceBehavior) behavior = forceBehavior;
+    toggleClass(this, behavior === "smooth", "r-tab-active-transition");
+    if (behavior === "smooth") this.$$.isActiveTransition = true;
+    const activeOffset = activeChild.getBoundingClientRect();
+    const parentOffset = this.getBoundingClientRect();
+    const scrollLeft = activeChild.offsetLeft - (parentOffset.width - activeOffset.width) / 2;
+    this.$$.active.style.width = activeOffset.width + "px";
+    this.$$.active.style.height = activeOffset.height + "px";
+    this.$$.active.style.left = `${activeChild.offsetLeft}px`;
+    this.$$.active.style.top = `${activeOffset.top - parentOffset.top}px`;
+    this.scrollTo({ left: scrollLeft, behavior });
+    this.$$.resizeObserver.observe(activeChild);
+    this.$$.active.removeEventListener("transitionend", this.$$.onActiveTransitionend);
+    this.$$.active.addEventListener("transitionend", this.$$.onActiveTransitionend);
+  }
 }
 
 export class RTabItem extends RainbowElement {
@@ -145,7 +145,7 @@ export class RTabItem extends RainbowElement {
     setActive: () => {
       toggleClass(this, this.value === this.$$.valueParent?.value, "r-tab-item-act");
       if (this.value === this.$$.valueParent?.value) {
-        this.$$.valueParent?.$$?.setChildrenClass?.();
+        this.$$.valueParent?.$onRender?.();
       }
     },
   };

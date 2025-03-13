@@ -7,7 +7,7 @@
     </r-pulldown> -->
     <button @click="$log(bool)">bool</button>
     <r-grid style="--r-columns: 3">
-      <r-pulldown v-model="bool">
+      <r-pulldown v-model="bool" class="select-pulldown">
         <div slot="label">{{name || '类目'}}</div>
         <div>类目内容 {{ columns }}</div>
         <div>类目内容 {{ columns }}</div>

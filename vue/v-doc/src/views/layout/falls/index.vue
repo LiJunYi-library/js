@@ -1,29 +1,22 @@
 <template>
-  <r-scroll class="VirtualFallsList-page" :class="name">
-    <VirtualFallsList v-model="List">
-      <template #default="{ item, index, key }">
-        <img :src="item.image" width="90%">
-        <button @click="changeIndex(index)">修改</button>
-        <button @click="List.splice(index, 1)">删除</button>
-        <div>{{ key }}</div>
-        <div>{{ item.id }}</div>
-        <div>{{ item.title }}</div>
-        <div>{{ item.name }}</div>
-      </template>
-    </VirtualFallsList>
+  <div :class="name" class="falls-demo">
+    <div>
+      <button @click="bool = !bool">bool</button>
+      <button @click="text = cText()">text</button>
+    </div>
 
-    <!-- <r-falls class="my-falls">
+    <r-falls>
       <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
       <div>
         五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
       </div>
       <div>
-        五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
+        {{text  }}
       </div>
       <div>
         五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
       </div>
-      <div>
+      <div v-if="bool">
         五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
       </div>
       <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
@@ -35,15 +28,22 @@
         五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
         五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
       </div>
-    </r-falls> -->
-  </r-scroll>
+      <div>
+        五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
+      </div>
+    </r-falls>
+
+  </div>
 </template>
 <script setup>
 import { arrayLoopMap, ListArray } from '@rainbow_ljy/rainbow-js'
 import { useRadio2 } from '@rainbow_ljy/v-hooks'
 import { ref } from 'vue'
-import VirtualFallsList from './VirtualFallsList.vue'
 import { useFetch } from '@/utils/request'
+const bool = ref(true);
+const cText = () => arrayLoopMap(Math.floor(Math.random() * 100), (i) => '我').join('');
+const text = ref(cText())
+
 
 const spuList = useFetch({
   url: 'https://spu.manmanbuy.com/spu/list',
@@ -52,7 +52,6 @@ const spuList = useFetch({
 })
 
 const name = ref('bottom-center')
-const bool = ref(true)
 const arrays = new ListArray()
 // arrays.push(
 //   ...arrayLoopMap(10, (value) => ({
@@ -100,4 +99,18 @@ setTimeout(async () => {
 // }, 4000)
 </script>
 
-<style></style>
+<style scoped lang="scss">
+.falls-demo {
+  r-falls {
+    --r-columns: 3;
+    --r-gap: 10px;
+    --r-row-gap: 10px;
+    --r-column-gap: 20px;
+  }
+
+  .r-falls-item {
+    // transition: 0.25s;
+  }
+
+}
+</style>

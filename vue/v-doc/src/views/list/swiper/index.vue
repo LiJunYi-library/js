@@ -1,8 +1,8 @@
 <template>
   <div>
-    <template >
-        <li class="list-item">{{ Radio2.value }}</li>
-      </template>
+    <template>
+      <li class="list-item">{{ Radio2.value }}</li>
+    </template>
     <VRTabs :listHook="Radio2"></VRTabs>
     <r-swiper v-model="Radio2.value">
       <template v-for="(item, index) in Radio2.list" :key="item.value">

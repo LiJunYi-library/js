@@ -36,6 +36,14 @@ export default defineConfig({
         {
           items: [
             {
+              text: "基础组件",
+              items: [
+                { text: "button", link: "/element/layout/grid" },
+                { text: "img", link: "/element/layout/flex" },
+                { text: "a", link: "/element/layout/scroll" }
+              ],
+            },
+            {
               text: "布局",
               items: [
                 { text: "指南", link: "/element/layout/handbook" },
@@ -52,24 +60,57 @@ export default defineConfig({
                 { text: "指南", link: "/element/layout/handbook" },
                 { text: "scroll", link: "/element/layout/grid" },
                 { text: "nested-scroll", link: "/element/layout/flex" },
+                { text: "refresh", link: "/element/layout/falls" },
                 { text: "scroll-refresh", link: "/element/layout/falls" },
                 { text: "scroll-memory-bable", link: "/element/layout/scroll" },
                 { text: "scroll-sticky", link: "/element/layout/scroll" },
                 { text: "scroll-fixed", link: "/element/layout/scroll" },
                 { text: "scroll-flotage", link: "/element/layout/scroll" },
                 { text: "scroll-top", link: "/element/layout/scroll" },
+                { text: "scroll-page", link: "/element/layout/scroll" },
               ],
             },
-            {
+            { 
+              text: "表单组件",
+              items: [
+                { text: "Calendar 日历", link: "/element/data/rolling-text" },
+                { text: "Cascader 级联选择", link: "/element/data/rolling-text" },
+                { text: "Checkbox 复选框", link: "/element/data/rolling-text" },
+                { text: "DatePicker 日期选择 ", link: "/element/data/rolling-text" },
+                { text: "input ", link: "/element/data/rolling-text" },
+
+             
+              ],
+            },
+            {  
               text: "数据",
               items: [
                 { text: "rolling-text", link: "/element/data/rolling-text" },
+                { text: "Badge", link: "/element/data/rolling-text" },
+                { text: "Circle", link: "/element/data/rolling-text" },
               ],
             },
-            {
+            { //Collapse
               text: "list",
               items: [
-                { text: "rolling-text", link: "/element/list/rolling-text" },
+                { text: "tabs", link: "/element/list/rolling-text" },
+                { text: "swiper", link: "/element/list/rolling-text" },
+              ],
+            },
+            { //SwipeCell 
+              text: "反馈",
+              items: [
+                { text: "message", link: "/element/list/rolling-text" },
+                { text: "notification", link: "/element/list/rolling-text" },
+                { text: "NoticeBar", link: "/element/list/rolling-text" },
+                { text: "Toast", link: "/element/list/rolling-text" },
+              ],
+            },
+            {   
+              text: "交互",
+              items: [
+                { text: "dialog", link: "/element/list/rolling-text" },
+                { text: "popover", link: "/element/list/rolling-text" },
               ],
             },
           ],

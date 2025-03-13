@@ -32,7 +32,7 @@ export class RFalls extends RainbowElement {
   }
 
   $onStyleChang(...arg) {
-    super.$onChildrenChanage(...arg);
+    super.$onStyleChang(...arg);
     this.$onRender();
   }
 
@@ -54,6 +54,7 @@ export class RFalls extends RainbowElement {
     // console.log(itemWidth);
     Array.from(this.children).forEach((child) => {
       child.classList.add("r-falls-item");
+      child.style.position = "absolute";
       child.style.width = itemWidth;
       let node = getMinHeightItem(list);
       if (node.height) node.height = node.height + rowGap;

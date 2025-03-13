@@ -127,16 +127,28 @@ export class RScrollVirtualGridList extends RainbowElement {
       "r-scroll-view",
       "r-nested-scroll",
     ]);
-    this.$$.scrollParent.addEventListener("scroll", this.$$.onScroll.bind(this));
+    this.$$.scrollParent.addEventListener("scroll", this.$$.onScroll);
     this.$$.layout();
   }
 
   disconnectedCallback(...arg) {
     super.disconnectedCallback(...arg);
-    this.$$.scrollParent.removeEventListener("scroll", this.$$.onScroll.bind(this));
+    this.$$.scrollParent.removeEventListener("scroll", this.$$.onScroll);
   }
 
-  $render() {
+  $onStyleChang(...arg) {
+    super.$onStyleChang(...arg);
+    this.$onRender();
+  }
+
+  $onWidthChange(...arg) {
+    super.$onWidthChange(...arg);
+    this.$onRender();
+  }
+
+  $onRender() {
     this.$$.layout();
   }
+
+
 }

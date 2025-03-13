@@ -303,3 +303,27 @@ export function findParentByLocalName(name, node) {
   if (parent.localName === name) return parent;
   return findParentByLocalName(name, parent);
 }
+
+export function getOffsetTop(node, p, num = 0) {
+  if (!node) return num;
+  if (node.offsetParent === p) return num;
+  let top = num + node?.offsetTop ?? 0;
+  return getOffsetTop(node.offsetParent, p, top);
+}
+
+export function findFixedParent(node) {
+  if (node=== document.body) return document.body;
+  if (!node) return document.body;
+  const parent = node.parentNode;
+  if (!parent) return document.body;
+  const style = window.getComputedStyle(parent);
+  const property = ["transform", "perspective", "filter", "backdrop-filter"];
+  const unNone = property.some((str) => style.getPropertyValue(str).trim() !== "none");
+  if (unNone) return parent;
+  return findFixedParent(parent);
+}
+
+export function findPositionParent(node) {
+  if (node.offsetParent) return node.offsetParent;
+  return findFixedParent(node);
+}

@@ -1,6 +1,6 @@
 import "./index.css";
 import { RainbowElement } from "../../base/index.js";
-import { wipePX, isNum } from "../../../utils/index.js";
+import { wipePX, isNum, findPositionParent } from "../../../utils/index.js";
 
 export class RMove extends RainbowElement {
   static observedAttributes = this.$registerProps({
@@ -18,6 +18,8 @@ export class RMove extends RainbowElement {
     "r-adsorb-border-bottom": Number,
     "r-adsorb": String, // left top bottom right horizontal vertical nearby nook
   });
+
+  positionParent = this.offsetParent;
 
   $$ = {
     caches: {
@@ -37,8 +39,8 @@ export class RMove extends RainbowElement {
       event.stopPropagation();
       const { rMoveBorderLeft, rMoveBorderTop, rMoveBorderRight, rMoveBorderBottom } = this.$.DATA;
       const touche = event.touches?.[0];
-      const maxX = this.parentNode.offsetWidth - this.offsetWidth - rMoveBorderRight;
-      const maxH = this.parentNode.offsetHeight - this.offsetHeight - rMoveBorderBottom;
+      const maxX = this.positionParent.offsetWidth - this.offsetWidth - rMoveBorderRight;
+      const maxH = this.positionParent.offsetHeight - this.offsetHeight - rMoveBorderBottom;
       let x = touche.clientX - this.$$.startTouche.clientX + this.$$.caches.x;
       let y = touche.clientY - this.$$.startTouche.clientY + this.$$.caches.y;
       if (isNum(rMoveBorderRight)) if (x > maxX) x = maxX;
@@ -64,10 +66,11 @@ export class RMove extends RainbowElement {
       } = this.$.DATA;
       let x = rAdsorbBorderLeft || 0;
       let y = rAdsorbBorderTop || 0;
-      const maxX = this.parentNode.offsetWidth - this.offsetWidth - (rAdsorbBorderRight || 0);
-      const maxH = this.parentNode.offsetHeight - this.offsetHeight - (rAdsorbBorderBottom || 0);
-      let right = this.parentNode.offsetWidth - left - this.offsetWidth;
-      let bottom = this.parentNode.offsetHeight - top - this.offsetHeight;
+      const maxX = this.positionParent.offsetWidth - this.offsetWidth - (rAdsorbBorderRight || 0);
+      const maxH =
+        this.positionParent.offsetHeight - this.offsetHeight - (rAdsorbBorderBottom || 0);
+      let right = this.positionParent.offsetWidth - left - this.offsetWidth;
+      let bottom = this.positionParent.offsetHeight - top - this.offsetHeight;
       if (rAdsorb) this.$$.adsorb[rAdsorb]({ x, y, maxX, maxH, left, top, right, bottom });
     },
     adsorb: {
@@ -83,7 +86,7 @@ export class RMove extends RainbowElement {
         this.$$.adsorb.com();
       },
       horizontal: ({ x, maxX, left }) => {
-        if (left + this.offsetWidth / 2 > this.parentNode.offsetWidth / 2) x = maxX;
+        if (left + this.offsetWidth / 2 > this.positionParent.offsetWidth / 2) x = maxX;
         this.style.left = `${x}px`;
         this.$$.adsorb.com();
       },
@@ -96,13 +99,13 @@ export class RMove extends RainbowElement {
         this.$$.adsorb.com();
       },
       vertical: ({ y, maxH, top }) => {
-        if (top + this.offsetHeight / 2 > this.parentNode.offsetHeight / 2) y = maxH;
+        if (top + this.offsetHeight / 2 > this.positionParent.offsetHeight / 2) y = maxH;
         this.style.top = `${y}px`;
         this.$$.adsorb.com();
       },
       nook: ({ y, maxH, top, x, maxX, left }) => {
-        if (left + this.offsetWidth / 2 > this.parentNode.offsetWidth / 2) x = maxX;
-        if (top + this.offsetHeight / 2 > this.parentNode.offsetHeight / 2) y = maxH;
+        if (left + this.offsetWidth / 2 > this.positionParent.offsetWidth / 2) x = maxX;
+        if (top + this.offsetHeight / 2 > this.positionParent.offsetHeight / 2) y = maxH;
         this.style.left = `${x}px`;
         this.style.top = `${y}px`;
         this.$$.adsorb.com();
@@ -127,6 +130,7 @@ export class RMove extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
+    this.positionParent = findPositionParent(this);
   }
 
   disconnectedCallback(...arg) {

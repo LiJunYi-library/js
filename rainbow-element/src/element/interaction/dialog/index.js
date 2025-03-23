@@ -145,9 +145,25 @@ export class RDialog extends RainbowElement {
     this.attachShadow({ mode: "open" });
     this.$$.content.append(this.$$.defaultSlot);
     this.shadowRoot.appendChild(this.$$.content);
+    const style = document.createElement('style');
+                style.textContent = `
+r-dialog::part(r-dialog-content),
+.r-dialog-content {
+    background: red;
+    width: 100%;
+    height: 100%;
+    transform-origin: 50% 50%;
+}`;
+
+                // 将样式和内容添加到 shadow root
+                this.shadowRoot.appendChild(style);
+                const extraSheet = new CSSStyleSheet();
+extraSheet.replaceSync("div { color: green; }");
+this.shadowRoot.adoptedStyleSheets = [extraSheet];
     this.addEventListener("afterEnter", this.$$.afterEnter);
     this.addEventListener("afterLeave", this.$$.afterLeave);
     this.addEventListener("click", this.$$.click);
+    console.log([this])
   }
 
   connectedCallback(...arg) {

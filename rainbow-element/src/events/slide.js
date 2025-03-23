@@ -103,7 +103,7 @@ export class SlideEvent extends CustomEvent {
     clearTimeout(timer);
     extendedEventArgs(event);
     prveEvent = event;
-    console.log('onPointermove')
+    // console.log('onPointermove')
     if (!isVerdict) {
       if (event.deltaC > 8) {
         const ang = event.deltaAng;

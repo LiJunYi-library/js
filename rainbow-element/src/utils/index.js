@@ -1,6 +1,8 @@
 import { numFixed, requestAnimationFramePromise } from "@rainbow_ljy/rainbow-js";
 window.rainbow.createDialog = createDialog;
 
+export * from './tokenList.js'
+
 export function deleteKey(target, source, bool) {
   for (const key in target) {
     if (Object.prototype.hasOwnProperty.call(target, key)) {
@@ -347,3 +349,4 @@ export function hasTransitionDuration(node) {
   if (duration === "0") return false;
   return true;
 }
+

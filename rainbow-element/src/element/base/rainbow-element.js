@@ -5,6 +5,7 @@ import {
   createCustomEvent,
   getBoundingClientRect,
   resizeObserver,
+  createDomTokenList,
 } from "../../utils/index.js";
 
 export class RainbowElement extends HTMLElement {
@@ -21,6 +22,12 @@ export class RainbowElement extends HTMLElement {
     this.prototype.$props = props;
     return keys;
   }
+
+  cssList = createDomTokenList({
+    element: this,
+    attributeName: "cssname",
+    formatterConnected: () => this?.$?.isConnected,
+  });
 
   $config = {
     mutationOptions: { childList: true },
@@ -140,13 +147,14 @@ export class RainbowElement extends HTMLElement {
 
   constructor(...arg) {
     super(...arg);
-    // console.log("constructor");
+    // console.log("constructor",[this]);
   }
 
   connectedCallback() {
-    this.$.getStyles();
-    // console.log("connectedCallback", this.$.data);
+    // console.log("connectedCallback",[this]);
     this.$.isConnected = true;
+    this.cssList.add(this.getAttribute("cssname"));
+    this.$.getStyles();
     const offset = getBoundingClientRect(this);
     this.$.cache.offset = { ...offset, __c__: 0 };
     window.addEventListener("documentMutation", this.$.documentMutation);

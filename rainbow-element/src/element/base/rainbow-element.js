@@ -25,7 +25,7 @@ export class RainbowElement extends HTMLElement {
 
   cssList = createDomTokenList({
     element: this,
-    attributeName: "cssname",
+    attributeName: "css-name",
     formatterConnected: () => this?.$?.isConnected,
   });
 
@@ -153,7 +153,7 @@ export class RainbowElement extends HTMLElement {
   connectedCallback() {
     // console.log("connectedCallback",[this]);
     this.$.isConnected = true;
-    this.cssList.add(this.getAttribute("cssname"));
+    this.cssList.add(this.getAttribute("css-name"));
     this.$.getStyles();
     const offset = getBoundingClientRect(this);
     this.$.cache.offset = { ...offset, __c__: 0 };

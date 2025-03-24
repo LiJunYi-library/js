@@ -1,3 +1,5 @@
+import { convertToCamelCase } from "./default.js";
+
 function getTokenArgs(...args) {
   return args
     .filter(Boolean)
@@ -42,6 +44,7 @@ class DomTokenList extends Array {
 
 export function createDomTokenList({ element, attributeName, formatterConnected = () => true }) {
   const tokenList = new DomTokenList(...parseTokens());
+  const key = convertToCamelCase(attributeName);
 
   Object.defineProperties(tokenList, {
     onValuesChange: {
@@ -50,7 +53,7 @@ export function createDomTokenList({ element, attributeName, formatterConnected 
         try {
           if (tokenList.value) element.setAttribute(attributeName, tokenList.value);
           else element.removeAttribute(attributeName);
-          element[attributeName] = tokenList.value;
+          element[key] = tokenList.value;
         } catch (error) {}
       },
     },

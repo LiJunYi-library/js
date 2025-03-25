@@ -18,5 +18,7 @@ export class RAbsolute extends RainbowElement {
 
   $onRender() {
     let { rPosition } = this.$.DATA;
+    this.cssName = `r-absolute-${rPosition}`;
+    console.log([this])
   }
 }

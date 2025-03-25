@@ -1,11 +1,11 @@
 <template>
-  <div :class="name" class="falls-demo">
+  <div :class="name" class="r-grid-demo">
     <div>
       <button @click="bool = !bool">bool</button>
       <button @click="text = cText()">text</button>
     </div>
 
-    <r-falls>
+    <r-grid>
       <div>五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五</div>
       <div>
         五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
@@ -35,15 +35,15 @@
       <div>
         五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五
       </div>
-    </r-falls>
+    </r-grid>
 
-    <r-falls class="min-auto-width">
+    <r-grid class="min-auto-width">
       <template v-for="(item, index) in list">
         <div>
           {{ item.text }}
         </div>
       </template>
-    </r-falls>
+    </r-grid>
 
   </div>
 </template>
@@ -58,17 +58,14 @@ const list = arrayLoopMap(10, () => ({ text: cText() }))
 </script>
 
 <style scoped lang="scss">
-.falls-demo {
-  r-falls {
+.r-grid-demo {
+  r-grid {
     --r-columns: 3;
     --r-gap: 10px;
     --r-row-gap: 10px;
     --r-column-gap: 20px;
   }
 
-  .r-falls-item {
-    // transition: 0.25s;
-  }
 
   .min-auto-width {
     --r-min-auto-width: 200px;

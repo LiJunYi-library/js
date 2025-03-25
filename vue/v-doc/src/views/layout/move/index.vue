@@ -4,11 +4,11 @@
 
 
 
-<div>
-        <r-move>
-          <div style="width: 80px; height: 80px; background: orangered">属性</div>
-        </r-move>
-</div>
+    <div>
+      <r-move>
+        <div style="width: 80px; height: 80px; background: orangered"></div>
+      </r-move>
+    </div>
 
 
 
@@ -35,9 +35,10 @@ import { useFetch } from '@/utils/request'
   height: 100vh;
   position: relative;
   overflow: hidden;
-  r-move{
+
+  r-move {
     --r-adsorb: bottom;
-    --r-adsorb-border-bottom:10px;
+    --r-adsorb-border-bottom: 10px;
   }
 }
 </style>

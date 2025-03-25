@@ -155,12 +155,19 @@ export function transition(props = {}) {
       config.node[config.property].add(`${config.name}-enter-active`);
       config.node[config.property].add(`${config.name}-enter-to`);
       config.dispatchNode.dispatchEvent(createCustomEvent("enter"));
-      if (hasTransitionDuration(config.eventNode)) {
-        config.eventNode.removeEventListener("transitionend", this.onTransitionend);
-        config.eventNode.addEventListener("transitionend", this.onTransitionend);
-      } else {
+      (() => {
+        if (hasTransitionDuration(config.eventNode)) {
+          config.eventNode.removeEventListener("transitionend", this.onTransitionend);
+          config.eventNode.addEventListener("transitionend", this.onTransitionend);
+          return;
+        }
+        if (hasAnimationDuration(config.eventNode)) {
+          config.eventNode.removeEventListener("animationend", this.onTransitionend);
+          config.eventNode.addEventListener("animationend", this.onTransitionend);
+          return;
+        }
         this.onTransitionend();
-      }
+      })();
     },
 
     async hide() {
@@ -179,12 +186,20 @@ export function transition(props = {}) {
       config.node[config.property].add(`${config.name}-leave-active`);
       config.node[config.property].add(`${config.name}-leave-to`);
       config.dispatchNode.dispatchEvent(createCustomEvent("leave"));
-      if (hasTransitionDuration(config.eventNode)) {
-        config.eventNode.removeEventListener("transitionend", this.onTransitionend);
-        config.eventNode.addEventListener("transitionend", this.onTransitionend);
-      } else {
+      (() => {
+        if (hasTransitionDuration(config.eventNode)) {
+          config.eventNode.removeEventListener("transitionend", this.onTransitionend);
+          config.eventNode.addEventListener("transitionend", this.onTransitionend);
+          return;
+        }
+        if (hasAnimationDuration(config.eventNode)) {
+          config.eventNode.removeEventListener("animationend", this.onTransitionend);
+          config.eventNode.addEventListener("animationend", this.onTransitionend);
+          return;
+        }
         this.onTransitionend();
-      }
+      })();
+
     },
   };
 
@@ -290,6 +305,14 @@ export function getComputedStyleProperty(node, property) {
 
 export function hasTransitionDuration(node) {
   let duration = getComputedStyleProperty(node, "transition-duration");
+  if (duration === "0s") return false;
+  if (duration === "0") return false;
+  return true;
+}
+
+export function hasAnimationDuration(node) {
+  let duration = getComputedStyleProperty(node, "animation-duration");
+  console.log(duration)
   if (duration === "0s") return false;
   if (duration === "0") return false;
   return true;

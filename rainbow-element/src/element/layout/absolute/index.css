@@ -1,61 +1,67 @@
 r-absolute {
-    position: absolute;
+  position: absolute;
+  --r-position: center;
 }
 
-[css-name=r-absolute-center] {
-    left: 50%;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
+[css-name="r-absolute-center"] {
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
 }
 
-[css-name=r-absolute-top-left],
-[css-name=r-absolute-left-top] {
-    top: 0;
-    left: 0;
+[css-name="r-absolute-top-left"],
+[css-name="r-absolute-left-top"] {
+  top: 0;
+  left: 0;
 }
 
-[css-name=r-absolute-top-center],
-[css-name=r-absolute-center-top] {
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+[css-name="r-absolute-top-center"],
+[css-name="r-absolute-center-top"] {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-[css-name=r-absolute-top-right],
-[css-name=r-absolute-right-top]{
-    top: 0;
-    right: 0;
+[css-name="r-absolute-top-right"],
+[css-name="r-absolute-right-top"] {
+  top: 0;
+  right: 0;
 }
 
-[css-name=r-absolute-right-center],
-[css-name=r-absolute-center-right] {
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
+[css-name="r-absolute-right-center"],
+[css-name="r-absolute-center-right"] {
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-[css-name=r-absolute-right-bottom],
-[css-name=r-absolute-bottom-right] {
-    right: 0;
-    bottom: 0;
+[css-name="r-absolute-right-bottom"],
+[css-name="r-absolute-bottom-right"] {
+  right: 0;
+  bottom: 0;
 }
 
-[css-name=r-absolute-bottom-center],
-[css-name=r-absolute-center-bottom] {
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 0;
+[css-name="r-absolute-bottom-center"],
+[css-name="r-absolute-center-bottom"] {
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
 }
 
-[css-name=r-absolute-bottom-left],
-[css-name=r-absolute-left-bottom] {
-    left: 0;
-    bottom: 0;
+[css-name="r-absolute-bottom-left"],
+[css-name="r-absolute-left-bottom"] {
+  left: 0;
+  bottom: 0;
 }
 
-[css-name=r-absolute-left-center],
-[css-name=r-absolute-center-left] {
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
+[css-name="r-absolute-left-center"],
+[css-name="r-absolute-center-left"] {
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+r-absolute[useAttrs="true"],
+r-absolute[useAttrs] {
+  --r-position: r-attr(r-position);
 }

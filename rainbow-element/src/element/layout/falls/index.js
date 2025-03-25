@@ -53,7 +53,7 @@ export class RFalls extends RainbowElement {
     let itemWidth = `calc( ${100 / col}% - ${((col - 1) * colGap) / col}px )`;
     // console.log(itemWidth);
     Array.from(this.children).forEach((child) => {
-      child.classList.add("r-falls-item");
+      child.setAttribute("css-name", "r-falls-item");
       child.style.position = "absolute";
       child.style.width = itemWidth;
       let node = getMinHeightItem(list);

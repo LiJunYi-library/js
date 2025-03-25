@@ -5,10 +5,6 @@ r-falls {
   --r-columns: 2;
 }
 
-.r-falls-item {
-  position: absolute;
-}
-
 r-falls[useAttrs="true"],
 r-falls[useAttrs] {
   --r-columns: r-attr(r-columns);

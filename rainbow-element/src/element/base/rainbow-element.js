@@ -42,6 +42,11 @@ export class RainbowElement extends HTMLElement {
     const onMutationObserver = (...arg) => this.$onMutationObserver(...arg);
     const onChildrenResizeObserver = (...arg) => this.$onChildrenResizeObserver(...arg);
     return {
+      value: undefined,
+      updateValue: (val) => {
+        this.$.value = val;
+        this.dispatchEvent(createCustomEvent("input", { value: val }));
+      },
       isRenderFinish: false,
       renderFinish: () => (this.$.isRenderFinish = true),
       renderFinishAnimationFrame: false,
@@ -138,6 +143,16 @@ export class RainbowElement extends HTMLElement {
       },
     };
   })();
+
+  set value(v) {
+    if (this.$.value === v) return;
+    this.$.value = v;
+    this.$onValueChange(v);
+  }
+
+  get value() {
+    return this.$.value;
+  }
 
   attributeChangedCallback(name, oldValue, newValue) {
     this.$.props[name] = newValue;
@@ -281,6 +296,10 @@ export class RainbowElement extends HTMLElement {
 
   $onChildrenHeightChange(...arg) {
     // console.log("onChildrenHeightChange", ...arg);
+  }
+
+  $onValueChange() {
+    // console.log("onResize");
   }
 
   $onRender() {

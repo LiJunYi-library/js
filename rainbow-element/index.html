@@ -4,62 +4,46 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Display Table Column Example</title>
-    <style>
-      .table {
-        display: grid;
-        width: 100%;
-        border-collapse: collapse;
-        table-layout: fixed; /* 确保列宽按定义分配 */
-        grid-template-columns: auto auto auto;
-      }
-      .table-column {
-        display: table-column;
-        width: 200px; /* 第一列宽度为 30% */
-      }
-      .table-column + .table-column {
-        width: 400px; /* 第二列宽度为 70% */
-      }
-      .table-row {
-        display: table-row;
-      }
-      .table-cell {
-        display: table-cell;
-        height: 40px;
-        border-left: 1px solid #ccc;
-        border-top: 1px solid #ccc;
-        text-align: center;
-        box-sizing: border-box;
-        background: #f2ebeb;
-      }
-    </style>
+
   </head>
   <body>
-    <div style="height: 200px; overflow: auto; width: 500px"  cssName="ff gg">
-      <div class="table">
-        <div class="table-cell" style="position: sticky;left: 0;top: 0;">Column 1</div>
-        <div class="table-cell">Column 2</div>
-        <div class="table-cell">Row 1, Cell 1</div>
-        <div class="table-cell" style="position: sticky;left: 0;top: 40px;">Row 1, Cell 2</div>
-        <div class="table-cell">Row 2, Cell 1</div>
-        <div class="table-cell">Row 2, Cell 2</div>
-        <div class="table-cell">Row 2, Cell 1</div>
-        <div class="table-cell">Row 2, Cell 2</div>
-        <div class="table-cell">Row 2, Cell 1</div>
-        <div class="table-cell">Row 2, Cell 2</div>
-        <div class="table-cell">Row 2, Cell 1</div>
-        <div class="table-cell">Row 2, Cell 2</div>
-        <div class="table-cell">Row 2, Cell 1</div>
-        <div class="table-cell">Row 2, Cell 2</div>
-        <div class="table-cell">Row 2, Cell 2</div>
-        <div class="table-cell">Row 2, Cell 1</div>
-        <div class="table-cell">Row 2, Cell 2</div>
-        <div class="table-cell">Row 2, Cell 1</div>
-        <div class="table-cell">Row 2, Cell 2</div>
-        <div class="table-cell">Row 2, Cell 1</div>
-        <div class="table-cell">Row 2, Cell 2</div>
-        <div class="table-cell">Row 2, Cell 1</div>
-        <div class="table-cell">Row 2, Cell 2</div>
-      </div>
-    </div>
+    <style id="myStyle">
+      /* 外部样式 */
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+    
+      my-component::part(box) {
+        width: 100px;
+        height: 100px;
+        background-color: red;
+        animation: fadeIn 2s ease-in-out infinite alternate;
+      }
+
+    </style>
+    
+    <script>
+      class MyComponent extends HTMLElement {
+        constructor() {
+          super();
+          const shadowRoot = this.attachShadow({ mode: 'open' });
+    
+          // 创建内容并暴露为可样式化部分
+          const div = document.createElement('div');
+          div.setAttribute('part', 'box'); // 暴露为可样式化部分
+    
+          shadowRoot.appendChild(div);
+        }
+      }
+    
+      customElements.define('my-component', MyComponent);
+      const myStyle = document.getElementById('myStyle');
+      console.log(window.style)
+    </script>
+
+    <my-component>
+      <div>123</div>
+    </my-component>
   </body>
 </html>

@@ -42,6 +42,9 @@ export class RainbowElement extends HTMLElement {
     const onMutationObserver = (...arg) => this.$onMutationObserver(...arg);
     const onChildrenResizeObserver = (...arg) => this.$onChildrenResizeObserver(...arg);
     return {
+      innerCss: "",
+      styleNode: document.createElement("style"),
+      styleElement: "",
       isRenderFinish: false,
       renderFinish: () => (this.$.isRenderFinish = true),
       renderFinishAnimationFrame: false,
@@ -136,6 +139,19 @@ export class RainbowElement extends HTMLElement {
           return str;
         }
       },
+      setStyleNodeTextContent: () => {
+        const textContent = [
+          ...[...[this.$.styleElement].flat(Infinity)].filter(Boolean).map((el) => {
+            try {
+              return document.getElementById(el).textContent;
+            } catch (error) {
+              return el.textContent;
+            }
+          }),
+          ...[...[this.$.innerCss].flat(Infinity)].filter(Boolean),
+        ].join("");
+        this.$.styleNode.textContent = textContent;
+      },
     };
   })();
 
@@ -156,6 +172,24 @@ export class RainbowElement extends HTMLElement {
     return this.$value;
   }
 
+  set innerCss(v) {
+    this.$.innerCss = v;
+    this.$.setStyleNodeTextContent();
+  }
+
+  get innerCss() {
+    return this.$.innerCss;
+  }
+
+  set styleElement(v) {
+    this.$.styleElement = v;
+    this.$.setStyleNodeTextContent();
+  }
+
+  get styleElement() {
+    return this.$.styleElement;
+  }
+
   attributeChangedCallback(name, oldValue, newValue) {
     this.$.props[name] = newValue;
     if (!this.$.isConnected) return;
@@ -170,6 +204,7 @@ export class RainbowElement extends HTMLElement {
   connectedCallback() {
     // console.log("connectedCallback",[this]);
     this.$.isConnected = true;
+    this.$.setStyleNodeTextContent();
     this.cssList.add(this.getAttribute("css-name"));
     this.$.getStyles();
     const offset = getBoundingClientRect(this);

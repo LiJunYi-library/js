@@ -53,8 +53,20 @@ export function createDomTokenList({ element, attributeName, formatterConnected 
         try {
           if (tokenList.value) element.setAttribute(attributeName, tokenList.value);
           else element.removeAttribute(attributeName);
-          element[key] = tokenList.value;
         } catch (error) {}
+      },
+    },
+  });
+
+  Object.defineProperties(element, {
+    [key]: {
+      get() {
+        return tokenList.value;
+      },
+      set(str) {
+        tokenList.splice();
+        const arr = str.trim().split(/\s+/).filter(Boolean);
+        tokenList.add(...arr);
       },
     },
   });

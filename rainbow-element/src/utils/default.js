@@ -166,11 +166,13 @@ export function isNum(d) {
 
 export function transition(props = {}) {
   const config = {
-    node: createElement(),
-    eventNode: createElement(),
-    dispatchNode: createElement(),
+    node: undefined,
+    eventNode: undefined,
+    dispatchNode: undefined,
     formatterVisible: (node) => node.value,
     name: "",
+    hideName: "",
+    property: "cssList",
     ...props,
   };
 
@@ -180,34 +182,34 @@ export function transition(props = {}) {
     finishSymbol: 1,
     onTransitionend: () => {
       args.finishSymbol = args.animateSymbol;
-      config.node.classList.remove(`${config.name}-enter-active`);
-      config.node.classList.remove(`${config.name}-leave-active`);
-      config.node.classList.remove(`${config.name}-enter-to`);
-      config.node.classList.remove(`${config.name}-leave-to`);
+      config.node[config.property].remove(`${config.name}-enter-active`);
+      config.node[config.property].remove(`${config.name}-leave-active`);
+      config.node[config.property].remove(`${config.name}-enter-to`);
+      config.node[config.property].remove(`${config.name}-leave-to`);
       if (config.formatterVisible(config.node)) {
-        config.node.classList.remove(`${config.hideClassName}`);
+        config.node[config.property].remove(`${config.hideName}`);
         config.dispatchNode.dispatchEvent(createCustomEvent("afterEnter"));
       } else {
-        config.node.classList.add(`${config.hideClassName}`);
+        config.node[config.property].add(`${config.hideName}`);
         config.dispatchNode.dispatchEvent(createCustomEvent("afterLeave"));
       }
     },
     async show() {
       if (args.value === true) return;
       args.value = true;
-      config.node.classList.remove(`${config.hideClassName}`);
-      config.node.classList.remove(`${config.name}-leave-from`);
-      config.node.classList.remove(`${config.name}-leave-active`);
-      config.node.classList.remove(`${config.name}-leave-to`);
-      config.node.classList.add(`${config.name}-enter-from`);
+      config.node[config.property].remove(`${config.hideName}`);
+      config.node[config.property].remove(`${config.name}-leave-from`);
+      config.node[config.property].remove(`${config.name}-leave-active`);
+      config.node[config.property].remove(`${config.name}-leave-to`);
+      config.node[config.property].add(`${config.name}-enter-from`);
       config.dispatchNode.dispatchEvent(createCustomEvent("beforeEnter"));
       if (args.animateSymbol === args.finishSymbol) {
         args.animateSymbol = Symbol();
         await requestAnimationFramePromise();
       }
-      config.node.classList.remove(`${config.name}-enter-from`);
-      config.node.classList.add(`${config.name}-enter-active`);
-      config.node.classList.add(`${config.name}-enter-to`);
+      config.node[config.property].remove(`${config.name}-enter-from`);
+      config.node[config.property].add(`${config.name}-enter-active`);
+      config.node[config.property].add(`${config.name}-enter-to`);
       config.dispatchNode.dispatchEvent(createCustomEvent("enter"));
       if (hasTransitionDuration(config.eventNode)) {
         config.eventNode.removeEventListener("transitionend", this.onTransitionend);
@@ -220,18 +222,18 @@ export function transition(props = {}) {
     async hide() {
       if (args.value === false) return;
       args.value = false;
-      config.node.classList.remove(`${config.name}-enter-from`);
-      config.node.classList.remove(`${config.name}-enter-active`);
-      config.node.classList.remove(`${config.name}-enter-to`);
-      config.node.classList.add(`${config.name}-leave-from`);
+      config.node[config.property].remove(`${config.name}-enter-from`);
+      config.node[config.property].remove(`${config.name}-enter-active`);
+      config.node[config.property].remove(`${config.name}-enter-to`);
+      config.node[config.property].add(`${config.name}-leave-from`);
       config.dispatchNode.dispatchEvent(createCustomEvent("beforeLeave"));
       if (args.animateSymbol === args.finishSymbol) {
         args.animateSymbol = Symbol();
         await requestAnimationFramePromise();
       }
-      config.node.classList.remove(`${config.name}-leave-from`);
-      config.node.classList.add(`${config.name}-leave-active`);
-      config.node.classList.add(`${config.name}-leave-to`);
+      config.node[config.property].remove(`${config.name}-leave-from`);
+      config.node[config.property].add(`${config.name}-leave-active`);
+      config.node[config.property].add(`${config.name}-leave-to`);
       config.dispatchNode.dispatchEvent(createCustomEvent("leave"));
       if (hasTransitionDuration(config.eventNode)) {
         config.eventNode.removeEventListener("transitionend", this.onTransitionend);

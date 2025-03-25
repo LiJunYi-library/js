@@ -1,6 +1,6 @@
 import "./index.css";
 import { RainbowElement } from "../../base/index.js";
-import { wipePX, isNum, findPositionParent } from "../../../utils/index.js";
+import { wipePX, isNum, findPositionParent, addEventListenerOnce } from "../../../utils/index.js";
 
 export class RMove extends RainbowElement {
   static observedAttributes = this.$registerProps({
@@ -26,23 +26,56 @@ export class RMove extends RainbowElement {
       x: 0,
       y: 0,
     },
-    startTouche: {},
+    startEvent: {},
+    isTouch: false,
+    isMousedown: false,
     onTouchstart: (event) => {
-      this.$$.startTouche = event.touches?.[0];
+      console.log("onTouchstart");
+      this.$$.isTouch = true;
+      this.$$.startEvent = event.touches?.[0];
       event.stopPropagation();
+      this.$$.onStart(this.$$.startEvent);
+    },
+    onTouchmove: (touchEvent) => {
+      const event = touchEvent.touches?.[0];
+      touchEvent.stopPropagation();
+      this.$$.onMove(event);
+    },
+    onTouchend: (touchEvent) => {
+      touchEvent.stopPropagation();
+      this.$$.onEnd();
+    },
+    onMousedown: (event) => {
+      if (this.$$.isTouch) return;
+      this.$$.isMousedown = true;
+      this.$$.startEvent = event;
+      event.stopPropagation();
+      this.$$.onStart(this.$$.startEvent);
+    },
+    onMousemove: (event) => {
+      if (this.$$.isTouch) return;
+      if (!this.$$.isMousedown) return;
+      event.stopPropagation();
+      this.$$.onMove(event);
+    },
+    onMouseup: (event) => {
+      if (this.$$.isTouch) return;
+      this.$$.isMousedown = false;
+      event.stopPropagation();
+      this.$$.onEnd();
+    },
+    onStart: () => {
       const style = window.getComputedStyle(this);
       this.$$.caches.x = wipePX(style.getPropertyValue("left").trim());
       this.$$.caches.y = wipePX(style.getPropertyValue("top").trim());
       this.style.transition = "none";
     },
-    onTouchmove: (event) => {
-      event.stopPropagation();
+    onMove: (event) => {
       const { rMoveBorderLeft, rMoveBorderTop, rMoveBorderRight, rMoveBorderBottom } = this.$.DATA;
-      const touche = event.touches?.[0];
       const maxX = this.positionParent.offsetWidth - this.offsetWidth - rMoveBorderRight;
       const maxH = this.positionParent.offsetHeight - this.offsetHeight - rMoveBorderBottom;
-      let x = touche.clientX - this.$$.startTouche.clientX + this.$$.caches.x;
-      let y = touche.clientY - this.$$.startTouche.clientY + this.$$.caches.y;
+      let x = event.clientX - this.$$.startEvent.clientX + this.$$.caches.x;
+      let y = event.clientY - this.$$.startEvent.clientY + this.$$.caches.y;
       if (isNum(rMoveBorderRight)) if (x > maxX) x = maxX;
       if (isNum(rMoveBorderLeft)) if (x < rMoveBorderLeft) x = rMoveBorderLeft;
       if (isNum(rMoveBorderBottom)) if (y > maxH) y = maxH;
@@ -52,8 +85,7 @@ export class RMove extends RainbowElement {
       this.style.bottom = "auto";
       this.style.right = "auto";
     },
-    onTouchend: (event) => {
-      event.stopPropagation();
+    onEnd: () => {
       const style = window.getComputedStyle(this);
       let left = wipePX(style.getPropertyValue("left").trim());
       let top = wipePX(style.getPropertyValue("top").trim());
@@ -123,14 +155,17 @@ export class RMove extends RainbowElement {
 
   constructor(...arg) {
     super(...arg);
-    this.addEventListener("touchstart", this.$$.onTouchstart);
-    this.addEventListener("touchmove", this.$$.onTouchmove);
-    this.addEventListener("touchend", this.$$.onTouchend);
   }
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     this.positionParent = findPositionParent(this);
+    addEventListenerOnce(this, "touchstart", this.$$.onTouchstart);
+    addEventListenerOnce(this, "touchmove", this.$$.onTouchmove);
+    addEventListenerOnce(this, "touchend", this.$$.onTouchend);
+    addEventListenerOnce(this, "mousedown", this.$$.onMousedown);
+    addEventListenerOnce(document, "mousemove", this.$$.onMousemove);
+    addEventListenerOnce(document, "mouseup", this.$$.onMouseup);
   }
 
   disconnectedCallback(...arg) {

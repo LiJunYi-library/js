@@ -349,3 +349,7 @@ export function hasTransitionDuration(node) {
   return true;
 }
 
+export function addEventListenerOnce(node, type, ls, config) {
+  node.removeEventListener(type, ls, config);
+  node.addEventListener(type, ls, config);
+}

@@ -3,19 +3,20 @@ import "./index.css";
 
 export class RFlex extends RainbowElement {
   static observedAttributes = this.$registerProps({
-    // 'direction': { type: String, default: "row" },
-    // 'inline': Boolean,
-    // 'reverse': Boolean,
-    // 'wrap': Boolean,
-    // 'justify': { type: String, default: "" },
-    // 'align': { type: String, default: "" },
-    // 'align-self': { type: String, default: "" },
-    // 'auto': { type: [String, Boolean], default: "" },
-    // 'fill': { type: [String, Boolean], default: "" },
     "r-gap": { type: Number, default: 0 },
     "r-row-gap": { type: Number, default: 0 },
     "r-column-gap": { type: Number, default: 0 },
   });
+
+  connectedCallback(...arg) {
+    super.connectedCallback(...arg);
+    this.$onRender();
+  }
+
+  $onStyleChang(...arg) {
+    super.$onChildrenChanage(...arg);
+    this.$onRender();
+  }
 
   $onRender() {
     let { rGap, rRowGap, rColumnGap } = this.$.DATA;

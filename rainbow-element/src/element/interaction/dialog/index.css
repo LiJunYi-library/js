@@ -3,6 +3,7 @@ r-dialog {
   overflow: hidden;
   --r-orientation: center;
   --r-blank-inner: margin;
+  --r-back-pressed: close;
   z-index: 10;
 }
 

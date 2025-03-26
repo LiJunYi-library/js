@@ -13,11 +13,11 @@ export class RDialog extends RainbowElement {
   static observedAttributes = this.$registerProps({
     "r-orientation": String, // "left" "right" "top" "bottom" "center"
     "r-back-pressed": String, //close
+    "r-blank-inner": String, // margin
     "r-blank-left": String,
     "r-blank-right": String,
     "r-blank-top": String,
     "r-blank-bottom": String,
-    "r-blank-inner": String, // margin
   });
 
   $watchStyle = {
@@ -76,6 +76,7 @@ export class RDialog extends RainbowElement {
         this.style.maxWidth = `calc( 100vh - ${(rBlankLeft || 0) + (rBlankRight || 0)}px )`;
       },
       historyBack: (unHistoryBack) => {
+        if (this.$.DATA.rBackPressed !== "close") return;
         if (!unHistoryBack) {
           history.back();
           const prveDialog = rainbow.dialogQueue.queue.at(-1);
@@ -83,6 +84,7 @@ export class RDialog extends RainbowElement {
         }
       },
       historyPushState: () => {
+        if (this.$.DATA.rBackPressed !== "close") return;
         this.$$.isBack = false;
         history.pushState({}, "");
       },
@@ -123,6 +125,7 @@ export class RDialog extends RainbowElement {
         this.$$.close();
       },
       onPopstate: (event) => {
+        if (this.$.DATA.rBackPressed !== "close") return;
         const currentDialog = rainbow.dialogQueue.queue.at(-1);
         if (currentDialog !== this) return;
         if (this.$$.isBack) return (this.$$.isBack = false);

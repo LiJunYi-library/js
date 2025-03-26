@@ -6,13 +6,14 @@ import {
   transition,
   createCustomEvent,
   addEventListenerOnce,
+  findParentByLocalName,
   isNum,
 } from "../../../utils/index.js";
 
 export class RDialog extends RainbowElement {
   static observedAttributes = this.$registerProps({
     "r-orientation": String, // "left" "right" "top" "bottom" "center"
-    "r-back-pressed": String, //close
+    "r-back-pressed": String, // close
     "r-blank-inner": String, // margin
     "r-blank-left": String,
     "r-blank-right": String,
@@ -194,5 +195,41 @@ export class RDialog extends RainbowElement {
       name: "r-dialog-" + rOrientation,
       hideName: "r-dialog-hide",
     });
+  }
+}
+
+export class RDialogClose extends RainbowElement {
+  $$ = {
+    loading: false,
+    onclick_: async () => undefined,
+    onClick: async (...args) => {
+      if (this.$$.loading === true) return;
+      this.$$.loading = true;
+      const res = this.$$.onclick_(...args);
+      if (res instanceof Promise) {
+        res.finally(this.$$.close);
+        return;
+      }
+      this.$$.close();
+    },
+    close: () => {
+      this.$$.dialogParent.$updateValue(false);
+      this.$$.dialogParent.$$.close();
+      this.$$.loading = false;
+    },
+  };
+
+  set onclick(v) {
+    this.$$.onclick_ = v;
+  }
+
+  get onclick() {
+    return this.$$.onclick_;
+  }
+
+  connectedCallback(...arg) {
+    super.connectedCallback(...arg);
+    addEventListenerOnce(this, "click", this.$$.onClick);
+    this.$$.dialogParent = findParentByLocalName("r-dialog", this);
   }
 }

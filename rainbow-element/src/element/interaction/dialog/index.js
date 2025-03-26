@@ -29,6 +29,7 @@ export class RDialog extends RainbowElement {
   $$ = (() => {
     const content = createElement("div", "r-dialog-content");
     return {
+      isBack: false,
       content,
       defaultSlot: createSlot("slot", "r-dialog-default-slot", ""),
       transition: transition({
@@ -74,6 +75,17 @@ export class RDialog extends RainbowElement {
         this.style.maxHeight = `calc( 100vh - ${(rBlankTop || 0) + (rBlankBottom || 0)}px )`;
         this.style.maxWidth = `calc( 100vh - ${(rBlankLeft || 0) + (rBlankRight || 0)}px )`;
       },
+      historyBack: (unHistoryBack) => {
+        if (!unHistoryBack) {
+          history.back();
+          const prveDialog = rainbow.dialogQueue.queue.at(-1);
+          if (prveDialog) prveDialog.$$.isBack = true;
+        }
+      },
+      historyPushState: () => {
+        this.$$.isBack = false;
+        history.pushState({}, "");
+      },
       open: () => {
         this.dispatchEvent(createCustomEvent("beforeOpen"));
         rainbow.dialogQueue.push(this);
@@ -84,18 +96,18 @@ export class RDialog extends RainbowElement {
         this.$$.transition.show();
         rainbow.overlay.value = true;
         this.dispatchEvent(createCustomEvent("open"));
-        history.pushState({ dialog: true });
+        this.$$.historyPushState();
         addEventListenerOnce(rainbow.overlay, "click", this.$$.onOverlayClick);
         document.removeEventListener("click", this.$$.onDocumentClick);
       },
-      close: () => {
+      close: ({ unHistoryBack } = {}) => {
         this.dispatchEvent(createCustomEvent("beforeClose"));
         this.$$.transition.hide();
         rainbow.overlayQueue.remove(this);
         rainbow.dialogQueue.remove(this);
+        this.$$.historyBack(unHistoryBack);
         if (rainbow.overlayQueue.queue.length === 0) rainbow.overlay.value = false;
         this.dispatchEvent(createCustomEvent("close"));
-        // history.back();
         document.removeEventListener("click", this.$$.onDocumentClick);
       },
       onOverlayClick: (event) => {
@@ -113,8 +125,9 @@ export class RDialog extends RainbowElement {
       onPopstate: (event) => {
         const currentDialog = rainbow.dialogQueue.queue.at(-1);
         if (currentDialog !== this) return;
+        if (this.$$.isBack) return (this.$$.isBack = false);
         this.$updateValue(false);
-        this.$$.close();
+        this.$$.close({ unHistoryBack: true });
       },
       onClick: (event) => {
         event.stopPropagation();

@@ -176,6 +176,9 @@ export function transition(props = {}) {
       config.node[config.property].remove(`${config.name}-enter-from`);
       config.node[config.property].remove(`${config.name}-enter-active`);
       config.node[config.property].remove(`${config.name}-enter-to`);
+      if (hasAnimationDuration(config.eventNode)) {
+        config.eventNode.style.animationPlayState = "paused";
+      }
       config.node[config.property].add(`${config.name}-leave-from`);
       config.dispatchNode.dispatchEvent(createCustomEvent("beforeLeave"));
       if (args.animateSymbol === args.finishSymbol) {
@@ -199,7 +202,6 @@ export function transition(props = {}) {
         }
         this.onTransitionend();
       })();
-
     },
   };
 
@@ -312,7 +314,6 @@ export function hasTransitionDuration(node) {
 
 export function hasAnimationDuration(node) {
   let duration = getComputedStyleProperty(node, "animation-duration");
-  console.log(duration)
   if (duration === "0s") return false;
   if (duration === "0") return false;
   return true;

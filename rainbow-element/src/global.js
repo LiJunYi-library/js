@@ -7,6 +7,10 @@ window.rainbow = (() => {
     overlay,
     zIndex: 100,
     zIndexAdd: 3,
+    zIndexPlus() {
+      this.zIndex = this.zIndex + this.zIndexAdd;
+      return this.zIndex;
+    },
     overlayQueue: useQueue(),
     dialogQueue: useQueue(),
     customRender(node, dialog) {

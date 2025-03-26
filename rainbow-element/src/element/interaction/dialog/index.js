@@ -7,6 +7,7 @@ import {
   createCustomEvent,
   addEventListenerOnce,
   findParentByLocalName,
+  toggleClass,
   isNum,
 } from "../../../utils/index.js";
 
@@ -19,11 +20,15 @@ export class RDialog extends RainbowElement {
     "r-blank-right": String,
     "r-blank-top": String,
     "r-blank-bottom": String,
+    "r-overlay-class": String,
   });
 
   $watchStyle = {
     "r-orientation": () => {
       this.$onRender();
+    },
+    "r-overlay-class": (newV, oldV) => {
+      toggleClass(rainbow.overlay, true, newV, oldV);
     },
   };
 
@@ -48,7 +53,9 @@ export class RDialog extends RainbowElement {
         prveDialog.$$.close();
       },
       setBlankStyle: () => {
-        const { rBlankTop, rBlankBottom, rBlankLeft, rBlankRight, rBlankInner } = this.$.DATA;
+        const { rBlankTop, rBlankBottom, rBlankLeft, rBlankRight, rBlankInner, rOverlayClass } =
+          this.$.DATA;
+        rainbow.overlay.className = rOverlayClass;
         rainbow.overlay.style.top = "";
         rainbow.overlay.style.bottom = "";
         rainbow.overlay.style.left = "";
@@ -176,11 +183,6 @@ export class RDialog extends RainbowElement {
     addEventListenerOnce(this, "show", this.$$.onShow);
     addEventListenerOnce(window, "popstate", this.$$.onPopstate);
     this.$onRender();
-  }
-
-  $onStyleChang(...arg) {
-    super.$onStyleChang(...arg);
-    this.$$.setBlankStyle();
   }
 
   $onRender() {

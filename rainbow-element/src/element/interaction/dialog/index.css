@@ -4,6 +4,7 @@ r-dialog {
   --r-orientation: center;
   --r-blank-inner: margin;
   --r-back-pressed: close;
+  --r-overlay-class: ssss;
   z-index: 10;
 }
 

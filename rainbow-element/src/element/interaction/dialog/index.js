@@ -15,15 +15,19 @@ import { RAsyncClick } from "../../async/asyncClick.js";
 export class RDialog extends RainbowElement {
   static observedAttributes = this.$registerProps({
     "r-orientation": String, // "left" "right" "top" "bottom" "center"
-    "r-back-pressed": String, // close
+    "r-back-pressed": String, // close none
+    "r-overlay-click": String, // close none
+    "r-blank-click": String, // close none
     "r-blank-inner": String, // margin
+    "r-fill": String, // screen
     "r-blank-left": String, // 0px
     "r-blank-right": String, // 0px
     "r-blank-top": String, // 0px
     "r-blank-bottom": String, // 0px
     "r-overlay-class": String,
     "r-overlay-visibility": String, // visible  hidden
-    "r-fill": String, // screen
+    "r-mount": String, // body Id Node
+    "r-destroy": String, // remove
   });
 
   $watchStyle = {
@@ -89,7 +93,7 @@ export class RDialog extends RainbowElement {
         }
         this.style.maxHeight = `calc( 100vh - ${(rBlankTop || 0) + (rBlankBottom || 0)}px )`;
         this.style.maxWidth = `calc( 100vw - ${(rBlankLeft || 0) + (rBlankRight || 0)}px )`;
-        if (rFill === 'screen') {
+        if (rFill === "screen") {
           this.style.height = "100vh";
           this.style.width = "100vw";
         }
@@ -149,12 +153,14 @@ export class RDialog extends RainbowElement {
         document.removeEventListener("click", this.$$.onDocumentClick);
       },
       onOverlayClick: (event) => {
+        if (this.$.DATA.rOverlayClick !== "close") return;
         event.stopPropagation();
         if (window.rainbow.overlayQueue.queue.at(-1) !== this) return;
         this.$updateValue(false);
         this.$$.close();
       },
       onDocumentClick: (event) => {
+        if (this.$.DATA.rBlankClick !== "close") return;
         event.stopPropagation();
         if (rainbow.dialogQueue.queue.at(-1) !== this) return;
         this.$updateValue(false);
@@ -179,6 +185,7 @@ export class RDialog extends RainbowElement {
         const prveDialog = rainbow.dialogQueue.queue.at(-1);
         if (prveDialog) prveDialog.dispatchEvent(createCustomEvent("show"));
         this.dispatchEvent(createCustomEvent("closed"));
+        if (rDestroy === "remove") this.remove();
       },
       onAfterEnter: () => {
         document.addEventListener("click", this.$$.onDocumentClick);

@@ -23,6 +23,7 @@ export class RDialog extends RainbowElement {
     "r-blank-bottom": String, // 0px
     "r-overlay-class": String,
     "r-overlay-visibility": String, // visible  hidden
+    "r-fill": String, // screen
   });
 
   $watchStyle = {
@@ -34,6 +35,7 @@ export class RDialog extends RainbowElement {
   $$ = (() => {
     const content = createElement("div", "r-dialog-content");
     return {
+      isOY: () => this.$.DATA.rOverlayVisibility === "visible",
       isBack: false,
       content,
       defaultSlot: createSlot("slot", "r-dialog-default-slot", ""),
@@ -52,8 +54,7 @@ export class RDialog extends RainbowElement {
         prveDialog.$$.close();
       },
       setOverlayBlankStyle: () => {
-        const { rBlankTop, rBlankBottom, rBlankLeft, rBlankRight, rBlankInner, rOverlayClass } =
-          this.$.DATA;
+        const { rBlankTop, rBlankBottom, rBlankLeft, rBlankRight, rOverlayClass } = this.$.DATA;
         rainbow.overlay.className = rOverlayClass;
         rainbow.overlay.style.top = "";
         rainbow.overlay.style.bottom = "";
@@ -78,7 +79,8 @@ export class RDialog extends RainbowElement {
         rainbow.overlay.style.zIndex = (rainbow.overlayQueue.queue.at(-1)?.style?.zIndex ?? 1) - 1;
       },
       setBlankStyle: () => {
-        const { rBlankTop, rBlankBottom, rBlankLeft, rBlankRight, rBlankInner } = this.$.DATA;
+        const { rBlankTop, rBlankBottom, rBlankLeft, rBlankRight, rBlankInner, rFill } =
+          this.$.DATA;
         if (rBlankInner === "margin") {
           if (isNum(rBlankTop)) this.style.marginTop = rBlankTop + "px";
           if (isNum(rBlankBottom)) this.style.marginBottom = rBlankBottom + "px";
@@ -87,6 +89,10 @@ export class RDialog extends RainbowElement {
         }
         this.style.maxHeight = `calc( 100vh - ${(rBlankTop || 0) + (rBlankBottom || 0)}px )`;
         this.style.maxWidth = `calc( 100vw - ${(rBlankLeft || 0) + (rBlankRight || 0)}px )`;
+        if (rFill === 'screen') {
+          this.style.height = "100vh";
+          this.style.width = "100vw";
+        }
       },
       historyBack: (unHistoryBack) => {
         if (this.$.DATA.rBackPressed !== "close") return;
@@ -117,24 +123,28 @@ export class RDialog extends RainbowElement {
       open: () => {
         this.dispatchEvent(createCustomEvent("beforeOpen"));
         rainbow.dialogQueue.push(this);
-        rainbow.overlayQueue.push(this);
+        if (this.$$.isOY()) rainbow.overlayQueue.push(this);
         this.style.zIndex = rainbow.zIndexPlus();
         this.$$.setBlankStyle();
         this.$$.transition.show();
-        this.$$.setOverlayBlankStyle();
-        rainbow.overlay.value = true;
+        if (this.$$.isOY()) this.$$.setOverlayBlankStyle();
+        if (this.$$.isOY()) rainbow.overlay.value = true;
         this.dispatchEvent(createCustomEvent("open"));
         this.$$.historyPushState();
-        addEventListenerOnce(rainbow.overlay, "click", this.$$.onOverlayClick);
+        if (this.$$.isOY()) {
+          addEventListenerOnce(rainbow.overlay, "click", this.$$.onOverlayClick);
+        }
         document.removeEventListener("click", this.$$.onDocumentClick);
       },
       close: ({ unHistoryBack } = {}) => {
         this.dispatchEvent(createCustomEvent("beforeClose"));
         this.$$.transition.hide();
-        rainbow.overlayQueue.remove(this);
+        if (this.$$.isOY()) rainbow.overlayQueue.remove(this);
         rainbow.dialogQueue.remove(this);
         this.$$.historyBack(unHistoryBack);
-        if (rainbow.overlayQueue.queue.length === 0) rainbow.overlay.value = false;
+        if (this.$$.isOY()) {
+          if (rainbow.overlayQueue.queue.length === 0) rainbow.overlay.value = false;
+        }
         this.dispatchEvent(createCustomEvent("close"));
         document.removeEventListener("click", this.$$.onDocumentClick);
       },
@@ -163,7 +173,7 @@ export class RDialog extends RainbowElement {
       },
       onShow: (event) => {
         this.$$.setBlankStyle();
-        this.$$.setOverlayBlankStyle();
+        if (this.$$.isOY()) this.$$.setOverlayBlankStyle();
       },
       onAfterLeave: () => {
         const prveDialog = rainbow.dialogQueue.queue.at(-1);

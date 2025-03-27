@@ -75,6 +75,7 @@ export class RDialog extends RainbowElement {
           rainbow.overlay.style.right = rBlankRight + "px";
           rainbow.overlay.style.left = "auto";
         }
+        rainbow.overlay.style.zIndex = (rainbow.overlayQueue.queue.at(-1)?.style?.zIndex ?? 1) - 1;
       },
       setBlankStyle: () => {
         const { rBlankTop, rBlankBottom, rBlankLeft, rBlankRight, rBlankInner } = this.$.DATA;
@@ -118,10 +119,9 @@ export class RDialog extends RainbowElement {
         rainbow.dialogQueue.push(this);
         rainbow.overlayQueue.push(this);
         this.style.zIndex = rainbow.zIndexPlus();
-        rainbow.overlay.style.zIndex = (rainbow.overlayQueue.queue.at(-1)?.style?.zIndex ?? 1) - 1;
         this.$$.setBlankStyle();
-        this.$$.setOverlayBlankStyle();
         this.$$.transition.show();
+        this.$$.setOverlayBlankStyle();
         rainbow.overlay.value = true;
         this.dispatchEvent(createCustomEvent("open"));
         this.$$.historyPushState();
@@ -164,7 +164,6 @@ export class RDialog extends RainbowElement {
       onShow: (event) => {
         this.$$.setBlankStyle();
         this.$$.setOverlayBlankStyle();
-        rainbow.overlay.style.zIndex = (rainbow.overlayQueue.queue.at(-1)?.style?.zIndex ?? 1) - 1;
       },
       onAfterLeave: () => {
         const prveDialog = rainbow.dialogQueue.queue.at(-1);
@@ -201,6 +200,15 @@ export class RDialog extends RainbowElement {
     addEventListenerOnce(this, "show", this.$$.onShow);
     addEventListenerOnce(window, "popstate", this.$$.onPopstate);
     this.$$.bindAnimation();
+  }
+
+  disconnectedCallback(...arg) {
+    super.disconnectedCallback(...arg);
+    if (this.value === true) {
+      history.back();
+      rainbow.overlayQueue.remove(this);
+      rainbow.dialogQueue.remove(this);
+    }
   }
 
   $onStyleChang(...arg) {

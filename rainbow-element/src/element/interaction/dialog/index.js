@@ -26,7 +26,6 @@ export class RDialog extends RainbowElement {
     "r-blank-bottom": String, // 0px
     "r-overlay-class": String,
     "r-overlay-visibility": String, // visible  hidden
-    "r-mount": String, // body Id Node
     "r-destroy": String, // remove
   });
 
@@ -185,7 +184,7 @@ export class RDialog extends RainbowElement {
         const prveDialog = rainbow.dialogQueue.queue.at(-1);
         if (prveDialog) prveDialog.dispatchEvent(createCustomEvent("show"));
         this.dispatchEvent(createCustomEvent("closed"));
-        if (rDestroy === "remove") this.remove();
+        if (this.$.DATA.rDestroy === "remove") this.remove();
       },
       onAfterEnter: () => {
         document.addEventListener("click", this.$$.onDocumentClick);

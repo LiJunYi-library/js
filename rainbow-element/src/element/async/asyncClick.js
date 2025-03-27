@@ -9,6 +9,8 @@ export class RAsyncClick extends RainbowElement {
     loading: false,
     onclick_: async () => undefined,
     onClick: async (...args) => {
+      if (!this.$$.onclick_) return;
+      if (this.disabled === true) return;
       if (this.$$.loading === true) return;
       this.$$.loading = true;
       this.shadowRoot.insertBefore(this.$$.loadingSlot, this.$$.defaultSlot);
@@ -48,5 +50,10 @@ export class RAsyncClick extends RainbowElement {
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     addEventListenerOnce(this, "click", this.$$.onClick);
+    this.cssList.toggle(this.disabled, "disabled");
+  }
+
+  $onDisabledChange() {
+    this.cssList.toggle(this.disabled, "disabled");
   }
 }

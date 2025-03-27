@@ -45,6 +45,7 @@ export class RainbowElement extends HTMLElement {
       innerCss: "",
       styleNode: document.createElement("style"),
       styleElement: "",
+      disabled: false,
       isRenderFinish: false,
       renderFinish: () => (this.$.isRenderFinish = true),
       renderFinishAnimationFrame: false,
@@ -170,6 +171,15 @@ export class RainbowElement extends HTMLElement {
 
   get value() {
     return this.$value;
+  }
+
+  set disabled(v) {
+    this.$.disabled = v;
+    this.$onDisabledChange(v);
+  }
+
+  get disabled() {
+    return this.$.disabled;
   }
 
   set innerCss(v) {
@@ -336,10 +346,18 @@ export class RainbowElement extends HTMLElement {
   }
 
   $onValueChange() {
-    // console.log("onResize");
+    // console.log("onValueChange");
+  }
+
+  $onDisabledChange() {
+    // console.log("onDisabledChange");
   }
 
   $onRender() {
+    // console.log('onRender')
+  }
+
+  $render() {
     // console.log('onRender')
   }
 }

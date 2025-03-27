@@ -12,6 +12,11 @@ class DomTokenList extends Array {
     return this.filter(Boolean).join(" ");
   }
 
+  empty() {
+    this.splice();
+    this?.onValuesChange?.();
+  }
+
   add(...args) {
     getTokenArgs(...args).forEach((token) => {
       if (!this.includes(token)) this.push(token);

@@ -10,16 +10,17 @@ import {
   toggleClass,
   isNum,
 } from "../../../utils/index.js";
+import { RAsyncClick } from "../../async/asyncClick.js";
 
 export class RDialog extends RainbowElement {
   static observedAttributes = this.$registerProps({
     "r-orientation": String, // "left" "right" "top" "bottom" "center"
     "r-back-pressed": String, // close
     "r-blank-inner": String, // margin
-    "r-blank-left": String,
-    "r-blank-right": String,
-    "r-blank-top": String,
-    "r-blank-bottom": String,
+    "r-blank-left": String, // 0px
+    "r-blank-right": String, // 0px
+    "r-blank-top": String, // 0px
+    "r-blank-bottom": String, // 0px
     "r-overlay-class": String,
   });
 
@@ -81,7 +82,7 @@ export class RDialog extends RainbowElement {
           rainbow.overlay.style.left = "auto";
         }
         this.style.maxHeight = `calc( 100vh - ${(rBlankTop || 0) + (rBlankBottom || 0)}px )`;
-        this.style.maxWidth = `calc( 100vh - ${(rBlankLeft || 0) + (rBlankRight || 0)}px )`;
+        this.style.maxWidth = `calc( 100vw - ${(rBlankLeft || 0) + (rBlankRight || 0)}px )`;
       },
       historyBack: (unHistoryBack) => {
         if (this.$.DATA.rBackPressed !== "close") return;
@@ -145,11 +146,11 @@ export class RDialog extends RainbowElement {
       },
       onShow: (event) => {
         this.$$.setBlankStyle();
+        const prveOverlay = rainbow.overlayQueue.queue.at(-1);
+        rainbow.overlay.style.zIndex = (prveOverlay?.style?.zIndex ?? 1) - 1;
       },
       onAfterLeave: () => {
-        const prveOverlay = rainbow.overlayQueue.queue.at(-1);
         const prveDialog = rainbow.dialogQueue.queue.at(-1);
-        rainbow.overlay.style.zIndex = (prveOverlay?.style?.zIndex ?? 1) - 1;
         if (prveDialog) prveDialog.dispatchEvent(createCustomEvent("show"));
         this.dispatchEvent(createCustomEvent("closed"));
       },
@@ -200,38 +201,19 @@ export class RDialog extends RainbowElement {
   }
 }
 
-export class RDialogClose extends RainbowElement {
-  $$ = {
-    loading: false,
-    onclick_: async () => undefined,
-    onClick: async (...args) => {
-      if (this.$$.loading === true) return;
-      this.$$.loading = true;
-      const res = this.$$.onclick_(...args);
-      if (res instanceof Promise) {
-        res.finally(this.$$.close);
-        return;
-      }
-      this.$$.close();
-    },
-    close: () => {
-      this.$$.dialogParent.$updateValue(false);
-      this.$$.dialogParent.$$.close();
-      this.$$.loading = false;
-    },
-  };
-
-  set onclick(v) {
-    this.$$.onclick_ = v;
-  }
-
-  get onclick() {
-    return this.$$.onclick_;
-  }
+export class RDialogClose extends RAsyncClick {
+  $$ = (() => {
+    return {
+      ...this.$$,
+      onfinally: () => {
+        this.$$.dialogParent.$updateValue(false);
+        this.$$.dialogParent.$$.close();
+      },
+    };
+  })();
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    addEventListenerOnce(this, "click", this.$$.onClick);
     this.$$.dialogParent = findParentByLocalName("r-dialog", this);
   }
 }

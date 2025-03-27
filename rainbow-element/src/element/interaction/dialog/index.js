@@ -22,14 +22,12 @@ export class RDialog extends RainbowElement {
     "r-blank-top": String, // 0px
     "r-blank-bottom": String, // 0px
     "r-overlay-class": String,
+    "r-overlay-visibility": String, // visible  hidden
   });
 
   $watchStyle = {
     "r-orientation": () => {
-      this.$onRender();
-    },
-    "r-overlay-class": (newV, oldV) => {
-      toggleClass(rainbow.overlay, true, newV, oldV);
+      this.$$.bindAnimation();
     },
   };
 
@@ -53,7 +51,7 @@ export class RDialog extends RainbowElement {
         prveDialog.$updateValue(false);
         prveDialog.$$.close();
       },
-      setBlankStyle: () => {
+      setOverlayBlankStyle: () => {
         const { rBlankTop, rBlankBottom, rBlankLeft, rBlankRight, rBlankInner, rOverlayClass } =
           this.$.DATA;
         rainbow.overlay.className = rOverlayClass;
@@ -62,24 +60,29 @@ export class RDialog extends RainbowElement {
         rainbow.overlay.style.left = "";
         rainbow.overlay.style.right = "";
         if (isNum(rBlankTop)) {
-          if (rBlankInner === "margin") this.style.marginTop = rBlankTop + "px";
           rainbow.overlay.style.top = rBlankTop + "px";
           rainbow.overlay.style.bottom = "auto";
         }
         if (isNum(rBlankBottom)) {
-          if (rBlankInner === "margin") this.style.marginBottom = rBlankBottom + "px";
           rainbow.overlay.style.bottom = rBlankBottom + "px";
           rainbow.overlay.style.top = "auto";
         }
         if (isNum(rBlankLeft)) {
-          if (rBlankInner === "margin") this.style.marginLeft = rBlankLeft + "px";
           rainbow.overlay.style.left = rBlankLeft + "px";
           rainbow.overlay.style.right = "auto";
         }
         if (isNum(rBlankRight)) {
-          if (rBlankInner === "margin") this.style.marginTop = rBlankRight + "px";
           rainbow.overlay.style.right = rBlankRight + "px";
           rainbow.overlay.style.left = "auto";
+        }
+      },
+      setBlankStyle: () => {
+        const { rBlankTop, rBlankBottom, rBlankLeft, rBlankRight, rBlankInner } = this.$.DATA;
+        if (rBlankInner === "margin") {
+          if (isNum(rBlankTop)) this.style.marginTop = rBlankTop + "px";
+          if (isNum(rBlankBottom)) this.style.marginBottom = rBlankBottom + "px";
+          if (isNum(rBlankLeft)) this.style.marginLeft = rBlankLeft + "px";
+          if (isNum(rBlankRight)) this.style.marginTop = rBlankRight + "px";
         }
         this.style.maxHeight = `calc( 100vh - ${(rBlankTop || 0) + (rBlankBottom || 0)}px )`;
         this.style.maxWidth = `calc( 100vw - ${(rBlankLeft || 0) + (rBlankRight || 0)}px )`;
@@ -97,6 +100,19 @@ export class RDialog extends RainbowElement {
         this.$$.isBack = false;
         history.pushState({}, "");
       },
+      bindAnimation: () => {
+        const { rOrientation } = this.$.DATA;
+        this.cssList.empty();
+        this.cssList.add(`r-dialog-${rOrientation}`);
+        if (this.value === false) this.cssList.add("r-dialog-hide");
+        this.$$.transition = transition({
+          node: this,
+          dispatchNode: this,
+          eventNode: this.$$.content,
+          name: "r-dialog-" + rOrientation,
+          hideName: "r-dialog-hide",
+        });
+      },
       open: () => {
         this.dispatchEvent(createCustomEvent("beforeOpen"));
         rainbow.dialogQueue.push(this);
@@ -104,6 +120,7 @@ export class RDialog extends RainbowElement {
         this.style.zIndex = rainbow.zIndexPlus();
         rainbow.overlay.style.zIndex = (rainbow.overlayQueue.queue.at(-1)?.style?.zIndex ?? 1) - 1;
         this.$$.setBlankStyle();
+        this.$$.setOverlayBlankStyle();
         this.$$.transition.show();
         rainbow.overlay.value = true;
         this.dispatchEvent(createCustomEvent("open"));
@@ -129,7 +146,7 @@ export class RDialog extends RainbowElement {
       },
       onDocumentClick: (event) => {
         event.stopPropagation();
-        if (window.rainbow.overlayQueue.queue.at(-1) !== this) return;
+        if (rainbow.dialogQueue.queue.at(-1) !== this) return;
         this.$updateValue(false);
         this.$$.close();
       },
@@ -146,8 +163,8 @@ export class RDialog extends RainbowElement {
       },
       onShow: (event) => {
         this.$$.setBlankStyle();
-        const prveOverlay = rainbow.overlayQueue.queue.at(-1);
-        rainbow.overlay.style.zIndex = (prveOverlay?.style?.zIndex ?? 1) - 1;
+        this.$$.setOverlayBlankStyle();
+        rainbow.overlay.style.zIndex = (rainbow.overlayQueue.queue.at(-1)?.style?.zIndex ?? 1) - 1;
       },
       onAfterLeave: () => {
         const prveDialog = rainbow.dialogQueue.queue.at(-1);
@@ -183,21 +200,12 @@ export class RDialog extends RainbowElement {
     addEventListenerOnce(this, "click", this.$$.onClick);
     addEventListenerOnce(this, "show", this.$$.onShow);
     addEventListenerOnce(window, "popstate", this.$$.onPopstate);
-    this.$onRender();
+    this.$$.bindAnimation();
   }
 
-  $onRender() {
-    const { rOrientation } = this.$.DATA;
-    this.cssList.add(`r-dialog-${rOrientation}`);
-    if (this.value === false) this.cssList.add("r-dialog-hide");
-
-    this.$$.transition = transition({
-      node: this,
-      dispatchNode: this,
-      eventNode: this.$$.content,
-      name: "r-dialog-" + rOrientation,
-      hideName: "r-dialog-hide",
-    });
+  $onStyleChang(...arg) {
+    super.$onStyleChang(...arg);
+    this.$$.setBlankStyle();
   }
 }
 
@@ -206,6 +214,7 @@ export class RDialogClose extends RAsyncClick {
     return {
       ...this.$$,
       onfinally: () => {
+        if (!this.$$.dialogParent) return;
         this.$$.dialogParent.$updateValue(false);
         this.$$.dialogParent.$$.close();
       },

@@ -153,3 +153,10 @@ r-flex[fill="vertical"] {
     flex: 1;
     height: 1px;
 }
+
+r-flex[useAttrs="true"],
+r-flex[useAttrs] {
+    --r-gap: r-attr(r-gap);
+    --r-row-gap: r-attr(r-row-gap);
+    --r-column-gap: r-attr(r-column-gap);
+}

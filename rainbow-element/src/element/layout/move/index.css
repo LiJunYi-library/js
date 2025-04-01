@@ -3,3 +3,16 @@ r-move {
   position: fixed;
   z-index: 5;
 }
+
+r-move[useAttrs="true"],
+r-move[useAttrs] {
+  --r-move-border-left: r-attr(r-move-border-left);
+  --r-move-border-right: r-attr(r-move-border-right);
+  --r-move-border-top: r-attr(r-move-border-top);
+  --r-move-border-bottom: r-attr(r-move-border-bottom);
+  --r-adsorb-border-left: r-attr(r-adsorb-border-left);
+  --r-adsorb-border-right: r-attr(r-adsorb-border-right);
+  --r-adsorb-border-top: r-attr(r-adsorb-border-top);
+  --r-adsorb-border-bottom: r-attr(r-adsorb-border-bottom);
+  --r-adsorb: r-attr(r-adsorb);
+}

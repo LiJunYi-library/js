@@ -4,8 +4,31 @@ r-dialog {
   --r-orientation: center;
   --r-blank-inner: margin;
   --r-back-pressed: close;
-  --r-overlay-class: ssss;
-  z-index: 10;
+  --r-overlay-click: close;
+  --r-blank-click: close;
+  --r-overlay-visibility: visible;
+}
+
+r-dialog[useAttrs="true"],
+r-dialog[useAttrs] {
+  --r-orientation: r-attr(r-orientation);
+  --r-back-pressed: r-attr(r-back-pressed);
+  --r-overlay-click: r-attr(r-overlay-click);
+  --r-blank-click: r-attr(r-blank-click);
+  --r-blank-inner: r-attr(r-blank-inner);
+  --r-fill: r-attr(r-fill);
+  --r-blank-left: r-attr(r-blank-left);
+  --r-blank-right: r-attr(r-blank-right);
+  --r-blank-top: r-attr(r-blank-top);
+  --r-blank-bottom: r-attr(r-blank-bottom);
+  --r-overlay-class: r-attr(r-overlay-class);
+  --r-overlay-visibility: r-attr(r-overlay-visibility);
+  --r-destroy: r-attr(r-destroy);
+}
+
+r-dialog[destroy="true"],
+r-dialog[destroy] {
+  --r-destroy: remove;
 }
 
 [css-name~="r-dialog-hide"] {

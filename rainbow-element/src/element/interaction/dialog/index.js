@@ -38,6 +38,7 @@ export class RDialog extends RainbowElement {
   $$ = (() => {
     const content = createElement("div", "r-dialog-content");
     return {
+      symbol: Math.random(),
       isOY: () => this.$.DATA.rOverlayVisibility === "visible",
       isBack: false,
       content,
@@ -57,6 +58,7 @@ export class RDialog extends RainbowElement {
         prveDialog.$$.close();
       },
       setOverlayBlankStyle: () => {
+        if (rainbow.dialogQueue.queue.at(-1) !== this) return;
         const { rBlankTop, rBlankBottom, rBlankLeft, rBlankRight, rOverlayClass } = this.$.DATA;
         rainbow.overlay.className = rOverlayClass;
         rainbow.overlay.style.top = "";
@@ -101,6 +103,7 @@ export class RDialog extends RainbowElement {
         if (this.$.DATA.rBackPressed !== "close") return;
         if (!unHistoryBack) {
           history.back();
+          history.replaceState({ symbol: this.$$.symbol }, "")
           const prveDialog = rainbow.dialogQueue.queue.at(-1);
           if (prveDialog) prveDialog.$$.isBack = true;
         }
@@ -108,7 +111,7 @@ export class RDialog extends RainbowElement {
       historyPushState: () => {
         if (this.$.DATA.rBackPressed !== "close") return;
         this.$$.isBack = false;
-        history.pushState({}, "");
+        history.pushState({ symbol: this.$$.symbol }, "");
       },
       bindAnimation: () => {
         const { rOrientation } = this.$.DATA;
@@ -176,13 +179,9 @@ export class RDialog extends RainbowElement {
       onClick: (event) => {
         event.stopPropagation();
       },
-      onShow: (event) => {
+      onAfterLeave: () => {
         this.$$.setBlankStyle();
         if (this.$$.isOY()) this.$$.setOverlayBlankStyle();
-      },
-      onAfterLeave: () => {
-        const prveDialog = rainbow.dialogQueue.queue.at(-1);
-        if (prveDialog) prveDialog.dispatchEvent(createCustomEvent("show"));
         this.dispatchEvent(createCustomEvent("closed"));
         if (this.$.DATA.rDestroy === "remove") this.remove();
       },
@@ -213,7 +212,6 @@ export class RDialog extends RainbowElement {
     addEventListenerOnce(this, "afterEnter", this.$$.onAfterEnter);
     addEventListenerOnce(this, "afterLeave", this.$$.onAfterLeave);
     addEventListenerOnce(this, "click", this.$$.onClick);
-    addEventListenerOnce(this, "show", this.$$.onShow);
     addEventListenerOnce(window, "popstate", this.$$.onPopstate);
     this.$$.bindAnimation();
   }
@@ -230,6 +228,7 @@ export class RDialog extends RainbowElement {
   $onStyleChang(...arg) {
     super.$onStyleChang(...arg);
     this.$$.setBlankStyle();
+    if (this.$$.isOY()) this.$$.setOverlayBlankStyle();
   }
 }
 

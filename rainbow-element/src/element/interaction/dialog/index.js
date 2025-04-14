@@ -246,6 +246,11 @@ export class RDialogClose extends RAsyncClick {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
+    console.log('connectedCallback')
     this.$$.dialogParent = findParentByLocalName("r-dialog", this);
+  }
+
+  disconnectedCallback() {
+    console.log('disconnectedCallback')
   }
 }

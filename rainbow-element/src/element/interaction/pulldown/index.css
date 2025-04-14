@@ -1,21 +1,21 @@
 r-pulldown {
-    display: block;
-}
-
-r-dialog.r-pulldown-dialog{
-    --r-orientation: bottom;
-}
-
-r-pulldown::part(r-pulldown-content),
-.r-pulldown-content {
     display: flex;
+    cursor: pointer;
     align-items: center;
 }
 
-r-pulldown::part(r-pulldown-icon) {
+r-dialog.r-pulldown-dialog {
+    --r-orientation: top;
+}
+
+r-pulldown .r-pulldown-default-icon {
     transition: 0.25s;
 }
 
-.r-pulldown-show::part(r-pulldown-icon) {
+[css-name~="r-pulldown-show"] .r-pulldown-default-icon {
     transform: rotate(180deg);
+}
+
+[css-name~="r-pulldown-hide"] .r-pulldown-default-icon {
+    transform: rotate(0deg);
 }

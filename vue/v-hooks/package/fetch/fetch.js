@@ -7,15 +7,15 @@ function AbortController(...arg) {
   if (window.AbortController) return new window.AbortController(...arg);
   return {
     signal: {
-      addEventListener() { }
+      addEventListener() {},
     },
-    abort() { }
+    abort() {},
   };
 }
 
-const errLoading = { error: "loading", message: "loading", code: 41, status: 41, };
-const errTimeout = { error: "Request Timeout", message: "Request Timeout", code: 48, status: 48, };
-const errAbout = { error: "about", message: "about", code: 20, status: 20, };
+const errLoading = { error: "loading", message: "loading", code: 41, status: 41 };
+const errTimeout = { error: "Request Timeout", message: "Request Timeout", code: 48, status: 48 };
+const errAbout = { error: "about", message: "about", code: 20, status: 20 };
 
 function getBody(config) {
   if (!config.body) return undefined;
@@ -33,11 +33,11 @@ function revBody(contentType, config, body) {
     const formData = new FormData();
     for (const key in _body) {
       if (Object.prototype.hasOwnProperty.call(_body, key)) {
-        formData.append(key, _body[key]);
+        if (_body[key] !== undefined) formData.append(key, _body[key]);
       }
     }
     return formData;
-  })()
+  })();
   if (config.isFormData) return formBody;
   if (config.isFormBody) return formBody;
   if (config.isJsonBody) return jsonBody;
@@ -71,7 +71,7 @@ function getParams(config) {
   return config.urlParams;
 }
 
-export function parseParams(url = '', object) {
+export function parseParams(url = "", object) {
   if (!object) return "";
   if (typeof object !== "object") return object;
   if (!Object.keys(object).length) return "";
@@ -89,7 +89,7 @@ export function parseParams(url = '', object) {
     }
   }
   str = str.slice(0, -1);
-  if (url && url.includes('?')) return `&${str}`;
+  if (url && url.includes("?")) return `&${str}`;
   return `?${str}`;
 }
 
@@ -278,7 +278,7 @@ export function useFetchHOC(props = {}) {
         loading.value = true;
         config.onRequest(fetchConfig, config);
         events.invoke(params);
-        if(config.isDeleteContentType) delete fetchConfig.headers['Content-Type'];
+        if (config.isDeleteContentType) delete fetchConfig.headers["Content-Type"];
         if (config.fetch) fetchPromise = config.fetch(URL, fetchConfig);
         else fetchPromise = fetch(URL, fetchConfig);
         if (config.isPushQueue) options.fetchQueue?.push?.(fetchPromise, config, params);
@@ -389,11 +389,12 @@ export function useFetchHOC(props = {}) {
 
 export function createFetchApi(useFetch) {
   const post = createOverload((overload) => {
-    const postFetch = (arg = {}) => useFetch({
-      method: "post",
-      initHeaders: { "Content-Type": "application/json;charset=UTF-8" },
-      ...arg
-    })
+    const postFetch = (arg = {}) =>
+      useFetch({
+        method: "post",
+        initHeaders: { "Content-Type": "application/json;charset=UTF-8" },
+        ...arg,
+      });
     overload.addimpl("Object", (obj) => postFetch(obj));
     overload.addimpl("String", (url) => postFetch({ url }));
     overload.addimpl(["String", "Object"], (url, body) => postFetch({ url, body }));
@@ -421,26 +422,27 @@ export function transformFetch(fun) {
       signal.addEventListener("abort", () => {
         reject(signal?.reason);
       });
-      fun(resolve, reject, ...args)
-    })
-  }
+      fun(resolve, reject, ...args);
+    });
+  };
 }
 
 export function promiseTransformFetch(fun) {
   return transformFetch((resolve, reject, ...args) => {
-    const mPromise = fun(...args)
+    const mPromise = fun(...args);
     if (mPromise instanceof Promise) {
-      mPromise.then((success) => {
-        try {
-          success.ok = 1;
-        } catch (error) {
-          console.error("success is not object");
-        }
-        resolve(success)
-      }).catch((...error) => {
-        reject(...error)
-      })
+      mPromise
+        .then((success) => {
+          try {
+            success.ok = 1;
+          } catch (error) {
+            console.error("success is not object");
+          }
+          resolve(success);
+        })
+        .catch((...error) => {
+          reject(...error);
+        });
     }
-  })
+  });
 }
-

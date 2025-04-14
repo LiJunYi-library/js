@@ -248,7 +248,7 @@ export class RainbowElement extends HTMLElement {
   }
 
   adoptedCallback() {
-    // console.log('adoptedCallback')
+    console.log('adoptedCallback')
   }
 
   $onStyleChang() {
@@ -358,6 +358,6 @@ export class RainbowElement extends HTMLElement {
   }
 
   $render() {
-    // console.log('onRender')
+    // console.log('render')
   }
 }

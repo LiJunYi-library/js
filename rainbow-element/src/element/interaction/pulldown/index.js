@@ -1,62 +1,82 @@
 import "./index.css";
 import { RainbowElement } from "../../base/index.js";
-import { createElement, createSlot, toggleClass, createElementCB } from "../../../utils/index.js";
+import {
+  createElement,
+  createSlot,
+  getBoundingClientRect,
+  addEventListenerOnce,
+  createElementCB,
+  createCustomEvent,
+} from "../../../utils/index.js";
 
 export class RPulldown extends RainbowElement {
   $$ = {
-    value: false,
-    content: createElement("div", "r-pulldown-content"),
     labelSlot: createSlot("slot", "", "label"),
     iconSlot: createSlot("slot", "", "icon"),
-    icon: createElement("div", "r-pulldown-icon"),
     defaultIcon: createElementCB("i", (el) => {
       el.className = "r-pulldown-default-icon iconfont";
       el.innerHTML = "&#xe887;";
       el.setAttribute("slot", "icon");
     }),
     dialog: createElement("r-dialog", "r-pulldown-dialog"),
-    click: () => {
-      this.value = !this.value;
+    onOpen: (event) => {
+      this.cssList.toggle(this.value, "r-pulldown-show", "r-pulldown-hide");
+      this.dispatchEvent(createCustomEvent("open", event));
     },
-    render: () => {
-      toggleClass(this, this.value, "r-pulldown-show", "r-pulldown-hide");
-      this.$$.dialog.value = this.value;
-      const children = Array.from(this.children).filter((el) => el.getAttribute("slot") === null);
-      this.$$.dialog.append(...children);
+    onClose: (event) => {
+      this.cssList.toggle(this.value, "r-pulldown-show", "r-pulldown-hide");
+      this.dispatchEvent(createCustomEvent("close", event));
     },
-    onDialogClose: () => {
-      this.value = false;
+    onClick: (event) => {
+      event.stopPropagation();
+      const offset = this.getBoundingClientRect();
+      this.$$.dialog.style.setProperty("--r-blank-top", `${offset.bottom}px`);
+      this.$updateValue(!this.$$.dialog.value);
+    },
+    onDialogInput: (event) => {
+      this.dispatchEvent(createCustomEvent("input", event));
     },
   };
 
+  $updateValue = (val) => {
+    this.$$.dialog.value = val;
+    this.dispatchEvent(createCustomEvent("input", { value: val }));
+  };
+
   set value(v) {
-    this.$$.value = v;
-    this.$$.render();
+    this.$$.dialog.value = v;
   }
 
   get value() {
-    return this.$$.value;
+    return this.$$.dialog.value;
   }
 
   constructor(...arg) {
     super(...arg);
     this.attachShadow({ mode: "open" });
-    this.$$.content.appendChild(this.$$.labelSlot);
-    this.$$.content.appendChild(this.$$.icon);
-    this.$$.icon.appendChild(this.$$.iconSlot);
-    this.shadowRoot.appendChild(this.$$.content);
-    this.addEventListener("click", this.$$.click);
-    this.$$.dialog.addEventListener("close", this.$$.onDialogClose);
+    this.shadowRoot.appendChild(this.$$.labelSlot);
+    this.shadowRoot.appendChild(this.$$.iconSlot);
+    addEventListenerOnce(this, "click", this.$$.onClick);
+    addEventListenerOnce(this.$$.dialog, "input", this.$$.onDialogInput);
+    addEventListenerOnce(this.$$.dialog, "open", this.$$.onOpen);
+    addEventListenerOnce(this.$$.dialog, "close", this.$$.onClose);
   }
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     this.appendChild(this.$$.defaultIcon);
     document.body.append(this.$$.dialog);
-    this.$$.render();
+    this.$render();
   }
 
   disconnectedCallback(...arg) {
     super.disconnectedCallback(...arg);
+    document.body.removeChild(this.$$.dialog);
+  }
+
+  $render() {
+    this.cssList.toggle(this.value, "r-pulldown-show", "r-pulldown-hide");
+    const children = Array.from(this.children).filter((el) => el.getAttribute("slot") === null);
+    this.$$.dialog.append(...children);
   }
 }

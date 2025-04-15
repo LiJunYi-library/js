@@ -50,8 +50,9 @@ export class RDialog extends RainbowElement {
         name: "r-dialog",
         hideName: "r-dialog-hide",
       }),
+      prveDialog: rainbow.dialogQueue.queue.at(-1),
       closePrveDialog: () => {
-        const prveDialog = rainbow.dialogQueue.queue.at(-1);
+        const { prveDialog } = this.$$;
         if (!prveDialog) return;
         if (prveDialog === this) return;
         prveDialog.$updateValue(false);
@@ -59,6 +60,7 @@ export class RDialog extends RainbowElement {
       },
       setOverlayBlankStyle: () => {
         if (rainbow.dialogQueue.queue.at(-1) !== this) return;
+        if (!this.$$.isOY()) return;
         const { rBlankTop, rBlankBottom, rBlankLeft, rBlankRight, rOverlayClass } = this.$.DATA;
         rainbow.overlay.className = rOverlayClass;
         rainbow.overlay.style.top = "";
@@ -127,13 +129,14 @@ export class RDialog extends RainbowElement {
         });
       },
       open: () => {
+        this.$$.prveDialog = rainbow.dialogQueue.queue.at(-1);
         this.dispatchEvent(createCustomEvent("beforeOpen"));
         rainbow.dialogQueue.push(this);
         if (this.$$.isOY()) rainbow.overlayQueue.push(this);
         this.style.zIndex = rainbow.zIndexPlus();
         this.$$.setBlankStyle();
         this.$$.transition.show();
-        if (this.$$.isOY()) this.$$.setOverlayBlankStyle();
+        this.$$.setOverlayBlankStyle();
         if (this.$$.isOY()) rainbow.overlay.value = true;
         this.dispatchEvent(createCustomEvent("open"));
         this.$$.historyPushState();
@@ -158,6 +161,7 @@ export class RDialog extends RainbowElement {
         if (this.$.DATA.rOverlayClick !== "close") return;
         event.stopPropagation();
         if (window.rainbow.overlayQueue.queue.at(-1) !== this) return;
+        console.log("onOverlayClick");
         this.$updateValue(false);
         this.$$.close();
       },
@@ -165,6 +169,7 @@ export class RDialog extends RainbowElement {
         if (this.$.DATA.rBlankClick !== "close") return;
         event.stopPropagation();
         if (rainbow.dialogQueue.queue.at(-1) !== this) return;
+        console.log("onDocumentClick");
         this.$updateValue(false);
         this.$$.close();
       },
@@ -181,7 +186,7 @@ export class RDialog extends RainbowElement {
       },
       onAfterLeave: () => {
         this.$$.setBlankStyle();
-        if (this.$$.isOY()) this.$$.setOverlayBlankStyle();
+        rainbow.dialogQueue.queue.at(-1)?.$$?.setOverlayBlankStyle?.();
         this.dispatchEvent(createCustomEvent("closed"));
         if (this.$.DATA.rDestroy === "remove") this.remove();
       },
@@ -212,7 +217,7 @@ export class RDialog extends RainbowElement {
     addEventListenerOnce(this, "afterEnter", this.$$.onAfterEnter);
     addEventListenerOnce(this, "afterLeave", this.$$.onAfterLeave);
     addEventListenerOnce(this, "click", this.$$.onClick);
-    addEventListenerOnce(window, "popstate", this.$$.onPopstate);
+    addEventListenerOnce(window, "rpopstate", this.$$.onPopstate);
     this.$$.bindAnimation();
   }
 
@@ -228,7 +233,7 @@ export class RDialog extends RainbowElement {
   $onStyleChang(...arg) {
     super.$onStyleChang(...arg);
     this.$$.setBlankStyle();
-    if (this.$$.isOY()) this.$$.setOverlayBlankStyle();
+    this.$$.setOverlayBlankStyle();
   }
 }
 
@@ -246,11 +251,11 @@ export class RDialogClose extends RAsyncClick {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    console.log('connectedCallback')
+    console.log("connectedCallback");
     this.$$.dialogParent = findParentByLocalName("r-dialog", this);
   }
 
   disconnectedCallback() {
-    console.log('disconnectedCallback')
+    console.log("disconnectedCallback");
   }
 }

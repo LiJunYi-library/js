@@ -32,41 +32,45 @@
       </div>
     </r-scroll>
   </r-scroll> -->
-  <!-- <r-scroll>
-    <div class="long">root1-12346789</div>
-    <r-scroll>
-      <div class="long">root2-12346789</div>
-    </r-scroll>
-  </r-scroll> -->
-  <r-grid style="--r-columns:2">
-    <div>
-      <template v-for="item in List" :key="item.pid">
-        <div>
-          <div>____________________</div>
-          <div>{{ item.name }} {{ item.pid }}</div>
-          <div>____________________</div>
-          <div>
-            <template v-for="ele in item.values" :key="ele.vid">
-              <div v-if="disabled(item, ele)">
-                <a> {{ ele.name }} {{ ele.vid }}-- {{ ele.reg }}</a>
-              </div>
-              <div style="margin:10px" v-else @click="active(item, ele)" :class="[item.active === ele.vid && 'act']">
-                {{ ele.name }} {{ ele.vid }}-- {{ ele.reg }}
-              </div>
-            </template>
-          </div>
-        </div>
-      </template>
-    </div>
-    <div>
-      <r-grid style="--r-columns:3">
-        <template v-for="(ele) in data.result.skuMap" :key="ele.propPath">
-          <div :class="[propPathdd(ele.propPath) && 'act']">{{ ele.propPath }}</div>
-        </template>
-      </r-grid>
 
-    </div>
-  </r-grid>
+ <r-nested-scroll class="t1" style=" max-height: 300px" css-name="ff gg">
+  <!-- <div  style="position: sticky;left: 0;top: 0;height: 50px;background: cyan;">Column 1</div> -->
+    <div class="long2">root1-12346789</div>
+    <r-nested-scroll style=" width: 500px;  max-height: 250px">
+      <div class="table">
+        <div class="table-cell" style="position: sticky;left: 0;top: 0;">Column 1</div>
+        <div class="table-cell">Column 2</div>
+        <div class="table-cell">Row 1, Cell 1</div>
+        <div class="table-cell" >Row 1, Cell 2</div>
+        <div class="table-cell">Row 2, Cell 1</div>
+        <div class="table-cell">Row 2, Cell 2</div>
+        <div class="table-cell">Row 2, Cell 1</div>
+        <div class="table-cell">Row 2, Cell 2</div>
+        <div class="table-cell">Row 2, Cell 1</div>
+        <div class="table-cell">Row 2, Cell 2</div>
+        <div class="table-cell">Row 2, Cell 1</div>
+        <div class="table-cell">Row 2, Cell 2</div>
+        <div class="table-cell">Row 2, Cell 1</div>
+        <div class="table-cell">Row 2, Cell 2</div>
+        <div class="table-cell">Row 2, Cell 2</div>
+        <div class="table-cell">Row 2, Cell 1</div>
+        <div class="table-cell">Row 2, Cell 2</div>
+        <div class="table-cell">Row 2, Cell 1</div>
+        <div class="table-cell">Row 2, Cell 2</div>
+        <div class="table-cell">Row 2, Cell 1</div>
+        <div class="table-cell">Row 2, Cell 2</div>
+        <div class="table-cell">Row 2, Cell 1</div>
+        <div class="table-cell">Row 2, Cell 2</div>
+      </div>
+      <div  style="position: sticky;bottom:  0;top: 0;height: 50px;background: pink;">Column 1</div>
+    </r-nested-scroll>
+  </r-nested-scroll>
+  <!-- <div class="long2" style="height: 200px;min-height: 200px;">root2-12346789</div>
+  <Tabs v-model:active="active" swipeable sticky>
+    <Tab v-for="index in 4" :title="'标签 ' + index">
+        <div class="long2">内容 {{ index }}</div>
+    </Tab>
+  </tabs> -->
 </template>
 <script setup>
 import { arrayLoopMap, arrayWipeRepetition } from '@rainbow_ljy/rainbow-js'
@@ -74,6 +78,7 @@ import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
 import { ref } from 'vue'
 import data from './data.json'
 import { columns } from 'element-plus/es/components/table-v2/src/common'
+import { Tab, Tabs } from 'vant';
 
 function propPathdd(propPath) {
   let reg = data.result.skuProperties.map(val => {
@@ -123,7 +128,7 @@ async function refresh(event) {
 
 <style>
 .long {
-  width: 30px;
+  width: 60px;
   font-size: 100px;
   background: linear-gradient(45deg, red, blue);
   text-wrap: wrap;
@@ -151,4 +156,39 @@ a {
 .act {
   color: red;
 }
+
+.long2 {
+  font-size: 100px;
+  text-wrap: wrap;
+  word-wrap: break-word;
+  min-height: 800px;
+  background: linear-gradient(gold, pink);
+}
+
+.table {
+        display: grid;
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed; /* 确保列宽按定义分配 */
+        grid-template-columns: auto auto auto;
+      }
+      .table-column {
+        display: table-column;
+        width: 200px; /* 第一列宽度为 30% */
+      }
+      .table-column + .table-column {
+        width: 400px; /* 第二列宽度为 70% */
+      }
+      .table-row {
+        display: table-row;
+      }
+      .table-cell {
+        display: table-cell;
+        height: 50px;
+        border-left: 1px solid #ccc;
+        border-top: 1px solid #ccc;
+        text-align: center;
+        box-sizing: border-box;
+        background: #f2ebeb;
+      }
 </style>

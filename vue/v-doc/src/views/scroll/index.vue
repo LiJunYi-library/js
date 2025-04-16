@@ -1,5 +1,5 @@
 <template>
-  <div class="page" :class="name">
+  <div class="page" :class="name" ref="div" >
     <!-- <r-circle v-model="add">
       <div>123</div>
     </r-circle> -->
@@ -19,7 +19,7 @@
     </div> -->
 
 
-    <r-scroll-view class="my-scroll" ref="ele" @scrollrefresh="refresh">
+
       <!-- <div slot="bottom">liu六liu六liu六liu六liu六liu六liu六liu六liu六</div>
       <r-scroll-sticky>
         <div style="height: 50px;background: cyan;"></div>
@@ -29,7 +29,7 @@
         <r-scroll-refresh  solt="top"></r-scroll-refresh>
       </div> -->
 
-      <r-scroll-refresh solt="top" @refresh="refresh"></r-scroll-refresh>
+      <!-- <r-scroll-refresh solt="top" @refresh="refresh"></r-scroll-refresh> -->
 
       <!-- <div> 1****{{ name }} </div>
         <div> {{ name }} </div>
@@ -45,12 +45,7 @@
       <div style="font-size: 50px;">{{ text }}</div>
       <div style="height: 50px;width: 50px; background: yellowgreen;position: fixed;top: 10px;"></div>
       <div style="height: 50px;width: 50px; background: pink;position: absolute;top: 100px;right: 0;"></div>
-      <!-- <r-scroll-memory-bable>
-        <div style="width: 50px;height: 50px;background: cyan;"></div>
-      </r-scroll-memory-bable> -->
 
-
-    </r-scroll-view>
 
 
 
@@ -63,7 +58,7 @@ import { ref, onMounted } from 'vue'
 import { setTimeoutPromise } from "@rainbow_ljy/rainbow-js";
 
 const text = arrayLoopMap(300, () => '帅').join('');
-
+const div = ref('div');
 const ele = ref('ele');
 
 const name = ref('bottom-center');
@@ -194,9 +189,15 @@ function arcToClipPathPolygon(x, y, radius, startAng, endAng, anticlockwise = fa
   return `path('${pathData}')`;
 }
 onMounted(() => {
+  console.log(div.value)
   const element = document.getElementById('clippedElement');
   // element.style.clipPath = arcToClipPathPolygon(100, 100, 100, 0, 250, false); // 从0度到270度顺时针绘制
   // element.style.clipPath = arcToClipPathRing(100, 100, 60, 50, 270, 631, false);
+  div.value.addEventListener('wheel',(event)=>{
+    console.log('wheel',event.deltaY  )
+    div.value.scrollTop = event.deltaY +  div.value.scrollTop
+  })
+
 })
 
 
@@ -325,12 +326,11 @@ setInterval(() => {
 
 /* .dsk {
     width: calc(100vw - 50px);
+}*/
+
+.page  {
+   max-height: 100vh;
+   overflow: auto;
+
 }
-
-.page .dsk {
-    --r-absolute: top;
-    flex-wrap: wrap;
-    column-width: 30px;
-
-} */
 </style>

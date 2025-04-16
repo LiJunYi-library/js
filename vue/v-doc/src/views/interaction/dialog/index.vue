@@ -1,11 +1,31 @@
 <template>
-  <div class="VirtualFallsList-page" :class="name">
+  <div class="r-dialog-demo" :class="classname">
     <div>
-      <button @click="dialog.show('aa')">show</button>
+      <!-- <button @click="dialog.show('aa')">show</button>
       <button @click="dialog2.show('bb')">show</button>
-      <button @click="dialog3.show('ccc')">show</button>
+      <button @click="dialog3.show('ccc')">show</button> -->
     </div>
+
+    <r-grid>
+      <div>属性</div>
+      <div>属性</div>
+      <div>属性</div>
+      <div>属性</div>
+      <div>属性</div>
+      <div>属性</div>
+    </r-grid>
+
     <div>
+      <div class="an">属性</div>
+      <div>属性</div>
+      <div>属性</div>
+      <div>属性</div>
+      <div>属性</div>
+      <div>属性</div>
+      <div>属性</div>
+      <div>属性</div>
+      <div>属性</div>
+      <div>属性</div>
       <div>属性</div>
       <div>属性</div>
       <div>属性</div>
@@ -14,130 +34,313 @@
       <div>属性</div>
     </div>
 
-    <div>
-      <div>属性</div>
-      <div>属性</div>
-      <div>属性</div>
-      <div>属性</div>
-      <div>属性</div>
-      <div>属性</div>
+    <div disabled="true">
+      <button @click="visible = true">default center</button>
+      <button @click="topVisible = true">top</button>
+      <button @click="bottomVisible = true">bottom</button>
+      <button @click="leftVisible = true">left</button>
+      <button @click="rightVisible = true">right</button>
+      <button @click="customVisible = true">自定义</button>
+      <button @click="customAnimationVisible = true">自定义 Animation</button>
+
+      <button @click="dialog1.value = true">visibleFun</button>
+      <button @click="commconDialog()">通用弹窗封装</button>
     </div>
-    <button @click="dialog.show('haha')">show</button>
-    <button @click="dialog.close()">close</button>
-    <button @click="bool = !bool">bool</button>
+
     <!-- <Teleport to="body"> -->
-      <r-dialog v-model="bool" :class="classname" @input="input">
+    <r-dialog v-model="visible" @input="input">
+      <div class="my-dialog-content">
+        <div>default center</div>
         <div>
-          <div>属性</div>
-          <div>属性</div>
-          <button @click="dialog.show('2222')">show</button>
-          <button @click="bool = !bool">bool</button>
+          <r-dialog-close :onclick="asyncClose" >
+            <i slot="loading" class="iconfont loading-icon">&#xe607;</i>
+            <button>使用 dialog-close 组件关闭 弹窗 </button>
+            <i slot="load" class="iconfont loading-icon">&#xe607;</i>
+          </r-dialog-close>
         </div>
-      </r-dialog>
+
+
+        <button @click="visible = false">关闭</button>
+        <div>嵌套弹窗</div>
+        <div>
+          <button @click="customVisible = true">自定义</button>
+        </div>
+      </div>
+    </r-dialog>
     <!-- </Teleport> -->
 
-    <button @click="classname = 'my-dialog'">classname</button>
+
+    <r-dialog  v-model="topVisible" class="my-top-dialog" r-overlay="false" closeOnPopstate>
+      <div class="my-dialog-content">
+        <div>top</div>
+        <button @click="bottomVisible = true">bottom</button>
+        <button @click="topVisible = false">关闭</button>
+      </div>
+    </r-dialog>
+
+
+    <r-dialog v-model="bottomVisible" class="my-bottom-dialog" closeOnPopstate>
+      <div class="my-dialog-content">
+        <div>bottom</div>
+        <div @click="classname = 'dddddddd'">bottom</div>
+        <button @click="bottomVisible = false">关闭</button>
+      </div>
+    </r-dialog>
+
+
+    <r-dialog v-model="leftVisible" class="my-left-dialog" closeOnPopstate>
+      <div class="my-dialog-content">
+        <div>left</div>
+        <button @click="leftVisible = false">关闭</button>
+      </div>
+    </r-dialog>
+
+
+    <r-dialog v-model="rightVisible" class="my-right-dialog">
+      <div class="my-dialog-content">
+        <div>right</div>
+        <button @click="rightVisible = false">关闭</button>
+      </div>
+    </r-dialog>
+
+
+    <r-dialog v-model="customVisible" class="my-custom-dialog">
+      <div class="my-dialog-content">
+        <div>custom</div>
+        <button @click="customVisible = false">关闭</button>
+        <div>嵌套弹窗</div>
+        <div>
+          <button @click="visible = true">default center</button>
+          <button @click="customAnimationVisible = true">自定义 Animation</button>
+        </div>
+      </div>
+    </r-dialog>
+
+    <r-dialog v-model="customAnimationVisible" class="my-custom-animation-dialog" styleElement="r-dialog-demo-style">
+      <div class="my-dialog-content">
+        <div>animation</div>
+        <button @click="customAnimationVisible = false">关闭</button>
+      </div>
+    </r-dialog>
+
   </div>
 </template>
 <script setup lang="jsx">
-import { arrayLoopMap, ListArray } from '@rainbow_ljy/rainbow-js'
-import { useRadio2 } from '@rainbow_ljy/v-hooks'
+import { arrayLoopMap, ListArray, setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
 import { ref, render } from 'vue'
-import { useFetch } from '@/utils/request'
-// import { createDialog } from '@rainbow_ljy/rainbow-element'
-
-const { createDialog } = rainbow
-
-const name = ref('bottom-center')
-const bool = ref(false)
-const arrays = new ListArray()
-const List = ref([])
-const gap = ref(10)
-const columns = ref(4)
-
-const classname = ref('my-dialog-bottom')
+import { Dialog } from 'vant';
+const visible = ref(false)
+const topVisible = ref(false)
+const bottomVisible = ref(false)
+const leftVisible = ref(false)
+const rightVisible = ref(false)
+const customVisible = ref(false)
+const customAnimationVisible = ref(false)
+const classname = ref('my-dialog-bottom');
 
 
 
-const dialog = createDialog()
-dialog.show = (sss) => {
-  return dialog(
-    <div>
-      <div>属性</div>
-      <div>{sss}</div>
-      <div>属性</div>
-      <div>属性</div>
-      <button onclick={() => dialog.show('11111')}>show</button>
-      <button onclick={dialog.close}>close</button>
-      <button onclick={() => setBool(true)}>bool true</button>
-      <button onclick={() => setBool(false)}>bool false</button>
-    </div>,
-    {
-      top: 50,
-    },
-  )
+
+function create(vNode) {
+  document.body._vnode = undefined
+  render(vNode, document.body);
+  return vNode.el
 }
 
-const dialog2 = createDialog()
-dialog2.show = (sss) => {
-  return dialog2(
+
+function commconDialog() {
+  const dia =<r-dialog destroy key={Math.random()}>
     <div>
-      <div>dialog2</div>
-      <div>{sss}</div>
-      <div>dialog2</div>
-      <div>dialog2</div>
-      <div>dialog2</div>
-      <div>dialog2</div>
-      <div>dialog2</div>
-    </div>,
-    {
-      top: 50,
-    },
-  )
+      <div>commconDialog</div>
+      <r-dialog-close >
+        使用 dialog-close 组件关闭 弹窗
+      </r-dialog-close>
+    </div>
+  </r-dialog>
+  const div = document.createElement('div')
+  document.body._vnode = undefined
+  render(dia,   document.body);
+  console.log([document.body]);
+
+  // document.body.append(dia.el)
+  dia.el.value = true
 }
 
-const dialog3 = createDialog()
-dialog3.show = (sss) => {
-  return dialog3(
-    <div>
-      <div>dialog3</div>
-      <div>{sss}</div>
-      <div>dialog3</div>
-      <div>dialog3</div>
-      <div>dialog3</div>
-      <div>dialog3</div>
-      <div>dialog3</div>
-    </div>,
-    {
-      top: 50,
-    },
-  )
-}
 
-function setBool(params) {
-  bool.value = params
+const dialog1 = create(
+  <r-dialog key='dialog1'>
+    <div>使用方法创建弹窗</div>
+    <r-dialog-close >
+      使用 dialog-close 组件关闭 弹窗
+    </r-dialog-close>
+  </r-dialog>
+)
+
+
+
+
+async function asyncClose() {
+  await setTimeoutPromise(3000)
 }
 
 function input(event) {
-  console.log(event)
-  console.log(bool)
+  console.log('input  input input event')
 }
 
-// arrays.push(
-//   ...arrayLoopMap(10, (value) => ({
-//     value,
-//     id: Math.random(),
-//     title: arrayLoopMap(Math.floor(Math.random() * 100), (i) => '我').join(''),
-//   })),
-// )
 </script>
 
-<style>
-.my-dialog {
+<style lang="scss" id="r-dialog-demo-style">
+.r-dialog-demo {
+  padding: 0 20px;
+r-grid{
+  --r-gap:0px;
+  --r-columns:3;
+  // border:  0.5px solid #0c0c0c;
+  border-collapse: collapse;
+  .r-grid-item{
+    border: 0.5px solid #0c0c0c;
+    border-left: none;
+    border-top: none;
+  }
+}
+
+}
+
+.my-dialog-content {
+  background: cyan;
+  min-width: 250px;
+  min-height: 250px;
+  width: 100%;
+  height: 100%;
+}
+
+.my-top-dialog {
   --r-orientation: top;
 }
 
-.my-dialog-bottom {
+.my-bottom-dialog {
   --r-orientation: bottom;
+  --r-blank-bottom: 100px;
+}
+
+.dddddddd .my-bottom-dialog{
+  --r-blank-bottom: 10px;
+}
+
+.my-left-dialog {
+  --r-orientation: left;
+  --r-blank-top: 100px;
+}
+
+.my-right-dialog {
+  --r-orientation: right;
+}
+
+/* 自定义弹窗css 过度动画*/
+.my-custom-dialog {
+  --r-orientation: custom;
+  --r-blank-top: 50px;
+  --r-overlay-class: custom-overlay;
+  // --r-overlay-visibility: hidden;
+
+  &[css-name~="r-dialog-custom"] {
+    left: 50%;
+    top: 50%;
+    transform-origin: 50% 50%;
+    transform: translate(-50%, -50%);
+    overflow: visible;
+  }
+
+  &[css-name~="r-dialog-custom-enter-from"]::part(r-dialog-content) {
+    transform: rotate(0deg) scale(0);
+  }
+
+  &[css-name~="r-dialog-custom-enter-active"]::part(r-dialog-content) {
+    transition: 0.25s;
+  }
+
+  &[css-name~="r-dialog-custom-enter-to"]::part(r-dialog-content) {
+    transform: rotate(720deg) scale(1);
+  }
+
+  &[css-name~="r-dialog-custom-leave-from"]::part(r-dialog-content) {
+    transform: rotate(720deg) scale(1);
+  }
+
+  &[css-name~="r-dialog-custom-leave-active"]::part(r-dialog-content) {
+    transition: 0.25s;
+  }
+
+  &[css-name~="r-dialog-custom-leave-to"]::part(r-dialog-content) {
+    transform: rotate(0deg) scale(0);
+  }
+}
+
+
+/* 自定义弹窗css */
+.my-custom-animation-dialog {
+  --r-orientation: springing;
+
+  &[css-name~="r-dialog-springing"] {
+    left: 0;
+    top: 0;
+    width: 100vw;
+    overflow: visible;
+    --r-blank-top: 100px;
+  }
+
+  &[css-name~="r-dialog-springing-enter-from"]::part(r-dialog-content) {
+    transform: translateY(-100%);
+  }
+
+  &[css-name~="r-dialog-springing-enter-active"]::part(r-dialog-content) {
+    animation: springing 1s 1;
+  }
+
+  &[css-name~="r-dialog-springing-enter-to"]::part(r-dialog-content) {
+    transform: translateY(-0%);
+  }
+
+  &[css-name~="r-dialog-springing-leave-from"]::part(r-dialog-content) {
+    transform: translateY(-0%);
+  }
+
+  &[css-name~="r-dialog-springing-leave-active"]::part(r-dialog-content) {
+    transition: 0.25s;
+  }
+
+  &[css-name~="r-dialog-springing-leave-to"]::part(r-dialog-content) {
+    transform: translateY(-100%);
+  }
+
+}
+
+
+
+@keyframes springing {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  10% {
+    transform: translateY(0%);
+  }
+
+  20% {
+    transform: translateY(-80%);
+  }
+
+  30% {
+    transform: translateY(0%);
+  }
+
+  40% {
+    transform: translateY(-50%);
+  }
+
+  100% {
+    transform: translateY(0%);
+  }
+
 }
 </style>

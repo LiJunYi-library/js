@@ -47,11 +47,14 @@ export default defineConfig({
               text: "布局",
               items: [
                 { text: "指南", link: "/element/layout/handbook" },
-                { text: "grid", link: "/element/layout/grid" },
-                { text: "flex", link: "/element/layout/flex" },
+                { text: "absolute", link: "/element/layout/grid" },
+                { text: "column", link: "/element/layout/scroll" },
                 { text: "falls", link: "/element/layout/falls" },
+                { text: "flex", link: "/element/layout/flex" },
+                { text: "grid", link: "/element/layout/grid" },
+                { text: "move", link: "/element/layout/scroll" },
                 { text: "row", link: "/element/layout/scroll" },
-                { text: "column", link: "/element/layout/scroll" }
+                { text: "transition", link: "/element/layout/scroll" },
               ],
             },
             {

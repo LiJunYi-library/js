@@ -1,37 +1,71 @@
-r-overlay {
-  width: 100vw;
-  height: 100vh;
+r-toast {
+  padding: 10px 12px;
   position: fixed;
-  overflow: hidden;
-  left: 0;
-  top: 0;
-  background: rgba(0, 0, 0, 0.7);
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 6000000;
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-[css-name~="r-overlay-hide"] {
+.r-toast-content {
+  max-width: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 400;
+  font-size: 16px;
+  color: #ffffff;
+  line-height: 20px;
+  text-align: left;
+  font-style: normal;
+}
+
+.r-toast-loading{
+  text-align: center;
+}
+
+.r-toast-loading::before{
+ content: '\e607';
+}
+
+.toast-loadingText {
+}
+.r-toast-text {
+}
+
+[css-name~="r-toast-hide"] {
   display: none;
 }
 
-[css-name~="r-overlay-enter-from"] {
+[css-name~="r-toast-enter-from"] {
   opacity: 0;
 }
 
-[css-name~="r-overlay-enter-active"] {
+[css-name~="r-toast-enter-active"] {
   transition: 0.3s;
 }
 
-[css-name~="r-overlay-enter-to"] {
+[css-name~="r-toast-enter-to"] {
   opacity: 1;
 }
 
-[css-name~="r-overlay-leave-from"] {
+[css-name~="r-toast-leave-from"] {
   opacity: 1;
 }
 
-[css-name~="r-overlay-leave-active"] {
+[css-name~="r-toast-leave-active"] {
   transition: 0.3s;
 }
 
-[css-name~="r-overlay-leave-to"] {
+[css-name~="r-toast-leave-to"] {
   opacity: 0;
 }

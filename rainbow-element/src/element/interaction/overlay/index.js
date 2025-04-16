@@ -5,7 +5,6 @@ import { transition } from "../../../utils/index.js";
 export class ROverlay extends RainbowElement {
   $$ = (() => {
     return {
-      value: false,
       transition: transition({
         node: this,
         dispatchNode: this,
@@ -16,15 +15,11 @@ export class ROverlay extends RainbowElement {
     };
   })();
 
-  set value(v) {
-    if (this.$$.value === v) return;
-    this.$$.value = v;
-    if (this.$$.value) this.$$.transition.show();
-    else this.$$.transition.hide();
-  }
+  $value = false;
 
-  get value() {
-    return this.$$.value;
+  $onValueChange(bool) {
+    if (bool) this.$$.transition.show();
+    else this.$$.transition.hide();
   }
 
   connectedCallback(...arg) {

@@ -9,6 +9,7 @@ window.rainbow = (() => {
   return {
     toast,
     overlay,
+    customRender(node, parent) {},
     zIndex: 100,
     zIndexAdd: 3,
     zIndexPlus() {
@@ -17,10 +18,6 @@ window.rainbow = (() => {
     },
     overlayQueue: useQueue(),
     dialogQueue: useQueue(),
-    customRender(node, dialog) {
-      dialog.innerHTML = "";
-      dialog.append(node);
-    },
     history: createHistory(),
   };
 })();
@@ -34,8 +31,6 @@ function createHistory() {
     state = "none";
   });
 
-
-
   function pushState(...args) {
     historyStack++;
     history.pushState(...args);
@@ -46,11 +41,11 @@ function createHistory() {
   }
 
   function back(...args) {
-    if(historyStack<=0)return;
-    console.log('historyStack',historyStack)
+    if (historyStack <= 0) return;
+    console.log("historyStack", historyStack);
     state = "back";
     historyStack--;
-    console.log('historyStack--',historyStack)
+    console.log("historyStack--", historyStack);
     history.back(...args);
   }
 

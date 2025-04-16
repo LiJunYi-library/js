@@ -2,6 +2,7 @@ r-pulldown {
     display: flex;
     cursor: pointer;
     align-items: center;
+    --r-placement: bottom;
 }
 
 r-dialog.r-pulldown-dialog {

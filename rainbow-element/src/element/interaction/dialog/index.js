@@ -92,7 +92,7 @@ export class RDialog extends RainbowElement {
           if (isNum(rBlankTop)) this.style.marginTop = rBlankTop + "px";
           if (isNum(rBlankBottom)) this.style.marginBottom = rBlankBottom + "px";
           if (isNum(rBlankLeft)) this.style.marginLeft = rBlankLeft + "px";
-          if (isNum(rBlankRight)) this.style.marginTop = rBlankRight + "px";
+          if (isNum(rBlankRight)) this.style.marginRight = rBlankRight + "px";
         }
         this.style.maxHeight = `calc( 100vh - ${(rBlankTop || 0) + (rBlankBottom || 0)}px )`;
         this.style.maxWidth = `calc( 100vw - ${(rBlankLeft || 0) + (rBlankRight || 0)}px )`;

@@ -9,6 +9,10 @@ r-dialog {
   --r-overlay-visibility: visible;
 }
 
+r-dialog-close {
+  cursor: pointer;
+}
+
 r-dialog[useAttrs="true"],
 r-dialog[useAttrs] {
   --r-orientation: r-attr(r-orientation);

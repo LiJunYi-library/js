@@ -1,5 +1,4 @@
 import { numFixed, requestAnimationFramePromise } from "@rainbow_ljy/rainbow-js";
-window.rainbow.createDialog = createDialog;
 
 export function createCustomEvent(name, event, eventInitDict = {}) {
   const newEvent = new CustomEvent(name, { bubbles: true, cancelable: true, ...eventInitDict });

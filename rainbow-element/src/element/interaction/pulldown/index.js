@@ -3,6 +3,7 @@ import { RainbowElement } from "../../base/index.js";
 import {
   createElement,
   createSlot,
+  createSlotElement,
   addEventListenerOnce,
   createElementCB,
   createCustomEvent,
@@ -16,11 +17,7 @@ export class RPulldown extends RainbowElement {
   $$ = {
     labelSlot: createSlot("slot", "", "label"),
     iconSlot: createSlot("slot", "", "icon"),
-    defaultIcon: createElementCB("i", (el) => {
-      el.className = "r-pulldown-default-icon iconfont";
-      el.innerHTML = "&#xe887;";
-      el.setAttribute("slot", "icon");
-    }),
+    defaultIcon: createSlotElement("i", "icon", "r-pulldown-default-icon iconfont"),
     dialog: createElement("r-dialog", "r-pulldown-dialog"),
     dialogClass: undefined,
     onBeforeOpen: (event) => {
@@ -140,3 +137,4 @@ export class RPulldown extends RainbowElement {
     placement.forEach((key) => this.$$.layout?.[key]?.(offset));
   }
 }
+

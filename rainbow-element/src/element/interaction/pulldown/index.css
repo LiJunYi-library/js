@@ -13,6 +13,10 @@ r-pulldown .r-pulldown-default-icon {
     transition: 0.25s;
 }
 
+r-pulldown .r-pulldown-default-icon::after{
+    content: '\e887'; 
+}
+
 [css-name~="r-pulldown-show"] .r-pulldown-default-icon {
     transform: rotate(180deg);
 }

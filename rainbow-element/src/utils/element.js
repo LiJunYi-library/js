@@ -84,6 +84,13 @@ export function createElementCB(name = "div", cb) {
   return ele;
 }
 
+export function createSlotElement(name = "div", slot = "", className = "") {
+  const ele = document.createElement(name);
+  ele.setAttribute("slot", slot);
+  ele.className = className;
+  return ele;
+}
+
 export function createSlot(name = "slot", className = "", slotName = className) {
   const ele = createElement(name, className);
   if (slotName) ele.setAttribute("name", slotName);

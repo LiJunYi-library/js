@@ -3,8 +3,11 @@ import { createCustomEvent } from "./utils/index.js";
 
 window.rainbow = (() => {
   const overlay = document.createElement("r-overlay");
+  const toast = document.createElement("r-toast");
   document.body.append(overlay);
+  document.body.append(toast);
   return {
+    toast,
     overlay,
     zIndex: 100,
     zIndexAdd: 3,

@@ -1,0 +1,37 @@
+r-overlay {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  overflow: hidden;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+[css-name~="r-overlay-hide"] {
+  display: none;
+}
+
+[css-name~="r-overlay-enter-from"] {
+  opacity: 0;
+}
+
+[css-name~="r-overlay-enter-active"] {
+  transition: 0.3s;
+}
+
+[css-name~="r-overlay-enter-to"] {
+  opacity: 1;
+}
+
+[css-name~="r-overlay-leave-from"] {
+  opacity: 1;
+}
+
+[css-name~="r-overlay-leave-active"] {
+  transition: 0.3s;
+}
+
+[css-name~="r-overlay-leave-to"] {
+  opacity: 0;
+}

@@ -1,6 +1,6 @@
 export * from "./element.js";
 import * as elements from "./element.js";
-console.log(elements)
+console.log(elements);
 export function defineElements() {
   for (const key in elements) {
     if (Object.prototype.hasOwnProperty.call(elements, key)) {
@@ -10,5 +10,5 @@ export function defineElements() {
     }
   }
 }
-
 defineElements();
+rainbow.toast =  document.createElement("r-toast");

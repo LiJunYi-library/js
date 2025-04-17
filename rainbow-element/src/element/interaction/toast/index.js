@@ -18,11 +18,13 @@ export class RToast extends RainbowElement {
       queue: useQueue({
         onBegin: () => {
           this.value = true;
+          document.body.append(this);
           this.$$.transition.show();
         },
         onFinish: () => {
           this.value = false;
           this.$$.transition.hide();
+          this.remove();
         },
       }),
       textQueue: useQueue({

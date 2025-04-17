@@ -8,8 +8,13 @@ export function transitionColor(defColor, color) {
     };
   }
   const rgb = (...args) => rgba(...args);
-  const defColors = eval(defColor);
-  const colors = eval(color);
+  const parseColorFun = (str = "") =>
+    str
+      .match(/rgba\((\d+),(\d+),(\d+),(\d+)\)/)
+      .slice(1)
+      .map(Number);
+  const defColors = parseColorFun(defColor);
+  const colors = parseColorFun(color);
 
   const gaps = {
     r: colors.r - defColors.r,
@@ -40,11 +45,10 @@ export function transitionStyleColor(...arg) {
   return (ratio) => `color: ${trColor(ratio)};`;
 }
 
-
 export function transitionOpacity(def, tart) {
   const gaps = tart - def;
-  return ratio => {
-      if (ratio > 1) ratio = 1;
+  return (ratio) => {
+    if (ratio > 1) ratio = 1;
     const opacity = gaps * ratio + def;
     return opacity;
   };
@@ -52,5 +56,5 @@ export function transitionOpacity(def, tart) {
 
 export function transitionStyleOpacity(...arg) {
   const trColor = transitionOpacity(...arg);
-  return ratio => `opacity: ${trColor(ratio)};`;
+  return (ratio) => `opacity: ${trColor(ratio)};`;
 }

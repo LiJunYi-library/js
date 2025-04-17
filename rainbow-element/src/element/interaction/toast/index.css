@@ -37,11 +37,6 @@ r-toast {
  content: '\e607';
 }
 
-.toast-loadingText {
-}
-.r-toast-text {
-}
-
 [css-name~="r-toast-hide"] {
   display: none;
 }

@@ -1,4 +1,4 @@
-import { arrayRemove } from "./";
+import { arrayRemove } from "./array.js";
 
 export class ListArray extends Array {
   constructor(...args) {

@@ -1,3 +1,4 @@
+import { arrayEvents } from "../array";
 import { objectParseFormData, objectParseUri } from "../object";
 
 const errLoading = { error: "loading", message: "loading", code: 41, status: 41 };
@@ -146,6 +147,7 @@ export class Fetch {
     timeoutId: 0,
     finish: () => {},
     props: {},
+    fetchEvents: arrayEvents(),
   };
 
   constructor(props = {}) {
@@ -155,9 +157,12 @@ export class Fetch {
   send(options = {}, props = {}) {
     const { throwLoad = false, isBegin = false } = props;
     const config = merge(this.config, this.props, options);
-    this.__.controller = new AbortController();
-    const { controller } = this.__;
-    this.__.timeoutId = setTimeout(() => controller.abort(errTimeout), config.time);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(errTimeout), config.time);
+    this.__.controller = controller;
+    this.__.timeoutId = timeoutId;
+    const timerController = { controller, timeoutId };
+    this.__.fetchEvents.push(timerController);
     return new Promise(async (resolve, reject) => {
       const success = (d) => {
         this.loading = false;
@@ -186,7 +191,11 @@ export class Fetch {
         url = url + objectParseUri(url, await config.formatterUrlParams(config));
         const body = await config.parseBody(config);
         const args = [url, { ...config, signal: controller.signal, body }];
-        const res = await fetchFun(...args).finally(() => config.onResponse(config));
+        const res = await fetchFun(...args).finally(() => {
+          clearTimeout(timeoutId);
+          this.__.fetchEvents.remove(timerController);
+          config.onResponse(config);
+        });
         if (!res.ok) throw res;
         const data = await config.formatterResponse(res, config);
         if (config.isDownloadFile) config.downloadFile(res, config, data);
@@ -197,6 +206,8 @@ export class Fetch {
           .then(async (d) => success(await config.formatterData(d, data, res, config)))
           .catch(fail);
       } catch (error) {
+        console.log("请求出错了*****", error);
+
         if (error?.status === 20) {
           config.onAbort(error, config, resolve, reject);
           return;
@@ -239,9 +250,15 @@ export class Fetch {
   awaitBeginSend(options) {
     return this.send(options, { throwLoad: true, isBegin: true });
   }
-  abort() {
+  abortPrve() {
     this.__.controller.abort(errAbout);
     clearTimeout(this.__.timeoutId);
   }
-  abortAll() {}
+  abort() {
+    this.__.fetchEvents.events.forEach((el) => {
+      console.log(el.timeoutId);
+      el.controller.abort(errAbout);
+      clearTimeout(el.timeoutId);
+    });
+  }
 }

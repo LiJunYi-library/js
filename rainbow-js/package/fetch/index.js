@@ -1,6 +1,18 @@
+import { objectParseFormData, objectParseUri } from "../object";
+
 const errLoading = { error: "loading", message: "loading", code: 41, status: 41 };
 const errTimeout = { error: "Request Timeout", message: "Request Timeout", code: 48, status: 48 };
 const errAbout = { error: "about", message: "about", code: 20, status: 20 };
+
+function mergePropertys(...args) {
+  const headersArr = args.map((el) => el?.headers);
+  const headers = JSON.parse(JSON.stringify(Object.assign({}, ...headersArr)));
+  return { headers };
+}
+
+function merge(...args) {
+  return Object.assign({}, ...args, mergePropertys(...args));
+}
 
 export class Fetch {
   ___ = {
@@ -51,13 +63,14 @@ export class Fetch {
     this.___.errorData = v;
   }
 
-  constructor() {}
-
   config = {
     formatterResponse: async (res, config) => {
       const contentType = res.headers.get("Content-Type");
       if (contentType.includes("application/json")) return await res.json();
-      if (contentType.includes("application/octet-stream")) return await res.blob();
+      if (contentType.includes("application/octet-stream")) {
+        if (config.formatterFile) return await config.formatterFile(res, config);
+        return await res.blob();
+      }
       if (contentType.includes("text/plain")) return await res.text();
       try {
         return await res.json();
@@ -65,32 +78,86 @@ export class Fetch {
         return undefined;
       }
     },
-    interceptResponseSuccess: async (res, data, config) => {
-      try {
-        if (data.code !== 200) throw data;
-        return data.data;
-      } catch (error) {
-        return Promise.reject(error);
-      }
+    formatterData: (d) => d,
+    formatterFile: async (res, config) => {
+      const fileName = await config.formatterFileName(res, config);
+      const blob = await res.blob();
+      const file = new File([blob], fileName);
+      return file;
     },
+    formatterFileName: async (res, config) => {
+      const disposition = res.headers.get("Content-Disposition")?.split("filename=")?.pop();
+      const fName = decodeURIComponent(disposition);
+      const fileName = config.fileName || fName;
+      return fileName;
+    },
+    formatterBody: async (config) => {
+      const body = config.body;
+      if (typeof body === "function") return body();
+      if (typeof body === "object") return body;
+      return undefined;
+    },
+    parseBody: async (config) => {
+      const contentType = config.headers["Content-Type"] || "";
+      const body = await config.formatterBody(config);
+      if (config.isFormBody) return objectParseFormData(body, true);
+      if (config.isJsonBody) return JSON.stringify(body);
+      if (contentType.includes("application/json")) return JSON.stringify(body);
+      if (contentType.includes("form")) return objectParseFormData(body, true);
+      return JSON.stringify(body);
+    },
+    formatterUrlParams: async (config) => {
+      const urlParams = config.urlParams;
+      if (typeof urlParams === "function") return urlParams();
+      if (typeof urlParams === "object") return urlParams;
+      return undefined;
+    },
+    downloadFile: async (res, config, file) => {
+      const elink = document.createElement("a");
+      elink.download = file.name;
+      elink.style.display = "none";
+      elink.href = URL.createObjectURL(file);
+      document.body.appendChild(elink);
+      elink.click();
+      URL.revokeObjectURL(elink.href);
+      document.body.removeChild(elink);
+    },
+    interceptResponseSuccess: async (res, data, config) => data,
     interceptResponseError: (error, config, resolve, reject) => undefined,
+    interceptRequest: () => undefined,
     onAbort: (error, config, resolve, reject) => undefined,
     onTimeoutAbort: (error, config, resolve, reject) => undefined,
-    onLoading: (error, config, resolve, reject) => console.log("正在加载中"),
+    onLoading: (error, config, resolve, reject) => undefined,
+    onRequest: (config) => undefined,
+    onResponse: (config) => undefined,
+    time: 30000,
+    isDownloadFile: false,
+    fileName: "",
+    url: "",
+    baseUrl: "",
+    urlParams: undefined,
+    body: undefined,
+    isFormBody: false,
+    isJsonBody: false,
   };
 
   __ = {
     controller: new AbortController(),
     timeoutId: 0,
     finish: () => {},
+    props: {},
   };
+
+  constructor(props = {}) {
+    this.props = props;
+  }
 
   send(options = {}, props = {}) {
     const { throwLoad = false, isBegin = false } = props;
-    const config = { ...this.config, ...options };
+    const config = merge(this.config, this.props, options);
     this.__.controller = new AbortController();
     const { controller } = this.__;
-    this.__.timeoutId = setTimeout(() => controller.abort(errTimeout), 2000);
+    this.__.timeoutId = setTimeout(() => controller.abort(errTimeout), config.time);
     return new Promise(async (resolve, reject) => {
       const success = (d) => {
         this.loading = false;
@@ -112,13 +179,23 @@ export class Fetch {
         this.loading = true;
         if (isBegin) this.begin = true;
         this.error = false;
-        const res = await fetch(config.uri, { signal: controller.signal, ...config });
+        config.interceptRequest(config);
+        config.onRequest(config);
+        const fetchFun = config.fetch || fetch;
+        let url = config.baseUrl + config.url;
+        url = url + objectParseUri(url, await config.formatterUrlParams(config));
+        const body = await config.parseBody(config);
+        const args = [url, { ...config, signal: controller.signal, body }];
+        const res = await fetchFun(...args).finally(() => config.onResponse(config));
         if (!res.ok) throw res;
         const data = await config.formatterResponse(res, config);
+        if (config.isDownloadFile) config.downloadFile(res, config, data);
         if (!config.interceptResponseSuccess) return success(data);
         const final = config.interceptResponseSuccess(res, data, config);
         if (!(final instanceof Promise)) return success(final);
-        final.then(success).catch(fail);
+        final
+          .then(async (d) => success(await config.formatterData(d, data, res, config)))
+          .catch(fail);
       } catch (error) {
         if (error?.status === 20) {
           config.onAbort(error, config, resolve, reject);
@@ -167,16 +244,4 @@ export class Fetch {
     clearTimeout(this.__.timeoutId);
   }
   abortAll() {}
-}
-
-function downloadFile(buffer, fileName) {
-  const blob = new Blob([buffer]);
-  const elink = document.createElement("a");
-  elink.download = fileName;
-  elink.style.display = "none";
-  elink.href = URL.createObjectURL(blob);
-  document.body.appendChild(elink);
-  elink.click();
-  URL.revokeObjectURL(elink.href);
-  document.body.removeChild(elink);
 }

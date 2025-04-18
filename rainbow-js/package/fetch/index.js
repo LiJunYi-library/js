@@ -162,13 +162,13 @@ export class Fetch {
     const timeoutId = setTimeout(() => controller.abort(errTimeout), config.time);
     this.__.controller = controller;
     this.__.timeoutId = timeoutId;
-    const timerController = { controller, timeoutId };
-    this.__.fetchEvents.push(timerController);
     return new Promise(async (resolve, reject) => {
       const success = (d) => {
         this.loading = false;
         this.data = d;
+        this.error = false;
         this.begin = false;
+        this.errorData = undefined;
         resolve(d);
       };
 
@@ -182,6 +182,8 @@ export class Fetch {
 
       try {
         if (this.loading === true && throwLoad) throw errLoading;
+        const timerController = { controller, timeoutId };
+        this.__.fetchEvents.push(timerController);
         this.loading = true;
         if (isBegin) this.begin = true;
         this.error = false;

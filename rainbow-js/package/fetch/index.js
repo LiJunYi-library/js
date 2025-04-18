@@ -79,7 +79,7 @@ export class Fetch {
         return undefined;
       }
     },
-    formatterData: (d) => d,
+    formatterData: (d, rest, res, config) => d,
     formatterFile: async (res, config) => {
       const fileName = await config.formatterFileName(res, config);
       const blob = await res.blob();
@@ -113,7 +113,7 @@ export class Fetch {
       if (typeof urlParams === "object") return urlParams;
       return undefined;
     },
-    downloadFile: async (res, config, file) => {
+    downloadFile: (res, config, file) => {
       const elink = document.createElement("a");
       elink.download = file.name;
       elink.style.display = "none";
@@ -125,7 +125,7 @@ export class Fetch {
     },
     interceptResponseSuccess: async (res, data, config) => data,
     interceptResponseError: (error, config, resolve, reject) => undefined,
-    interceptRequest: () => undefined,
+    interceptRequest: (config) => undefined,
     onAbort: (error, config, resolve, reject) => undefined,
     onTimeoutAbort: (error, config, resolve, reject) => undefined,
     onLoading: (error, config, resolve, reject) => undefined,
@@ -140,6 +140,7 @@ export class Fetch {
     body: undefined,
     isFormBody: false,
     isJsonBody: false,
+    errorLog: false,
   };
 
   __ = {
@@ -206,8 +207,6 @@ export class Fetch {
           .then(async (d) => success(await config.formatterData(d, data, res, config)))
           .catch(fail);
       } catch (error) {
-        console.log("请求出错了*****", error);
-
         if (error?.status === 20) {
           config.onAbort(error, config, resolve, reject);
           return;
@@ -217,6 +216,8 @@ export class Fetch {
           config.onLoading(error, config, resolve, reject);
           return;
         }
+
+        if (config.errorLog) console.log("请求出错了*****", error);
 
         (() => {
           if (error?.status === 48) {

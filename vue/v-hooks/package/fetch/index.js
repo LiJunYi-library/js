@@ -1,6 +1,6 @@
 import { ref, reactive } from "vue";
 export * from "./fetch.js";
-
+export * from "./index-n.js";
 export { createHttpRequest, useFetchHoc, createHttpFetch };
 
 function parseParams(object) {

@@ -24,3 +24,35 @@ export function objectEqualitys(o1 = {}, o2 = {}) {
   }
   return true;
 }
+
+export function objectParseUri(url = "", object) {
+  if (!object) return "";
+  if (typeof object !== "object") return object;
+  if (!Object.keys(object).length) return "";
+  let str = "";
+  for (const key in object) {
+    if (Object.hasOwnProperty.call(object, key)) {
+      let element = object[key];
+      if (typeof element === "object") {
+        if (element instanceof Array) element = element.toString();
+        else element = JSON.stringify(element);
+      }
+      if (element === undefined) continue;
+      if (element + "" === "NaN") element = null;
+      str += `${key}=${element}&`;
+    }
+  }
+  str = str.slice(0, -1);
+  if (url && url.includes("?")) return `&${str}`;
+  return `?${str}`;
+}
+
+export function objectParseFormData(object, bool) {
+  const formData = new FormData();
+  for (const key in object) {
+    if (Object.prototype.hasOwnProperty.call(object, key)) {
+      if (bool && object[key] !== undefined) formData.append(key, object[key]);
+    }
+  }
+  return formData;
+}

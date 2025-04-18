@@ -156,6 +156,7 @@ export function useFetchHOC(props = {}) {
     onResponse: () => undefined,
     urlParams: undefined,
     body: undefined,
+
     url: "",
     baseUrl: "",
     time: 30000,

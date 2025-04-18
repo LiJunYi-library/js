@@ -1,11 +1,13 @@
 import { RainbowElement } from "../base/index.js";
-import { addEventListenerOnce, createSlot } from "../../utils/index.js";
+import { addEventListenerOnce, createSlot, createSlotElement } from "../../utils/index.js";
 
 export class RAsyncClick extends RainbowElement {
   $$ = {
-    loadingSlot: createSlot("slot", "r-dialog-close-loading-slot", "loading"),
-    defaultSlot: createSlot("slot", "r-dialog-close-default-slot", ""),
-    loadSlot: createSlot("slot", "r-dialog-close-loading-slot", "load"),
+    prveSlot: createSlot("slot", "r-async-prve-slot", "prve"),
+    nextSlot: createSlot("slot", "r-async-next-slot", "next"),
+    prveEl: createSlotElement("div", "prve", "r-prve"),
+    nextEl: createSlotElement("div", "next", "r-next"),
+    defaultSlot: createSlot("slot", "r-async-default-slot", ""),
     loading: false,
     onclick_: async () => undefined,
     onClick: async (...args) => {
@@ -13,8 +15,8 @@ export class RAsyncClick extends RainbowElement {
       if (this.disabled === true) return;
       if (this.$$.loading === true) return;
       this.$$.loading = true;
-      this.shadowRoot.insertBefore(this.$$.loadingSlot, this.$$.defaultSlot);
-      this.shadowRoot.appendChild(this.$$.loadSlot);
+      this.shadowRoot.insertBefore(this.$$.prveSlot, this.$$.defaultSlot);
+      this.shadowRoot.appendChild(this.$$.nextSlot);
       this.cssList.add("loading");
       const res = this.$$.onclick_(...args);
       if (res instanceof Promise) {
@@ -25,8 +27,8 @@ export class RAsyncClick extends RainbowElement {
     },
     close: () => {
       this.$$.loading = false;
-      this.shadowRoot.removeChild(this.$$.loadingSlot);
-      this.shadowRoot.removeChild(this.$$.loadSlot);
+      this.shadowRoot.removeChild(this.$$.prveSlot);
+      this.shadowRoot.removeChild(this.$$.nextSlot);
       this.cssList.remove("loading");
       this.$$.onfinally();
     },
@@ -49,6 +51,8 @@ export class RAsyncClick extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
+    this.append(this.$$.prveEl);
+    this.append(this.$$.nextEl);
     addEventListenerOnce(this, "click", this.$$.onClick);
     this.cssList.toggle(this.disabled, "disabled");
   }

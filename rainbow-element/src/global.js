@@ -3,6 +3,7 @@ import { createCustomEvent } from "./utils/index.js";
 
 window.rainbow = (() => {
   const overlay = document.createElement("r-overlay");
+  document.body.append(overlay);
   return {
     toast: undefined,
     overlay,

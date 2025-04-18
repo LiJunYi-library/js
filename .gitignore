@@ -17,6 +17,7 @@
 /react/r-doc/node_modules
 /rainbow-element/build
 /rainbow-element/dist
+/svelte
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

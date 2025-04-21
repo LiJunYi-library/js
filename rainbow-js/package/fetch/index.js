@@ -169,6 +169,7 @@ export class Fetch {
         this.error = false;
         this.begin = false;
         this.errorData = undefined;
+        config.onResponse(config);
         resolve(d);
       };
 
@@ -177,6 +178,7 @@ export class Fetch {
         this.errorData = e;
         this.error = true;
         this.begin = false;
+        config.onResponse(config);
         reject(e);
       };
 
@@ -197,7 +199,6 @@ export class Fetch {
         const res = await fetchFun(...args).finally(() => {
           clearTimeout(timeoutId);
           this.__.fetchEvents.remove(timerController);
-          config.onResponse(config);
         });
         if (!res.ok) throw res;
         const data = await config.formatterResponse(res, config);
@@ -211,6 +212,7 @@ export class Fetch {
       } catch (error) {
         if (error?.status === 20) {
           config.onAbort(error, config, resolve, reject);
+          config.onResponse(config);
           return;
         }
 
@@ -233,6 +235,8 @@ export class Fetch {
         this.errorData = error;
         this.loading = false;
         this.begin = false;
+        reject(error);
+        config.onResponse(config);
       }
     });
   }

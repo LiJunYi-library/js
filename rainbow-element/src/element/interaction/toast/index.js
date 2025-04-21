@@ -1,6 +1,6 @@
 import "./index.css";
 import { RainbowElement } from "../../base/index.js";
-import { transition, createElement } from "../../../utils/index.js";
+import { transition, createElement, addEventListenerOnce } from "../../../utils/index.js";
 import { useQueue } from "@rainbow_ljy/rainbow-js";
 
 export class RToast extends RainbowElement {
@@ -24,7 +24,6 @@ export class RToast extends RainbowElement {
         onFinish: () => {
           this.value = false;
           this.$$.transition.hide();
-          this.remove();
         },
       }),
       textQueue: useQueue({
@@ -34,7 +33,7 @@ export class RToast extends RainbowElement {
         onRemoved: (queue, current) => {
           const last = queue.at(-1);
           if (last) this.$$.update(last);
-          else this.$$.content.innerHTML = "";
+          if (!last && this.$$.queue.queue.length) this.$$.content.innerHTML = "";
         },
       }),
       loadingQueue: useQueue({
@@ -42,7 +41,7 @@ export class RToast extends RainbowElement {
           this.insertBefore(this.$$.loading, this.firstChild);
         },
         onFinish: () => {
-          this.$$.loading.remove();
+          if (this.$$.queue.queue.length) this.$$.loading.remove();
         },
       }),
       update: (props = {}) => {
@@ -57,6 +56,12 @@ export class RToast extends RainbowElement {
           rainbow.customRender(props.text, content);
         }
       },
+      onAfterEnter: () => {},
+      onAfterLeave: () => {
+        this.$$.content.innerHTML = "";
+        this.$$.loading.remove();
+        this.remove();
+      },
     };
   })();
 
@@ -64,6 +69,8 @@ export class RToast extends RainbowElement {
     super.connectedCallback(...arg);
     this.cssList.add("r-toast-hide");
     this.append(this.$$.content);
+    addEventListenerOnce(this, "afterEnter", this.$$.onAfterEnter);
+    addEventListenerOnce(this, "afterLeave", this.$$.onAfterLeave);
   }
 
   open(props) {

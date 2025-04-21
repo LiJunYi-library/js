@@ -8,36 +8,18 @@
 
 .iconfont {
   font-family: "iconfont" !important;
-  font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-display: fallback;
 }
 
-
-
 .loading-icon {
-  --color: inherit;
-  height: 24px;
-  width: 24px;
-  line-height: 24px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  fill: currentColor;
-  color: var(--color);
-  font-size: inherit;
+  font-family: "iconfont" !important;
+  font-style: normal;
   animation: rotating 2s linear infinite;
 }
 
-@keyframes rotating {
-  0% {
-    transform: rotate(0);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
+.loading-icon::before {
+  content: '\e607';
 }

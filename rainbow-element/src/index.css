@@ -1,5 +1,37 @@
 :root {
     --r-gap: 10px;
     --primary-color: #ff5500;
+    --primary-disabled-color: #e2733b;
     --primary-loading-color: #e2733b;
+    --primary-hover-color: rgb(255, 116, 73);
+    --primary-active-color: #ddff00;
+
+
+    --success-color: #09ff00;
+    --success-disabled-color: #09ff00;
+    --success-loading-color: #09ff00;
+    --success-hover-color: #09ff00;
+    --success-active-color: #09ff00;
+
+}
+
+
+@keyframes rotating {
+    0% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotatingCenter {
+    0% {
+        transform: translate(-50%, -50%) rotate(0);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }

@@ -1,0 +1,91 @@
+ .button {
+     cursor: pointer;
+     display: inline-flex;
+     align-items: center;
+     background-color: var(--primary-color);
+     padding: 3px 10px;
+     border-radius: 3px;
+     color: white;
+     font-size: 14px;
+
+     .r-prve,
+     .r-next {
+         font-family: "iconfont" !important;
+
+         &::before {
+             content: '';
+         }
+     }
+
+     &:hover {
+         background: var(--primary-hover-color);
+     }
+
+     &:active {
+         background: var(--primary-active-color);
+     }
+
+     &[css-name~="disabled"] {
+         background: var(--primary-disabled-color);
+     }
+
+     &[css-name~="loading"] {
+         background: var(--primary-loading-color);
+         cursor: not-allowed;
+
+         .r-prve {
+             animation: rotating 2s linear infinite;
+
+             &::before {
+                 content: '\e607';
+             }
+         }
+     }
+
+     &[loading-type~="center"] {
+         position: relative;
+
+         &[css-name~="loading"] {
+             color: var(--primary-loading-color);
+
+             .r-prve {
+                 position: absolute;
+                 left: 50%;
+                 top: 50%;
+                 animation: rotatingCenter 2s linear infinite;
+                 color: white;
+
+                 &::before {
+                     content: '\e607';
+                 }
+             }
+         }
+     }
+
+
+     &[loading-type~="right"] {
+         &[css-name~="loading"] {
+             .r-prve {
+                 animation: none;
+
+                 &::before {
+                     content: '';
+                 }
+             }
+
+             .r-next {
+                 animation: rotating 2s linear infinite;
+
+                 &::before {
+                     content: '\e607';
+                 }
+             }
+         }
+     }
+
+
+ }
+
+ //  .button[theme="info"] {
+ //     background-color: var(--success-color);
+ //  }

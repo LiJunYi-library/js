@@ -15,8 +15,6 @@ export class RAsyncClick extends RainbowElement {
       if (this.disabled === true) return;
       if (this.$$.loading === true) return;
       this.$$.loading = true;
-      this.shadowRoot.insertBefore(this.$$.prveSlot, this.$$.defaultSlot);
-      this.shadowRoot.appendChild(this.$$.nextSlot);
       this.cssList.add("loading");
       const res = this.$$.onclick_(...args);
       if (res instanceof Promise) {
@@ -27,8 +25,6 @@ export class RAsyncClick extends RainbowElement {
     },
     close: () => {
       this.$$.loading = false;
-      this.shadowRoot.removeChild(this.$$.prveSlot);
-      this.shadowRoot.removeChild(this.$$.nextSlot);
       this.cssList.remove("loading");
       this.$$.onfinally();
     },
@@ -46,7 +42,9 @@ export class RAsyncClick extends RainbowElement {
   constructor(...arg) {
     super(...arg);
     this.attachShadow({ mode: "open" });
+    this.shadowRoot.appendChild(this.$$.prveSlot);
     this.shadowRoot.appendChild(this.$$.defaultSlot);
+    this.shadowRoot.appendChild(this.$$.nextSlot);
   }
 
   connectedCallback(...arg) {

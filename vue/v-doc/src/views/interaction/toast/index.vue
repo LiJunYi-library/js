@@ -1,22 +1,25 @@
 <template>
-  <div class="pulldown-demo">
-    <button class="tttt" @click="click">click</button>
-    <button class="tttt" @click="close">close</button>
-    <button class="tttt" @click="click2">click2</button>
-    <button class="tttt" @click="close2">close</button>
-    <button class="tttt" @click="click3">click3</button>
-    <button class="tttt" @click="close3">close</button>
+  <div class="toast-demo">
+    <div style="display: flex;">
+      <button class="tttt" @click="click">click</button>
+      <button class="tttt" @click="close">close</button>
+      <button class="tttt" @click="click2">click</button>
+      <button class="tttt" @click="close2">close</button>
+      <button class="tttt" @click="click3">click3</button>
+      <button class="tttt" @click="close3">close</button>
+      <button class="tttt" @click="toast">toast</button>
+    </div>
   </div>
 </template>
 <script setup lang="jsx">
-import { ref, reactive, render } from 'vue'
+import { ref } from 'vue'
 
 const name = ref('name')
-
 const p = { text: 'zzzzzz', loading: true, }
 
-function click(params) {
-  rainbow.toast.show(p)
+
+async function click(params) {
+  rainbow.toast.open(p)
 }
 
 function close(params) {
@@ -53,69 +56,8 @@ function close3(params) {
 }
 
 
-
+function toast(params) {
+  rainbow.toast.show(p)
+}
 
 </script>
-
-<style lang="scss">
-.pulldown-demo {
-  r-pulldown.select-pulldown {
-    .r-pulldown-default-icon::after {
-      content: '\e745';
-    }
-  }
-
-  .my-pulldown {
-    background: cyan;
-  }
-
-  .my-pulldown-top {
-    --r-placement: top;
-  }
-
-  .my-pulldown-bottom {
-    --r-placement: bottom;
-  }
-
-  .my-pulldown-left {
-    --r-placement: left;
-  }
-
-  .my-pulldown-right {
-    --r-placement: right;
-  }
-
-  .my-pulldown-top-left {
-    --r-placement: top|left;
-  }
-
-  .my-pulldown-top-right {
-    --r-placement: right|top;
-  }
-
-  .my-pulldown-bottom-left {
-    --r-placement: bottom|left;
-  }
-
-  .my-pulldown-bottom-right {
-    --r-placement: bottom|right;
-  }
-}
-
-
-r-dialog.my-pulldown-dialog-top {
-  --r-orientation: bottom;
-}
-
-r-dialog.my-pulldown-dialog-bottom {
-  --r-orientation: top;
-}
-
-r-dialog.my-pulldown-dialog-left {
-  --r-orientation: right;
-}
-
-r-dialog.my-pulldown-dialog-right {
-  --r-orientation: left;
-}
-</style>

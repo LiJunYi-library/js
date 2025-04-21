@@ -6,15 +6,19 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+  <script src="//apapia-config.manmanbuy.com/cdn/eruda/2.3.3/eruda.min.js"></script>
+  <script>  eruda.init(); </script>
   <title>
     <%= htmlWebpackPlugin.options.title %>
   </title>
 </head>
 
-<body>
+<body class="bb">
   <!-- <script src="//apapia-config.manmanbuy.com/cdn/eruda/2.3.3/eruda.min.js"></script>
   <script>eruda.init()</script> -->
+  <div id="apapia-config"></div>
   <div id="app"></div>
+
 </body>
 
 </html>

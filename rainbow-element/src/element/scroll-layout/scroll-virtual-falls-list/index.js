@@ -6,7 +6,12 @@ import {
   arrayLoop,
 } from "@rainbow_ljy/rainbow-js";
 import { RainbowElement } from "../../base/index.js";
-import { findParentByLocalName, createCustomEvent, renderChildren } from "../../../utils/index.js";
+import {
+  findParentByLocalName,
+  createCustomEvent,
+  renderChildren,
+  getOffsetTop,
+} from "../../../utils/index.js";
 import "./index.css";
 
 class ItemCache {
@@ -55,12 +60,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
       start: undefined,
       end: undefined,
     },
-    // recycle: {
-    //   divs: [],
-    // },
     createElement: () => {
-      // let node = this.$$.recycle.divs.shift();
-      // if (node) return node;
       let node = document.createElement("div");
       this.$$.resizeObserver.observe(node);
       return node;
@@ -70,6 +70,8 @@ export class RScrollVirtualFallsList extends RainbowElement {
       this.$$.layout(false);
     },
     findIndex: (scrollTop) => {
+      const first = this.value[0];
+      if (!first?.__cache__) return 0;
       return arrayBinaryFindIndex(
         this.value,
         (item) => {
@@ -85,11 +87,20 @@ export class RScrollVirtualFallsList extends RainbowElement {
     falls: {
       list: [],
     },
+    create__cache__: (o) => {
+      Object.defineProperties(o, {
+        __cache__: {
+          value: new ItemCache(),
+          configurable: true,
+        },
+      });
+      return o;
+    },
     getCssValues: () => {
       const { rAvgHeight, rGap, rColumnGap, rRowGap } = this.$.DATA;
       const columnGap = rColumnGap || rGap || 0;
       const rowGap = rRowGap || rGap || 0;
-      const offsetTop = this.$.getOffsetTop(this);
+      const offsetTop = getOffsetTop(this, this.$$.scrollParent);
       const recycleTop = -window.innerHeight + offsetTop;
       const recycleBottom = window.innerHeight * 2 + offsetTop;
       const scrollTop = this.$$.scrollParent.scrollTop;
@@ -99,6 +110,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
       if (!this.$$.scrollParent) return;
       const { scrollTop, recycleBottom, recycleTop, rowGap } = this.$$.getCssValues();
       let start = this.$$.findIndex(scrollTop);
+      // console.log("start", start);
       if (start === -1) start = 0;
       let end = start + 30;
       if (end > this.value.length) end = this.value.length;
@@ -107,7 +119,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
       this.$$.cache.end = end;
       this.$$.preLoadIndex = end;
       if (isForce === false && isRender === false) return;
-      console.log("start", start);
+      // console.log("start", start);
       let startItem = this.value[start];
       if (!startItem) return;
       let list = this.value.slice(start, end);
@@ -134,7 +146,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
         },
         onBeforeInsertNode: (val, index, key) => {
           minColumn = getMinHeightItem(this.$$.falls.list);
-          if (!val.item.__cache__) val.item.__cache__ = new ItemCache();
+          if (!val.item.__cache__) this.$$.create__cache__(val.item);
           __cache__ = val.item.__cache__;
           __cache__.list = this.$$.falls.list.map((el) => ({ ...el }));
         },
@@ -158,7 +170,6 @@ export class RScrollVirtualFallsList extends RainbowElement {
         },
         onRemoveNode: (ele, key) => {
           ele.setAttribute("key", "");
-          // this.$$.recycle.divs.push(ele);
           this.$$.resizeObserver.unobserve(ele);
         },
       });
@@ -192,7 +203,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
       if (!item) return;
       const { scrollTop, recycleBottom, recycleTop, rowGap, rAvgHeight } = this.$$.getCssValues();
       let __cache__ = new ItemCache();
-      if (!item.__cache__) item.__cache__ = new ItemCache();
+      if (!item.__cache__) this.$$.create__cache__(item);
       __cache__ = item.__cache__;
       __cache__.list = this.$$.falls.list.map((el) => ({ ...el }));
       // console.log(item);
@@ -248,7 +259,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
     this.$$.backstage.stop();
   }
 
-  $onRender() {
+  $render() {
     this.$$.layout();
   }
 }

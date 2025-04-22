@@ -2,7 +2,7 @@ r-scroll-virtual-grid-list {
     display: block;
     position: relative;
     --r-columns: 1;
-    --r-avg-height: 130px;
+    --r-avg-height: 140px;
     --r-column-gap: 10px;
     --r-row-gap: 10px;
 }

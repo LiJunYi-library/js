@@ -1,10 +1,11 @@
 import { arrayRewriteFunction, ListArray } from "@rainbow_ljy/rainbow-js";
+import { RainbowElement } from "../../base/index.js";
 import {
-  RainbowElement,
-  createCustomEvent,
   renderChildren,
   findParentByLocalName,
-} from "../../base/index.js";
+  createCustomEvent,
+  getOffsetTop,
+} from "../../../utils/index.js";
 import "./index.css";
 
 export class RScrollVirtualGridList extends RainbowElement {
@@ -54,7 +55,7 @@ export class RScrollVirtualGridList extends RainbowElement {
       const columnGap = rColumnGap || rGap || 0;
       const rowGap = rRowGap || rGap || 0;
       // console.log(columnGap);
-      const offsetTop = this.$.getOffsetTop(this);
+      const offsetTop = getOffsetTop(this, this.$$.scrollParent);
       const scrollTop = this.$$.scrollParent.scrollTop;
       let recycleCount = Math.ceil(window.innerHeight / (rAvgHeight + columnGap)) * this.$$columns;
       let nth = Math.floor((scrollTop - offsetTop) / (rAvgHeight + columnGap)) * this.$$columns;
@@ -142,15 +143,15 @@ export class RScrollVirtualGridList extends RainbowElement {
 
   $onStyleChang(...arg) {
     super.$onStyleChang(...arg);
-    this.$onRender();
+    this.$$.layout();
   }
 
   $onWidthChange(...arg) {
     super.$onWidthChange(...arg);
-    this.$onRender();
+    this.$$.layout();
   }
 
-  $onRender() {
+  $render() {
     this.$$.layout();
   }
 }

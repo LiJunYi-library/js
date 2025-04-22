@@ -284,7 +284,7 @@ export function findParentByLocalName(name, node) {
 
 export function getOffsetTop(node, p, num = 0) {
   if (!node) return num;
-  if (node.offsetParent === p) return num;
+  if (node === p) return num;
   let top = num + node?.offsetTop ?? 0;
   return getOffsetTop(node.offsetParent, p, top);
 }

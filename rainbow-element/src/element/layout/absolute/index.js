@@ -8,15 +8,15 @@ export class RAbsolute extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.$onRender();
+    this.$render();
   }
 
   $onStyleChang(...arg) {
     super.$onChildrenChanage(...arg);
-    this.$onRender();
+    this.$render();
   }
 
-  $onRender() {
+  $render() {
     let { rPosition } = this.$.DATA;
     this.cssName = `r-absolute-${rPosition}`;
     console.log([this])

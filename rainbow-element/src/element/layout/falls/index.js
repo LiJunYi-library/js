@@ -13,30 +13,30 @@ export class RFalls extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.$onRender();
+    this.$render();
   }
 
   $onWidthChange(...arg) {
     super.$onWidthChange(...arg);
-    this.$onRender();
+    this.$render();
   }
 
   $onChildrenHeightChange(...arg) {
     super.$onChildrenHeightChange(...arg);
-    this.$onRender();
+    this.$render();
   }
 
   $onChildrenChanage(...arg) {
     super.$onChildrenChanage(...arg);
-    this.$onRender();
+    this.$render();
   }
 
   $onStyleChang(...arg) {
     super.$onStyleChang(...arg);
-    this.$onRender();
+    this.$render();
   }
 
-  $onRender() {
+  $render() {
     let { rMinAutoWidth, rColumns, rGap, rRowGap, rColumnGap } = this.$.DATA;
     // console.log(rMinAutoWidth, rColumns, rGap, rRowGap, rColumnGap);
     const col = (() => {

@@ -5,15 +5,15 @@ export declare interface FetchConfig<T = ANY, D = ANY> extends RequestInit {
   url?: string;
   urlParams?: ANY;
   body?: ANY;
-  baseUrl?: string = "";
-  time?: number = 30000;
-  isDownloadFile?: boolean = false;
+  baseUrl?: string ;
+  time?: number ;
+  isDownloadFile?: boolean ;
   fileName?: string;
   isFormBody?: boolean;
   isJsonBody?: boolean;
-  loading?: boolean = false;
-  begin?: boolean = false;
-  error?: boolean = false;
+  loading?: boolean ;
+  begin?: boolean ;
+  error?: boolean ;
   data?: ANY;
   errorData?: ANY;
 
@@ -51,5 +51,5 @@ export class Fetch<T = any, D = any> {
   awaitBeginSend: (config: FetchConfig<T, D>) => Promise<D>;
   abortPrve: () => void;
   abort: () => void;
-  constructor(props?: FetchConfig<T, D> = {})
+  constructor(props?: FetchConfig<T, D> )
 }

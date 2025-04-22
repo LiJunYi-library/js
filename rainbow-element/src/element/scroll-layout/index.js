@@ -1,4 +1,5 @@
-export * from "./nested-scroll/index.js";
+// export * from "./nested-scroll/index.js";
+export * from "./scroll/index.js";
 // export * from "./rolling-text-num/index.js";
 // export * from "./rolling-text/index.js";
 // export * from "./circle/index.js";

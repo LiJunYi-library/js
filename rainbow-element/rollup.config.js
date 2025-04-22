@@ -7,6 +7,8 @@ import serve from "rollup-plugin-serve";
 import livereload from "rollup-plugin-livereload";
 import staticFiles from "rollup-plugin-static-files";
 import copy from "rollup-plugin-copy";
+import scss from 'rollup-plugin-scss';
+import autoprefixer from 'autoprefixer';
 
 function changeIconfontPath(fmt = (match, p1) => `url(font/${p1})`) {
  return (css) => {
@@ -57,6 +59,11 @@ export default ()=> {
     resolve(), // 查找外部模块
     commonjs(), // 将 CommonJS 转换为 ES6 模块
     terser(), // 压缩代码
+    scss({
+      output: true,
+      failOnError: true,
+      processor: () => postcss([autoprefixer()]),
+    }),
     postcss({
       extract: true, // 提取 CSS 到单独的文件
       extract: "index.css", // 指定输出文件名

@@ -2,7 +2,6 @@ import "./index.css";
 import { RainbowElement } from "../../base/index.js";
 import {
   findParentByLocalName,
-  toggleClass,
   getOffsetTop,
   addEventListenerOnce,
   functionInvokeKey,

@@ -19,6 +19,7 @@ export class RScrollVirtualGridList extends RainbowElement {
   });
 
   keyExtractor = (val) => val.item;
+  onrenderItems = () => undefined;
 
   get $$columns() {
     let { rColumns, rMinAutoWidth } = this.$.DATA;
@@ -84,13 +85,17 @@ export class RScrollVirtualGridList extends RainbowElement {
           node.style.height = `${rAvgHeight}px`;
           node.style.position = "absolute";
           this.$$.measure(node, val, rAvgHeight, rowGap, columnGap);
-          this.dispatchEvent(createCustomEvent("renderList", { ele: node, ...val, key }));
+          const event = createCustomEvent("renderItems", { ele: node, ...val, key });
+          this.dispatchEvent(event);
+          this.onrenderItems(event);
           return node;
         },
         onCacheNode: (node, val, index, key) => {
           node.setAttribute("key", key);
           this.$$.measure(node, val, rAvgHeight, rowGap, columnGap);
-          this.dispatchEvent(createCustomEvent("renderList", { ele: node, ...val, key }));
+          const event = createCustomEvent("renderItems", { ele: node, ...val, key });
+          this.dispatchEvent(event);
+          this.onrenderItems(event);
           return node;
         },
         onRemoveNode: (node, key) => {

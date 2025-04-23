@@ -1,5 +1,9 @@
 <template>
-  <r-scroll-virtual-falls-list :ref="onRef" v-model="list" @renderList="onRenderList" />
+  <r-scroll-virtual-falls-list
+    v-model="list"
+    :onrenderItems="onRenderItems"
+    :keyExtractor="props.keyExtractor"
+  />
 </template>
 
 <script setup lang="jsx">
@@ -15,7 +19,7 @@ const props = defineProps({
 
 const list = computed({
   set(val) {
-    if (props.listHook.list) return props.listHook.list = val;
+    if (props.listHook.list) return (props.listHook.list = val);
     emit("update:modelValue", val);
   },
   get() {
@@ -27,7 +31,7 @@ const list = computed({
 const refList = computed(() => {
   if (props.listHook.list) return props.listHook.list;
   return props.modelValue;
-})
+});
 
 const Item = defineComponent({
   inheritAttrs: false,
@@ -36,19 +40,14 @@ const Item = defineComponent({
     slots: Object,
   },
   setup(props) {
-    onMounted(() => {
-    })
+    onMounted(() => {});
     return () => {
       return props?.slots?.default?.(props.event);
     };
   },
 });
 
-function onRef(el) {
-  if (el) el.keyExtractor = props.keyExtractor;
-}
-
-function onRenderList(event) {
+function onRenderItems(event) {
   event.item = refList.value[event.index];
   render(
     <Item

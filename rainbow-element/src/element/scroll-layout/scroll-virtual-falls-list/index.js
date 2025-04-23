@@ -37,6 +37,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
   });
 
   keyExtractor = (val) => val.item;
+  onrenderItems = () => undefined;
 
   get $$columns() {
     let { rColumns, rMinAutoWidth } = this.$.DATA;
@@ -141,12 +142,16 @@ export class RScrollVirtualFallsList extends RainbowElement {
           ele.setAttribute("key", key);
           ele.classList.add("r-scroll-virtual-falls-list-item");
           ele.style.position = "absolute";
-          this.dispatchEvent(createCustomEvent("renderList", { ele: ele, ...val, key }));
+          const event = createCustomEvent("renderItems", { ele: ele, ...val, key });
+          this.dispatchEvent(event);
+          this.onrenderItems(event);
           return ele;
         },
         onCacheNode: (ele, val, index, key) => {
           ele.setAttribute("key", key);
-          this.dispatchEvent(createCustomEvent("renderList", { ele: ele, ...val, key }));
+          const event = createCustomEvent("renderItems", { ele: ele, ...val, key });
+          this.onrenderItems(event);
+          this.dispatchEvent(event);
           return ele;
         },
         onBeforeInsertNode: (val, index, key) => {

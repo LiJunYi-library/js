@@ -11,6 +11,7 @@ import {
   createCustomEvent,
   renderChildren,
   getOffsetTop,
+  getBoundingClientRect,
 } from "../../../utils/index.js";
 import "./index.css";
 
@@ -45,13 +46,16 @@ export class RScrollVirtualFallsList extends RainbowElement {
 
   $$ = {
     resizeObserver: new ResizeObserver((entries) => {
+      let isChange = false;
       entries.forEach((entrie) => {
         const offset = getBoundingClientRect(entrie.target);
-        if (entrie.target?.__bindData__?.__cache__) {
+        const __cache__ = entrie.target?.__bindData__?.__cache__;
+        if (__cache__ && __cache__.height !== offset.height) {
+          isChange = true;
           entrie.target.__bindData__.__cache__.height = offset.height;
         }
       });
-      this.$$.layout();
+      if (isChange) this.$$.layout();
     }),
     renderChildren: renderChildren({ parentNode: this }),
     value: [],
@@ -110,23 +114,19 @@ export class RScrollVirtualFallsList extends RainbowElement {
       if (!this.$$.scrollParent) return;
       const { scrollTop, recycleBottom, recycleTop, rowGap } = this.$$.getCssValues();
       let start = this.$$.findIndex(scrollTop);
-      // console.log("start", start);
       if (start === -1) start = 0;
       let end = start + 30;
       if (end > this.value.length) end = this.value.length;
       let isRender = !(this.$$.cache.start === start && this.$$.cache.end === end);
       this.$$.cache.start = start;
       this.$$.cache.end = end;
-      this.$$.preLoadIndex = end;
       if (isForce === false && isRender === false) return;
-      // console.log("start", start);
       let startItem = this.value[start];
       if (!startItem) return;
       let list = this.value.slice(start, end);
       let renderList = list.map((item, sub) => ({ index: start + sub, item, data: item }));
       if (startItem.__cache__) this.$$.falls.list = startItem.__cache__.list;
       else this.$$.falls.list = initList.call(this);
-      // console.log(startItem);
       let minColumn = getMinHeightItem(this.$$.falls.list);
       let __cache__ = new ItemCache();
       this.$$.renderChildren.renderList(renderList, {
@@ -166,13 +166,13 @@ export class RScrollVirtualFallsList extends RainbowElement {
           __cache__.vBottom = minColumn.height + recycleBottom;
           __cache__.calculateList = this.$$.falls.list.map((el) => ({ ...el }));
           ele.__bindData__ = val.item;
-          // console.log(__cache__);
         },
         onRemoveNode: (ele, key) => {
           ele.setAttribute("key", "");
           this.$$.resizeObserver.unobserve(ele);
         },
       });
+      this.$$.preLoadIndex = end;
       this.$$.preLoads();
       this.$$.setHeight();
       this.$$.backstage.reStart();
@@ -180,8 +180,8 @@ export class RScrollVirtualFallsList extends RainbowElement {
     setHeight: () => {
       const calculateList = this.value.at(-1)?.__cache__?.calculateList;
       if (!calculateList?.length) {
-        const { rAvgHeight, columnGap } = this.$$.getCssValues();
-        this.style.height = `${(rAvgHeight + columnGap) * Math.ceil(this.value.length / this.$$columns) - columnGap}px`;
+        const { rAvgHeight, rowGap } = this.$$.getCssValues();
+        this.style.height = `${(rAvgHeight + rowGap) * Math.ceil(this.value.length / this.$$columns) - rowGap}px`;
         return;
       }
       this.style.height = `${getMaxHeightItem(calculateList).height}px`;
@@ -198,7 +198,6 @@ export class RScrollVirtualFallsList extends RainbowElement {
       });
     },
     preLoad: () => {
-      // console.log(this.$$.preLoadIndex);
       const item = this.value[this.$$.preLoadIndex];
       if (!item) return;
       const { scrollTop, recycleBottom, recycleTop, rowGap, rAvgHeight } = this.$$.getCssValues();
@@ -206,7 +205,6 @@ export class RScrollVirtualFallsList extends RainbowElement {
       if (!item.__cache__) this.$$.create__cache__(item);
       __cache__ = item.__cache__;
       __cache__.list = this.$$.falls.list.map((el) => ({ ...el }));
-      // console.log(item);
       let minColumn = getMinHeightItem(this.$$.falls.list);
       if (!__cache__.height) __cache__.height = rAvgHeight;
       if (minColumn.height) minColumn.height = minColumn.height + rowGap;
@@ -223,7 +221,6 @@ export class RScrollVirtualFallsList extends RainbowElement {
       () => {
         this.$$.preLoads(50);
         this.$$.setHeight();
-        // console.log(this.$$.preLoadIndex);
       },
       () => this.$$.preLoadIndex >= this.value.length,
     ),
@@ -257,6 +254,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
     super.disconnectedCallback(...arg);
     this.$$.scrollParent.removeEventListener("scroll", this.$$.onScroll);
     this.$$.backstage.stop();
+    this.$$.resizeObserver.disconnect();
   }
 
   $render() {
@@ -296,25 +294,43 @@ function getMaxHeightItem(list) {
 }
 
 function createBackstage(callback, stopFmt) {
-  let timer;
-  let requestTimer = requestIdleCallback || requestAnimationFrame;
-  let cancelRequestTimer = requestIdleCallback ? cancelIdleCallback : cancelAnimationFrame;
+  let timer = null;
+  const requestTimer = requestIdleCallback || requestAnimationFrame;
+  const cancelRequestTimer = requestIdleCallback ? cancelIdleCallback : cancelAnimationFrame;
 
   function idleCallback(deadline) {
-    stop();
-    if (stopFmt()) return;
-    if (deadline.timeRemaining() > 0) {
-      callback();
-      if (!deadline.didTimeout) timer = requestTimer(idleCallback);
+    if (stopFmt()) {
+      stop();
+      return;
+    }
+
+    const hasTimeRemaining =
+      typeof deadline === "object" && deadline.timeRemaining && deadline.timeRemaining() > 0;
+
+    if (hasTimeRemaining || typeof deadline === "number") {
+      try {
+        callback(); // 执行回调函数
+      } catch (error) {
+        console.error("Error in callback:", error);
+      }
+
+      if ((typeof deadline === "object" && !deadline.didTimeout) || typeof deadline === "number") {
+        timer = requestTimer(idleCallback);
+      }
     }
   }
 
   function start() {
-    timer = requestTimer(idleCallback);
+    if (!timer) {
+      timer = requestTimer(idleCallback);
+    }
   }
 
   function stop() {
-    cancelRequestTimer(timer);
+    if (timer) {
+      cancelRequestTimer(timer);
+      timer = null;
+    }
   }
 
   function reStart() {
@@ -323,11 +339,4 @@ function createBackstage(callback, stopFmt) {
   }
 
   return { start, stop, reStart };
-}
-
-function getBoundingClientRect(ele = document.createElement("div")) {
-  let offset = ele.getBoundingClientRect();
-  return {
-    height: Number(offset.height.toFixed(2)),
-  };
 }

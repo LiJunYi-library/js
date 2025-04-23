@@ -4,7 +4,7 @@ import { useState, PureComponent } from "react";
 import { arrayLoopMap } from "@rainbow_ljy/rainbow-js";
 import ReactDOM from "react-dom/client";
 import { useMemo } from "react";
-import { RRVirtualFallsList,RRVirtualGridList } from "./r-view";
+import { RRVirtualFallsList, RRVirtualGridList } from "./r-view";
 
 const d = arrayLoopMap(50, (value) => ({
   value,
@@ -24,9 +24,25 @@ function App() {
     list.splice(index, 1);
   }
 
+  const p = { text: "zzzzzz", loading: true };
+
+  async function click() {
+    rainbow.toast.open(p);
+  }
+
+  function close() {
+    rainbow.toast.close(p);
+  }
+
   return (
     <div className="App">
-      <r-scroll-view>
+      <button  onClick={click}>
+        click
+      </button>
+      <button  onClick={close}>
+        close
+      </button>
+      {/* <r-scroll-view>
         <r-scroll-refresh slot="r-scroll-top"></r-scroll-refresh>
 
         <RRVirtualFallsList value={list}>
@@ -39,7 +55,7 @@ function App() {
             </div>
           )}
         </RRVirtualFallsList>
-      </r-scroll-view>
+      </r-scroll-view> */}
     </div>
   );
 }

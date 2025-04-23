@@ -3,7 +3,10 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import '@rainbow_ljy/rainbow-element'
+import '@rainbow_ljy/rainbow-element/main'
+
+console.log(rainbow);
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

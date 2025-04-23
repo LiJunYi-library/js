@@ -76,6 +76,10 @@ export class RScrollVirtualFallsList extends RainbowElement {
     findIndex: (scrollTop) => {
       const first = this.value[0];
       if (!first?.__cache__) return 0;
+      const last = this.value.at(-1);
+      if (last.__cache__) {
+        if (scrollTop > last.__cache__.vBottom) return this.value.length - 1;
+      }
       return arrayBinaryFindIndex(
         this.value,
         (item) => {
@@ -110,12 +114,13 @@ export class RScrollVirtualFallsList extends RainbowElement {
       const scrollTop = this.$$.scrollParent.scrollTop;
       return { scrollTop, recycleBottom, recycleTop, offsetTop, rowGap, columnGap, rAvgHeight };
     },
-    layout: (isForce = true) => {
+    layout: (isForce = true, startIndex) => {
       if (!this.$$.scrollParent) return;
       const { scrollTop, recycleBottom, recycleTop, rowGap } = this.$$.getCssValues();
       let start = this.$$.findIndex(scrollTop);
       if (start === -1) start = 0;
-      let end = start + 30;
+      if (typeof startIndex === "number") start = startIndex;
+      let end = start + 50;
       if (end > this.value.length) end = this.value.length;
       let isRender = !(this.$$.cache.start === start && this.$$.cache.end === end);
       this.$$.cache.start = start;
@@ -257,8 +262,22 @@ export class RScrollVirtualFallsList extends RainbowElement {
     this.$$.resizeObserver.disconnect();
   }
 
-  $render() {
-    this.$$.layout();
+  $onStyleChang(...arg) {
+    super.$onStyleChang(...arg);
+    this.$render();
+  }
+
+  $onWidthChange(...arg) {
+    super.$onWidthChange(...arg);
+    this.$render();
+  }
+
+  $layout(...args) {
+    this.$$.layout(...args);
+  }
+
+  $render(isForce = true) {
+    this.$$.layout(isForce, 0);
   }
 }
 

@@ -360,4 +360,8 @@ export class RainbowElement extends HTMLElement {
   $render() {
     // console.log('render')
   }
+
+  $layout() {
+    // console.log('layout')
+  }
 }

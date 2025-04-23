@@ -151,7 +151,7 @@ export class RScrollVirtualGridList extends RainbowElement {
     this.$$.layout();
   }
 
-  $render() {
-    this.$$.layout();
+  $render(...arg) {
+    this.$$.layout(...arg);
   }
 }

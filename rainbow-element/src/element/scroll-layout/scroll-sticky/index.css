@@ -1,13 +1,9 @@
 r-scroll-sticky {
     display: block;
     position: sticky;
-    z-index: 2;  
+    z-index: 2;
 }
 
-.r-scroll-sticky-measure {
-    width: 0;
-    height: 0;
-}
 
 r-scroll-fixed {
     display: block;
@@ -15,4 +11,3 @@ r-scroll-fixed {
     width: 100%;
     z-index: 2;
 }
-

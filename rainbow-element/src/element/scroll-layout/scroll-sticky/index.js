@@ -1,6 +1,12 @@
 import "./index.css";
 import { RainbowElement } from "../../base/index.js";
-import { findParentByLocalName, toggleClass } from "../../../utils/index.js";
+import {
+  findParentByLocalName,
+  toggleClass,
+  getOffsetTop,
+  addEventListenerOnce,
+  functionInvokeKey,
+} from "../../../utils/index.js";
 
 export class RScrollSticky extends RainbowElement {
   static observedAttributes = this.$registerProps({
@@ -8,12 +14,9 @@ export class RScrollSticky extends RainbowElement {
     bottom: Number,
     "r-active-top": Number, // r-scroll-sticky-act 的高度
     "r-active-bottom": Number, // r-scroll-sticky-act 的高度
-    "r-scroll-anima": Number,
-    "r-opacity-ani": Boolean,
     "r-opacity-top": Number,
-    "r-visible-ani": Boolean,
-    "r-visible-top": Number,
-    "r-opacity-delay": Number,
+    "r-opacity-bottom": Number,
+    "r-opacity-sequence": String, // reverse none
   });
 
   $$ = {
@@ -23,22 +26,43 @@ export class RScrollSticky extends RainbowElement {
       isStickyTop: false,
       isStickyBottom: false,
       isStickyAct: false,
+      opacity: {
+        reverse: (scrollTop, top, rOpacityTop) => {
+          const opacity = 1 - Math.min(1, scrollTop / (rOpacityTop - top));
+          this.style.opacity = opacity;
+        },
+        default: (scrollTop, top, rOpacityTop) => {
+          const opacity = Math.min(1, scrollTop / (rOpacityTop - top));
+          this.style.opacity = opacity;
+        },
+      },
     },
     bottom: {
       isSticky: false,
       isStickyTop: false,
       isStickyBottom: false,
       isStickyAct: false,
+      opacity: {
+        reverse: (scrollBottom, bottom, rOpacityBottom) => {
+          const opacity = 1 - Math.min(1, scrollBottom / (rOpacityBottom - bottom));
+          this.style.opacity = opacity;
+        },
+        default: (scrollBottom, bottom, rOpacityBottom) => {
+          const opacity = Math.min(1, scrollBottom / (rOpacityBottom - bottom));
+          this.style.opacity = opacity;
+        },
+      },
     },
     scrollParent: document.createElement("div"),
-    onScroll: (event) => {
-      let { scrollTop } = event;
-      const offsetTop = this.$.getOffsetTop(this);
+    onScroll: () => {
+      const scrollTop = this.$$.scrollParent.scrollTop;
+      const offsetTop = getOffsetTop(this, this.$$.scrollParent);
       this.$$.stickyBottom(scrollTop, offsetTop);
       this.$$.stickyTop(scrollTop, offsetTop);
     },
     stickyTop: (scrollTop, offsetTop) => {
-      const { top, rActiveTop } = this.$.DATA;
+      const { top, rActiveTop, rOpacityTop, rOpacitySequence } = this.$.DATA;
+      if (typeof top !== "number") return;
       let stickyTop = offsetTop - scrollTop;
       if (Math.abs(stickyTop - top) < 0.5) stickyTop = top;
       this.$$.top.isSticky = top === stickyTop;
@@ -47,39 +71,59 @@ export class RScrollSticky extends RainbowElement {
       this.$$.top.isStickyAct = scrollTop >= rActiveTop;
       const { isSticky, isStickyAct, isStickyTop, isStickyBottom } = this.$$.top;
       const topClass = this.$$.class.top;
-      toggleClass(this, isSticky, topClass.isSticky, topClass.unSticky);
-      toggleClass(this, isStickyAct, topClass.isStickyAct, topClass.unStickyAct);
-      toggleClass(this, isStickyTop, topClass.isStickyTop, topClass.unStickyTop);
-      toggleClass(this, isStickyBottom, topClass.isStickyBottom, topClass.unStickyBottom);
+      this.cssList.toggle(isSticky, topClass.isSticky, topClass.unSticky);
+      this.cssList.toggle(isStickyAct, topClass.isStickyAct, topClass.unStickyAct);
+      this.cssList.toggle(isStickyTop, topClass.isStickyTop, topClass.unStickyTop);
+      this.cssList.toggle(isStickyBottom, topClass.isStickyBottom, topClass.unStickyBottom);
+      if (rOpacityTop) {
+        functionInvokeKey(this.$$.top.opacity, rOpacitySequence)(scrollTop, top, rOpacityTop);
+      }
     },
     stickyBottom: (scrollTop, offsetTop) => {
-      const { bottom, rActiveBottom } = this.$.DATA;
-      let stickyTop = offsetTop - scrollTop;
-      let pTop = Math.round(this.$$.scrollParent.offsetHeight - bottom - this.offsetHeight);
-      if (Math.abs(stickyTop - pTop) < 0.8) stickyTop = pTop;
-      this.$$.bottom.isSticky = pTop === stickyTop;
+      const { bottom, rActiveBottom, rOpacityBottom, rOpacitySequence } = this.$.DATA;
+      if (typeof bottom !== "number") return;
+      const height = this.$$.scrollParent.offsetHeight;
+      const scrollHeight = this.$$.scrollParent.scrollHeight;
+      let stickyBottom = height - offsetTop + scrollTop - this.offsetHeight;
+      if (Math.abs(stickyBottom - bottom) < 0.5) stickyBottom = bottom;
+      const scrollBottom = scrollHeight - scrollTop - height;
+      this.$$.bottom.isSticky = bottom === stickyBottom;
+      this.$$.bottom.isStickyAct = scrollBottom >= rActiveBottom;
       const { isSticky, isStickyAct, isStickyTop, isStickyBottom } = this.$$.bottom;
-      const bottomClass = this.$$.class.bottom;
-      toggleClass(this, isSticky, bottomClass.isSticky, bottomClass.unSticky);
-      // console.log(stickyTop);
+      const bClass = this.$$.class.bottom;
+      this.cssList.toggle(isSticky, bClass.isSticky, bClass.unSticky);
+      this.cssList.toggle(isStickyAct, bClass.isStickyAct, bClass.unStickyAct);
+      if (rOpacityBottom) {
+        functionInvokeKey(this.$$.bottom.opacity, rOpacitySequence)(
+          scrollBottom,
+          bottom,
+          rOpacityBottom,
+        );
+      }
     },
   };
 
   $$onGetClass() {
     return {
       top: {
-        isSticky: "r-scroll-sticky-sticky-top",
-        unSticky: "r-scroll-sticky-unsticky-top",
-        isStickyAct: "r-scroll-sticky-act-top",
-        unStickyAct: "r-scroll-sticky-unact-top",
+        isSticky: "r-scroll-sticky-top-sticky",
+        unSticky: "r-scroll-sticky-top-unsticky",
+        isStickyAct: "r-scroll-sticky-top-act",
+        unStickyAct: "r-scroll-sticky-top-unact",
         isStickyTop: "r-scroll-sticky-top-top",
-        unStickyTop: "r-scroll-sticky-untop-top",
-        isStickyBottom: "r-scroll-sticky-bottom-top",
-        unStickyBottom: "r-scroll-sticky-unbottom-top",
+        unStickyTop: "r-scroll-sticky-top-untop",
+        isStickyBottom: "r-scroll-sticky-top-bottom",
+        unStickyBottom: "r-scroll-sticky-top-unbottom",
       },
       bottom: {
-        isSticky: "r-scroll-sticky-sticky-bottom",
-        unSticky: "r-scroll-sticky-unsticky-bottom",
+        isSticky: "r-scroll-sticky-bottom-sticky",
+        unSticky: "r-scroll-sticky-bottom-unsticky",
+        isStickyAct: "r-scroll-sticky-bottom-act",
+        unStickyAct: "r-scroll-sticky-bottom-unact",
+        isStickyTop: "r-scroll-sticky-bottom-top",
+        unStickyTop: "r-scroll-sticky-bottom-untop",
+        isStickyBottom: "r-scroll-sticky-bottom-bottom",
+        unStickyBottom: "r-scroll-sticky-bottom-unbottom",
       },
     };
   }
@@ -91,17 +135,25 @@ export class RScrollSticky extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.$$.scrollParent = findParentByLocalName([
-      "r-scroll",
-      "r-scroll-view",
-      "r-nested-scroll",
-    ],this);
-    this.$$.scrollParent.addEventListener("scroll", this.$$.onScroll.bind(this));
+    const scrollName = ["r-scroll", "r-scroll-view", "r-nested-scroll"];
+    this.$$.scrollParent = findParentByLocalName(scrollName, this);
+    addEventListenerOnce(this.$$.scrollParent, "scroll", this.$$.onScroll);
+    this.$$.onScroll();
   }
 
   disconnectedCallback(...arg) {
     super.disconnectedCallback(...arg);
-    this.$$.scrollParent.removeEventListener("scroll", this.$$.onScroll.bind(this));
+    this.$$.scrollParent.removeEventListener("scroll", this.$$.onScroll);
+  }
+
+  $onStyleChang(...arg) {
+    super.$onStyleChang(...arg);
+    this.$$.onScroll();
+  }
+
+  $onResize(...arg) {
+    super.$onResize(...arg);
+    this.$$.onScroll();
   }
 }
 
@@ -109,53 +161,25 @@ export class RScrollFixed extends RScrollSticky {
   $$onGetClass() {
     return {
       top: {
-        isSticky: "r-scroll-fixed-fixed-top",
-        unSticky: "r-scroll-fixed-unfixed-top",
-        isStickyAct: "r-scroll-fixed-act-top",
-        unStickyAct: "r-scroll-fixed-unact-top",
+        isSticky: "r-scroll-fixed-top-fixed",
+        unSticky: "r-scroll-fixed-top-unfixed",
+        isStickyAct: "r-scroll-fixed-top-act",
+        unStickyAct: "r-scroll-fixed-top-unact",
         isStickyTop: "r-scroll-fixed-top-top",
-        unStickyTop: "r-scroll-fixed-untop-top",
-        isStickyBottom: "r-scroll-fixed-bottom-top",
-        unStickyBottom: "r-scroll-fixed-unbottom-top",
+        unStickyTop: "r-scroll-fixed-top-untop",
+        isStickyBottom: "r-scroll-fixed-top-bottom",
+        unStickyBottom: "r-scroll-fixed-top-unbottom",
       },
       bottom: {
-        isSticky: "r-scroll-fixed-fixed-bottom",
-        unSticky: "r-scroll-fixed-unfixed-bottom",
+        isSticky: "r-scroll-fixed-bottom-fixed",
+        unSticky: "r-scroll-fixed-bottom-unfixed",
+        isStickyAct: "r-scroll-fixed-bottom-act",
+        unStickyAct: "r-scroll-fixed-bottom-unact",
+        isStickyTop: "r-scroll-fixed-bottom-top",
+        unStickyTop: "r-scroll-fixed-bottom-untop",
+        isStickyBottom: "r-scroll-fixed-bottom-bottom",
+        unStickyBottom: "r-scroll-fixed-bottom-unbottom",
       },
     };
   }
 }
-
-// get $$opacityTop() {
-//     if (this.$attrs['opacity-top'] !== undefined) return this.$attrs['opacity-top']
-//     return this.$initTop
-// }
-
-// get $visibleTop() {
-//     if (this.$attrs['visible-top'] !== undefined) return this.$attrs['visible-top']
-//     return this.$$opacityTop
-// }
-
-// $$onScroll(event) {
-//   console.log("onScroll", event);
-//   // console.log(this.$attrs);
-//   // if (this.$attrs.top === undefined) return;
-//   // const { scrollTop, } = this.$scrollParent;
-//   // const { top, opacityDelay } = this.$attrs;
-//   // let oTop = Math.round(this.$getOffsetTop(this) - scrollTop);
-//   // this.$$isSticky = top === oTop;
-//   // this.$$isStickyTop = top >= oTop;
-//   // this.$$isStickyBottom = top <= oTop;
-//   // if (this.$attrs['active-top'] !== undefined) this.$$isStickyAct = scrollTop >= this.$attrs['active-top'];
-
-//   // const opacity = ((scrollTop - opacityDelay) / (this.$$opacityTop - top)).toFixed(3)
-//   // if (this.$attrs['opacity-ani'] === true) this.$$opacity = opacity
-//   // if (this.$attrs['opacity-ani'] === false) this.$$opacity = 1 - opacity
-
-//   // const visible = ((scrollTop) / (this.$visibleTop - top))
-//   // if (this.$attrs['visible-ani'] === true) this.$$display = visible > 1 ? 'block' : 'none';
-//   // if (this.$attrs['visible-ani'] === false) this.$$display = (1 - visible) < 0 ? 'none' : 'block';
-
-//   // this.$bindClass();
-//   // this.$bindStyle();
-// }

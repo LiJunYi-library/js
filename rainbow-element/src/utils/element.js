@@ -329,3 +329,13 @@ export function addEventListenerOnce(node, type, ls, config) {
   node.removeEventListener(type, ls, config);
   node.addEventListener(type, ls, config);
 }
+
+export function inv(node, type, ls, config) {
+  node.removeEventListener(type, ls, config);
+  node.addEventListener(type, ls, config);
+}
+
+export function functionInvokeKey(o = {}, key) {
+  const f = () => 0;
+  return o[key] || o["default"] || f;
+}

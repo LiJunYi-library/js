@@ -3,18 +3,14 @@ import { setTimeoutPromise } from "@rainbow_ljy/rainbow-js";
 import { RainbowElement } from "../../base/index.js";
 import { createCustomEvent, createElement, createSlot } from "../../../utils/index.js";
 
-export class RRefresh extends RainbowElement {
-  static observedAttributes = this.$registerProps({
-    "r-refresh-heignt": { type: String, default: "0" },
-    "r-max-refresh-heignt": { type: String, default: "0" },
-    "r-min-time": { type: String, default: "500" },
-  });
+export class RScrollWindow extends RainbowElement {
+  static observedAttributes = this.$registerProps({});
 
   $$ = {
     scrollView: createElement("div"),
-    defaultSlot: createSlot("slot", "r-refresh-default-slot", ""),
-    topSlot: createSlot("slot", "r-refresh-top-slot", "top"),
-    content: createElement("div", "r-refresh-content"),
+    defaultSlot: createSlot("slot", "r-scroll-window-default-slot", ""),
+    topSlot: createSlot("slot", "r-scroll-window-top-slot", "top"),
+    content: createElement("div", "r-scroll-window-content"),
   };
 
   constructor(...arg) {

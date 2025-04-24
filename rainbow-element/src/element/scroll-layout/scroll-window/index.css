@@ -1,8 +1,8 @@
-r-refresh {
+r-scroll-window {
     display: block;
 }
 
-r-refresh::part(r-refresh-content) {
+r-scroll-window::part(r-scroll-window-content) {
     display: block;
     filter: opacity(1);
 }

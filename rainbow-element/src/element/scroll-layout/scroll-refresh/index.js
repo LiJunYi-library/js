@@ -148,7 +148,7 @@ export class RScrollRefresh extends RainbowElement {
     this.classList.add("r-scroll-refresh");
     const pName = ["r-scroll", "r-scroll-view", "r-nested-scroll"];
     this.$$.scrollView = findParentByLocalName(pName, this);
-    this.$$.eventView = findParentByLocalName(["r-refresh"], this);
+    this.$$.eventView = findParentByLocalName(["r-scroll-window"], this);
     const opt = { passive: false, capture: true };
     addEventListenerOnce(this.$$eventView, "pointerdown", this.$$.pointerdown, opt);
     addEventListenerOnce(this.$$eventView, "pointermove", this.$$.pointermove, opt);

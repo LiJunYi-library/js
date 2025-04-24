@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <r-refresh class="scroll-refresh-demo">
+  <div class="scroll-refresh-demo">
+    <r-scroll-window>
       <r-scroll-refresh slot="top" :onrefresh="onrefresh"></r-scroll-refresh>
       <r-scroll @scroll="scroll">
         <!-- <r-scroll-refresh :onrefresh="onrefresh"></r-scroll-refresh> -->
@@ -10,7 +10,7 @@
         <div>123</div>
         <div style="font-size: 80px">{{ text }}</div>
       </r-scroll>
-    </r-refresh>
+    </r-scroll-window>
   </div>
 </template>
 <script setup>

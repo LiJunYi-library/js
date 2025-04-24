@@ -29,11 +29,10 @@ export class RScroll extends RainbowElement {
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     this.$$.refreshView = findParentByLocalName("r-refresh", this);
-    this.$$.refreshView?.$$?.bindEvents?.(this);
+    if (this.$$.refreshView) this.$$.refreshView.$$.scrollView = this;
   }
 
   disconnectedCallback(...arg) {
     super.disconnectedCallback(...arg);
-    this.$$.refreshView?.$$?.unbindEvents?.();
   }
 }

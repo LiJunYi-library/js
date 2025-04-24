@@ -1,7 +1,11 @@
 import "./index.css";
 import { setTimeoutPromise } from "@rainbow_ljy/rainbow-js";
 import { RainbowElement } from "../../base/index.js";
-import { findParentByLocalName } from "../../../utils/index.js";
+import {
+  findParentByLocalName,
+  addEventListenerOnce,
+  removeEventListener,
+} from "../../../utils/index.js";
 
 export class RScrollRefresh extends RainbowElement {
   static observedAttributes = this.$registerProps({
@@ -48,7 +52,8 @@ export class RScrollRefresh extends RainbowElement {
   }
 
   $$ = {
-    scrollParent: undefined,
+    scrollView: undefined,
+    eventView: undefined,
     loading: false,
     DATA: this.$.DATA,
     get release() {
@@ -70,13 +75,12 @@ export class RScrollRefresh extends RainbowElement {
       if (this.$$.loading === true) return;
       // event.stopPropagation();
       const moveY = event.pageY - this.$$.pointerdownEvent.pageY;
-      const { scrollParent } = this.$$;
-      if (scrollParent.scrollTop > 0) {
-        scrollParent.removeEventListener("pointermove", this.$$.pointermove);
+      if (this.$$scrollView.scrollTop > 0) {
+        this.$$eventView.removeEventListener("pointermove", this.$$.pointermove);
         this.$$.lock = false;
         return;
       }
-      if (moveY >= 8 && scrollParent.scrollTop <= 0) this.$$.lock = true;
+      if (moveY >= 8 && this.$$scrollView.scrollTop <= 0) this.$$.lock = true;
     },
     touchstart: (event) => {
       if (this.$$.loading === true) return;
@@ -102,7 +106,6 @@ export class RScrollRefresh extends RainbowElement {
       if (this.$$.loading === true) return;
       if (!this.$$.lock) return;
       // event.stopPropagation();
-      const { scrollParent } = this.$$;
       const { rRefreshHeignt, rMinTime } = this.$.DATA;
       this.classList.add("r-scroll-refresh-transition");
       const release = this.$$.release;
@@ -114,14 +117,14 @@ export class RScrollRefresh extends RainbowElement {
       if (release) {
         this.$$.loading = true;
         this.$$.render();
-        scrollParent.$$.disabledScroll();
+        this.$$scrollView.$$.disabledScroll();
         await Promise.allSettled([setTimeoutPromise(rMinTime, true), this.onrefresh()]);
         this.$$.height = 0;
         event.refreshHeight = this.$$.height;
         this.$$.loading = false;
         this.style.height = this.$$.height + "px";
         this.$$.render();
-        scrollParent.$$.unDisabledScroll();
+        this.$$scrollView.$$.unDisabledScroll();
       }
     },
   };
@@ -130,28 +133,37 @@ export class RScrollRefresh extends RainbowElement {
     super(...arg);
   }
 
+  get $$eventView() {
+    if (this.$$.scrollView) return this.$$.scrollView;
+    return this.$$.eventView;
+  }
+
+  get $$scrollView() {
+    if (this.$$.scrollView) return this.$$.scrollView;
+    return this.$$.eventView?.$$?.scrollView;
+  }
+
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     this.classList.add("r-scroll-refresh");
     const pName = ["r-scroll", "r-scroll-view", "r-nested-scroll"];
-    this.$$.scrollParent = findParentByLocalName(pName, this);
-    const { scrollParent } = this.$$;
+    this.$$.scrollView = findParentByLocalName(pName, this);
+    this.$$.eventView = findParentByLocalName(["r-refresh"], this);
     const opt = { passive: false, capture: true };
-    scrollParent.addEventListener("pointerdown", this.$$.pointerdown, opt);
-    scrollParent.addEventListener("pointermove", this.$$.pointermove, opt);
-    scrollParent.addEventListener("touchstart", this.$$.touchstart);
-    scrollParent.addEventListener("touchmove", this.$$.touchmove);
-    scrollParent.addEventListener("touchend", this.$$.touchend);
+    addEventListenerOnce(this.$$eventView, "pointerdown", this.$$.pointerdown, opt);
+    addEventListenerOnce(this.$$eventView, "pointermove", this.$$.pointermove, opt);
+    addEventListenerOnce(this.$$eventView, "touchstart", this.$$.touchstart);
+    addEventListenerOnce(this.$$eventView, "touchmove", this.$$.touchmove);
+    addEventListenerOnce(this.$$eventView, "touchend", this.$$.touchend);
     this.$$.render = this.$$renderRefresh();
   }
 
   disconnectedCallback(...arg) {
     super.disconnectedCallback(...arg);
-    const { scrollParent } = this.$$;
-    scrollParent.removeEventListener("pointerdown", this.$$.pointerdown);
-    scrollParent.removeEventListener("pointermove", this.$$.pointermove);
-    scrollParent.removeEventListener("touchstart", this.$$.touchstart);
-    scrollParent.removeEventListener("touchmove", this.$$.touchmove);
-    scrollParent.removeEventListener("touchend", this.$$.touchend);
+    removeEventListener(this.$$eventView, "pointerdown", this.$$.pointerdown);
+    removeEventListener(this.$$eventView, "pointermove", this.$$.pointermove);
+    removeEventListener(this.$$eventView, "touchstart", this.$$.touchstart);
+    removeEventListener(this.$$eventView, "touchmove", this.$$.touchmove);
+    removeEventListener(this.$$eventView, "touchend", this.$$.touchend);
   }
 }

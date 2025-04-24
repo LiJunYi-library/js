@@ -4,6 +4,7 @@
       <r-scroll-refresh slot="top" :onrefresh="onrefresh"></r-scroll-refresh>
       <r-scroll @scroll="scroll">
         <!-- <r-scroll-refresh :onrefresh="onrefresh"></r-scroll-refresh> -->
+        <div style="height: 50px;"></div>
         <div class="flexed">123</div>
         <div>123</div>
         <div>123</div>

@@ -326,13 +326,14 @@ export function hasAnimationDuration(node) {
 }
 
 export function addEventListenerOnce(node, type, ls, config) {
+  if (!node) return;
   node.removeEventListener(type, ls, config);
   node.addEventListener(type, ls, config);
 }
 
-export function inv(node, type, ls, config) {
+export function removeEventListener(node, type, ls, config) {
+  if (!node) return;
   node.removeEventListener(type, ls, config);
-  node.addEventListener(type, ls, config);
 }
 
 export function functionInvokeKey(o = {}, key) {

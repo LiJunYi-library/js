@@ -1,7 +1,9 @@
 <template>
   <div class="scroll-refresh-demo">
     <r-scroll @scroll="scroll">
-      <r-scroll-refresh :onrefresh="onrefresh" :refresh-type="refreshType"></r-scroll-refresh>
+      <r-scroll-refresh :onrefresh="onrefresh" :refresh-type="refreshType">
+        <div>4578965</div>
+      </r-scroll-refresh>
       <div style="height: 50px;background: cyan;"></div>
       <select v-model="refreshType">
         <option value="" label="默认"></option>

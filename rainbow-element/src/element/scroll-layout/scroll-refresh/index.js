@@ -7,6 +7,7 @@ import {
   removeEventListener,
   toggleClass,
   createElement,
+  createCustomEvent,
 } from "../../../utils/index.js";
 
 export class RScrollRefresh extends RainbowElement {
@@ -40,6 +41,18 @@ export class RScrollRefresh extends RainbowElement {
   }
 
   $$ = {
+    dispatchEvent: () => {
+      const { rRefreshHeignt } = this.$.DATA;
+      const progress = (this.$$.height / rRefreshHeignt) * 100;
+      this.dispatchEvent(
+        createCustomEvent("scrollrefresh", {
+          loading: this.$$.loading,
+          release: this.$$.release,
+          progress,
+          height: this.$$.height,
+        }),
+      );
+    },
     scrollView: undefined,
     eventView: undefined,
     loading: false,
@@ -89,6 +102,7 @@ export class RScrollRefresh extends RainbowElement {
       event.refreshHeight = this.$$.height;
       this.style.height = this.$$.height + "px";
       this.$$.render();
+      this.$$.dispatchEvent();
     },
     touchend: async (event) => {
       if (this.$$.loading === true) return;
@@ -102,9 +116,11 @@ export class RScrollRefresh extends RainbowElement {
       event.refreshHeight = this.$$.height;
       this.style.height = this.$$.height + "px";
       this.$$.render();
+      this.$$.dispatchEvent();
       if (release) {
         this.$$.loading = true;
         this.$$.render();
+        this.$$.dispatchEvent();
         this.$$scrollView.$$.disabledScroll();
         await Promise.allSettled([setTimeoutPromise(rMinTime, true), this.onrefresh()]);
         this.$$.height = 0;
@@ -112,6 +128,7 @@ export class RScrollRefresh extends RainbowElement {
         this.$$.loading = false;
         this.style.height = this.$$.height + "px";
         this.$$.render();
+        this.$$.dispatchEvent();
         this.$$scrollView.$$.unDisabledScroll();
       }
     },
@@ -144,6 +161,7 @@ export class RScrollRefresh extends RainbowElement {
     addEventListenerOnce(this.$$eventView, "touchend", this.$$.touchend);
     this.$$.render = this.$$renderRefresh();
     this.$$.render();
+    this.$$.dispatchEvent();
   }
 
   disconnectedCallback(...arg) {

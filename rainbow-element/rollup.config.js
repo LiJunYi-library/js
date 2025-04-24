@@ -62,7 +62,7 @@ export default ()=> {
     postcss({
       extract: true, // 提取 CSS 到单独的文件
       minimize: true, // 压缩 CSS
-      extract: "index.css",
+      extract: "main.css",
       modules: false, // 如果使用 CSS Modules，设置为 true
       extensions: ['.css', '.scss'], // 支持的文件扩展名
       use: [

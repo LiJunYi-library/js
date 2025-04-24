@@ -1,5 +1,5 @@
-import { RainbowElement, createSlot, createElement } from "../../base/index.js";
-import { resizeObserverIMP } from "../../base/imps/index.js";
+import { RainbowElement} from "../../base/index.js";
+import {  createSlot, createElement } from "../../../utils/index.js";
 
 export class RCircle extends RainbowElement {
   static observedAttributes = this.$registerProps({
@@ -14,10 +14,6 @@ export class RCircle extends RainbowElement {
     "r-range-max": String,
     "r-range-min": String,
   });
-
-  $onRegisterIMPS() {
-    return [resizeObserverIMP()];
-  }
 
   $$ = {
     defaultSlot: createSlot("slot", "content", "content"),
@@ -106,17 +102,21 @@ export class RCircle extends RainbowElement {
 
   set value(v) {
     this.$$.value = v;
-    this.$debouncedRender();
+    this.$render();
   }
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-
     this.attachShadow({ mode: "open" });
     this.$$.default.appendChild(this.$$.defaultSlot);
     this.shadowRoot.append(this.$$.layerDiv);
     this.shadowRoot.append(this.$$.borderDiv);
     this.shadowRoot.append(this.$$.default);
+  }
+
+  $onResize(...arg){
+    super.$onResize(...arg);
+    this.$render();
   }
 
   $render() {

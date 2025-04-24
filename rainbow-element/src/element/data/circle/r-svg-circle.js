@@ -1,5 +1,5 @@
 import { RainbowElement } from "../../base/index.js";
-import { resizeObserverIMP } from "../../base/imps/index.js";
+
 {/* <div class="van-circle" style="width: 100px; height: 100px;">
   <svg viewBox="0 0 1040 1040">
     <path d="M 520 520 m 0, -500 a 500, 500 0 1, 1 0, 1000 a 500, 500 0 1, 1 0, -1000"
@@ -34,7 +34,6 @@ export class RSvgCircle extends RainbowElement {
 
   set value(v) {
     this.$$.value = v;
-    this.$debouncedRender();
   }
 
   $render() {

@@ -5,6 +5,8 @@ import {
   findParentByLocalName,
   addEventListenerOnce,
   removeEventListener,
+  toggleClass,
+  createElement,
 } from "../../../utils/index.js";
 
 export class RScrollRefresh extends RainbowElement {
@@ -17,32 +19,18 @@ export class RScrollRefresh extends RainbowElement {
   async onrefresh() {}
 
   $$renderRefresh() {
-    const circle = document.createElement("r-circle");
-    circle.classList.add("r-scroll-refresh-circle");
-    const loadIcon = document.createElement("i");
-    loadIcon.classList.add("loading-icon", "iconfont", "r-scroll-refresh-loading");
-    const text = document.createElement("div");
-    text.classList.add("r-scroll-refresh-text");
+    const progress = createElement("r-circle", "r-scroll-refresh-progress", "");
+    const icon = createElement("div", "r-scroll-refresh-icon", "");
+    const loadingIcon = createElement("div", "r-scroll-refresh-loading", "");
+    const text = createElement("div", "r-scroll-refresh-text", "");
+    this.append(progress, icon, loadingIcon, text);
 
-    this.$.append(circle);
-    this.$.append(loadIcon);
-    this.$.append(text);
-
-    const handleLoading = () => {
-      if (!this.$$.loading) {
-        loadIcon.classList.add("r-scroll-refresh-loading-hide");
-        circle.classList.remove("r-scroll-refresh-circle-hide");
-      } else {
-        loadIcon.classList.remove("r-scroll-refresh-loading-hide");
-        circle.classList.add("r-scroll-refresh-circle-hide");
-      }
-    };
-
-    handleLoading();
     return () => {
-      handleLoading();
       const { rRefreshHeignt } = this.$.DATA;
-      circle.value = (this.$$.height / rRefreshHeignt) * 100;
+      progress.value = (this.$$.height / rRefreshHeignt) * 100;
+      toggleClass(loadingIcon, this.$$.loading, "", "r-scroll-refresh-hide");
+      toggleClass(progress, !this.$$.loading, "", "r-scroll-refresh-hide");
+      toggleClass(icon, !this.$$.loading, "", "r-scroll-refresh-hide");
       text.innerText = (() => {
         if (this.$$.loading) return "正在刷新";
         if (this.$$.release) return "释放刷新";
@@ -145,7 +133,6 @@ export class RScrollRefresh extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.classList.add("r-scroll-refresh");
     const pName = ["r-scroll", "r-scroll-view", "r-nested-scroll"];
     this.$$.scrollView = findParentByLocalName(pName, this);
     this.$$.eventView = findParentByLocalName(["r-scroll-window"], this);
@@ -156,6 +143,7 @@ export class RScrollRefresh extends RainbowElement {
     addEventListenerOnce(this.$$eventView, "touchmove", this.$$.touchmove);
     addEventListenerOnce(this.$$eventView, "touchend", this.$$.touchend);
     this.$$.render = this.$$renderRefresh();
+    this.$$.render();
   }
 
   disconnectedCallback(...arg) {

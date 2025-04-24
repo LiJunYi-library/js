@@ -1,0 +1,18 @@
+r-scroll-refresh {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .r-scroll-refresh-icon {
+        display: none;
+    }
+
+    &[refresh-type~="flex"] {
+        display: block;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        z-index: 500;
+    }
+}

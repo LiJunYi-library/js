@@ -1,41 +1,31 @@
 <template>
   <div class="scroll-refresh-demo">
-    <r-scroll-window>
-      <r-scroll-refresh slot="top" :onrefresh="onrefresh"></r-scroll-refresh>
-      <r-scroll @scroll="scroll">
-        <!-- <r-scroll-refresh :onrefresh="onrefresh"></r-scroll-refresh> -->
-        <div style="height: 50px;"></div>
-        <div class="flexed">123</div>
-        <div>123</div>
-        <div>123</div>
-        <div style="font-size: 80px">{{ text }}</div>
-      </r-scroll>
-    </r-scroll-window>
+    <r-scroll @scroll="scroll">
+      <r-scroll-refresh :onrefresh="onrefresh" :refresh-type="refreshType"></r-scroll-refresh>
+      <div style="height: 50px;background: cyan;"></div>
+      <select v-model="refreshType">
+        <option value="" label="默认"></option>
+        <option value="fixed" label="fixed"></option>
+      </select>
+      <div>123</div>
+      <div style="font-size: 80px">{{ text }}</div>
+    </r-scroll>
   </div>
 </template>
 <script setup>
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
-import { useRadio2 } from '@rainbow_ljy/v-hooks'
-import { ref, onMounted } from 'vue'
 import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
-
+import { ref } from 'vue'
 const text = arrayLoopMap(300, () => '帅').join('')
-
-const bool = ref(true)
+const refreshType = ref("");
 
 async function onrefresh() {
-  return setTimeoutPromise(2000)
+  return setTimeoutPromise(300000)
 }
 </script>
 
 <style lang="scss">
 .scroll-refresh-demo {
-  .flexed {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background: red;
-    height: 50px;
-  }
+  background: rgb(161, 249, 249);
 }
 </style>

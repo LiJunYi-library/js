@@ -1,0 +1,29 @@
+@keyframes rotating {
+    0% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotatingCenter {
+    0% {
+        transform: translate(-50%, -50%) rotate(0);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes rotatingHorizontalCenter {
+    0% {
+        transform: translateX(-50%) rotate(0);
+    }
+
+    100% {
+        transform: translateX(-50%) rotate(360deg);
+    }
+}

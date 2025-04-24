@@ -1,6 +1,7 @@
 import "./index.css";
-import { RainbowElement, createCustomEvent, createElement } from "../../base/index.js";
 import { setTimeoutPromise } from "@rainbow_ljy/rainbow-js";
+import { RainbowElement } from "../../base/index.js";
+import { createCustomEvent, createElement, createSlot } from "../../../utils/index.js";
 
 export class RRefresh extends RainbowElement {
   static observedAttributes = this.$registerProps({
@@ -12,38 +13,38 @@ export class RRefresh extends RainbowElement {
   onrefresh() {}
 
   $$renderRefresh() {
-    const circle = document.createElement("r-circle");
-    circle.classList.add("r-scroll-refresh-circle");
-    const loadIcon = document.createElement("i");
-    loadIcon.classList.add("loading-icon", "iconfont", "r-scroll-refresh-loading");
-    loadIcon.innerHTML = "&#xe607;";
-    const text = document.createElement("div");
-    text.classList.add("r-scroll-refresh-text");
+    // const circle = document.createElement("r-circle");
+    // circle.classList.add("r-scroll-refresh-circle");
+    // const loadIcon = document.createElement("i");
+    // loadIcon.classList.add("loading-icon", "iconfont", "r-scroll-refresh-loading");
+    // loadIcon.innerHTML = "&#xe607;";
+    // const text = document.createElement("div");
+    // text.classList.add("r-scroll-refresh-text");
 
-    this.$.append(circle);
-    this.$.append(loadIcon);
-    this.$.append(text);
+    // this.$.append(circle);
+    // this.$.append(loadIcon);
+    // this.$.append(text);
 
-    const handleLoading = () => {
-      if (!this.$$.loading) {
-        loadIcon.classList.add("r-scroll-refresh-loading-hide");
-        circle.classList.remove("r-scroll-refresh-circle-hide");
-      } else {
-        loadIcon.classList.remove("r-scroll-refresh-loading-hide");
-        circle.classList.add("r-scroll-refresh-circle-hide");
-      }
-    };
+    // const handleLoading = () => {
+    //   if (!this.$$.loading) {
+    //     loadIcon.classList.add("r-scroll-refresh-loading-hide");
+    //     circle.classList.remove("r-scroll-refresh-circle-hide");
+    //   } else {
+    //     loadIcon.classList.remove("r-scroll-refresh-loading-hide");
+    //     circle.classList.add("r-scroll-refresh-circle-hide");
+    //   }
+    // };
 
-    handleLoading();
+    // handleLoading();
     return () => {
-      handleLoading();
-      const { rRefreshHeignt } = this.$.DATA;
-      circle.value = (this.$$.height / rRefreshHeignt) * 100;
-      text.innerText = (() => {
-        if (this.$$.loading) return "正在刷新";
-        if (this.$$.release) return "释放刷新";
-        return "下拉刷新";
-      })();
+      // handleLoading();
+      // const { rRefreshHeignt } = this.$.DATA;
+      // circle.value = (this.$$.height / rRefreshHeignt) * 100;
+      // text.innerText = (() => {
+      //   if (this.$$.loading) return "正在刷新";
+      //   if (this.$$.release) return "释放刷新";
+      //   return "下拉刷新";
+      // })();
     };
   }
 
@@ -63,6 +64,9 @@ export class RRefresh extends RainbowElement {
       return this.height > rRefreshHeignt;
     },
     render: () => {},
+    defaultSlot: createSlot("slot", "r-refresh-default-slot", ""),
+    topSlot: createSlot("slot", "r-refresh-top-slot", "top"),
+    content: createElement("div", "r-refresh-content"),
     pointerdownEvent: undefined,
     touchstartEvent: undefined,
     lock: false,
@@ -74,6 +78,7 @@ export class RRefresh extends RainbowElement {
       this.$$.lock = false;
     },
     pointermove: (event) => {
+      console.log(this.$$.loading);
       if (this.$$.loading === true) return;
       // event.stopPropagation();
       const moveY = event.pageY - this.$$.pointerdownEvent.pageY;
@@ -162,6 +167,10 @@ export class RRefresh extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.appendChild(this.$$.topSlot);
+    this.$$.content.appendChild(this.$$.defaultSlot )
+    this.shadowRoot.appendChild(this.$$.content);
     // this.$$.scrollView = this.$.findChildByLocalName(["r-scroll"]);
     // const child = document.getElementsByTagName("r-scroll");
     // console.log(this.$$.scrollView);

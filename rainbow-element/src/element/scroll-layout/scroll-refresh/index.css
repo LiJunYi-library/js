@@ -7,7 +7,7 @@ r-scroll-refresh {
     overflow: hidden;
     --r-max-refresh-heignt: 175px;
     --r-refresh-heignt: 125px;
-    --r-min-time: 3000;
+    --r-min-time: 500;
 }
 
 .r-scroll-refresh-transition {

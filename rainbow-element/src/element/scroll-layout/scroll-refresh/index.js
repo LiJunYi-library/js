@@ -1,6 +1,7 @@
 import "./index.css";
-import { RainbowElement, createCustomEvent ,findParentByLocalName} from "../../base/index.js";
 import { setTimeoutPromise } from "@rainbow_ljy/rainbow-js";
+import { RainbowElement } from "../../base/index.js";
+import { findParentByLocalName } from "../../../utils/index.js";
 
 export class RScrollRefresh extends RainbowElement {
   static observedAttributes = this.$registerProps({
@@ -9,14 +10,13 @@ export class RScrollRefresh extends RainbowElement {
     "r-min-time": { type: String, default: "500" },
   });
 
-  onrefresh() {}
+  async onrefresh() {}
 
   $$renderRefresh() {
     const circle = document.createElement("r-circle");
     circle.classList.add("r-scroll-refresh-circle");
     const loadIcon = document.createElement("i");
     loadIcon.classList.add("loading-icon", "iconfont", "r-scroll-refresh-loading");
-    loadIcon.innerHTML = "&#xe607;";
     const text = document.createElement("div");
     text.classList.add("r-scroll-refresh-text");
 
@@ -48,13 +48,6 @@ export class RScrollRefresh extends RainbowElement {
   }
 
   $$ = {
-    createPromise: () => {
-      return new Promise((resolve) => {
-        this.$$.resolve = resolve;
-      });
-    },
-    resolve: () => 0,
-    promise: undefined,
     scrollParent: undefined,
     loading: false,
     DATA: this.$.DATA,
@@ -122,12 +115,7 @@ export class RScrollRefresh extends RainbowElement {
         this.$$.loading = true;
         this.$$.render();
         scrollParent.$$.disabledScroll();
-        this.$$.promise = this.$$.createPromise();
-        event.resolve = this.$$.resolve;
-        this.dispatchEvent(createCustomEvent("refresh", event));
-        await Promise.allSettled(
-          [setTimeoutPromise(rMinTime, true), this.onrefresh(), this.$$.promise].filter(Boolean),
-        );
+        await Promise.allSettled([setTimeoutPromise(rMinTime, true), this.onrefresh()]);
         this.$$.height = 0;
         event.refreshHeight = this.$$.height;
         this.$$.loading = false;
@@ -145,11 +133,8 @@ export class RScrollRefresh extends RainbowElement {
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     this.classList.add("r-scroll-refresh");
-    this.$$.scrollParent = findParentByLocalName([
-      "r-scroll",
-      "r-scroll-view",
-      "r-nested-scroll",
-    ],this);
+    const pName = ["r-scroll", "r-scroll-view", "r-nested-scroll"];
+    this.$$.scrollParent = findParentByLocalName(pName, this);
     const { scrollParent } = this.$$;
     const opt = { passive: false, capture: true };
     scrollParent.addEventListener("pointerdown", this.$$.pointerdown, opt);
@@ -170,5 +155,3 @@ export class RScrollRefresh extends RainbowElement {
     scrollParent.removeEventListener("touchend", this.$$.touchend);
   }
 }
-
-

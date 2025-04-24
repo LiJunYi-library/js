@@ -10,14 +10,18 @@
         <div slot="label">{{ category || '类目' }}
           <span>bool: {{ bool }}</span>
         </div>
-        <div>类目内容</div>
-        <div>使用bool值控制弹窗 打开 关闭</div>
-        <div>bool: {{ bool }}</div>
         <div>
-          <button @click="category = '牛奶牛奶牛奶牛奶牛奶牛奶牛奶牛奶牛奶'">修改label内容</button>
-          <button @click="category = ''">清除label内容</button>
-          <button @click="confirm">确定</button>
-          <button @click="clear">清除</button>
+          <div v-if="visible">visible</div>
+          <button @click="visible = !visible">visible</button>
+          <div>类目内容</div>
+          <div>使用bool值控制弹窗 打开 关闭</div>
+          <div>bool: {{ bool }}</div>
+          <div>
+            <button @click="category = '牛奶牛奶牛奶牛奶牛奶牛奶牛奶牛奶牛奶'">修改label内容</button>
+            <button @click="category = ''">清除label内容</button>
+            <button @click="confirm">确定</button>
+            <button @click="clear">清除</button>
+          </div>
         </div>
       </r-pulldown>
 
@@ -85,7 +89,7 @@
 </template>
 <script setup lang="jsx">
 import { ref, reactive } from 'vue'
-
+const visible = ref(false);
 const category = ref('');
 const bool = ref(false);
 function confirm() {
@@ -138,7 +142,7 @@ const placements = [
 <style lang="scss">
 .pulldown-demo {
   r-pulldown.select-pulldown {
-     .r-pulldown-default-icon::after {
+    .r-pulldown-default-icon::after {
       content: '\e745';
     }
   }

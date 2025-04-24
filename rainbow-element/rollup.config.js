@@ -59,29 +59,28 @@ export default ()=> {
     resolve(), // 查找外部模块
     commonjs(), // 将 CommonJS 转换为 ES6 模块
     terser(), // 压缩代码
-    scss({
-      output: true,
-      failOnError: true,
-      processor: () => postcss([autoprefixer()]),
-    }),
     postcss({
       extract: true, // 提取 CSS 到单独的文件
-      extract: "index.css", // 指定输出文件名
-      modules: false, // 如果你使用 CSS Modules，设置为 true
+      minimize: true, // 压缩 CSS
+      extract: "index.css",
+      modules: false, // 如果使用 CSS Modules，设置为 true
+      extensions: ['.css', '.scss'], // 支持的文件扩展名
+      use: [
+        ['sass', { includePaths: ['./src/styles'] }], // 配置 SASS
+      ],
       plugins: [
-        // 配置 PostCSS 插件
+        autoprefixer(), // 自动添加浏览器前缀
         changeIconfontPath(),
         cssnano({
-          // 使用 cssnano 压缩 CSS
-          preset: "default", // 使用默认压缩配置
-        }),
+          preset: 'default', // 使用默认压缩配置
+        }), // 压缩 CSS
       ],
     }),
     copy({
       targets: [
-        { src: "src/iconfont/*.woff", dest: "build/font" }, // 复制 .woff 文件
-        { src: "src/iconfont/*.woff2", dest: "build/font" }, // 复制 .woff2 文件
-        { src: "src/iconfont/*.ttf", dest: "build/font" }, // 复制 .ttf 文件
+        { src: "src/style/iconfont/*.woff", dest: "build/font" }, // 复制 .woff 文件
+        { src: "src/style/iconfont/*.woff2", dest: "build/font" }, // 复制 .woff2 文件
+        { src: "src/style/iconfont/*.ttf", dest: "build/font" }, // 复制 .ttf 文件
       ],
     }),
     // serve({

@@ -12,7 +12,7 @@ r-scroll-refresh {
 }
 
 .r-scroll-refresh-hide {
-    display: none;
+    display: none !important;
 }
 
 .r-scroll-refresh-icon {

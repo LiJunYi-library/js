@@ -17,10 +17,10 @@ import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
 import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
 import { ref } from 'vue'
 const text = arrayLoopMap(300, () => '帅').join('')
-const refreshType = ref("");
+const refreshType = ref("fixed");
 
 async function onrefresh() {
-  return setTimeoutPromise(300000)
+  return setTimeoutPromise(3000)
 }
 </script>
 

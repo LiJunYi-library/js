@@ -59,6 +59,12 @@ export class RainbowElement extends HTMLElement {
       },
       data: {},
       DATA: new Proxy({}, { get: (target, prop) => this.$.data[camelCaseToKebabCase(prop)] }),
+      resolvePercentum: (v = "", node = this, fmt = (node) => node.offsetWidth) => {
+        if (/\d+?%/.test(v)) return fmt(node) * (v.replaceAll("%", "") / 100);
+        return v;
+      },
+      resolvePercentumH: (v, node, fmt = (node) => node.offsetHeight) =>
+        this.$.resolvePercentum(v, node, fmt),
       documentMutation: (events) => {
         this.$.listenerStyle();
       },
@@ -248,7 +254,7 @@ export class RainbowElement extends HTMLElement {
   }
 
   adoptedCallback() {
-    console.log('adoptedCallback')
+    console.log("adoptedCallback");
   }
 
   $onStyleChang() {

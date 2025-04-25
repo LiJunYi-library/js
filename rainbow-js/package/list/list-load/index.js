@@ -1,3 +1,5 @@
+import { arrayForcedTransform } from "@rainbow_ljy/rainbow-js";
+
 export class ListLoad {
   get loading() {
     return this.loadHook.loading;

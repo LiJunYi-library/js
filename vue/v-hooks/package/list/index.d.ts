@@ -92,3 +92,5 @@ export declare type TablePaginationHooks = PaginationListHooks & {
   onPageChange: (currentPage: number, pageSize: number) => void;
 };
 export declare function useTablePagination(options: PaginationListConfig): TablePaginationHooks;
+
+export * from "./list-load";

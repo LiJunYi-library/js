@@ -167,7 +167,6 @@ export class Fetch {
         this.loading = false;
         this.data = d;
         this.error = false;
-        this.begin = false;
         this.errorData = undefined;
         config.onResponse(config);
         resolve(d);

@@ -1,5 +1,2 @@
-export class List {
-  constructor(props = List.defaultProps) {
-    //
-  }
-}
+export * from "./list";
+export * from "./list-load";

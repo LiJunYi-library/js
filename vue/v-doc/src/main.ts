@@ -1,5 +1,5 @@
-import '@rainbow_ljy/rainbow-element'
-import '@rainbow_ljy/rainbow-element/build/main.css'
+import '@rainbow_ljy/rainbow-element/main'
+// import '@rainbow_ljy/rainbow-element/build/main.css'
 import { createApp, render } from 'vue'
 import App from './App.vue'
 import router from './router'

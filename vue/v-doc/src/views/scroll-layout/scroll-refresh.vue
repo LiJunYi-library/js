@@ -1,7 +1,7 @@
 <template>
   <div class="scroll-refresh-demo">
     <r-scroll @scroll="scroll">
-      <r-scroll-refresh :onrefresh="onrefresh" :refresh-type="refreshType">
+      <r-scroll-refresh :onrefresh="onrefresh" :refresh-type="refreshType" @scrollrefresh="scrollrefresh">
         <div>4578965</div>
       </r-scroll-refresh>
       <div style="height: 50px;background: cyan;"></div>
@@ -23,6 +23,10 @@ const refreshType = ref("fixed");
 
 async function onrefresh() {
   return setTimeoutPromise(3000)
+}
+
+function scrollrefresh(params) {
+
 }
 </script>
 

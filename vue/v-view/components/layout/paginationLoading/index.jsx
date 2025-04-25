@@ -3,7 +3,7 @@ import "./index.scss";
 
 export const VRPaginationLoading = defineComponent({
   props: {
-    triggerBottomDistance: { type: Number, default: 50 },
+    triggerBottomDistance: { type: Number, default: 500 },
     loadingHook: { type: Object, default: () => ({}) },
     onErrorLoadClick: { type: Function },
     onBeginErrorClick: { type: Function },

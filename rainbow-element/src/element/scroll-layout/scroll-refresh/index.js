@@ -32,6 +32,8 @@ export class RScrollRefresh extends RainbowElement {
       toggleClass(loadingIcon, this.$$.loading, "", "r-scroll-refresh-hide");
       toggleClass(progress, !this.$$.loading, "", "r-scroll-refresh-hide");
       toggleClass(icon, !this.$$.loading, "", "r-scroll-refresh-hide");
+      this.cssList.toggle(this.$$.loading, "r-scroll-refresh-loading");
+      this.cssList.toggle(this.$$.release, "r-scroll-refresh-release");
       text.innerText = (() => {
         if (this.$$.loading) return "正在刷新";
         if (this.$$.release) return "释放刷新";
@@ -161,7 +163,6 @@ export class RScrollRefresh extends RainbowElement {
     addEventListenerOnce(this.$$eventView, "touchend", this.$$.touchend);
     this.$$.render = this.$$renderRefresh();
     this.$$.render();
-    this.$$.dispatchEvent();
   }
 
   disconnectedCallback(...arg) {

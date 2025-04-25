@@ -156,6 +156,8 @@ export declare function arrayForEachFind<T>(
   callbackfn: (value: T, index: number, array: T[]) => Boolean,
 ): T;
 
+export declare function arrayForcedTransform<T>(v): T[];
+
 export class ListArray extends Array { }
 
 // 模仿sql查询  //

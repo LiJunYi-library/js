@@ -396,3 +396,8 @@ export function arrayForEachFind(arr = [], formatter) {
   });
   return val;
 }
+
+export function arrayForcedTransform(v){
+  if (v instanceof Array) return v;
+  return [];
+}

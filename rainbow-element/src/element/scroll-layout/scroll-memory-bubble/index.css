@@ -1,0 +1,33 @@
+r-scroll-memory-bubble {
+    display: block;
+    position: fixed;
+    z-index: 30;
+    transition: transform 0.3s;
+    --r-init-visibility: visible;
+    --r-visible-distance: 300px;
+    --r-visible-reversal: reversal;
+    --r-orientation: right;
+    top: 200px;
+    right: 50px;
+}
+
+[css-name~="r-scroll-memory-bubble-visible"] {
+    transform: none;
+}
+
+[css-name~="r-scroll-memory-bubble-hide-left"] {
+    transform: translateX(-100vW);
+}
+
+[css-name~="r-scroll-memory-bubble-hide-right"] {
+    transform: translateX(100vW);
+}
+
+[css-name~="r-scroll-memory-bubble-hide-top"] {
+    transform: translateY(-100vH);
+}
+
+[css-name~="r-scroll-memory-bubble-hide-bottom"] {
+    transform: translateY(100vH);
+}
+

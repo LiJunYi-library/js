@@ -8,6 +8,6 @@ r-scroll {
 }
 
 
-r-scroll.r-scroll-disabled {
+[css-name~="r-scroll-disabled"] {
   overflow: hidden;
 }

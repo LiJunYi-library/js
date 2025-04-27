@@ -6,6 +6,7 @@ r-scroll-top {
   --r-adsorb-border-right: 20px;
   --r-adsorb-border-left: 20px;
   --r-adsorb: horizontal;
+  --r-scroll-top-active: 1200px;
   bottom: 100px;
   right: 20px;
   position: fixed;
@@ -35,7 +36,7 @@ r-scroll-top {
 }
 
 .r-scroll-top-icon::before {
-  content: "\e744";
+  content: "\e76c";
 }
 
 [css-name~="r-scroll-top-hide"] {

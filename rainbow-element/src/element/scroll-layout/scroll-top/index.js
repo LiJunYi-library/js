@@ -49,7 +49,11 @@ export class RScrollTop extends RMove {
     onScroll: ({ scrollTop }) => {
       this.$$.setListView();
       if (this.$$.lock === true) return;
-      this.cssList.toggle(scrollTop >= 1200, "r-scroll-top-show", "r-scroll-top-hide");
+      this.cssList.toggle(
+        scrollTop >= this.$.DATA.rScrollTopActive,
+        "r-scroll-top-show",
+        "r-scroll-top-hide",
+      );
       this.$$.lookHistory = false;
       this.cssList.toggle(this.$$.lookHistory, "r-scroll-top-history");
       this.$$.setTextInnerHTML();

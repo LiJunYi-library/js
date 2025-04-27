@@ -17,6 +17,7 @@ export class RMove extends RainbowElement {
     "r-adsorb-border-top": Number,
     "r-adsorb-border-bottom": Number,
     "r-adsorb": String, // left top bottom right horizontal vertical nearby nook
+    "r-scroll-top-active": Number,
   });
 
   positionParent = this.offsetParent;

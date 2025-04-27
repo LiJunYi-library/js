@@ -58,12 +58,16 @@ export class RScrollVirtualGridList extends RainbowElement {
       // console.log(columnGap);
       const offsetTop = getOffsetTop(this, this.$$.scrollParent);
       const scrollTop = this.$$.scrollParent.scrollTop;
-      let recycleCount = Math.ceil(window.innerHeight / (rAvgHeight + columnGap)) * this.$$columns;
-      let nth = Math.floor((scrollTop - offsetTop) / (rAvgHeight + columnGap)) * this.$$columns;
+      let recycleCount = Math.ceil(window.innerHeight / (rAvgHeight + rRowGap)) * this.$$columns;
+      let nth = Math.floor((scrollTop - offsetTop) / (rAvgHeight + rRowGap)) * this.$$columns;
+      let last =
+        Math.floor((scrollTop - offsetTop + window.innerHeight) / (rAvgHeight + rRowGap)) *
+          this.$$columns +
+        (this.$$columns - 1);
       let index = nth - recycleCount;
       let start = index < 0 ? 0 : index;
       this.$$.visible.start = Math.min(Math.max(0, nth), this.value.length - 1);
-      this.$$.visible.end = Math.max(0, Math.min(nth + recycleCount, this.value.length - 1));
+      this.$$.visible.end = Math.max(0, Math.min(last, this.value.length - 1));
       // console.log(this.$$.visible.start, this.$$.visible.end);
       let end = index + recycleCount * 3;
       if (end < 0) end = 0;

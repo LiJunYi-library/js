@@ -65,7 +65,8 @@ export class RScrollTop extends RMove {
     },
     setListView: () => {
       if (this.$$.listView instanceof Element) return;
-      let lv = findParentByLocalName("r-scroll-virtual-falls-list", this);
+      const n = ["r-scroll-virtual-falls-list", "r-scroll-virtual-grid-list"];
+      let lv = findParentByLocalName(n, this);
       if (lv) return (this.$$.listView = lv);
       if (this.listView instanceof Element) return (this.$$.listView = this.listView);
       lv = document.getElementById(this.listView);

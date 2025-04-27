@@ -1,8 +1,8 @@
 <template>
   <div class="scroll-layout-virtual-falls-demo">
     <r-scroll>
-      <div class="long-content">虚拟化瀑布流布局 回收列表</div>
-      <VRVirtualFallsList ref="virtualList" class="my-scroll-virtual-falls-list" v-model="List"
+      <!-- <div class="long-content">虚拟化瀑布流布局 回收列表</div> -->
+      <!-- <VRVirtualFallsList ref="virtualList" class="my-scroll-virtual-falls-list" v-model="List"
         :keyExtractor="({ item }) => item.id">
         <template #default="{ item, index, key }">
           <div>index:{{ index }}</div>
@@ -16,13 +16,16 @@
             <button @click="transposal(item, index)">置顶</button>
           </r-grid>
         </template>
-      </VRVirtualFallsList>
-      <div class="long-content">虚拟化瀑布流布局 回收列表</div>
-      <div class="long-content">虚拟化瀑布流布局 回收列表</div>
-      <div class="long-content">虚拟化瀑布流布局 回收列表</div>
+      </VRVirtualFallsList> -->
+      <!-- <div class="long-content">虚拟化瀑布流布局 回收列表</div> -->
+      <!-- <div class="long-content">虚拟化瀑布流布局 回收列表</div>
+      <div class="long-content">虚拟化瀑布流布局 回收列表</div> -->
       <div>更多推荐</div>
-      <!-- <div class="more-scroll-virtual-falls-list-bg">
-        <VRVirtualFallsList v-model="moreList" :keyExtractor="({ item }) => item.id"
+      <r-move style="position: fixed;left: 0;top: 200;z-index: 100;background: wheat;">
+      {{ moreList.length }}
+      </r-move>
+      <div class="more-scroll-virtual-falls-list-bg">
+        <VRVirtualFallsList id="vID"  v-model="moreList" :keyExtractor="({ item }) => item.id"
           class="more-scroll-virtual-falls-list">
           <template #default="{ item, index, key }">
             <div>index:{{ index }}</div>
@@ -31,7 +34,7 @@
             <div class="title">{{ item.title }}</div>
           </template>
         </VRVirtualFallsList>
-      </div> -->
+      </div>
 
     </r-scroll>
   </div>

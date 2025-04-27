@@ -233,7 +233,6 @@ export class Fetch {
         this.error = true;
         this.errorData = error;
         this.loading = false;
-        this.begin = false;
         reject(error);
         config.onResponse(config);
       }

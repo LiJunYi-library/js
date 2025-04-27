@@ -33,6 +33,6 @@ export class MFetch extends Vfetch {
       'content-type': 'application/json',
     },
     time: 30000,
-    baseUrl: 'http://192.168.192.187:5000',
+    baseUrl: 'http://192.168.192.202:5000',
   }
 }

@@ -39,6 +39,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
 
   keyExtractor = (val) => val.item;
   onrenderItems = () => undefined;
+  visibleCount = 50;
 
   get $$columns() {
     let { rColumns, rMinAutoWidth } = this.$.DATA;
@@ -143,7 +144,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
       let start = this.$$.findIndex(scrollTop);
       if (start === -1) start = 0;
       if (typeof startIndex === "number") start = startIndex;
-      let end = start + 50;
+      let end = start + this.visibleCount;
       if (end > this.value.length) end = this.value.length;
       let isRender = !(this.$$.cache.start === start && this.$$.cache.end === end);
       this.$$.cache.start = start;
@@ -258,7 +259,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
     },
     backstage: createBackstage(
       () => {
-        this.$$.preLoads(50);
+        this.$$.preLoads(100);
         this.$$.setHeight();
       },
       () => this.$$.preLoadIndex >= this.value.length,

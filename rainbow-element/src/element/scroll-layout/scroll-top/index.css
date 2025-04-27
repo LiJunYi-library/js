@@ -1,0 +1,47 @@
+r-scroll-top {
+  --r-move-border-left: 20px;
+  --r-move-border-right: 20px;
+  --r-move-border-top: 20px;
+  --r-move-border-bottom: 20px;
+  --r-adsorb-border-right: 20px;
+  --r-adsorb-border-left: 20px;
+  --r-adsorb: horizontal;
+  bottom: 100px;
+  right: 20px;
+  position: fixed;
+  z-index: 50;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.13);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.r-scroll-top-text {
+  font-size: 12px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.r-scroll-top-icon {
+  transition: 0.25s;
+  font-family: "iconfont";
+}
+
+.r-scroll-top-icon::before {
+  content: "\e744";
+}
+
+[css-name~="r-scroll-top-hide"] {
+  display: none;
+}
+
+[css-name~="r-scroll-top-history"] .r-scroll-top-icon {
+  transform: rotate(180deg);
+}

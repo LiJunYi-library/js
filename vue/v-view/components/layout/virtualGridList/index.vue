@@ -1,9 +1,7 @@
 <template>
-  <r-scroll-virtual-grid-list
-    v-model="list"
-    :onrenderItems="onRenderItems"
-    :keyExtractor="props.keyExtractor"
-  />
+  <r-scroll-virtual-grid-list v-model="list" :onrenderItems="onRenderItems" :keyExtractor="props.keyExtractor">
+    <slot></slot>
+  </r-scroll-virtual-grid-list>
 </template>
 
 <script setup lang="jsx">
@@ -41,7 +39,7 @@ const Item = defineComponent({
   },
   setup(props) {
     return () => {
-      return props?.slots?.default?.(props.event);
+      return props?.slots?.item?.(props.event);
     };
   },
 });

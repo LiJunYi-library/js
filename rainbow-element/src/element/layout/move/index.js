@@ -30,7 +30,6 @@ export class RMove extends RainbowElement {
     isTouch: false,
     isMousedown: false,
     onTouchstart: (event) => {
-      console.log("onTouchstart");
       this.$$.isTouch = true;
       this.$$.startEvent = event.touches?.[0];
       event.stopPropagation();
@@ -39,6 +38,7 @@ export class RMove extends RainbowElement {
     onTouchmove: (touchEvent) => {
       const event = touchEvent.touches?.[0];
       touchEvent.stopPropagation();
+      touchEvent.preventDefault();
       this.$$.onMove(event);
     },
     onTouchend: (touchEvent) => {

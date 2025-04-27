@@ -4,6 +4,7 @@ import {
   ListArray,
   arrayBinaryFindIndex,
   arrayLoop,
+  arrayLoops,
 } from "@rainbow_ljy/rainbow-js";
 import { RainbowElement } from "../../base/index.js";
 import {
@@ -61,6 +62,16 @@ export class RScrollVirtualFallsList extends RainbowElement {
     renderChildren: renderChildren({ parentNode: this }),
     value: [],
     preLoadIndex: 0,
+    visible: {
+      end: 0,
+      start: 0,
+      setEnd: (cache, offsetTop, scrollTop, winHeight, index) => {
+        if (!cache) return false;
+        if (cache.top + offsetTop >= scrollTop && cache.top + offsetTop <= scrollTop + winHeight) {
+          this.$$.visible.end = index;
+        }
+      },
+    },
     cache: {
       start: undefined,
       end: undefined,
@@ -113,11 +124,22 @@ export class RScrollVirtualFallsList extends RainbowElement {
       const recycleTop = -window.innerHeight + offsetTop;
       const recycleBottom = window.innerHeight * 2 + offsetTop;
       const scrollTop = this.$$.scrollParent.scrollTop;
-      return { scrollTop, recycleBottom, recycleTop, offsetTop, rowGap, columnGap, rAvgHeight };
+      const winHeight = this.$$.scrollParent.offsetHeight;
+      return {
+        scrollTop,
+        recycleBottom,
+        recycleTop,
+        offsetTop,
+        rowGap,
+        columnGap,
+        rAvgHeight,
+        winHeight,
+      };
     },
     layout: (isForce = true, startIndex) => {
       if (!this.$$.scrollParent) return;
-      const { scrollTop, recycleBottom, recycleTop, rowGap } = this.$$.getCssValues();
+      const { scrollTop, recycleBottom, recycleTop, rowGap, offsetTop, winHeight } =
+        this.$$.getCssValues();
       let start = this.$$.findIndex(scrollTop);
       if (start === -1) start = 0;
       if (typeof startIndex === "number") start = startIndex;
@@ -126,7 +148,13 @@ export class RScrollVirtualFallsList extends RainbowElement {
       let isRender = !(this.$$.cache.start === start && this.$$.cache.end === end);
       this.$$.cache.start = start;
       this.$$.cache.end = end;
-      if (isForce === false && isRender === false) return;
+      this.$$.visible.start = start;
+      if (isForce === false && isRender === false) {
+        arrayLoops(start, end, (i) =>
+          this.$$.visible.setEnd(this.value[i].__cache__, offsetTop, scrollTop, winHeight, i),
+        );
+        return;
+      }
       let startItem = this.value[start];
       if (!startItem) return;
       let list = this.value.slice(start, end);
@@ -174,6 +202,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
           minColumn.height = minColumn.height + offset.height;
           __cache__.bottom = minColumn.height;
           __cache__.vBottom = minColumn.height + recycleBottom;
+          this.$$.visible.setEnd(__cache__, offsetTop, scrollTop, winHeight, val.index);
           __cache__.calculateList = this.$$.falls.list.map((el) => ({ ...el }));
           ele.__bindData__ = val.item;
         },

@@ -1,5 +1,7 @@
 export declare function arrayLoop(num: number, cb: (index: number) => boolean): void;
 
+export declare function arrayLoops(start: number, end: number, cb: (index: number) => boolean): void;
+
 export declare function arrayLoopMap<T>(num: number, cb: (index: number) => T): T[];
 
 export declare function arrayBubble<T>(

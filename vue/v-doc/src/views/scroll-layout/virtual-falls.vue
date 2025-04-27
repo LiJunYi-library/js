@@ -21,7 +21,7 @@
       <div class="long-content">虚拟化瀑布流布局 回收列表</div>
       <div class="long-content">虚拟化瀑布流布局 回收列表</div>
       <div>更多推荐</div>
-      <div class="more-scroll-virtual-falls-list-bg">
+      <!-- <div class="more-scroll-virtual-falls-list-bg">
         <VRVirtualFallsList v-model="moreList" :keyExtractor="({ item }) => item.id"
           class="more-scroll-virtual-falls-list">
           <template #default="{ item, index, key }">
@@ -31,7 +31,7 @@
             <div class="title">{{ item.title }}</div>
           </template>
         </VRVirtualFallsList>
-      </div>
+      </div> -->
 
     </r-scroll>
   </div>

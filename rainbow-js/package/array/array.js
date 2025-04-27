@@ -47,6 +47,12 @@ export function arrayLoopMap(num, cb) {
   }
   return arr;
 }
+//循环,
+export function arrayLoops(start, end, cb) {
+  for (let index = start; index < end; index++) {
+    if (cb(index) === false) return;
+  }
+}
 //冒泡查找
 export function arrayBubble(list = [], formatter, verdict) {
   let value = null;
@@ -397,7 +403,7 @@ export function arrayForEachFind(arr = [], formatter) {
   return val;
 }
 
-export function arrayForcedTransform(v){
+export function arrayForcedTransform(v) {
   if (v instanceof Array) return v;
   return [];
 }

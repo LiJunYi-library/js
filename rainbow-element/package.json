@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@rainbow_ljy/rainbow-element",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "",
   "main": "build/index.js",
   "module": "build/index.esm.js",
@@ -12,7 +12,9 @@
   "files": [
     "build/index.js",
     "build/index.esm.js",
-    "build/index.css"
+    "build/index.css",
+    "build/main.css",
+    "build/font"
   ],
   "scripts": {
     "dev": "rollup -c -w",

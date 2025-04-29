@@ -1,6 +1,6 @@
 import { defineComponent, onUnmounted, onMounted, renderSlot, renderList } from "vue";
 import { findParentByLocalName } from "@rainbow_ljy/rainbow-element";
-import { useScrollController } from "../../scroll-layout/scroll-patch";
+import { useScrollController } from "../scroll-patch/utils";
 import "./index.scss";
 
 export const VRPaginationLoading = defineComponent({

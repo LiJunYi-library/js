@@ -1,5 +1,6 @@
 import { defineComponent, onUnmounted, onMounted, renderSlot, renderList } from "vue";
 import { findParentByLocalName } from "@rainbow_ljy/rainbow-element";
+import { useScrollController } from "../../scroll-layout/scroll-patch";
 import "./index.scss";
 
 export const VRPaginationLoading = defineComponent({
@@ -11,6 +12,14 @@ export const VRPaginationLoading = defineComponent({
   },
   emits: ["rollToBottom"],
   setup(props, ctx) {
+    (() => {
+      useScrollController({ onScrollDown });
+      function onScrollDown(event) {
+        const max = event.contentHeight - event.containerHeight - props.triggerBottomDistance;
+        const bool = event.scrollTop >= max;
+        if (bool) ctx.emit("rollToBottom", event);
+      }
+    })();
     let vm;
     let scrollView = document.createElement("div");
     onMounted(mounted);
@@ -19,14 +28,17 @@ export const VRPaginationLoading = defineComponent({
     function mounted() {
       const scrollName = ["r-scroll", "r-scroll-view", "r-nested-scroll"];
       scrollView = findParentByLocalName(scrollName, vm.$el);
+      if (!scrollView) return;
       scrollView.addEventListener("scrollUp", onScrollUp);
     }
 
     function unmounted() {
+      if (!scrollView) return;
       scrollView.removeEventListener("scrollUp", onScrollUp);
     }
 
     function onScrollUp(event) {
+      if (!scrollView) return;
       const max = scrollView.scrollHeight - scrollView.offsetHeight - props.triggerBottomDistance;
       const bool = scrollView.scrollTop >= max;
       if (bool) ctx.emit("rollToBottom", event);

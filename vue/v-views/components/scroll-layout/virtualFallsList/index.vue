@@ -1,9 +1,7 @@
 <template>
-  <r-scroll-virtual-falls-list
-    v-model="list"
-    :onrenderItems="onRenderItems"
-    :keyExtractor="props.keyExtractor"
-  />
+  <r-scroll-virtual-falls-list v-model="list" :onrenderItems="onRenderItems" :keyExtractor="props.keyExtractor">
+    <slot></slot>
+  </r-scroll-virtual-falls-list>
 </template>
 
 <script setup lang="jsx">
@@ -40,9 +38,9 @@ const Item = defineComponent({
     slots: Object,
   },
   setup(props) {
-    onMounted(() => {});
+    onMounted(() => { });
     return () => {
-      return props?.slots?.default?.(props.event);
+      return props?.slots?.item?.(props.event);
     };
   },
 });

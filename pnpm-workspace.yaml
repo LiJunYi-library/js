@@ -8,6 +8,7 @@ packages:
   - "react/r-view/**"
   - "vue/v-hooks/**"
   - "vue/v-view/**"
+  - "vue/v-views/**"
   - "vue/v-chart/**"
   - "vue/v-library/**"
   - "vue/v-cli/**"

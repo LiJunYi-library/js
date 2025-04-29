@@ -127,6 +127,7 @@
     "@rainbow_ljy/v-hooks": "workspace:^",
     "@rainbow_ljy/v-library": "workspace:^",
     "@rainbow_ljy/v-view": "workspace:^",
+    "@rainbow_ljy/v-views": "workspace:^",
     "@storybook/addon-controls": "^8.3.6",
     "@storybook/addon-docs": "^8.3.6",
     "@testing-library/jest-dom": "^6.1.4",

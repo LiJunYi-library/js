@@ -1,4 +1,5 @@
 import { defineComponent, onUnmounted, onMounted, renderSlot, renderList } from "vue";
+import { findParentByLocalName } from "@rainbow_ljy/rainbow-element";
 import "./index.scss";
 
 export const VRPaginationLoading = defineComponent({
@@ -16,7 +17,8 @@ export const VRPaginationLoading = defineComponent({
     onUnmounted(unmounted);
 
     function mounted() {
-      scrollView = vm.$el.parentElement;
+      const scrollName = ["r-scroll", "r-scroll-view", "r-nested-scroll"];
+      scrollView = findParentByLocalName(scrollName, vm.$el);
       scrollView.addEventListener("scrollUp", onScrollUp);
     }
 

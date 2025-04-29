@@ -2,7 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require('cors');
 const server = express();
-
+const fs = require('fs');
+const path = require('path');
 
 
 
@@ -175,6 +176,23 @@ server.get("/", (req, res) => {
     res.writeHead(200, { "Content-Type": "text/plain;charset=utf-8" });
     res.end("hellow!");
   }, 1000);
+});
+
+server.get("/aaa.html", (req, res) => {
+
+  const filePath = path.join(__dirname,  'aaa.html');
+
+  // 读取文件内容
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      // 如果读取失败，返回 500 错误
+      return res.status(500).send('Error loading the HTML file.');
+    }
+
+    // 设置响应头并返回文件内容
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.end(data);
+  });
 });
 
 server.listen(5000, () => { });

@@ -10,6 +10,7 @@ export function useScrollController(props = {}) {
     onScrollDown: () => undefined,
     onScroll: () => undefined,
     onScrollend: () => undefined,
+    onScrollRefresh: () => undefined,
     onScrollRefreshMove: () => undefined,
     onResize: () => undefined,
     onMounted: () => undefined,
@@ -164,4 +165,41 @@ export function useFallsLayout(options = {}) {
   }
 
   return args;
+}
+
+export function arrayBinarySearch(
+  setPointer = (args, index) => (args.right = index - 1),
+  arr = [],
+  formatter,
+  compare,
+) {
+  const fg = {
+    left: 0,
+    right: arr.length - 1,
+    result: -1,
+  };
+  while (fg.left <= fg.right) {
+    const index = Math.floor((fg.left + fg.right) / 2);
+    const item = arr[index];
+    if (formatter(item)) {
+      fg.result = index;
+      setPointer(fg, index, item);
+    } else if (compare(item)) {
+      fg.left = index + 1;
+    } else {
+      fg.right = index - 1;
+    }
+  }
+  return fg.result;
+}
+
+export function arrayBinaryFindIndex(arr = [], formatter, compare) {
+  return arrayBinarySearch(
+    (args, index) => {
+      args.right = index - 1;
+    },
+    arr,
+    formatter,
+    compare,
+  );
 }

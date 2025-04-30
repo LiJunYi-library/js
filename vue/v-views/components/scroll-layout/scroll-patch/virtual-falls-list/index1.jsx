@@ -13,9 +13,8 @@ import {
   watchEffect,
   onBeforeMount
 } from "vue";
-import { useScrollController,useFallsLayout } from "../utils";
+import { useScrollController,useFallsLayout,arrayBinaryFindIndex } from "../utils";
 import { useResizeObserver } from "@rainbow_ljy/v-hooks";
-import { arrayBinaryFindIndex  } from "@rainbow_ljy/rainbow-js";
 
 const mProps = {
   avgHeight: { type: Number, default: 400 }, // 每个item高度

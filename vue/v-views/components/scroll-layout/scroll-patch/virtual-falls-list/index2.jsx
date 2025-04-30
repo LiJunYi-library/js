@@ -1,7 +1,6 @@
 import { defineComponent, computed, reactive, provide, render, watch, onMounted, renderList } from "vue";
-import { useScrollController,useFallsLayout } from "../utils";
+import { useScrollController,useFallsLayout,arrayBinaryFindIndex } from "../utils";
 import { useResizeObserver } from "@rainbow_ljy/v-hooks";
-import { arrayBinaryFindIndex } from "@rainbow_ljy/rainbow-js";
 
 const mProps = {
   avgHeight: { type: Number, default: 300 }, // 每个item高度

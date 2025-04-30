@@ -6,7 +6,11 @@ export function defineElements() {
     if (Object.prototype.hasOwnProperty.call(elements, key)) {
       const element = elements[key];
       const defineKey = key.replaceAll(/[A-Z]/g, (v) => "-" + v.toLowerCase()).slice(1);
-      customElements.define(defineKey, element);
+      try {
+        customElements.define(defineKey, element);
+      } catch (error) {
+
+      }
     }
   }
 }

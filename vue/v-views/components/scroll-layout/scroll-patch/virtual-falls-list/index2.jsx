@@ -189,6 +189,7 @@ export const RScrollVirtualFallsListV2 = defineComponent({
 
     function layout(isForce) {
       let index = findIndex(scrollTop())
+      if (index === -1) index = 0;
       let item = LIST.value[index];
       if (!item) return;
       if (!isForce && CACHE.item === item) return;

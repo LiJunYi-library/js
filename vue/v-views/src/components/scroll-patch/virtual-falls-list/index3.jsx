@@ -267,6 +267,8 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       let timer;
       let index = 0;
       let column;
+      const requestTimer = requestIdleCallback || requestAnimationFrame;
+      const cancelRequestTimer = requestIdleCallback ? cancelIdleCallback : cancelAnimationFrame;
 
       function rePreLoads() {
         index = mCtx.endIndex;
@@ -305,32 +307,43 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       }
 
       function idleCallback(deadline) {
-        // console.log(index);
         if (index >= LIST.value.length) {
           stop();
           return;
         }
-        const timeRemaining = deadline.timeRemaining();
-        if (timeRemaining > 0) {
-          preLoads(10);
-          if (!deadline.didTimeout) {
-            timer = requestIdleCallback(idleCallback);
+
+        const hasTimeRemaining =
+          typeof deadline === "object" && deadline.timeRemaining && deadline.timeRemaining() > 0;
+
+        if (hasTimeRemaining || typeof deadline === "number") {
+          try {
+             preLoads(10);
+          } catch (error) {
+            console.error("Error in callback:", error);
+          }
+
+          if (
+            (typeof deadline === "object" && !deadline.didTimeout) ||
+            typeof deadline === "number"
+          ) {
+            timer = requestTimer(idleCallback);
           }
         }
       }
 
       function start() {
-        // console.log('backstageTask start',);
-        timer = requestIdleCallback(idleCallback);
+        timer = requestTimer(idleCallback);
       }
 
       function stop() {
-        // console.log('backstageTask stop',);
-        cancelIdleCallback(timer);
+        if (timer) {
+          cancelRequestTimer(timer);
+          timer = null;
+        }
       }
 
       function trigger() {
-        requestIdleCallback(idleCallback);
+        requestTimer(idleCallback);
       }
 
       return { start, stop, trigger, preLoads, preLoad, rePreLoads };

@@ -286,8 +286,8 @@ export const RScrollVirtualFallsListV2 = defineComponent({
 
     function createBackstage() {
       let timer;
-      const requestTimer = requestIdleCallback || requestAnimationFrame;
-      const cancelRequestTimer = requestIdleCallback ? cancelIdleCallback : cancelAnimationFrame;
+      const requestTimer = window.requestIdleCallback || requestAnimationFrame;
+      const cancelRequestTimer = window.requestIdleCallback ? cancelIdleCallback : cancelAnimationFrame;
 
       function idleCallback(deadline) {
         if (INDEX >= LIST.value.length) {

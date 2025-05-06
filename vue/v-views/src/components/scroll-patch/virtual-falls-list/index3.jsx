@@ -267,8 +267,8 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       let timer;
       let index = 0;
       let column;
-      const requestTimer = requestIdleCallback || requestAnimationFrame;
-      const cancelRequestTimer = requestIdleCallback ? cancelIdleCallback : cancelAnimationFrame;
+      const requestTimer = window.requestIdleCallback || requestAnimationFrame;
+      const cancelRequestTimer = window.requestIdleCallback ? cancelIdleCallback : cancelAnimationFrame;
 
       function rePreLoads() {
         index = mCtx.endIndex;

@@ -317,7 +317,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
 
         if (hasTimeRemaining || typeof deadline === "number") {
           try {
-             preLoads(10);
+            preLoads(10);
           } catch (error) {
             console.error("Error in callback:", error);
           }

@@ -13,22 +13,7 @@
     "build"
   ],
   "scripts": {
-    "build": "rollup -c"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "@babel/core": "^7.26.10",
-    "@babel/runtime": "^7.27.0",
-    "@babel/preset-env": "^7.26.9",
-    "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-buble": "^1.0.3",
-    "@rollup/plugin-commonjs": "^28.0.3",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "@vue/babel-plugin-jsx": "^1.4.0",
-    "rollup": "^4.40.1",
-    "rollup-plugin-vue": "^6.0.0",
-    "vue": "^3.5.13",
-    "@vue/compiler-sfc": "^3.5.13"
+    "build": "vite build"
   },
   "browserslist": [
     "> 1%",

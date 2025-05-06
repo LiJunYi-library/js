@@ -1,293 +1,200 @@
-import { resolveComponent, createBlock, openBlock, mergeProps, withCtx, createElementBlock, renderSlot, Fragment, renderList, normalizeClass, createTextVNode, toDisplayString, inject, reactive, onBeforeUnmount, defineComponent, onMounted, onUnmounted, createVNode, useSlots, computed, toRaw, render, provide, watch, onBeforeMount, isVNode } from 'vue';
-import { findParentByLocalName } from '@rainbow_ljy/rainbow-element';
-import { arrayRemove, arrayLoopMap, animationDebounced, arrayLoop } from '@rainbow_ljy/rainbow-js';
-import { useResizeObserver } from '@rainbow_ljy/v-hooks';
-
-function _defineProperty(e, r, t) {
-  return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
-    value: t,
-    enumerable: true,
-    configurable: true,
-    writable: true
-  }) : e[r] = t, e;
-}
-function ownKeys(e, r) {
-  var t = Object.keys(e);
-  if (Object.getOwnPropertySymbols) {
-    var o = Object.getOwnPropertySymbols(e);
-    r && (o = o.filter(function (r) {
-      return Object.getOwnPropertyDescriptor(e, r).enumerable;
-    })), t.push.apply(t, o);
-  }
-  return t;
-}
-function _objectSpread2(e) {
-  for (var r = 1; r < arguments.length; r++) {
-    var t = null != arguments[r] ? arguments[r] : {};
-    r % 2 ? ownKeys(Object(t), true).forEach(function (r) {
-      _defineProperty(e, r, t[r]);
-    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) {
-      Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r));
-    });
-  }
-  return e;
-}
-function _toPrimitive(t, r) {
-  if ("object" != typeof t || !t) return t;
-  var e = t[Symbol.toPrimitive];
-  if (void 0 !== e) {
-    var i = e.call(t, r);
-    if ("object" != typeof i) return i;
-    throw new TypeError("@@toPrimitive must return a primitive value.");
-  }
-  return ("string" === r ? String : Number)(t);
-}
-function _toPropertyKey(t) {
-  var i = _toPrimitive(t, "string");
-  return "symbol" == typeof i ? i : i + "";
-}
-
-var script$2 = {
-  __name: 'index',
+import { createElementBlock as U, openBlock as W, mergeProps as de, renderSlot as S, Fragment as he, renderList as G, normalizeClass as fe, createTextVNode as O, toDisplayString as ge, inject as K, reactive as q, onBeforeUnmount as te, defineComponent as N, onMounted as X, onUnmounted as me, createVNode as f, useSlots as ne, computed as V, toRaw as ie, withDirectives as oe, vModelText as le, render as P, provide as Q, watch as re, onBeforeMount as _e, isVNode as ve } from "vue";
+import { findParentByLocalName as be } from "@rainbow_ljy/rainbow-element";
+import { arrayRemove as xe, arrayLoopMap as ye, animationDebounced as Y, arrayLoop as ke } from "@rainbow_ljy/rainbow-js";
+import { useResizeObserver as ae } from "@rainbow_ljy/v-hooks";
+const He = ["value"], Ce = ["trigger", "value", "onClick"], Ee = {
+  __name: "index",
   props: {
-    trigger: {
-      type: String,
-      default: "click"
-    },
-    keyExtractor: {
-      type: Function,
-      default: (item, index) => index
-    },
-    listHook: {
-      type: Object,
-      default: () => ({})
-    }
+    trigger: { type: String, default: "click" },
+    keyExtractor: { type: Function, default: (e, n) => n },
+    listHook: { type: Object, default: () => ({}) }
   },
-  setup(__props) {
-    return (_ctx, _cache) => {
-      var _component_r_tab_item = resolveComponent("r-tab-item");
-      var _component_r_tabs = resolveComponent("r-tabs");
-      return openBlock(), createBlock(_component_r_tabs, mergeProps({
-        value: __props.listHook.value
-      }, _objectSpread2({}, _ctx.$attrs)), {
-        default: withCtx(() => {
-          var _props$listHook$list, _props$listHook;
-          return [(openBlock(true), createElementBlock(Fragment, null, renderList((_props$listHook$list = (_props$listHook = __props.listHook) === null || _props$listHook === void 0 ? void 0 : _props$listHook.list) !== null && _props$listHook$list !== void 0 ? _props$listHook$list : [], (item, index) => {
-            var _props$listHook2, _props$listHook2$form;
-            return openBlock(), createBlock(_component_r_tab_item, {
-              key: __props.keyExtractor(item, index),
-              trigger: __props.trigger,
-              value: (_props$listHook2 = __props.listHook) === null || _props$listHook2 === void 0 || (_props$listHook2$form = _props$listHook2.formatterValue) === null || _props$listHook2$form === void 0 ? void 0 : _props$listHook2$form.call(_props$listHook2, item, index),
-              class: normalizeClass(["v-r-tab-item", 'v-r-tab-item' + index]),
-              onClick: $event => {
-                var _props$listHook3, _props$listHook3$onSe;
-                return (_props$listHook3 = __props.listHook) === null || _props$listHook3 === void 0 || (_props$listHook3$onSe = _props$listHook3.onSelect) === null || _props$listHook3$onSe === void 0 ? void 0 : _props$listHook3$onSe.call(_props$listHook3, item, index);
-              }
-            }, {
-              default: withCtx(() => [renderSlot(_ctx.$slots, "default", {
-                item: item,
-                index: index
-              }, () => {
-                var _props$listHook4, _props$listHook4$form;
-                return [createTextVNode(toDisplayString((_props$listHook4 = __props.listHook) === null || _props$listHook4 === void 0 || (_props$listHook4$form = _props$listHook4.formatterLabel) === null || _props$listHook4$form === void 0 ? void 0 : _props$listHook4$form.call(_props$listHook4, item, index)), 1 /* TEXT */)];
-              })]),
-              _: 2 /* DYNAMIC */
-            }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["trigger", "value", "class", "onClick"]);
-          }), 128 /* KEYED_FRAGMENT */)), renderSlot(_ctx.$slots, "active")];
-        }),
-        _: 3 /* FORWARDED */
-      }, 16 /* FULL_PROPS */, ["value"]);
+  setup(e) {
+    return (n, c) => {
+      var s;
+      return W(), U("r-tabs", de({
+        value: e.listHook.value
+      }, { ...n.$attrs }), [
+        (W(!0), U(he, null, G(((s = e.listHook) == null ? void 0 : s.list) ?? [], (t, i) => {
+          var a, h;
+          return W(), U("r-tab-item", {
+            key: e.keyExtractor(t, i),
+            trigger: e.trigger,
+            value: (h = (a = e.listHook) == null ? void 0 : a.formatterValue) == null ? void 0 : h.call(a, t, i),
+            class: fe(["v-r-tab-item", "v-r-tab-item" + i]),
+            onClick: (r) => {
+              var o, _;
+              return (_ = (o = e.listHook) == null ? void 0 : o.onSelect) == null ? void 0 : _.call(o, t, i);
+            }
+          }, [
+            S(n.$slots, "default", {
+              item: t,
+              index: i
+            }, () => {
+              var r, o;
+              return [
+                O(ge((o = (r = e.listHook) == null ? void 0 : r.formatterLabel) == null ? void 0 : o.call(r, t, i)), 1)
+              ];
+            })
+          ], 10, Ce);
+        }), 128)),
+        S(n.$slots, "active")
+      ], 16, He);
     };
   }
-};
-
-script$2.__file = "src/components/radio-layout/tabs/index.vue";
-
-var VRTabs = script$2;
-
-function useScrollController() {
-  var _RScrollContext$child, _RScrollContext$child2;
-  var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var RScrollContext = inject("RScrollContext") || {};
-  var controller = reactive(_objectSpread2(_objectSpread2({
-    onScrollTop: () => undefined,
-    onScrollBottom: () => undefined,
-    onScrollUp: () => undefined,
-    onScrollDown: () => undefined,
-    onScroll: () => undefined,
-    onScrollend: () => undefined,
-    onScrollRefresh: () => undefined,
-    onScrollRefreshMove: () => undefined,
-    onResize: () => undefined,
-    onMounted: () => undefined,
-    onTouchstart: () => undefined,
-    onTouchend: () => undefined,
-    onFlotage: () => undefined
-  }, props), {}, {
-    destroy,
-    getOffsetTop,
-    dispatchFlotage,
-    context: RScrollContext
-  }));
-  RScrollContext === null || RScrollContext === void 0 || (_RScrollContext$child = RScrollContext.children) === null || _RScrollContext$child === void 0 || (_RScrollContext$child2 = _RScrollContext$child.push) === null || _RScrollContext$child2 === void 0 || _RScrollContext$child2.call(_RScrollContext$child, controller);
-  function getOffsetTop(ele) {
-    var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-    if (!RScrollContext.element) return top;
-    if (!ele) return top;
-    top = top + ele.offsetTop;
-    if (ele.offsetParent === RScrollContext.element) return top;
-    return getOffsetTop(ele.offsetParent, top);
+}, Pe = Ee;
+function J(e = {}) {
+  var a, h;
+  const n = K("RScrollContext") || {}, c = q({
+    onScrollTop: () => {
+    },
+    onScrollBottom: () => {
+    },
+    onScrollUp: () => {
+    },
+    onScrollDown: () => {
+    },
+    onScroll: () => {
+    },
+    onScrollend: () => {
+    },
+    onScrollRefresh: () => {
+    },
+    onScrollRefreshMove: () => {
+    },
+    onResize: () => {
+    },
+    onMounted: () => {
+    },
+    onTouchstart: () => {
+    },
+    onTouchend: () => {
+    },
+    onFlotage: () => {
+    },
+    ...e,
+    destroy: i,
+    getOffsetTop: s,
+    dispatchFlotage: t,
+    context: n
+  });
+  (h = (a = n == null ? void 0 : n.children) == null ? void 0 : a.push) == null || h.call(a, c);
+  function s(r, o = 0) {
+    return !n.element || !r || (o = o + r.offsetTop, r.offsetParent === n.element) ? o : s(r.offsetParent, o);
   }
-  function dispatchFlotage() {
-    for (var _len = arguments.length, arg = new Array(_len), _key = 0; _key < _len; _key++) {
-      arg[_key] = arguments[_key];
-    }
-    RScrollContext.children.forEach(element => {
-      element.onFlotage(...arg);
+  function t(...r) {
+    n.children.forEach((o) => {
+      o.onFlotage(...r);
     });
   }
-  function destroy() {
-    arrayRemove(RScrollContext === null || RScrollContext === void 0 ? void 0 : RScrollContext.children, controller);
+  function i() {
+    xe(n == null ? void 0 : n.children, c);
   }
-  onBeforeUnmount(() => {
-    destroy();
-  });
-  return controller;
+  return te(() => {
+    i();
+  }), c;
 }
-function useFallsLayout() {
-  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var config = _objectSpread2({}, options);
-  var args = {
-    width: getWidth(),
-    list: undefined,
-    setColumns,
-    afreshConfig,
-    push,
-    layout,
-    setConfig,
-    setWidth,
-    afreshLayout,
-    getMaxHeightItem,
-    getMinHeightItem,
-    setList
+function ce(e = {}) {
+  const n = { ...e }, c = {
+    width: t(),
+    list: void 0,
+    setColumns: r,
+    afreshConfig: B,
+    push: k,
+    layout: T,
+    setConfig: b,
+    setWidth: s,
+    afreshLayout: D,
+    getMaxHeightItem: o,
+    getMinHeightItem: _,
+    setList: i
   };
-  setList();
-  function setWidth() {
-    args.width = getWidth();
+  i();
+  function s() {
+    c.width = t();
   }
-  function getWidth() {
-    return "calc( ".concat(100 / config.columns, "% - ").concat((config.columns - 1) * config.gap / config.columns, "px )");
+  function t() {
+    return `calc( ${100 / n.columns}% - ${(n.columns - 1) * n.gap / n.columns}px )`;
   }
-  function setList() {
-    args.list = getList();
+  function i() {
+    c.list = a();
   }
-  function getList() {
-    return arrayLoopMap(config.columns, i => ({
+  function a() {
+    return ye(n.columns, (u) => ({
       height: 0,
-      width: args.width,
-      left: getLeft(i),
+      width: c.width,
+      left: g(u),
       top: 0,
       children: [],
-      index: i
+      index: u
     }));
   }
-  function getColumns(width) {
-    if (!config.minAutoWidth) return config.columns;
-    return Math.floor(width / config.minAutoWidth) || 1;
+  function h(u) {
+    return n.minAutoWidth ? Math.floor(u / n.minAutoWidth) || 1 : n.columns;
   }
-  function setColumns(width) {
-    config.columns = getColumns(width);
-    setWidth();
-    setList();
+  function r(u) {
+    n.columns = h(u), s(), i();
   }
-  function getMaxHeightItem() {
-    var item = args.list[0];
-    args.list.forEach(el => {
-      if (el.height > item.height) item = el;
-    });
-    return item;
+  function o() {
+    let u = c.list[0];
+    return c.list.forEach((y) => {
+      y.height > u.height && (u = y);
+    }), u;
   }
-  function getMinHeightItem(index) {
-    if (typeof index === "number") return args.list[index];
-    var item = args.list[0];
-    args.list.forEach(el => {
-      if (el.height < item.height) item = el;
-    });
-    return item;
+  function _(u) {
+    if (typeof u == "number") return c.list[u];
+    let y = c.list[0];
+    return c.list.forEach((L) => {
+      L.height < y.height && (y = L);
+    }), y;
   }
-  function setConfig(conf) {
-    Object.assign(config, conf);
-    config.columns = getColumns(conf.width);
+  function b(u) {
+    Object.assign(n, u), n.columns = h(u.width);
   }
-  function afreshConfig(conf) {
-    setConfig(conf);
-    setWidth();
-    setList();
+  function B(u) {
+    b(u), s(), i();
   }
-  function afreshLayout(conf) {
-    var items = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-    setConfig(conf);
-    setWidth();
-    layout(items);
+  function D(u, y = []) {
+    b(u), s(), T(y);
   }
-  function layout() {
-    var items = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-    setList();
-    push(...items);
+  function T(u = []) {
+    i(), k(...u);
   }
-  function push() {
-    for (var _len2 = arguments.length, items = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      items[_key2] = arguments[_key2];
-    }
-    items.forEach(ele => {
-      if (!ele) return;
-      if (!ele.style) return;
-      var node = getMinHeightItem();
-      if (node.height) node.height = node.height + config.gap;
-      ele.style.left = node.left;
-      ele.style.top = node.height + "px";
-      node.height = node.height + ele.offsetHeight;
+  function k(...u) {
+    u.forEach((y) => {
+      if (!y || !y.style) return;
+      let L = _();
+      L.height && (L.height = L.height + n.gap), y.style.left = L.left, y.style.top = L.height + "px", L.height = L.height + y.offsetHeight;
     });
   }
-  function getLeft(i) {
-    return "calc( ".concat(100 / config.columns * i, "% - ").concat((config.columns - 1) * config.gap / config.columns * i, "px + ").concat(i * config.gap, "px )");
+  function g(u) {
+    return `calc( ${100 / n.columns * u}% - ${(n.columns - 1) * n.gap / n.columns * u}px + ${u * n.gap}px )`;
   }
-  return args;
+  return c;
 }
-function arrayBinarySearch() {
-  var setPointer = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (args, index) => args.right = index - 1;
-  var arr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-  var formatter = arguments.length > 2 ? arguments[2] : undefined;
-  var compare = arguments.length > 3 ? arguments[3] : undefined;
-  var fg = {
+function Le(e = (t, i) => t.right = i - 1, n = [], c, s) {
+  const t = {
     left: 0,
-    right: arr.length - 1,
+    right: n.length - 1,
     result: -1
   };
-  while (fg.left <= fg.right) {
-    var index = Math.floor((fg.left + fg.right) / 2);
-    var item = arr[index];
-    if (formatter(item)) {
-      fg.result = index;
-      setPointer(fg, index, item);
-    } else if (compare(item)) {
-      fg.left = index + 1;
-    } else {
-      fg.right = index - 1;
-    }
+  for (; t.left <= t.right; ) {
+    const i = Math.floor((t.left + t.right) / 2), a = n[i];
+    c(a) ? (t.result = i, e(t, i, a)) : s(a) ? t.left = i + 1 : t.right = i - 1;
   }
-  return fg.result;
+  return t.result;
 }
-function arrayBinaryFindIndex() {
-  var arr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  var formatter = arguments.length > 1 ? arguments[1] : undefined;
-  var compare = arguments.length > 2 ? arguments[2] : undefined;
-  return arrayBinarySearch((args, index) => {
-    args.right = index - 1;
-  }, arr, formatter, compare);
+function ue(e = [], n, c) {
+  return Le(
+    (s, t) => {
+      s.right = t - 1;
+    },
+    e,
+    n,
+    c
+  );
 }
-
-var VRPaginationLoading = defineComponent({
+const ze = /* @__PURE__ */ N({
   props: {
     triggerBottomDistance: {
       type: Number,
@@ -305,138 +212,127 @@ var VRPaginationLoading = defineComponent({
     }
   },
   emits: ["rollToBottom"],
-  setup(props, ctx) {
+  setup(e, n) {
     (() => {
-      useScrollController({
-        onScrollDown
+      J({
+        onScrollDown: g
       });
-      function onScrollDown(event) {
-        var max = event.contentHeight - event.containerHeight - props.triggerBottomDistance;
-        var bool = event.scrollTop >= max;
-        if (bool) ctx.emit("rollToBottom", event);
+      function g(u) {
+        const y = u.contentHeight - u.containerHeight - e.triggerBottomDistance;
+        u.scrollTop >= y && n.emit("rollToBottom", u);
       }
     })();
-    var vm;
-    var scrollView = document.createElement("div");
-    onMounted(mounted);
-    onUnmounted(unmounted);
-    function mounted() {
-      var scrollName = ["r-scroll", "r-scroll-view", "r-nested-scroll"];
-      scrollView = findParentByLocalName(scrollName, vm.$el);
-      if (!scrollView) return;
-      scrollView.addEventListener("scrollUp", onScrollUp);
+    let c, s = document.createElement("div");
+    X(t), me(i);
+    function t() {
+      s = be(["r-scroll", "r-scroll-view", "r-nested-scroll"], c.$el), s && s.addEventListener("scrollUp", a);
     }
-    function unmounted() {
-      if (!scrollView) return;
-      scrollView.removeEventListener("scrollUp", onScrollUp);
+    function i() {
+      s && s.removeEventListener("scrollUp", a);
     }
-    function onScrollUp(event) {
-      if (!scrollView) return;
-      var max = scrollView.scrollHeight - scrollView.offsetHeight - props.triggerBottomDistance;
-      var bool = scrollView.scrollTop >= max;
-      if (bool) ctx.emit("rollToBottom", event);
+    function a(g) {
+      if (!s) return;
+      const u = s.scrollHeight - s.offsetHeight - e.triggerBottomDistance;
+      s.scrollTop >= u && n.emit("rollToBottom", g);
     }
-    function renderLoading() {
-      return renderSlot(ctx.slots, "loading", {}, () => [createVNode("div", {
-        "class": "r-pagination-loading-loading"
-      }, [createVNode("div", {
-        "class": "r-pagination-loading-loading-prve"
-      }, null), createVNode("div", {
-        "class": "r-pagination-loading-loading-text"
-      }, [createTextVNode("\u52A0\u8F7D\u4E2D")]), createVNode("div", {
-        "class": "r-pagination-loading-loading-next"
+    function h() {
+      return S(n.slots, "loading", {}, () => [f("div", {
+        class: "r-pagination-loading-loading"
+      }, [f("div", {
+        class: "r-pagination-loading-loading-prve"
+      }, null), f("div", {
+        class: "r-pagination-loading-loading-text"
+      }, [O("加载中")]), f("div", {
+        class: "r-pagination-loading-loading-next"
       }, null)])]);
     }
-    function renderFinished() {
-      return renderSlot(ctx.slots, "finished", {}, () => [createVNode("div", {
-        "class": "r-pagination-loading-finished"
-      }, [createVNode("div", {
-        "class": "r-pagination-loading-finished-prve"
-      }, null), createVNode("div", {
-        "class": "r-pagination-loading-finished-text"
-      }, [createTextVNode("\u6CA1\u6709\u66F4\u591A\u7684\u4E86")]), createVNode("div", {
-        "class": "r-pagination-loading-finished-next"
+    function r() {
+      return S(n.slots, "finished", {}, () => [f("div", {
+        class: "r-pagination-loading-finished"
+      }, [f("div", {
+        class: "r-pagination-loading-finished-prve"
+      }, null), f("div", {
+        class: "r-pagination-loading-finished-text"
+      }, [O("没有更多的了")]), f("div", {
+        class: "r-pagination-loading-finished-next"
       }, null)])]);
     }
-    function renderEmpty() {
-      return renderSlot(ctx.slots, "empty", {}, () => [createVNode("div", {
-        "class": "r-pagination-loading-empty"
-      }, [createVNode("div", {
-        "class": "r-pagination-loading-empty-prve"
-      }, null), createVNode("div", {
-        "class": "r-pagination-loading-empty-text"
-      }, [createTextVNode("\u6682\u65E0\u76F8\u5173\u6570\u636E\uFF0C\u8BD5\u8BD5\u5176\u4ED6\u6761\u4EF6\u5427")]), createVNode("div", {
-        "class": "r-pagination-loading-empty-next"
+    function o() {
+      return S(n.slots, "empty", {}, () => [f("div", {
+        class: "r-pagination-loading-empty"
+      }, [f("div", {
+        class: "r-pagination-loading-empty-prve"
+      }, null), f("div", {
+        class: "r-pagination-loading-empty-text"
+      }, [O("暂无相关数据，试试其他条件吧")]), f("div", {
+        class: "r-pagination-loading-empty-next"
       }, null)])]);
     }
-    function renderBegin() {
-      return renderSlot(ctx.slots, "begin", {}, () => [createVNode("div", {
-        "class": "r-pagination-loading-begin"
-      }, [createVNode("div", {
-        "class": "r-pagination-loading-begin-loading"
-      }, [createVNode("div", {
-        "class": "r-pagination-loading-begin-prve"
-      }, null), createVNode("div", {
-        "class": "r-pagination-loading-begin-text"
-      }, [createTextVNode("\u52A0\u8F7D\u4E2D")]), createVNode("div", {
-        "class": "r-pagination-loading-begin-next"
-      }, null)]), createVNode("div", {
-        "class": "r-pagination-loading-begin-skeleton"
-      }, [renderList(10, () => createVNode("div", {
-        "class": "r-pagination-loading-begin-skeleton-item"
+    function _() {
+      return S(n.slots, "begin", {}, () => [f("div", {
+        class: "r-pagination-loading-begin"
+      }, [f("div", {
+        class: "r-pagination-loading-begin-loading"
+      }, [f("div", {
+        class: "r-pagination-loading-begin-prve"
+      }, null), f("div", {
+        class: "r-pagination-loading-begin-text"
+      }, [O("加载中")]), f("div", {
+        class: "r-pagination-loading-begin-next"
+      }, null)]), f("div", {
+        class: "r-pagination-loading-begin-skeleton"
+      }, [G(10, () => f("div", {
+        class: "r-pagination-loading-begin-skeleton-item"
       }, null))])])]);
     }
-    function onBeginErrorClick() {
-      var _props$loadingHook, _props$loadingHook$ne;
-      if (props.onBeginErrorClick) props.onBeginErrorClick(...arg);else (_props$loadingHook = props.loadingHook) === null || _props$loadingHook === void 0 || (_props$loadingHook$ne = _props$loadingHook.nextBeginSend) === null || _props$loadingHook$ne === void 0 || _props$loadingHook$ne.call(_props$loadingHook);
+    function b() {
+      var g, u;
+      e.onBeginErrorClick ? e.onBeginErrorClick(...arg) : (u = (g = e.loadingHook) == null ? void 0 : g.nextBeginSend) == null || u.call(g);
     }
-    function renderError() {
-      return renderSlot(ctx.slots, "error", {}, () => [createVNode("div", {
-        "class": "r-pagination-loading-begin-error",
-        "onClick": onBeginErrorClick
-      }, [createVNode("div", {
-        "class": "r-pagination-loading-begin-error-prve"
-      }, null), createVNode("div", {
-        "class": "r-pagination-loading-begin-error-text"
-      }, [createTextVNode("\u51FA\u9519\u4E86 \u70B9\u51FB\u91CD\u65B0\u52A0\u8F7D")]), createVNode("div", {
-        "class": "r-pagination-loading-begin-error-next"
+    function B() {
+      return S(n.slots, "error", {}, () => [f("div", {
+        class: "r-pagination-loading-begin-error",
+        onClick: b
+      }, [f("div", {
+        class: "r-pagination-loading-begin-error-prve"
+      }, null), f("div", {
+        class: "r-pagination-loading-begin-error-text"
+      }, [O("出错了 点击重新加载")]), f("div", {
+        class: "r-pagination-loading-begin-error-next"
       }, null)])]);
     }
-    function onErrorLoadClick() {
-      var _props$loadingHook2, _props$loadingHook2$a;
-      if (props.onErrorLoadClick) props.onErrorLoadClick(...arguments);else (_props$loadingHook2 = props.loadingHook) === null || _props$loadingHook2 === void 0 || (_props$loadingHook2$a = _props$loadingHook2.awaitSend) === null || _props$loadingHook2$a === void 0 || _props$loadingHook2$a.call(_props$loadingHook2);
+    function D(...g) {
+      var u, y;
+      e.onErrorLoadClick ? e.onErrorLoadClick(...g) : (y = (u = e.loadingHook) == null ? void 0 : u.awaitSend) == null || y.call(u);
     }
-    function renderLoadError() {
-      return renderSlot(ctx.slots, "errorLoad", {}, () => [createVNode("div", {
-        "class": "r-pagination-loading-error",
-        "onClick": onErrorLoadClick
-      }, [createVNode("div", {
-        "class": "r-pagination-loading-error-prve"
-      }, null), createVNode("div", {
-        "class": "r-pagination-loading-error-text"
-      }, [createTextVNode("\u51FA\u9519\u4E86 \u70B9\u51FB\u91CD\u65B0\u52A0\u8F7D")]), createVNode("div", {
-        "class": "r-pagination-loading-error-next"
+    function T() {
+      return S(n.slots, "errorLoad", {}, () => [f("div", {
+        class: "r-pagination-loading-error",
+        onClick: D
+      }, [f("div", {
+        class: "r-pagination-loading-error-prve"
+      }, null), f("div", {
+        class: "r-pagination-loading-error-text"
+      }, [O("出错了 点击重新加载")]), f("div", {
+        class: "r-pagination-loading-error-next"
       }, null)])]);
     }
-    function renderState() {
-      var ps = props.loadingHook;
-      if (ps.begin === true && ps.error === true) return renderError();
-      if (ps.error === true) return renderLoadError();
-      if (ps.begin === true) return renderBegin();
-      if (ps.empty === true && ps.finished === true) return renderEmpty();
-      if (ps.finished === true) return renderFinished();
-      if (ps.loading === true) return renderLoading();
+    function k() {
+      const g = e.loadingHook;
+      if (g.begin === !0 && g.error === !0) return B();
+      if (g.error === !0) return T();
+      if (g.begin === !0) return _();
+      if (g.empty === !0 && g.finished === !0) return o();
+      if (g.finished === !0) return r();
+      if (g.loading === !0) return h();
     }
-    return (v, a) => {
-      var _ctx$slots, _ctx$slots$default;
-      vm = v;
-      return [(_ctx$slots = ctx.slots) === null || _ctx$slots === void 0 || (_ctx$slots$default = _ctx$slots.default) === null || _ctx$slots$default === void 0 ? void 0 : _ctx$slots$default.call(_ctx$slots), renderState()];
+    return (g, u) => {
+      var y, L;
+      return c = g, [(L = (y = n.slots) == null ? void 0 : y.default) == null ? void 0 : L.call(y), k()];
     };
   }
-});
-
-var script$1 = {
-  __name: 'index',
+}), pe = ["keyExtractor"], Me = {
+  __name: "index",
   props: {
     modelValue: {
       type: Array,
@@ -444,7 +340,7 @@ var script$1 = {
     },
     keyExtractor: {
       type: Function,
-      default: val => val.item
+      default: (e) => e.item
     },
     listHook: {
       type: Object,
@@ -452,70 +348,46 @@ var script$1 = {
     }
   },
   emits: ["update:modelValue"],
-  setup(__props, _ref) {
-    var {
-      emit: __emit
-    } = _ref;
-    var slots = useSlots();
-    var emit = __emit;
-    var props = __props;
-    var list = computed({
-      set(val) {
-        if (props.listHook.list) return props.listHook.list = val;
-        emit("update:modelValue", val);
+  setup(e, {
+    emit: n
+  }) {
+    const c = ne(), s = n, t = e, i = V({
+      set(o) {
+        if (t.listHook.list) return t.listHook.list = o;
+        s("update:modelValue", o);
       },
       get() {
-        if (props.listHook.list) return props.listHook.list;
-        return toRaw(props.modelValue);
+        return t.listHook.list ? t.listHook.list : ie(t.modelValue);
       }
-    });
-    var refList = computed(() => {
-      if (props.listHook.list) return props.listHook.list;
-      return props.modelValue;
-    });
-    var Item = defineComponent({
-      inheritAttrs: false,
+    }), a = V(() => t.listHook.list ? t.listHook.list : t.modelValue), h = /* @__PURE__ */ N({
+      inheritAttrs: !1,
       props: {
         event: Object,
         slots: Object
       },
-      setup(props) {
+      setup(o) {
         return () => {
-          var _props$slots, _props$slots$item;
-          return props === null || props === void 0 || (_props$slots = props.slots) === null || _props$slots === void 0 || (_props$slots$item = _props$slots.item) === null || _props$slots$item === void 0 ? void 0 : _props$slots$item.call(_props$slots, props.event);
+          var _, b;
+          return (b = (_ = o == null ? void 0 : o.slots) == null ? void 0 : _.item) == null ? void 0 : b.call(_, o.event);
         };
       }
     });
-    function onRenderItems(event) {
-      event.item = refList.value[event.index];
-      render(createVNode(Item, {
-        "event": event,
-        "slots": slots,
-        "key": props.keyExtractor(event),
-        "data-key": props.keyExtractor(event)
-      }, null), event.ele);
+    function r(o) {
+      o.item = a.value[o.index], P(f(h, {
+        event: o,
+        slots: c,
+        key: t.keyExtractor(o),
+        "data-key": t.keyExtractor(o)
+      }, null), o.ele);
     }
-    return (_ctx, _cache) => {
-      var _component_r_scroll_virtual_grid_list = resolveComponent("r-scroll-virtual-grid-list");
-      return openBlock(), createBlock(_component_r_scroll_virtual_grid_list, {
-        modelValue: list.value,
-        "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => list.value = $event),
-        onrenderItems: onRenderItems,
-        keyExtractor: props.keyExtractor
-      }, {
-        default: withCtx(() => [renderSlot(_ctx.$slots, "default")]),
-        _: 3 /* FORWARDED */
-      }, 8 /* PROPS */, ["modelValue", "keyExtractor"]);
-    };
+    return (o, _) => oe((W(), U("r-scroll-virtual-grid-list", {
+      "onUpdate:modelValue": _[0] || (_[0] = (b) => i.value = b),
+      onrenderItems: r,
+      keyExtractor: t.keyExtractor
+    }, [S(o.$slots, "default")], 8, pe)), [[le, i.value]]);
   }
-};
-
-script$1.__file = "src/components/scroll-layout/virtualGridList/index.vue";
-
-var VRVirtualGridList = script$1;
-
-var script = {
-  __name: 'index',
+}, Ue = Me, we = ["keyExtractor"], Ie = {
+  __name: "index",
   props: {
     modelValue: {
       type: Array,
@@ -523,7 +395,7 @@ var script = {
     },
     keyExtractor: {
       type: Function,
-      default: val => val.item
+      default: (e) => e.item
     },
     listHook: {
       type: Object,
@@ -531,70 +403,46 @@ var script = {
     }
   },
   emits: ["update:modelValue"],
-  setup(__props, _ref) {
-    var {
-      emit: __emit
-    } = _ref;
-    var slots = useSlots();
-    var emit = __emit;
-    var props = __props;
-    var list = computed({
-      set(val) {
-        if (props.listHook.list) return props.listHook.list = val;
-        emit("update:modelValue", val);
+  setup(e, {
+    emit: n
+  }) {
+    const c = ne(), s = n, t = e, i = V({
+      set(o) {
+        if (t.listHook.list) return t.listHook.list = o;
+        s("update:modelValue", o);
       },
       get() {
-        if (props.listHook.list) return props.listHook.list;
-        return toRaw(props.modelValue);
+        return t.listHook.list ? t.listHook.list : ie(t.modelValue);
       }
-    });
-    var refList = computed(() => {
-      if (props.listHook.list) return props.listHook.list;
-      return props.modelValue;
-    });
-    var Item = defineComponent({
-      inheritAttrs: false,
+    }), a = V(() => t.listHook.list ? t.listHook.list : t.modelValue), h = /* @__PURE__ */ N({
+      inheritAttrs: !1,
       props: {
         event: Object,
         slots: Object
       },
-      setup(props) {
-        onMounted(() => {});
-        return () => {
-          var _props$slots, _props$slots$item;
-          return props === null || props === void 0 || (_props$slots = props.slots) === null || _props$slots === void 0 || (_props$slots$item = _props$slots.item) === null || _props$slots$item === void 0 ? void 0 : _props$slots$item.call(_props$slots, props.event);
+      setup(o) {
+        return X(() => {
+        }), () => {
+          var _, b;
+          return (b = (_ = o == null ? void 0 : o.slots) == null ? void 0 : _.item) == null ? void 0 : b.call(_, o.event);
         };
       }
     });
-    function onRenderItems(event) {
-      event.item = refList.value[event.index];
-      render(createVNode(Item, {
-        "event": event,
-        "slots": slots,
-        "key": props.keyExtractor(event),
-        "data-key": props.keyExtractor(event)
-      }, null), event.ele);
+    function r(o) {
+      o.item = a.value[o.index], P(f(h, {
+        event: o,
+        slots: c,
+        key: t.keyExtractor(o),
+        "data-key": t.keyExtractor(o)
+      }, null), o.ele);
     }
-    return (_ctx, _cache) => {
-      var _component_r_scroll_virtual_falls_list = resolveComponent("r-scroll-virtual-falls-list");
-      return openBlock(), createBlock(_component_r_scroll_virtual_falls_list, {
-        modelValue: list.value,
-        "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => list.value = $event),
-        onrenderItems: onRenderItems,
-        keyExtractor: props.keyExtractor
-      }, {
-        default: withCtx(() => [renderSlot(_ctx.$slots, "default")]),
-        _: 3 /* FORWARDED */
-      }, 8 /* PROPS */, ["modelValue", "keyExtractor"]);
-    };
+    return (o, _) => oe((W(), U("r-scroll-virtual-falls-list", {
+      "onUpdate:modelValue": _[0] || (_[0] = (b) => i.value = b),
+      onrenderItems: r,
+      keyExtractor: t.keyExtractor
+    }, [S(o.$slots, "default")], 8, we)), [[le, i.value]]);
   }
-};
-
-script.__file = "src/components/scroll-layout/virtualFallsList/index.vue";
-
-var VRVirtualFallsList = script;
-
-var mProps$2 = {
+}, We = Ie, Be = {
   avgHeight: {
     type: Number,
     default: 300
@@ -602,12 +450,9 @@ var mProps$2 = {
   // 每个item高度
   keyExtractor: {
     type: Function,
-    default: _ref => {
-      var {
-        index
-      } = _ref;
-      return index;
-    }
+    default: ({
+      index: e
+    }) => e
   },
   columns: {
     type: Number,
@@ -635,327 +480,194 @@ var mProps$2 = {
     type: Number,
     default: 30
   }
-};
-var ListenerList$1 = defineComponent({
+}, Te = /* @__PURE__ */ N({
   props: {
     list: Array
   },
-  setup(props, context) {
-    return () => {
-      return renderList(props.list || [], () => null);
-    };
+  setup(e, n) {
+    return () => G(e.list || [], () => null);
   }
-});
-var Item$1 = defineComponent({
+}), Z = /* @__PURE__ */ N({
   props: {
     item: Object,
     index: Number,
     slots: Object
   },
-  setup(props, context) {
-    var vm;
-    useResizeObserver(() => vm.$el, onSizeChange);
-    function onSizeChange(events) {
-      var _events$0$target$offs, _events$, _props$item$__cache__, _props$item;
-      var height = (_events$0$target$offs = events === null || events === void 0 || (_events$ = events[0]) === null || _events$ === void 0 || (_events$ = _events$.target) === null || _events$ === void 0 ? void 0 : _events$.offsetHeight) !== null && _events$0$target$offs !== void 0 ? _events$0$target$offs : 0;
-      var oldHeight = (_props$item$__cache__ = (_props$item = props.item) === null || _props$item === void 0 || (_props$item = _props$item.__cache__) === null || _props$item === void 0 ? void 0 : _props$item.height) !== null && _props$item$__cache__ !== void 0 ? _props$item$__cache__ : 0;
-      if (height === 0) return;
-      if (oldHeight !== height) {
-        var _props$item2;
-        if ((_props$item2 = props.item) !== null && _props$item2 !== void 0 && _props$item2.__cache__) {
-          props.item.__cache__.height = height;
-          props.item.__cache__.isResize = true;
-          context.emit('heightChange', height, oldHeight, events);
-        }
-      }
+  setup(e, n) {
+    let c;
+    ae(() => c.$el, s);
+    function s(t) {
+      var h, r, o, _, b;
+      const i = ((r = (h = t == null ? void 0 : t[0]) == null ? void 0 : h.target) == null ? void 0 : r.offsetHeight) ?? 0, a = ((_ = (o = e.item) == null ? void 0 : o.__cache__) == null ? void 0 : _.height) ?? 0;
+      i !== 0 && a !== i && (b = e.item) != null && b.__cache__ && (e.item.__cache__.height = i, e.item.__cache__.isResize = !0, n.emit("heightChange", i, a, t));
     }
-    return el => {
-      var _props$slots, _props$slots$default;
-      vm = el;
-      return createVNode("div", {
-        "class": "r-scroll-virtual-falls-list-item-content"
-      }, [props === null || props === void 0 || (_props$slots = props.slots) === null || _props$slots === void 0 || (_props$slots$default = _props$slots.default) === null || _props$slots$default === void 0 ? void 0 : _props$slots$default.call(_props$slots, props)]);
+    return (t) => {
+      var i, a;
+      return c = t, f("div", {
+        class: "r-scroll-virtual-falls-list-item-content"
+      }, [(a = (i = e == null ? void 0 : e.slots) == null ? void 0 : i.default) == null ? void 0 : a.call(i, e)]);
     };
   }
-});
-var RScrollVirtualFallsListV2 = defineComponent({
-  props: _objectSpread2({}, mProps$2),
-  setup(props, context) {
-    var falls = useFallsLayout(props);
-    var LIST = computed(() => (props.listHook ? props.listHook.list : props.list) || []);
-    var watchLock = false;
-    var contentHtml;
-    var INDEX = 0;
-    var COLUMN = falls.getMinHeightItem();
-    var CACHE = {
-      nodeMap: new Map(),
-      currentDivNode: undefined,
-      item: undefined
+}), qe = /* @__PURE__ */ N({
+  props: {
+    ...Be
+  },
+  setup(e, n) {
+    const c = ce(e), s = V(() => (e.listHook ? e.listHook.list : e.list) || []);
+    let t = !1, i, a = 0, h = c.getMinHeightItem(), r = {
+      nodeMap: /* @__PURE__ */ new Map(),
+      currentDivNode: void 0,
+      item: void 0
     };
-    var CURRENT = reactive({
-      nodeMap: new Map(),
+    const o = q({
+      nodeMap: /* @__PURE__ */ new Map(),
       index: 0,
       list: []
+    }), _ = m(), b = q({
+      context: n,
+      slots: n.slots,
+      renderItems: L,
+      layout: F
     });
-    var backstageTask = createBackstage();
-    var mCtx = reactive({
-      context,
-      slots: context.slots,
-      renderItems,
-      layout
-    });
-    provide("RScrollVirtualFallsListContext", mCtx);
-    context.expose(mCtx);
-    watch(() => LIST.value.slice(CURRENT.index, CURRENT.index + props.renderCount), onListChange);
-    var scrollController = useScrollController({
-      onScroll,
-      onResize
-    });
-    var scrollTop = () => {
-      var _scrollController$con, _scrollController$con2;
-      return (_scrollController$con = scrollController === null || scrollController === void 0 || (_scrollController$con2 = scrollController.context) === null || _scrollController$con2 === void 0 || (_scrollController$con2 = _scrollController$con2.element) === null || _scrollController$con2 === void 0 ? void 0 : _scrollController$con2.scrollTop) !== null && _scrollController$con !== void 0 ? _scrollController$con : 0;
-    };
-    var minHeight = computed(() => {
-      if (!LIST.value.length) return 0;
-      return (props.avgHeight + props.gap) * Math.ceil(LIST.value.length / props.columns) - props.gap;
-    });
-    var recycleTop = () => -window.innerHeight + scrollController.getOffsetTop(contentHtml);
-    var recycleBottom = () => window.innerHeight * 2 + scrollController.getOffsetTop(contentHtml);
-    function findIndex(sTop) {
-      return arrayBinaryFindIndex(LIST.value, item => {
-        if (!item.__cache__) return false;
-        return item.__cache__.vTop <= sTop && sTop <= item.__cache__.vBottom;
-      }, item => {
-        if (!item.__cache__) return false;
-        return item.__cache__.vTop < sTop;
-      });
+    Q("RScrollVirtualFallsListContext", b), n.expose(b), re(() => s.value.slice(o.index, o.index + e.renderCount), C);
+    const B = J({
+      onScroll: w,
+      onResize: p
+    }), D = () => {
+      var d, l;
+      return ((l = (d = B == null ? void 0 : B.context) == null ? void 0 : d.element) == null ? void 0 : l.scrollTop) ?? 0;
+    }, T = V(() => s.value.length ? (e.avgHeight + e.gap) * Math.ceil(s.value.length / e.columns) - e.gap : 0), k = () => -window.innerHeight + B.getOffsetTop(i), g = () => window.innerHeight * 2 + B.getOffsetTop(i);
+    function u(d) {
+      return ue(s.value, (l) => l.__cache__ ? l.__cache__.vTop <= d && d <= l.__cache__.vBottom : !1, (l) => l.__cache__ ? l.__cache__.vTop < d : !1);
     }
-    function renderItem(nth) {
-      var _ele$__cache__, _ele$__cache__2, _ele$__cache__3;
-      var ele = LIST.value[INDEX];
-      if (!ele) return;
-      var node = COLUMN;
-      if (!ele.__cache__) ele.__cache__ = {};
-      ele.__cache__.columns = falls.list.map(el => _objectSpread2({}, el));
-      if (node.height) node.height = node.height + props.gap;
-      ele.__cache__.top = node.height;
-      ele.__cache__.left = node.left;
-      ele.__cache__.width = node.width;
-      ele.__cache__.columnIndex = node.index;
-      ele.__cache__.index = INDEX;
-      // console.log(CACHE.nodeMap.has(ele), ele);
-      var div;
-      if (CACHE.nodeMap.has(ele)) {
-        div = CACHE.nodeMap.get(ele);
-        div.setAttribute('data-index', INDEX);
-        render(createVNode(Item$1, {
-          "item": ele,
-          "index": INDEX,
-          "slots": context.slots,
-          "key": props.keyExtractor({
-            item: ele,
-            index: INDEX
-          }),
-          "onHeightChange": onHeightChange
-        }, null), div);
-        // console.log('缓存有', div);
-        if (CACHE.currentDivNode) {
-          if (CACHE.currentDivNode.nextSibling === div) ; else {
-            contentHtml.insertBefore(div, CACHE.currentDivNode.nextSibling);
-          }
-        }
-        CACHE.currentDivNode = div;
-        CACHE.nodeMap.delete(ele);
-        // console.log('删除', CACHE.nodeMap.size);
-      } else {
-        // console.log('没有则创建', INDEX, ele);
-        div = document.createElement('div');
-        div.setAttribute('data-index', INDEX);
-        div.classList.add('r-scroll-virtual-falls-list-item');
-        render(createVNode(Item$1, {
-          "item": ele,
-          "index": INDEX,
-          "slots": context.slots,
-          "key": props.keyExtractor({
-            item: ele,
-            index: INDEX
-          }),
-          "onHeightChange": onHeightChange
-        }, null), div);
-        if (!CACHE.currentDivNode) {
-          contentHtml.insertBefore(div, contentHtml.firstChild);
-          CACHE.currentDivNode = div;
-        } else {
-          contentHtml.insertBefore(div, CACHE.currentDivNode.nextSibling);
-          CACHE.currentDivNode = div;
-        }
-      }
-      div.style.top = (ele === null || ele === void 0 || (_ele$__cache__ = ele.__cache__) === null || _ele$__cache__ === void 0 ? void 0 : _ele$__cache__.top) + 'px';
-      div.style.left = ele === null || ele === void 0 || (_ele$__cache__2 = ele.__cache__) === null || _ele$__cache__2 === void 0 ? void 0 : _ele$__cache__2.left;
-      div.style.width = ele === null || ele === void 0 || (_ele$__cache__3 = ele.__cache__) === null || _ele$__cache__3 === void 0 ? void 0 : _ele$__cache__3.width;
-      ele.__cache__.height = div.offsetHeight;
-      node.height = node.height + div.offsetHeight;
-      ele.__cache__.bottom = node.height;
-      ele.__cache__.vTop = ele.__cache__.top + recycleTop();
-      ele.__cache__.vBottom = ele.__cache__.bottom + recycleBottom();
-      ele.__cache__.columns2 = falls.list.map(el => _objectSpread2({}, el));
-      //
-      INDEX++;
-      COLUMN = falls.getMinHeightItem();
-      CURRENT.nodeMap.set(ele, div);
+    function y(d) {
+      var H, M, j;
+      const l = s.value[a];
+      if (!l) return;
+      let E = h;
+      l.__cache__ || (l.__cache__ = {}), l.__cache__.columns = c.list.map((A) => ({
+        ...A
+      })), E.height && (E.height = E.height + e.gap), l.__cache__.top = E.height, l.__cache__.left = E.left, l.__cache__.width = E.width, l.__cache__.columnIndex = E.index, l.__cache__.index = a;
+      let v;
+      r.nodeMap.has(l) ? (v = r.nodeMap.get(l), v.setAttribute("data-index", a), P(f(Z, {
+        item: l,
+        index: a,
+        slots: n.slots,
+        key: e.keyExtractor({
+          item: l,
+          index: a
+        }),
+        onHeightChange: I
+      }, null), v), r.currentDivNode && (r.currentDivNode.nextSibling === v || i.insertBefore(v, r.currentDivNode.nextSibling)), r.currentDivNode = v, r.nodeMap.delete(l)) : (v = document.createElement("div"), v.setAttribute("data-index", a), v.classList.add("r-scroll-virtual-falls-list-item"), P(f(Z, {
+        item: l,
+        index: a,
+        slots: n.slots,
+        key: e.keyExtractor({
+          item: l,
+          index: a
+        }),
+        onHeightChange: I
+      }, null), v), r.currentDivNode ? (i.insertBefore(v, r.currentDivNode.nextSibling), r.currentDivNode = v) : (i.insertBefore(v, i.firstChild), r.currentDivNode = v)), v.style.top = ((H = l == null ? void 0 : l.__cache__) == null ? void 0 : H.top) + "px", v.style.left = (M = l == null ? void 0 : l.__cache__) == null ? void 0 : M.left, v.style.width = (j = l == null ? void 0 : l.__cache__) == null ? void 0 : j.width, l.__cache__.height = v.offsetHeight, E.height = E.height + v.offsetHeight, l.__cache__.bottom = E.height, l.__cache__.vTop = l.__cache__.top + k(), l.__cache__.vBottom = l.__cache__.bottom + g(), l.__cache__.columns2 = c.list.map((A) => ({
+        ...A
+      })), a++, h = c.getMinHeightItem(), o.nodeMap.set(l, v);
     }
-    function renderItems() {
-      var n = 0;
-      CURRENT.nodeMap = new Map();
-      CACHE.currentDivNode = undefined;
-      backstageTask.stop();
-      while (n < props.renderCount) {
-        renderItem();
-        n++;
-      }
-      // console.log('需要删除的', CACHE.nodeMap);
-      CACHE.nodeMap.forEach(div => {
-        div.remove();
-      });
-      CACHE.currentDivNode = undefined;
-      CACHE.nodeMap = CURRENT.nodeMap;
-      preLoads();
-      backstageTask.start();
+    function L() {
+      let d = 0;
+      for (o.nodeMap = /* @__PURE__ */ new Map(), r.currentDivNode = void 0, _.stop(); d < e.renderCount; )
+        y(), d++;
+      r.nodeMap.forEach((l) => {
+        l.remove();
+      }), r.currentDivNode = void 0, r.nodeMap = o.nodeMap, $(), _.start();
     }
-    function layout(isForce) {
-      var index = findIndex(scrollTop());
-      if (index === -1) index = 0;
-      var item = LIST.value[index];
-      if (!item) return;
-      if (!isForce && CACHE.item === item) return;
-      // console.log('layout');
-      INDEX = index;
-      watchLock = true;
-      CURRENT.index = INDEX;
-      var cache = item.__cache__;
-      if (index === 0) {
-        falls.setList();
-        COLUMN = falls.getMinHeightItem();
-      } else {
-        falls.list = cache.columns;
-        COLUMN = falls.getMinHeightItem(cache.columnIndex);
-      }
-      CACHE.item = item;
-      renderItems();
-      watchLock = false;
+    function F(d) {
+      let l = u(D());
+      l === -1 && (l = 0);
+      let E = s.value[l];
+      if (!E || !d && r.item === E) return;
+      a = l, t = !0, o.index = a;
+      let v = E.__cache__;
+      l === 0 ? (c.setList(), h = c.getMinHeightItem()) : (c.list = v.columns, h = c.getMinHeightItem(v.columnIndex)), r.item = E, L(), t = !1;
     }
-    function resize() {
-      layout(true);
+    function R() {
+      F(!0);
     }
-    function preLoad() {
-      var ele = LIST.value[INDEX];
-      if (!ele) return;
-      var node = COLUMN;
-      if (!ele.__cache__) ele.__cache__ = {};
-      var cache__height = ele.__cache__.height || props.avgHeight;
-      ele.__cache__.columns = falls.list.map(el => _objectSpread2({}, el));
-      if (node.height) node.height = node.height + props.gap;
-      ele.__cache__.top = node.height;
-      ele.__cache__.left = node.left;
-      ele.__cache__.width = node.width;
-      ele.__cache__.columnIndex = node.index;
-      ele.__cache__.index = INDEX;
-      ele.__cache__.height = cache__height;
-      node.height = node.height + cache__height;
-      ele.__cache__.bottom = node.height;
-      ele.__cache__.columns2 = falls.list.map(el => _objectSpread2({}, el));
-      ele.__cache__.vTop = ele.__cache__.top + recycleTop();
-      ele.__cache__.vBottom = ele.__cache__.bottom + recycleBottom();
-      INDEX++;
-      COLUMN = falls.getMinHeightItem();
+    function z() {
+      const d = s.value[a];
+      if (!d) return;
+      let l = h;
+      d.__cache__ || (d.__cache__ = {});
+      const E = d.__cache__.height || e.avgHeight;
+      d.__cache__.columns = c.list.map((v) => ({
+        ...v
+      })), l.height && (l.height = l.height + e.gap), d.__cache__.top = l.height, d.__cache__.left = l.left, d.__cache__.width = l.width, d.__cache__.columnIndex = l.index, d.__cache__.index = a, d.__cache__.height = E, l.height = l.height + E, d.__cache__.bottom = l.height, d.__cache__.columns2 = c.list.map((v) => ({
+        ...v
+      })), d.__cache__.vTop = d.__cache__.top + k(), d.__cache__.vBottom = d.__cache__.bottom + g(), a++, h = c.getMinHeightItem();
     }
-    function preLoads() {
-      var count = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : props.preLoadsCount;
-      var n = 0;
-      while (n < count) {
-        preLoad();
-        n++;
-      }
+    function $(d = e.preLoadsCount) {
+      let l = 0;
+      for (; l < d; )
+        z(), l++;
     }
-    function getHeight() {
-      var _LIST$value$at;
-      var columns = (_LIST$value$at = LIST.value.at(-1)) === null || _LIST$value$at === void 0 || (_LIST$value$at = _LIST$value$at.__cache__) === null || _LIST$value$at === void 0 ? void 0 : _LIST$value$at.columns2;
-      if (!columns) return minHeight.value;
-      var col = columns[0];
-      columns.forEach(el => {
-        if (el.height > col.height) col = el;
-      });
-      return col.height;
+    function x() {
+      var E, v;
+      const d = (v = (E = s.value.at(-1)) == null ? void 0 : E.__cache__) == null ? void 0 : v.columns2;
+      if (!d) return T.value;
+      let l = d[0];
+      return d.forEach((H) => {
+        H.height > l.height && (l = H);
+      }), l.height;
     }
-    function createBackstage() {
-      var timer;
-      function idleCallback(deadline) {
-        if (INDEX >= LIST.value.length) {
-          stop();
+    function m() {
+      let d;
+      function l(M) {
+        if (a >= s.value.length) {
+          v();
           return;
         }
-        var timeRemaining = deadline.timeRemaining();
-        if (timeRemaining > 0) {
-          preLoads(props.preLoadCount);
-          if (!deadline.didTimeout) {
-            timer = requestIdleCallback(idleCallback);
-          }
-        }
+        M.timeRemaining() > 0 && ($(e.preLoadCount), M.didTimeout || (d = requestIdleCallback(l)));
       }
-      function start() {
-        // console.log('backstageTask start',);
-        timer = requestIdleCallback(idleCallback);
+      function E() {
+        d = requestIdleCallback(l);
       }
-      function stop() {
-        // console.log('backstageTask stop',);
-        cancelIdleCallback(timer);
+      function v() {
+        cancelIdleCallback(d);
       }
-      function trigger() {
-        requestIdleCallback(idleCallback);
+      function H() {
+        requestIdleCallback(l);
       }
       return {
-        start,
-        stop,
-        trigger
+        start: E,
+        stop: v,
+        trigger: H
       };
     }
-    onMounted(() => {
-      // console.log('onMounted', scrollTop());
-      renderItems();
+    X(() => {
+      L();
     });
-    function onHeightChange() {
-      // console.log('onHeightChange');
-      resize();
+    function I() {
+      R();
     }
-    function onScroll() {
-      // console.log('onScroll');
-      layout();
+    function w() {
+      F();
     }
-    function onResize() {
-      // console.log('onResize', scrollTop());
-      layout();
+    function p() {
+      F();
     }
-    function onListChange() {
-      // console.log('onListChange', scrollTop());
-      if (watchLock) return;
-      resize();
+    function C() {
+      t || R();
     }
-    return () => {
-      return createVNode("div", null, [createVNode(ListenerList$1, {
-        "list": LIST.value.slice(CURRENT.index, CURRENT.index + props.renderCount)
-      }, null), createVNode("div", {
-        "style": {
-          height: getHeight() + 'px'
-        },
-        "data-length": LIST.value.length,
-        "ref": el => contentHtml = el,
-        "class": "r-scroll-virtual-falls-list"
-      }, null)]);
-    };
+    return () => f("div", null, [f(Te, {
+      list: s.value.slice(o.index, o.index + e.renderCount)
+    }, null), f("div", {
+      style: {
+        height: x() + "px"
+      },
+      "data-length": s.value.length,
+      ref: (d) => i = d,
+      class: "r-scroll-virtual-falls-list"
+    }, null)]);
   }
-});
-
-var mProps$1 = {
+}), Ne = {
   avgHeight: {
     type: Number,
     default: 200
@@ -963,12 +675,9 @@ var mProps$1 = {
   // 每个item高度
   keyExtractor: {
     type: Function,
-    default: _ref => {
-      var {
-        index
-      } = _ref;
-      return index;
-    }
+    default: ({
+      index: e
+    }) => e
   },
   columns: {
     type: Number,
@@ -992,339 +701,205 @@ var mProps$1 = {
     type: Number,
     default: 30
   }
-};
-var CONTEXT = defineComponent({
+}, Se = /* @__PURE__ */ N({
   props: {
     list: Array
   },
-  setup(props, context) {
-    return () => {
-      renderList(props.list || [], (item, index) => null);
-      return null;
-    };
+  setup(e, n) {
+    return () => (G(e.list || [], (c, s) => null), null);
   }
-});
-var ListenerList = defineComponent({
+}), Ve = /* @__PURE__ */ N({
   props: {
     list: Array
   },
-  setup(props, context) {
-    return () => {
-      return createVNode(CONTEXT, {
-        "list": props.list
-      }, null);
-    };
+  setup(e, n) {
+    return () => f(Se, {
+      list: e.list
+    }, null);
   }
-});
-var Item = defineComponent({
+}), ee = /* @__PURE__ */ N({
   props: {
     item: Object,
     index: Number,
     slots: Object
   },
-  setup(props, context) {
-    var vm;
-    useResizeObserver(() => vm.$el, onSizeChange);
-    function onSizeChange(events) {
-      var _events$0$target$offs, _events$, _props$item$__cache__, _props$item;
-      var height = (_events$0$target$offs = events === null || events === void 0 || (_events$ = events[0]) === null || _events$ === void 0 || (_events$ = _events$.target) === null || _events$ === void 0 ? void 0 : _events$.offsetHeight) !== null && _events$0$target$offs !== void 0 ? _events$0$target$offs : 0;
-      var oldHeight = (_props$item$__cache__ = (_props$item = props.item) === null || _props$item === void 0 || (_props$item = _props$item.__cache__) === null || _props$item === void 0 ? void 0 : _props$item.height) !== null && _props$item$__cache__ !== void 0 ? _props$item$__cache__ : 0;
-      if (height === 0) return;
-      if (oldHeight !== height) {
-        var _props$item2;
-        if ((_props$item2 = props.item) !== null && _props$item2 !== void 0 && _props$item2.__cache__) {
-          props.item.__cache__.height = height;
-          props.item.__cache__.isResize = true;
-          context.emit('heightChange', height, oldHeight, events);
-        }
-      }
+  setup(e, n) {
+    let c;
+    ae(() => c.$el, s);
+    function s(t) {
+      var h, r, o, _, b;
+      const i = ((r = (h = t == null ? void 0 : t[0]) == null ? void 0 : h.target) == null ? void 0 : r.offsetHeight) ?? 0, a = ((_ = (o = e.item) == null ? void 0 : o.__cache__) == null ? void 0 : _.height) ?? 0;
+      i !== 0 && a !== i && (b = e.item) != null && b.__cache__ && (e.item.__cache__.height = i, e.item.__cache__.isResize = !0, n.emit("heightChange", i, a, t));
     }
-    return el => {
-      var _props$slots, _props$slots$default;
-      vm = el;
-      return createVNode("div", {
-        "class": "r-scroll-virtual-falls-list-item-content"
-      }, [props === null || props === void 0 || (_props$slots = props.slots) === null || _props$slots === void 0 || (_props$slots$default = _props$slots.default) === null || _props$slots$default === void 0 ? void 0 : _props$slots$default.call(_props$slots, props)]);
+    return (t) => {
+      var i, a;
+      return c = t, f("div", {
+        class: "r-scroll-virtual-falls-list-item-content"
+      }, [(a = (i = e == null ? void 0 : e.slots) == null ? void 0 : i.default) == null ? void 0 : a.call(i, e)]);
     };
   }
-});
-var RScrollVirtualFallsListV3 = defineComponent({
-  props: _objectSpread2({}, mProps$1),
-  setup(props, context) {
-    var contentHtml;
-    var watchLock = false;
-    var falls = useFallsLayout(props);
-    var LIST = computed(() => (props.listHook ? props.listHook.list : props.list) || []);
-    var backstage = createBackstage();
-    var CACHE = {
-      nodeMap: new Map(),
-      DivPointer: undefined,
-      item: undefined
-    };
-    var mCtx = reactive({
-      context,
-      slots: context.slots,
+}), Ge = /* @__PURE__ */ N({
+  props: {
+    ...Ne
+  },
+  setup(e, n) {
+    let c, s = !1;
+    const t = ce(e), i = V(() => (e.listHook ? e.listHook.list : e.list) || []), a = F(), h = {
+      nodeMap: /* @__PURE__ */ new Map(),
+      DivPointer: void 0,
+      item: void 0
+    }, r = q({
+      context: n,
+      slots: n.slots,
       index: 0,
       endIndex: 0,
-      column: falls.getMinHeightItem(),
-      endColumn: falls.getMinHeightItem(),
-      nodeMap: new Map(),
+      column: t.getMinHeightItem(),
+      endColumn: t.getMinHeightItem(),
+      nodeMap: /* @__PURE__ */ new Map(),
       renderList: [],
-      renderItems
+      renderItems: g
     });
-    provide("RScrollVirtualFallsListContext", mCtx);
-    context.expose(mCtx);
-    var onResizeDebounced = animationDebounced(onResize);
-    var onHeightChange = animationDebounced(onChangeHeight);
-    var scrollController = useScrollController({
-      onScroll,
-      onResize: onResizeDebounced
-    });
-    var scrollTop = () => {
-      var _scrollController$con, _scrollController$con2;
-      return (_scrollController$con = scrollController === null || scrollController === void 0 || (_scrollController$con2 = scrollController.context) === null || _scrollController$con2 === void 0 || (_scrollController$con2 = _scrollController$con2.element) === null || _scrollController$con2 === void 0 ? void 0 : _scrollController$con2.scrollTop) !== null && _scrollController$con !== void 0 ? _scrollController$con : 0;
-    };
-    var minHeight = computed(() => {
-      if (!LIST.value.length) return 0;
-      return (props.avgHeight + props.gap) * Math.ceil(LIST.value.length / props.columns) - props.gap;
-    });
-    var recycleTop = () => -window.innerHeight + scrollController.getOffsetTop(contentHtml);
-    var recycleBottom = () => window.innerHeight * 2 + scrollController.getOffsetTop(contentHtml);
-    function renderItems() {
-      if (!contentHtml) return;
-      backstage.stop();
-      var node = mCtx.column;
-      mCtx.nodeMap = new Map();
-      CACHE.DivPointer = undefined;
-      mCtx.renderList.forEach((ele, nth) => {
-        if (!ele.__cache__) ele.__cache__ = {};
-        var index = mCtx.index + nth;
-        var __cache__ = ele.__cache__;
-        __cache__.columns = falls.list.map(el => _objectSpread2({}, el));
-        if (node.height) node.height = node.height + props.gap;
-        __cache__.top = node.height;
-        __cache__.left = node.left;
-        __cache__.width = node.width;
-        __cache__.columnIndex = node.index;
-        var div;
-        if (CACHE.nodeMap.has(ele)) {
-          div = CACHE.nodeMap.get(ele);
-          div.setAttribute('data-index', index);
-          render(createVNode(Item, {
-            "item": ele,
-            "index": index,
-            "slots": context.slots,
-            "key": props.keyExtractor({
-              item: ele,
-              index
-            }),
-            "onHeightChange": onHeightChange
-          }, null), div);
-          // console.log('缓存有', div);
-          if (CACHE.DivPointer) {
-            if (CACHE.DivPointer.nextSibling === div) ; else {
-              contentHtml.insertBefore(div, CACHE.DivPointer.nextSibling);
-            }
-          }
-          CACHE.DivPointer = div;
-          CACHE.nodeMap.delete(ele);
-        } else {
-          // console.log('没有则创建', index);
-          div = document.createElement('div');
-          div.setAttribute('data-index', index);
-          div.classList.add('r-scroll-virtual-falls-list-item');
-          render(createVNode(Item, {
-            "item": ele,
-            "index": index,
-            "slots": context.slots,
-            "key": props.keyExtractor({
-              item: ele,
-              index
-            }),
-            "onHeightChange": onHeightChange
-          }, null), div);
-          if (!CACHE.DivPointer) {
-            contentHtml.insertBefore(div, contentHtml.firstChild);
-            CACHE.DivPointer = div;
-          } else {
-            contentHtml.insertBefore(div, CACHE.DivPointer.nextSibling);
-            CACHE.DivPointer = div;
-          }
-        }
-        div.style.top = __cache__.top + 'px';
-        div.style.left = __cache__.left;
-        div.style.width = __cache__.width;
-        __cache__.height = div.offsetHeight;
-        node.height = node.height + div.offsetHeight;
-        __cache__.bottom = node.height;
-        __cache__.vTop = __cache__.top + recycleTop();
-        __cache__.vBottom = __cache__.bottom + recycleBottom();
-        __cache__.columns2 = falls.list.map(el => _objectSpread2({}, el));
-        mCtx.endIndex = index + 1;
-        node = falls.getMinHeightItem();
-        mCtx.endColumn = node;
-        mCtx.nodeMap.set(ele, div);
-      });
-      // console.log('renderItems', mCtx);
-      CACHE.nodeMap.forEach(div => div.remove());
-      CACHE.DivPointer = undefined;
-      CACHE.nodeMap = mCtx.nodeMap;
-      watchLock = false;
-      backstage.rePreLoads();
-      backstage.start();
+    Q("RScrollVirtualFallsListContext", r), n.expose(r);
+    const o = Y($), _ = Y(R), b = J({
+      onScroll: z,
+      onResize: o
+    }), B = () => {
+      var x, m;
+      return ((m = (x = b == null ? void 0 : b.context) == null ? void 0 : x.element) == null ? void 0 : m.scrollTop) ?? 0;
+    }, D = V(() => i.value.length ? (e.avgHeight + e.gap) * Math.ceil(i.value.length / e.columns) - e.gap : 0), T = () => -window.innerHeight + b.getOffsetTop(c), k = () => window.innerHeight * 2 + b.getOffsetTop(c);
+    function g() {
+      if (!c) return;
+      a.stop();
+      let x = r.column;
+      r.nodeMap = /* @__PURE__ */ new Map(), h.DivPointer = void 0, r.renderList.forEach((m, I) => {
+        m.__cache__ || (m.__cache__ = {});
+        const w = r.index + I, p = m.__cache__;
+        p.columns = t.list.map((d) => ({
+          ...d
+        })), x.height && (x.height = x.height + e.gap), p.top = x.height, p.left = x.left, p.width = x.width, p.columnIndex = x.index;
+        let C;
+        h.nodeMap.has(m) ? (C = h.nodeMap.get(m), C.setAttribute("data-index", w), P(f(ee, {
+          item: m,
+          index: w,
+          slots: n.slots,
+          key: e.keyExtractor({
+            item: m,
+            index: w
+          }),
+          onHeightChange: _
+        }, null), C), h.DivPointer && (h.DivPointer.nextSibling === C || c.insertBefore(C, h.DivPointer.nextSibling)), h.DivPointer = C, h.nodeMap.delete(m)) : (C = document.createElement("div"), C.setAttribute("data-index", w), C.classList.add("r-scroll-virtual-falls-list-item"), P(f(ee, {
+          item: m,
+          index: w,
+          slots: n.slots,
+          key: e.keyExtractor({
+            item: m,
+            index: w
+          }),
+          onHeightChange: _
+        }, null), C), h.DivPointer ? (c.insertBefore(C, h.DivPointer.nextSibling), h.DivPointer = C) : (c.insertBefore(C, c.firstChild), h.DivPointer = C)), C.style.top = p.top + "px", C.style.left = p.left, C.style.width = p.width, p.height = C.offsetHeight, x.height = x.height + C.offsetHeight, p.bottom = x.height, p.vTop = p.top + T(), p.vBottom = p.bottom + k(), p.columns2 = t.list.map((d) => ({
+          ...d
+        })), r.endIndex = w + 1, x = t.getMinHeightItem(), r.endColumn = x, r.nodeMap.set(m, C);
+      }), h.nodeMap.forEach((m) => m.remove()), h.DivPointer = void 0, h.nodeMap = r.nodeMap, s = !1, a.rePreLoads(), a.start();
     }
-    function layout(isForce) {
-      var index = findIndex(scrollTop());
-      if (index === -1) index = 0;
-      var item = LIST.value[index];
-      if (!item) return;
-      if (!isForce && CACHE.item === item) return;
-      watchLock = true;
-      mCtx.index = index;
-      // console.log('layout-index', index);
-      var cache = item.__cache__;
-      if (index === 0) {
-        falls.setList();
-        mCtx.column = falls.getMinHeightItem();
-      } else {
-        falls.list = cache.columns;
-        mCtx.column = falls.getMinHeightItem(cache.columnIndex);
-      }
-      mCtx.renderList = LIST.value.slice(mCtx.index, mCtx.index + props.renderCount);
-      CACHE.item = item;
-      renderItems();
+    function u(x) {
+      let m = y(B());
+      m === -1 && (m = 0);
+      let I = i.value[m];
+      if (!I || !x && h.item === I) return;
+      s = !0, r.index = m;
+      let w = I.__cache__;
+      m === 0 ? (t.setList(), r.column = t.getMinHeightItem()) : (t.list = w.columns, r.column = t.getMinHeightItem(w.columnIndex)), r.renderList = i.value.slice(r.index, r.index + e.renderCount), h.item = I, g();
     }
-    function findIndex(sTop) {
-      return arrayBinaryFindIndex(LIST.value, item => {
-        if (!item.__cache__) return false;
-        return item.__cache__.vTop <= sTop && sTop <= item.__cache__.vBottom;
-      }, item => {
-        if (!item.__cache__) return false;
-        return item.__cache__.vTop < sTop;
-      });
+    function y(x) {
+      return ue(i.value, (m) => m.__cache__ ? m.__cache__.vTop <= x && x <= m.__cache__.vBottom : !1, (m) => m.__cache__ ? m.__cache__.vTop < x : !1);
     }
-    function getHeight() {
-      var _LIST$value$at;
-      var columns = (_LIST$value$at = LIST.value.at(-1)) === null || _LIST$value$at === void 0 || (_LIST$value$at = _LIST$value$at.__cache__) === null || _LIST$value$at === void 0 ? void 0 : _LIST$value$at.columns2;
-      if (!columns) return minHeight.value;
-      var col = columns[0];
-      columns.forEach(el => {
-        if (el.height > col.height) col = el;
-      });
-      return col.height;
+    function L() {
+      var I, w;
+      const x = (w = (I = i.value.at(-1)) == null ? void 0 : I.__cache__) == null ? void 0 : w.columns2;
+      if (!x) return D.value;
+      let m = x[0];
+      return x.forEach((p) => {
+        p.height > m.height && (m = p);
+      }), m.height;
     }
-    function createBackstage() {
-      var timer;
-      var index = 0;
-      var column;
-      function rePreLoads() {
-        index = mCtx.endIndex;
-        column = mCtx.endColumn;
-        preLoads();
+    function F() {
+      let x, m = 0, I;
+      function w() {
+        m = r.endIndex, I = r.endColumn, C();
       }
-      function preLoad() {
-        var ele = LIST.value[index];
-        if (!ele) return;
-        var node = column;
-        if (!ele.__cache__) ele.__cache__ = {};
-        var cache__height = ele.__cache__.height || props.avgHeight;
-        ele.__cache__.columns = falls.list.map(el => _objectSpread2({}, el));
-        if (node.height) node.height = node.height + props.gap;
-        ele.__cache__.top = node.height;
-        ele.__cache__.left = node.left;
-        ele.__cache__.width = node.width;
-        ele.__cache__.columnIndex = node.index;
-        ele.__cache__.height = cache__height;
-        node.height = node.height + cache__height;
-        ele.__cache__.bottom = node.height;
-        ele.__cache__.columns2 = falls.list.map(el => _objectSpread2({}, el));
-        ele.__cache__.vTop = ele.__cache__.top + recycleTop();
-        ele.__cache__.vBottom = ele.__cache__.bottom + recycleBottom();
-        index++;
-        column = falls.getMinHeightItem();
+      function p() {
+        const H = i.value[m];
+        if (!H) return;
+        let M = I;
+        H.__cache__ || (H.__cache__ = {});
+        const j = H.__cache__.height || e.avgHeight;
+        H.__cache__.columns = t.list.map((A) => ({
+          ...A
+        })), M.height && (M.height = M.height + e.gap), H.__cache__.top = M.height, H.__cache__.left = M.left, H.__cache__.width = M.width, H.__cache__.columnIndex = M.index, H.__cache__.height = j, M.height = M.height + j, H.__cache__.bottom = M.height, H.__cache__.columns2 = t.list.map((A) => ({
+          ...A
+        })), H.__cache__.vTop = H.__cache__.top + T(), H.__cache__.vBottom = H.__cache__.bottom + k(), m++, I = t.getMinHeightItem();
       }
-      function preLoads() {
-        arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : props.preLoadsCount;
-        var nth = 0;
-        while (nth < props.preLoadsCount) {
-          preLoad();
-          nth++;
-        }
+      function C(H = e.preLoadsCount) {
+        let M = 0;
+        for (; M < e.preLoadsCount; )
+          p(), M++;
       }
-      function idleCallback(deadline) {
-        // console.log(index);
-        if (index >= LIST.value.length) {
-          stop();
+      function d(H) {
+        if (m >= i.value.length) {
+          E();
           return;
         }
-        var timeRemaining = deadline.timeRemaining();
-        if (timeRemaining > 0) {
-          preLoads(10);
-          if (!deadline.didTimeout) {
-            timer = requestIdleCallback(idleCallback);
-          }
-        }
+        H.timeRemaining() > 0 && (C(10), H.didTimeout || (x = requestIdleCallback(d)));
       }
-      function start() {
-        // console.log('backstageTask start',);
-        timer = requestIdleCallback(idleCallback);
+      function l() {
+        x = requestIdleCallback(d);
       }
-      function stop() {
-        // console.log('backstageTask stop',);
-        cancelIdleCallback(timer);
+      function E() {
+        cancelIdleCallback(x);
       }
-      function trigger() {
-        requestIdleCallback(idleCallback);
+      function v() {
+        requestIdleCallback(d);
       }
       return {
-        start,
-        stop,
-        trigger,
-        preLoads,
-        preLoad,
-        rePreLoads
+        start: l,
+        stop: E,
+        trigger: v,
+        preLoads: C,
+        preLoad: p,
+        rePreLoads: w
       };
     }
-    onMounted(() => {});
-    onBeforeUnmount(() => {
-      backstage.stop();
+    X(() => {
+    }), te(() => {
+      a.stop();
     });
-    function onChangeHeight() {
-      // console.log('onChangeHeight');
-      layout(true);
+    function R() {
+      u(!0);
     }
-    function onScroll() {
-      // console.log('onScroll');
-      layout();
+    function z() {
+      u();
     }
-    function onResize() {
-      // console.log('onResize', LIST.value);
-      layout(true);
+    function $() {
+      u(!0);
     }
-    watch(() => LIST.value.slice(mCtx.index, mCtx.index + props.renderCount), () => {
-      // console.log('list ------ watch', watchLock);
-      if (watchLock) return;
-      layout(true);
-    });
-    return () => {
-      return createVNode("div", null, [createVNode(ListenerList, {
-        "list": LIST.value.slice(mCtx.index, mCtx.index + props.renderCount)
-      }, null), createVNode("div", {
-        "style": {
-          height: getHeight() + 'px'
-        },
-        "data-length": LIST.value.length,
-        "ref": el => contentHtml = el,
-        "class": "r-scroll-virtual-falls-list"
-      }, null)]);
-    };
+    return re(() => i.value.slice(r.index, r.index + e.renderCount), () => {
+      s || u(!0);
+    }), () => f("div", null, [f(Ve, {
+      list: i.value.slice(r.index, r.index + e.renderCount)
+    }, null), f("div", {
+      style: {
+        height: L() + "px"
+      },
+      "data-length": i.value.length,
+      ref: (x) => c = x,
+      class: "r-scroll-virtual-falls-list"
+    }, null)]);
   }
 });
-
-function _isSlot(s) {
-  return typeof s === 'function' || Object.prototype.toString.call(s) === '[object Object]' && !isVNode(s);
+function De(e) {
+  return typeof e == "function" || Object.prototype.toString.call(e) === "[object Object]" && !ve(e);
 }
-var mProps = {
+const se = {
   bothEndsHeight: {
     type: Number,
     default: 0
@@ -1337,12 +912,9 @@ var mProps = {
   // 每个item高度
   keyExtractor: {
     type: Function,
-    default: _ref => {
-      var {
-        index
-      } = _ref;
-      return index;
-    }
+    default: ({
+      index: e
+    }) => e
   },
   columns: {
     type: Number,
@@ -1359,103 +931,72 @@ var mProps = {
   list: Array,
   openAnimationFrame: Boolean
   //
-};
-var RScrollVirtualGridListItem = defineComponent({
+}, Fe = /* @__PURE__ */ N({
   props: {
     item: [Object, Array, String, Number],
     index: Number
   },
-  setup(props, context) {
-    var mCtx = inject("RScrollVirtualGridListContext") || {};
-    var html;
-    var obs = new IntersectionObserver(_ref2 => {
-      var [entries] = _ref2;
-      if (!entries.isIntersecting) return;
-      mCtx.context.emit("itemVisible", props);
-      handleMarkVisible();
+  setup(e, n) {
+    const c = K("RScrollVirtualGridListContext") || {};
+    let s;
+    const t = new IntersectionObserver(([a]) => {
+      a.isIntersecting && (c.context.emit("itemVisible", e), i());
     });
-    function handleMarkVisible() {
-      if (typeof props.item !== 'object') return;
-      if (props.item.__markVisible !== mCtx.markVisible) {
-        props.item.__markVisible = mCtx.markVisible;
-        mCtx.context.emit("itemMarkVisible", props);
-      }
+    function i() {
+      typeof e.item == "object" && e.item.__markVisible !== c.markVisible && (e.item.__markVisible = c.markVisible, c.context.emit("itemMarkVisible", e));
     }
-    onMounted(() => {
-      obs.observe(html);
-    });
-    onBeforeMount(() => {
-      obs.disconnect();
-    });
-    return () => {
-      return createVNode("div", {
-        "ref": el => html = el
-      }, [renderSlot(context.slots, "default", props)]);
-    };
+    return X(() => {
+      t.observe(s);
+    }), _e(() => {
+      t.disconnect();
+    }), () => f("div", {
+      ref: (a) => s = a
+    }, [S(n.slots, "default", e)]);
   }
-});
-var Context = defineComponent({
-  props: _objectSpread2({}, mProps),
-  setup(props, context) {
-    var mCtx = inject("RScrollVirtualGridListContext") || {};
-    function handleMark(item) {
-      if (typeof item.item !== 'object') return;
-      if (item.item.__markCount !== mCtx.markCount) {
-        item.item.__markCount = mCtx.markCount;
-        mCtx.context.emit("itemMarkRender", item);
-      }
+}), Re = /* @__PURE__ */ N({
+  props: {
+    ...se
+  },
+  setup(e, n) {
+    const c = K("RScrollVirtualGridListContext") || {};
+    function s(t) {
+      typeof t.item == "object" && t.item.__markCount !== c.markCount && (t.item.__markCount = c.markCount, c.context.emit("itemMarkRender", t));
     }
-    return () => {
-      return renderList(mCtx.renderList, (item, index) => {
-        var _slot;
-        handleMark(item);
-        return createVNode(RScrollVirtualGridListItem, {
-          "data-index": item.index,
-          "class": "r-scroll-virtual-grid-list-item",
-          "style": item.style,
-          "item": item.item,
-          "index": item.index,
-          "key": props.keyExtractor(item)
-        }, _isSlot(_slot = renderSlot(mCtx.slots, "default", item)) ? _slot : {
-          default: () => [_slot]
-        });
-        // return (
-        //   <div ref={(el) => onRef(el, item)} data-index={item.index} class="r-scroll-virtual-grid-list-item" style={item.style} key={props.keyExtractor(item)}>
-        //     {renderSlot(mCtx.slots, "default", item)}
-        //   </div>
-        // );
+    return () => G(c.renderList, (t, i) => {
+      let a;
+      return s(t), f(Fe, {
+        "data-index": t.index,
+        class: "r-scroll-virtual-grid-list-item",
+        style: t.style,
+        item: t.item,
+        index: t.index,
+        key: e.keyExtractor(t)
+      }, De(a = S(c.slots, "default", t)) ? a : {
+        default: () => [a]
       });
-    };
+    });
   }
-});
-var RScrollVirtualGridList = defineComponent({
-  props: _objectSpread2({}, mProps),
+}), Xe = /* @__PURE__ */ N({
+  props: {
+    ...se
+  },
   emits: ["itemMarkRender", "itemMarkVisible", "itemVisible"],
-  setup(props, context) {
-    var cache = {
-      index: undefined
-    };
-    var contentHtml;
-    var recycleHeight = () => window.innerHeight; //window.innerHeight; // 有些浏览器初始拿innerHeight有时为0;
-    var itemWidth = computed(() => "calc( ".concat(100 / props.columns, "% - ").concat((props.columns - 1) * props.gap / props.columns, "px )"));
-    var LIST = computed(() => (props.listHook ? props.listHook.list : props.list) || []);
-    var HEIGHT = computed(() => {
-      if (!LIST.value.length) return 0;
-      return (props.avgHeight + props.gap) * Math.ceil(LIST.value.length / props.columns) - props.gap + props.bothEndsHeight * 2;
-    });
-    var scrollController = useScrollController({
-      onScroll(event, sTop) {
-        layout();
+  setup(e, n) {
+    let c = {
+      index: void 0
+    }, s;
+    const t = () => window.innerHeight, i = V(() => `calc( ${100 / e.columns}% - ${(e.columns - 1) * e.gap / e.columns}px )`), a = V(() => (e.listHook ? e.listHook.list : e.list) || []), h = V(() => a.value.length ? (e.avgHeight + e.gap) * Math.ceil(a.value.length / e.columns) - e.gap + e.bothEndsHeight * 2 : 0), r = J({
+      onScroll(k, g) {
+        T();
       },
-      onResize(entries, sTop) {
-        layout();
+      onResize(k, g) {
+        T();
       }
-    });
-    var mCtx = reactive({
-      context,
-      slots: context.slots,
-      itemWidth,
-      height: HEIGHT,
+    }), o = q({
+      context: n,
+      slots: n.slots,
+      itemWidth: i,
+      height: h,
       renderList: [],
       markCount: 0,
       markVisible: 0
@@ -1473,86 +1014,64 @@ var RScrollVirtualGridList = defineComponent({
       //   });
       // },
     });
-    provide("RScrollVirtualGridListContext", mCtx);
-    context.expose(mCtx);
-    function getLeft(i) {
-      return "calc( ".concat(100 / props.columns * i, "% - ").concat((props.columns - 1) * props.gap / props.columns * i, "px + ").concat(i * props.gap, "px )");
+    Q("RScrollVirtualGridListContext", o), n.expose(o);
+    function _(k) {
+      return `calc( ${100 / e.columns * k}% - ${(e.columns - 1) * e.gap / e.columns * k}px + ${k * e.gap}px )`;
     }
-    function getRenderList(index) {
-      var addH = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-      var pList = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-      scrollController.context.element.scrollTop;
-      scrollController.getOffsetTop(contentHtml);
-      if (index >= LIST.value.length) return pList;
-      arrayLoop(props.columns, i => {
-        if (index >= 0) {
-          var nth = Math.floor(index / props.columns);
-          var top = nth * (props.avgHeight + props.gap) + props.bothEndsHeight + "px";
-          if (nth === 0) top = props.bothEndsHeight + "px";
-          var left = getLeft(i);
-          var width = itemWidth.value;
-          var height = props.avgHeight + "px";
-          pList.push({
-            index,
+    function b(k, g = 0, u = []) {
+      return r.context.element.scrollTop, r.getOffsetTop(s), k >= a.value.length ? u : (ke(e.columns, (y) => {
+        if (k >= 0) {
+          const L = Math.floor(k / e.columns);
+          let F = L * (e.avgHeight + e.gap) + e.bothEndsHeight + "px";
+          L === 0 && (F = e.bothEndsHeight + "px");
+          const R = _(y), z = i.value, $ = e.avgHeight + "px";
+          u.push({
+            index: k,
             style: {
-              top,
-              left,
-              width,
-              height
+              top: F,
+              left: R,
+              width: z,
+              height: $
             },
-            item: LIST.value[index]
+            item: a.value[k]
           });
         }
-        index++;
-      });
-      addH = addH + props.avgHeight + props.gap;
-      if (addH < window.innerHeight + recycleHeight() * 2) return getRenderList(index, addH, pList);
-      return pList;
+        k++;
+      }), g = g + e.avgHeight + e.gap, g < window.innerHeight + t() * 2 ? b(k, g, u) : u);
     }
-    function doLayout() {
-      var isCache = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-      if (!scrollController.context.element) return;
-      var sTop = scrollController.context.element.scrollTop;
-      var offsetTop = scrollController.getOffsetTop(contentHtml);
-      var renderTop = offsetTop - sTop - window.innerHeight - recycleHeight();
-      if (renderTop > 0) return;
-      var aaa = Math.floor(recycleHeight() / (props.avgHeight + props.gap)) * props.columns;
-      var bbb = Math.floor((sTop - offsetTop) / (props.avgHeight + props.gap)) * props.columns;
-      var index = bbb - aaa;
-      if (cache.index === index && isCache) return;
-      cache.index = index;
-      mCtx.renderList = getRenderList(index);
-      // console.log('---------layout ---------');
-      // console.log(`renderTop : ${renderTop}`);
-      // console.log(`index : ${index}`);
-      // console.log(mCtx.renderList);
-      // console.log('  ');
+    function B(k = !0) {
+      if (!r.context.element) return;
+      const g = r.context.element.scrollTop, u = r.getOffsetTop(s);
+      if (u - g - window.innerHeight - t() > 0) return;
+      let L = Math.floor(t() / (e.avgHeight + e.gap)) * e.columns, R = Math.floor((g - u) / (e.avgHeight + e.gap)) * e.columns - L;
+      c.index === R && k || (c.index = R, o.renderList = b(R));
     }
-    var time;
-    function layout() {
-      var isCache = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-      if (!props.openAnimationFrame) return doLayout(isCache);
-      cancelAnimationFrame(time);
-      time = requestAnimationFrame(() => {
-        doLayout(isCache);
+    let D;
+    function T(k = !0) {
+      if (!e.openAnimationFrame) return B(k);
+      cancelAnimationFrame(D), D = requestAnimationFrame(() => {
+        B(k);
       });
     }
-    return () => {
-      // console.log('---------render ---------');
-      layout(false);
-      return createVNode("div", {
-        "data-length": LIST.value.length,
-        "ref": el => contentHtml = el,
-        "style": {
-          height: HEIGHT.value + "px"
-        },
-        "class": "r-scroll-virtual-grid-list"
-      }, [createVNode(Context, {
-        "keyExtractor": props.keyExtractor
-      }, null)]);
-    };
+    return () => (T(!1), f("div", {
+      "data-length": a.value.length,
+      ref: (k) => s = k,
+      style: {
+        height: h.value + "px"
+      },
+      class: "r-scroll-virtual-grid-list"
+    }, [f(Re, {
+      keyExtractor: e.keyExtractor
+    }, null)]));
   }
 });
-
-export { RScrollVirtualFallsListV2, RScrollVirtualFallsListV3, RScrollVirtualGridList, VRPaginationLoading, VRTabs, VRVirtualFallsList, VRVirtualGridList };
+export {
+  qe as RScrollVirtualFallsListV2,
+  Ge as RScrollVirtualFallsListV3,
+  Xe as RScrollVirtualGridList,
+  ze as VRPaginationLoading,
+  Pe as VRTabs,
+  We as VRVirtualFallsList,
+  Ue as VRVirtualGridList
+};
 //# sourceMappingURL=index.js.map

@@ -1,7 +1,17 @@
-import { defineComponent, computed, reactive, provide, render, watch, onMounted, renderList,onBeforeUnmount } from "vue";
-import { useScrollController,useFallsLayout ,arrayBinaryFindIndex} from "../utils.js";
+import {
+  defineComponent,
+  computed,
+  reactive,
+  provide,
+  render,
+  watch,
+  onMounted,
+  renderList,
+  onBeforeUnmount,
+} from "vue";
+import { useScrollController, useFallsLayout, arrayBinaryFindIndex } from "../utils.js";
 import { useResizeObserver } from "@rainbow_ljy/v-hooks";
-import {  animationDebounced } from "@rainbow_ljy/rainbow-js";
+import { animationDebounced } from "@rainbow_ljy/rainbow-js";
 
 const mProps = {
   avgHeight: { type: Number, default: 200 }, // 每个item高度
@@ -22,11 +32,11 @@ const CONTEXT = defineComponent({
   },
   setup(props, context) {
     return () => {
-      renderList(props.list || [], (item, index) => null)
-      return null
-    }
-  }
-})
+      renderList(props.list || [], (item, index) => null);
+      return null;
+    };
+  },
+});
 
 const ListenerList = defineComponent({
   props: {
@@ -34,17 +44,16 @@ const ListenerList = defineComponent({
   },
   setup(props, context) {
     return () => {
-      return <CONTEXT list={props.list}></CONTEXT>
-    }
-  }
-})
-
+      return <CONTEXT list={props.list}></CONTEXT>;
+    };
+  },
+});
 
 const Item = defineComponent({
   props: {
     item: Object,
     index: Number,
-    slots: Object
+    slots: Object,
   },
   setup(props, context) {
     let vm;
@@ -53,23 +62,24 @@ const Item = defineComponent({
     function onSizeChange(events) {
       const height = events?.[0]?.target?.offsetHeight ?? 0;
       const oldHeight = props.item?.__cache__?.height ?? 0;
-      if (height === 0) return
+      if (height === 0) return;
       if (oldHeight !== height) {
         if (props.item?.__cache__) {
           props.item.__cache__.height = height;
           props.item.__cache__.isResize = true;
-          context.emit('heightChange', height, oldHeight, events)
-        };
+          context.emit("heightChange", height, oldHeight, events);
+        }
       }
     }
 
     return (el) => {
-      vm = el
-      return <div class="r-scroll-virtual-falls-list-item-content" >{props?.slots?.default?.(props)}</div>
-    }
-  }
-})
-
+      vm = el;
+      return (
+        <div class="r-scroll-virtual-falls-list-item-content">{props?.slots?.default?.(props)}</div>
+      );
+    };
+  },
+});
 
 export const RScrollVirtualFallsListV3 = defineComponent({
   props: {
@@ -77,7 +87,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
   },
   setup(props, context) {
     let contentHtml;
-    let watchLock = false
+    let watchLock = false;
     const falls = useFallsLayout(props);
     const LIST = computed(() => (props.listHook ? props.listHook.list : props.list) || []);
     const backstage = createBackstage();
@@ -87,7 +97,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       DivPointer: undefined,
       renderList: [],
       item: undefined,
-    }
+    };
 
     const mCtx = reactive({
       context,
@@ -109,11 +119,12 @@ export const RScrollVirtualFallsListV3 = defineComponent({
     const scrollTop = () => scrollController?.context?.element?.scrollTop ?? 0;
     const minHeight = computed(() => {
       if (!LIST.value.length) return 0;
-      return ((props.avgHeight + props.gap) * Math.ceil(LIST.value.length / props.columns) - props.gap);
+      return (
+        (props.avgHeight + props.gap) * Math.ceil(LIST.value.length / props.columns) - props.gap
+      );
     });
-    const recycleTop = () => - window.innerHeight + scrollController.getOffsetTop(contentHtml);
+    const recycleTop = () => -window.innerHeight + scrollController.getOffsetTop(contentHtml);
     const recycleBottom = () => window.innerHeight * 2 + scrollController.getOffsetTop(contentHtml);
-
 
     function renderItems() {
       if (!contentHtml) return;
@@ -126,7 +137,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
         if (!ele.__cache__) ele.__cache__ = {};
         const index = mCtx.index + nth;
         const __cache__ = ele.__cache__;
-        __cache__.columns = falls.list.map(el => ({ ...el }))
+        __cache__.columns = falls.list.map((el) => ({ ...el }));
         if (node.height) node.height = node.height + props.gap;
         __cache__.top = node.height;
         __cache__.left = node.left;
@@ -136,11 +147,21 @@ export const RScrollVirtualFallsListV3 = defineComponent({
         let div;
         if (CACHE.nodeMap.has(ele)) {
           div = CACHE.nodeMap.get(ele);
-          div.setAttribute('data-index', index)
-          render(<Item item={ele} index={index} slots={context.slots} key={props.keyExtractor({ item: ele, index })} onHeightChange={onHeightChange}></Item>, div);
+          div.setAttribute("data-index", index);
+          render(
+            <Item
+              item={ele}
+              index={index}
+              slots={context.slots}
+              key={props.keyExtractor({ item: ele, index })}
+              onHeightChange={onHeightChange}
+            ></Item>,
+            div,
+          );
           // console.log('缓存有', div);
           if (CACHE.DivPointer) {
-            if (CACHE.DivPointer.nextSibling === div) { // 当 当前指针的下一个和要渲染的div相同
+            if (CACHE.DivPointer.nextSibling === div) {
+              // 当 当前指针的下一个和要渲染的div相同
             } else {
               contentHtml.insertBefore(div, CACHE.DivPointer.nextSibling);
             }
@@ -149,10 +170,19 @@ export const RScrollVirtualFallsListV3 = defineComponent({
           CACHE.nodeMap.delete(ele);
         } else {
           // console.log('没有则创建', index);
-          div = document.createElement('div')
-          div.setAttribute('data-index', index)
-          div.classList.add('r-scroll-virtual-falls-list-item');
-          render(<Item item={ele} index={index} slots={context.slots} key={props.keyExtractor({ item: ele, index })} onHeightChange={onHeightChange}></Item>, div);
+          div = document.createElement("div");
+          div.setAttribute("data-index", index);
+          div.classList.add("r-scroll-virtual-falls-list-item");
+          render(
+            <Item
+              item={ele}
+              index={index}
+              slots={context.slots}
+              key={props.keyExtractor({ item: ele, index })}
+              onHeightChange={onHeightChange}
+            ></Item>,
+            div,
+          );
           if (!CACHE.DivPointer) {
             contentHtml.insertBefore(div, contentHtml.firstChild);
             CACHE.DivPointer = div;
@@ -162,7 +192,7 @@ export const RScrollVirtualFallsListV3 = defineComponent({
           }
         }
 
-        div.style.top = __cache__.top + 'px';
+        div.style.top = __cache__.top + "px";
         div.style.left = __cache__.left;
         div.style.width = __cache__.width;
         __cache__.height = div.offsetHeight;
@@ -170,15 +200,15 @@ export const RScrollVirtualFallsListV3 = defineComponent({
         __cache__.bottom = node.height;
         __cache__.vTop = __cache__.top + recycleTop();
         __cache__.vBottom = __cache__.bottom + recycleBottom();
-        __cache__.columns2 = falls.list.map(el => ({ ...el }))
+        __cache__.columns2 = falls.list.map((el) => ({ ...el }));
 
         mCtx.endIndex = index + 1;
         node = falls.getMinHeightItem();
         mCtx.endColumn = node;
         mCtx.nodeMap.set(ele, div);
-      })
+      });
       // console.log('renderItems', mCtx);
-      CACHE.nodeMap.forEach((div) => div.remove())
+      CACHE.nodeMap.forEach((div) => div.remove());
       CACHE.DivPointer = undefined;
       CACHE.nodeMap = mCtx.nodeMap;
       watchLock = false;
@@ -204,32 +234,34 @@ export const RScrollVirtualFallsListV3 = defineComponent({
         falls.list = cache.columns;
         mCtx.column = falls.getMinHeightItem(cache.columnIndex);
       }
-      mCtx.renderList = LIST.value.slice(mCtx.index, mCtx.index + props.renderCount)
+      mCtx.renderList = LIST.value.slice(mCtx.index, mCtx.index + props.renderCount);
       CACHE.item = item;
       renderItems();
     }
 
     function findIndex(sTop) {
-      return arrayBinaryFindIndex(LIST.value,
+      return arrayBinaryFindIndex(
+        LIST.value,
         (item) => {
           if (!item.__cache__) return false;
-          return item.__cache__.vTop <= sTop && sTop <= item.__cache__.vBottom
+          return item.__cache__.vTop <= sTop && sTop <= item.__cache__.vBottom;
         },
         (item) => {
           if (!item.__cache__) return false;
-          return item.__cache__.vTop < sTop
-        }
-      )
+          return item.__cache__.vTop < sTop;
+        },
+      );
     }
 
     function getHeight() {
       const columns = LIST.value.at(-1)?.__cache__?.columns2;
       if (!columns) return minHeight.value;
       let col = columns[0];
-      columns.forEach((el) => { if (el.height > col.height) col = el });
+      columns.forEach((el) => {
+        if (el.height > col.height) col = el;
+      });
       return col.height;
     }
-
 
     function createBackstage() {
       let timer;
@@ -247,8 +279,8 @@ export const RScrollVirtualFallsListV3 = defineComponent({
         if (!ele) return;
         let node = column;
         if (!ele.__cache__) ele.__cache__ = {};
-        const cache__height = ele.__cache__.height || props.avgHeight
-        ele.__cache__.columns = falls.list.map(el => ({ ...el }))
+        const cache__height = ele.__cache__.height || props.avgHeight;
+        ele.__cache__.columns = falls.list.map((el) => ({ ...el }));
         if (node.height) node.height = node.height + props.gap;
         ele.__cache__.top = node.height;
         ele.__cache__.left = node.left;
@@ -257,13 +289,12 @@ export const RScrollVirtualFallsListV3 = defineComponent({
         ele.__cache__.height = cache__height;
         node.height = node.height + cache__height;
         ele.__cache__.bottom = node.height;
-        ele.__cache__.columns2 = falls.list.map(el => ({ ...el }))
+        ele.__cache__.columns2 = falls.list.map((el) => ({ ...el }));
         ele.__cache__.vTop = ele.__cache__.top + recycleTop();
         ele.__cache__.vBottom = ele.__cache__.bottom + recycleBottom();
         index++;
         column = falls.getMinHeightItem();
       }
-
 
       function preLoads(count = props.preLoadsCount) {
         let nth = 0;
@@ -276,12 +307,12 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       function idleCallback(deadline) {
         // console.log(index);
         if (index >= LIST.value.length) {
-          stop()
-          return
+          stop();
+          return;
         }
         const timeRemaining = deadline.timeRemaining();
         if (timeRemaining > 0) {
-          preLoads(10)
+          preLoads(10);
           if (!deadline.didTimeout) {
             timer = requestIdleCallback(idleCallback);
           }
@@ -295,22 +326,21 @@ export const RScrollVirtualFallsListV3 = defineComponent({
 
       function stop() {
         // console.log('backstageTask stop',);
-        cancelIdleCallback(timer)
+        cancelIdleCallback(timer);
       }
 
       function trigger() {
         requestIdleCallback(idleCallback);
       }
 
-      return { start, stop, trigger, preLoads, preLoad, rePreLoads }
+      return { start, stop, trigger, preLoads, preLoad, rePreLoads };
     }
 
+    onMounted(() => {});
 
-    onMounted(() => { })
-
-    onBeforeUnmount(()=>{
+    onBeforeUnmount(() => {
       backstage.stop();
-    })
+    });
 
     function onChangeHeight() {
       // console.log('onChangeHeight');
@@ -327,24 +357,27 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       layout(true);
     }
 
-    watch(() => LIST.value.slice(mCtx.index, mCtx.index + props.renderCount), () => {
-      // console.log('list ------ watch', watchLock);
-      if (watchLock) return
-      layout(true);
-    })
+    watch(
+      () => LIST.value.slice(mCtx.index, mCtx.index + props.renderCount),
+      () => {
+        // console.log('list ------ watch', watchLock);
+        if (watchLock) return;
+        layout(true);
+      },
+    );
 
     return () => {
       return (
-        <div >
-          <ListenerList list={LIST.value.slice(mCtx.index, mCtx.index + props.renderCount)}></ListenerList>
+        <div>
+          <ListenerList
+            list={LIST.value.slice(mCtx.index, mCtx.index + props.renderCount)}
+          ></ListenerList>
           <div
-            style={{ height: getHeight() + 'px' }}
+            style={{ height: getHeight() + "px" }}
             data-length={LIST.value.length}
             ref={(el) => (contentHtml = el)}
             class="r-scroll-virtual-falls-list"
-          >
-          </div>
-
+          ></div>
         </div>
       );
     };

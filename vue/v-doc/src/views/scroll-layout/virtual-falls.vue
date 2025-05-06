@@ -25,13 +25,13 @@
       {{ moreList.length }}
       </r-move>
       <div class="more-scroll-virtual-falls-list-bg">
-        <VRVirtualFallsList id="vID"  v-model="moreList" :keyExtractor="({ item }) => item.id"
+        <VRVirtualFallsList id="vID"  v-model="moreList" :keyExtractor="({ item }) => item?.id"
           class="more-scroll-virtual-falls-list">
-          <template #default="{ item, index, key }">
+          <template #item="{ item, index, key }">
             <div>index:{{ index }}</div>
-            <div>id:{{ item.id }}</div>
-            <div>nth:{{ item.nth }}</div>
-            <div class="title">{{ item.title }}</div>
+            <div>id:{{ item?.id }}</div>
+            <div>nth:{{ item?.nth }}</div>
+            <div class="title">{{ item?.title }}</div>
           </template>
         </VRVirtualFallsList>
       </div>
@@ -41,7 +41,7 @@
 </template>
 <script setup>
 import { arrayLoopMap, } from '@rainbow_ljy/rainbow-js'
-import { VRVirtualFallsList } from '@rainbow_ljy/v-view'
+import { VRVirtualFallsList } from '@rainbow_ljy/v-views'
 import { onMounted, ref } from 'vue'
 
 

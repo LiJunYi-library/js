@@ -1,12 +1,9 @@
 import { useQueue } from "@rainbow_ljy/rainbow-js";
-import { createCustomEvent } from "./utils/index.js";
 
 window.rainbow = (() => {
-  const overlay = document.createElement("r-overlay");
-  document.body.append(overlay);
   return {
     toast: undefined,
-    overlay,
+    overlay: undefined,
     customRender(node, parent) {},
     zIndex: 100,
     zIndexAdd: 3,

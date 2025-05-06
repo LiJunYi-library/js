@@ -505,8 +505,8 @@ importers:
         specifier: ^4.40.1
         version: 4.40.1
       rollup-plugin-vue:
-        specifier: ^6.0.0
-        version: 6.0.0(@vue/compiler-sfc@3.5.13)
+        specifier: 6.0.0-beta.10
+        version: 6.0.0-beta.10(@vue/compiler-sfc@3.5.13)
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.6.2)
@@ -10332,11 +10332,6 @@ packages:
     deprecated: This package has been deprecated and is no longer maintained. Please use @rollup/plugin-terser
     peerDependencies:
       rollup: ^2.0.0
-
-  rollup-plugin-vue@6.0.0:
-    resolution: {integrity: sha512-oVvUd84d5u73M2HYM3XsMDLtZRIA/tw2U0dmHlXU2UWP5JARYHzh/U9vcxaN/x/9MrepY7VH3pHFeOhrWpxs/Q==}
-    peerDependencies:
-      '@vue/compiler-sfc': '*'
 
   rollup-plugin-vue@6.0.0-beta.10:
     resolution: {integrity: sha512-8TZJmROiSRjWoHRR6id0/ktOBOUGuI302xDBq4YBiA/tnnXdoY3oFGtvRWzT5ldX0jTJ8QX40rrJOw2SvcWwxQ==}
@@ -24383,7 +24378,7 @@ snapshots:
       serialize-javascript: 4.0.0
       terser: 5.32.0
 
-  rollup-plugin-vue@6.0.0(@vue/compiler-sfc@3.5.13):
+  rollup-plugin-vue@6.0.0-beta.10(@vue/compiler-sfc@3.5.13):
     dependencies:
       '@vue/compiler-sfc': 3.5.13
       debug: 4.4.0(supports-color@8.1.1)

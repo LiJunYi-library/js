@@ -28,7 +28,7 @@
 <script setup>
 import { arrayLoopMap, arrayForcedTransform } from '@rainbow_ljy/rainbow-js'
 import { useListLoad2 } from '@rainbow_ljy/v-hooks'
-import { VRPaginationLoading } from '@rainbow_ljy/v-view'
+import { VRPaginationLoading } from '@rainbow_ljy/v-views'
 import { Vfetch, VlistLoad } from '@rainbow_ljy/v-hooks'
 import { ref, reactive, render, isRef, computed, onMounted } from 'vue'
 import { MFetch } from '@/hooks'

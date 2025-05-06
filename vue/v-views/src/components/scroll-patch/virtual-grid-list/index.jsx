@@ -9,7 +9,7 @@ import {
   onBeforeMount,
   onMounted
 } from "vue";
-import { useScrollController } from "../utils";
+import { useScrollController } from "../utils.js";
 import { arrayLoop } from "@rainbow_ljy/rainbow-js";
 import './index.scss'
 

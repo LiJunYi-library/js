@@ -1,5 +1,5 @@
 import { defineComponent, computed, reactive, provide, render, watch, onMounted, renderList,onBeforeUnmount } from "vue";
-import { useScrollController,useFallsLayout ,arrayBinaryFindIndex} from "../utils";
+import { useScrollController,useFallsLayout ,arrayBinaryFindIndex} from "../utils.js";
 import { useResizeObserver } from "@rainbow_ljy/v-hooks";
 import {  animationDebounced } from "@rainbow_ljy/rainbow-js";
 

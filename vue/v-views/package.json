@@ -5,7 +5,7 @@
   "main": "build/iife/index.js",
   "module": "build/esm/index.js",
   "type": "module",
-  "private": true,
+  "private": false,
   "typings": "index.d.ts",
   "author": "",
   "license": "ISC",

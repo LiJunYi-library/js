@@ -286,40 +286,54 @@ export const RScrollVirtualFallsListV2 = defineComponent({
 
     function createBackstage() {
       let timer;
+      const requestTimer = requestIdleCallback || requestAnimationFrame;
+      const cancelRequestTimer = requestIdleCallback ? cancelIdleCallback : cancelAnimationFrame;
 
       function idleCallback(deadline) {
         if (INDEX >= LIST.value.length) {
           stop();
           return;
         }
-        const timeRemaining = deadline.timeRemaining();
-        if (timeRemaining > 0) {
-          preLoads(props.preLoadCount);
-          if (!deadline.didTimeout) {
-            timer = requestIdleCallback(idleCallback);
+
+        const hasTimeRemaining =
+          typeof deadline === "object" && deadline.timeRemaining && deadline.timeRemaining() > 0;
+
+        if (hasTimeRemaining || typeof deadline === "number") {
+          try {
+            preLoads(props.preLoadCount);
+          } catch (error) {
+            console.error("Error in callback:", error);
+          }
+
+          if (
+            (typeof deadline === "object" && !deadline.didTimeout) ||
+            typeof deadline === "number"
+          ) {
+            timer = requestTimer(idleCallback);
           }
         }
       }
 
+
       function start() {
-        // console.log('backstageTask start',);
-        timer = requestIdleCallback(idleCallback);
+        timer = requestTimer(idleCallback);
       }
 
       function stop() {
-        // console.log('backstageTask stop',);
-        cancelIdleCallback(timer);
+        if (timer) {
+          cancelRequestTimer(timer);
+          timer = null;
+        }
       }
 
       function trigger() {
-        requestIdleCallback(idleCallback);
+        requestTimer(idleCallback);
       }
 
       return { start, stop, trigger };
     }
 
     onMounted(() => {
-      // console.log('onMounted', scrollTop());
       renderItems();
     });
 

@@ -9,10 +9,13 @@
   "typings": "index.d.ts",
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "files": [
+    "build"
+  ],
   "scripts": {
     "build": "rollup -c"
   },
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.26.10",
     "@babel/runtime": "^7.27.0",

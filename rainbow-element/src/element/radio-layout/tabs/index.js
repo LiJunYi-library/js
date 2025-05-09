@@ -8,6 +8,8 @@ import {
   resizeObserver,
   getBoundingClientRect,
   findParentByLocalName,
+  addEventListenerOnce,
+  removeEventListener,
 } from "../../../utils/index.js";
 import "./index.css";
 
@@ -135,7 +137,9 @@ export class RTabs extends RainbowElement {
 }
 
 export class RTabItem extends RainbowElement {
-  static observedAttributes = this.$registerProps({});
+  static observedAttributes = this.$registerProps({
+    "r-trigger": String,
+  });
 
   $$ = {
     value: undefined,
@@ -162,8 +166,6 @@ export class RTabItem extends RainbowElement {
 
   constructor(...arg) {
     super(...arg);
-    const trigger = this.getAttribute("trigger") || "click";
-    if (trigger !== "none") this.addEventListener("click", this.$$.click);
     if (this.getAttribute("value") !== null) this.value = this.getAttribute("value");
   }
 
@@ -171,9 +173,13 @@ export class RTabItem extends RainbowElement {
     super.connectedCallback(...arg);
     this.$$.valueParent = findParentByLocalName("r-tabs", this);
     this.$$.setActive();
+    const { rTrigger } = this.$.DATA;
+    if (rTrigger && rTrigger !== "none") addEventListenerOnce(this, rTrigger, this.$$.click);
   }
 
   disconnectedCallback(...arg) {
     super.disconnectedCallback(...arg);
+    const { rTrigger } = this.$.DATA;
+    removeEventListener(this, rTrigger, this.$$.click);
   }
 }

@@ -220,6 +220,10 @@ export const RScrollVirtualFallsListV3 = defineComponent({
     function layout(isForce) {
       let index = findIndex(scrollTop());
       if (index === -1) index = 0;
+      if( LIST.value.length === 0 && contentHtml){
+        contentHtml.innerHTML = ''
+        return
+      }
       let item = LIST.value[index];
       if (!item) return;
       if (!isForce && CACHE.item === item) return;
@@ -374,6 +378,14 @@ export const RScrollVirtualFallsListV3 = defineComponent({
       () => LIST.value.slice(mCtx.index, mCtx.index + props.renderCount),
       () => {
         // console.log('list ------ watch', watchLock);
+        if (watchLock) return;
+        layout(true);
+      },
+    );
+
+    watch(
+      () => LIST.value.length,
+      () => {
         if (watchLock) return;
         layout(true);
       },

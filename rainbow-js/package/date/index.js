@@ -400,4 +400,12 @@ DATE.formatTime = function formatTime(
   return timeStr;
 };
 
+  // static getCurrentWeekRange = (rule = 'YYYY年MM月DD日', join = '-'): string => {
+  //   const now = new Date();
+  //   const ago = (i: number) => new Date().setDate(new Date().getDate() + i);
+  //   const currentDay = now.getDay() || 7;
+  //   const s = (i: number) => dayjs(ago(i)).format(rule);
+  //   return [s(1 - currentDay), s(7 - currentDay)].join(join);
+  // };
+
 export { DATE };

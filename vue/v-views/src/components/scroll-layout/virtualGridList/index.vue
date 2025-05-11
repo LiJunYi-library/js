@@ -21,7 +21,7 @@ const list = computed({
     emit("update:modelValue", val);
   },
   get() {
-    if (props.listHook.list) return props.listHook.list;
+    if (props.listHook.list) return toRaw(props.listHook.list);
     return toRaw(props.modelValue);
   },
 });

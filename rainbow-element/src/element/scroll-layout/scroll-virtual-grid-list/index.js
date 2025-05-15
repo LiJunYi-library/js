@@ -66,8 +66,9 @@ export class RScrollVirtualGridList extends RainbowElement {
         (this.$$columns - 1);
       let index = nth - recycleCount;
       let start = index < 0 ? 0 : index;
-      this.$$.visible.start = Math.min(Math.max(0, nth), this.value.length - 1);
-      this.$$.visible.end = Math.max(0, Math.min(last, this.value.length - 1));
+      let count = Math.max(0, this.value.length - 1);
+      this.$$.visible.start = Math.min(Math.max(0, nth), count);
+      this.$$.visible.end = Math.max(0, Math.min(last, count));
       // console.log(this.$$.visible.start, this.$$.visible.end);
       let end = index + recycleCount * 3;
       if (end < 0) end = 0;
@@ -76,7 +77,9 @@ export class RScrollVirtualGridList extends RainbowElement {
       let isRender = !(this.$$.cache.start === start && this.$$.cache.end === end);
       this.$$.cache.start = start;
       this.$$.cache.end = end;
-      this.style.height = `${(rAvgHeight + rowGap) * Math.ceil(this.value.length / this.$$columns) - rowGap}px`;
+      let height = (rAvgHeight + rowGap) * Math.ceil(this.value.length / this.$$columns) - rowGap;
+      if (height < 0) height = 0;
+      this.style.height = `${height}px`;
       if (isForce === false && isRender === false) return;
       // console.log(start, end);
       this.$$.renderChildren.renderList(renderList, {

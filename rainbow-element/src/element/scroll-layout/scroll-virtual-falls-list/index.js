@@ -157,10 +157,9 @@ export class RScrollVirtualFallsList extends RainbowElement {
         return;
       }
       let startItem = this.value[start];
-      if (!startItem) return;
       let list = this.value.slice(start, end);
       let renderList = list.map((item, sub) => ({ index: start + sub, item, data: item }));
-      if (startItem.__cache__) this.$$.falls.list = startItem.__cache__.list;
+      if (startItem?.__cache__) this.$$.falls.list = startItem.__cache__.list;
       else this.$$.falls.list = initList.call(this);
       let minColumn = getMinHeightItem(this.$$.falls.list);
       let __cache__ = new ItemCache();
@@ -221,7 +220,11 @@ export class RScrollVirtualFallsList extends RainbowElement {
       const calculateList = this.value.at(-1)?.__cache__?.calculateList;
       if (!calculateList?.length) {
         const { rAvgHeight, rowGap } = this.$$.getCssValues();
-        this.style.height = `${(rAvgHeight + rowGap) * Math.ceil(this.value.length / this.$$columns) - rowGap}px`;
+        let height = Math.max(
+          0,
+          (rAvgHeight + rowGap) * Math.ceil(this.value.length / this.$$columns) - rowGap,
+        );
+        this.style.height = `${height}px`;
         return;
       }
       this.style.height = `${getMaxHeightItem(calculateList).height}px`;

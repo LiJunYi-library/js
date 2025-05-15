@@ -77,8 +77,10 @@ export class RScrollVirtualGridList extends RainbowElement {
       let isRender = !(this.$$.cache.start === start && this.$$.cache.end === end);
       this.$$.cache.start = start;
       this.$$.cache.end = end;
-      let height = (rAvgHeight + rowGap) * Math.ceil(this.value.length / this.$$columns) - rowGap;
-      if (height < 0) height = 0;
+      let height = Math.max(
+        0,
+        (rAvgHeight + rowGap) * Math.ceil(this.value.length / this.$$columns) - rowGap,
+      );
       this.style.height = `${height}px`;
       if (isForce === false && isRender === false) return;
       // console.log(start, end);

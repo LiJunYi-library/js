@@ -1,15 +1,25 @@
 <template>
   <div>
-    <r-tabs value="3" @change="change">
+    <!-- <r-tabs value="3" @change="change">
       <r-tab-item value="1" class="item"> label1 </r-tab-item>
+      <div slot="active" class="item-active">123</div>
       <r-tab-item value="2" class="item"> label2 </r-tab-item>
       <r-tab-item value="3" class="item"> label3 </r-tab-item>
       <r-tab-item value="4" class="item" v-if="bool"> label4 </r-tab-item>
       <r-tab-item value="5" class="item"> label5 </r-tab-item>
+    </r-tabs> -->
+    <div>------------------------------------------------</div>
+    <r-tabs :value="Radio2.value" :class="tabclass" @change="change">
+      <template v-for="(item, index) in Radio2.list" :key="item.value">
+        <r-tab-item trigger="none" :value="item.value" class="item" :class="'item' + index"
+          @click="Radio2.onSelect(item, index)">
+          {{ item.label }}
+        </r-tab-item>
+      </template>
       <div slot="active" class="item-active">123</div>
     </r-tabs>
     <div>------------------------------------------------</div>
-    <r-tabs :value="Radio2.value" :class="tabclass" @change="change">
+    <r-tabs :value="Radio2.value" class="r-tabs-vertical vertical-tab" @change="change">
       <template v-for="(item, index) in Radio2.list" :key="item.value">
         <r-tab-item trigger="none" :value="item.value" class="item" :class="'item' + index"
           @click="Radio2.onSelect(item, index)">
@@ -36,7 +46,7 @@
     <div>123</div>
     <div>Radio2.value {{ Radio2.value }}</div>
     <div style="width: 30px; font-size: 80px; height: 1500px; word-wrap: break-word">123456789</div>
-    <button @click="bool=!bool">bool</button>
+    <button @click="bool = !bool">bool</button>
 
   </div>
 </template>
@@ -46,7 +56,7 @@ import { useRadio2 } from '@rainbow_ljy/v-hooks'
 import { ref, onMounted, watch } from 'vue'
 import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
 import { VRTabs } from '@rainbow_ljy/v-view'
-const d = arrayLoopMap(5, (value) => ({
+const d = arrayLoopMap(10, (value) => ({
   value,
   label: 'label' + value,
   id: Math.random(),
@@ -104,5 +114,10 @@ function setH() {
     height: 100%;
     background: rgba(100, 0, 255, 0.5);
   }
+}
+
+.vertical-tab {
+  width: 150px;
+  height: 200px;
 }
 </style>

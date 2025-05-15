@@ -29,3 +29,9 @@ r-tabs .r-tab-active-line {
   bottom: 6px;
   transform: translateX(-50%);
 }
+
+
+.r-tabs-vertical {
+  flex-direction: column;
+  touch-action: pan-y;
+}

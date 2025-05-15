@@ -90,10 +90,18 @@ export class RTabs extends RainbowElement {
   $onRender(forceBehavior) {
     this.$$.activeChild = (() => {
       if (this.value === undefined) return undefined;
-      return arrayForEachFind(Array.from(this.children), (child) => {
-        if (child.localName !== "r-tab-item") return false;
+      const children = Array.from(this.children).filter(
+        (child) => child.localName === "r-tab-item",
+      );
+      return arrayForEachFind(children, (child, index) => {
         const bool = this.value === child.value;
+        const prveChild = children[index - 1];
+        const nextChild = children[index + 1];
+        const prveBool = nextChild ? this.value === nextChild.value : false;
+        const nextBool = prveChild ? this.value === prveChild.value : false;
         toggleClass(child, bool, "r-tab-item-act");
+        toggleClass(child, prveBool, "r-tab-item-prve-act");
+        toggleClass(child, nextBool, "r-tab-item-next-act");
         return bool;
       });
     })();
@@ -125,11 +133,12 @@ export class RTabs extends RainbowElement {
     const activeOffset = activeChild.getBoundingClientRect();
     const parentOffset = this.getBoundingClientRect();
     const scrollLeft = activeChild.offsetLeft - (parentOffset.width - activeOffset.width) / 2;
+    const scrollTop = activeChild.offsetTop - (parentOffset.height - activeOffset.height) / 2;
     this.$$.active.style.width = activeOffset.width + "px";
     this.$$.active.style.height = activeOffset.height + "px";
     this.$$.active.style.left = `${activeChild.offsetLeft}px`;
-    this.$$.active.style.top = `${activeOffset.top - parentOffset.top}px`;
-    this.scrollTo({ left: scrollLeft, behavior });
+    this.$$.active.style.top = `${activeChild.offsetTop}px`;
+    this.scrollTo({ left: scrollLeft, behavior, top: scrollTop });
     this.$$.resizeObserver.observe(activeChild);
     this.$$.active.removeEventListener("transitionend", this.$$.onActiveTransitionend);
     this.$$.active.addEventListener("transitionend", this.$$.onActiveTransitionend);

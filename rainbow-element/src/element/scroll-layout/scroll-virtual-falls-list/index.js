@@ -214,6 +214,10 @@ export class RScrollVirtualFallsList extends RainbowElement {
       this.$$.preLoadIndex = end;
       this.$$.preLoads();
       this.$$.setHeight();
+      if (!renderList.length) {
+        this.$$.visible.start = 0;
+        this.$$.visible.end = 0;
+      }
       this.$$.backstage.reStart();
     },
     setHeight: () => {

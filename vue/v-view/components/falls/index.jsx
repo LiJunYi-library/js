@@ -1,8 +1,8 @@
 import { RResize } from "../resize";
 import { useResizeObserver } from "@rainbow_ljy/v-hooks";
-import { defineComponent, render, computed, renderSlot, renderList, watch, onMounted, onBeforeUnmount } from "vue";
+import { defineComponent, computed, renderSlot, renderList, watch, onMounted, onBeforeUnmount } from "vue";
 import "./index.scss";
-import { timerDebounced, animationDebounced, arrayLoopMap } from "@rainbow_ljy/rainbow-js";
+import {  animationDebounced, arrayLoopMap } from "@rainbow_ljy/rainbow-js";
 
 
 export const RFallsProps = {

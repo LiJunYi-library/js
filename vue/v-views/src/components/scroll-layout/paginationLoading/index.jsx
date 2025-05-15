@@ -1,4 +1,4 @@
-import { defineComponent, onUnmounted, onMounted, renderSlot, renderList } from "vue";
+import { defineComponent, onUnmounted, onMounted, renderSlot, renderList, watch } from "vue";
 import { findParentByLocalName } from "@rainbow_ljy/rainbow-element";
 import { useScrollController } from "../../scroll-patch/utils.js";
 import "./index.scss";
@@ -9,6 +9,7 @@ export const VRPaginationLoading = defineComponent({
     loadingHook: { type: Object, default: () => ({}) },
     onErrorLoadClick: { type: Function },
     onBeginErrorClick: { type: Function },
+    skeletonCount: { type: Number, default: 10 },
   },
   emits: ["rollToBottom"],
   setup(props, ctx) {
@@ -83,7 +84,7 @@ export const VRPaginationLoading = defineComponent({
             <div class="r-pagination-loading-begin-next"></div>
           </div>
           <div class="r-pagination-loading-begin-skeleton">
-            {renderList(10, () => (
+            {renderList(props.skeletonCount, () => (
               <div class="r-pagination-loading-begin-skeleton-item" />
             ))}
           </div>
@@ -123,16 +124,24 @@ export const VRPaginationLoading = defineComponent({
 
     function renderState() {
       const ps = props.loadingHook;
-      if (ps.begin === true && ps.error === true) return renderError();
       if (ps.error === true) return renderLoadError();
-      if (ps.begin === true) return renderBegin();
       if (ps.empty === true && ps.finished === true) return renderEmpty();
       if (ps.finished === true) return renderFinished();
       if (ps.loading === true) return renderLoading();
     }
 
+    watch(
+      () => props.loadingHook.begin,
+      async () => {
+        console.log([vm.$el]);
+      },
+    );
+
     return (v, a) => {
       vm = v;
+      const ps = props.loadingHook;
+      if (ps.begin === true && ps.error === true) return renderError();
+      if (ps.begin === true) return renderBegin();
       return [ctx.slots?.default?.(), renderState()];
     };
   },

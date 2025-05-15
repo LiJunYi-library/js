@@ -340,3 +340,17 @@ export function functionInvokeKey(o = {}, key) {
   const f = () => 0;
   return o[key] || o["default"] || f;
 }
+
+//TODO
+export function scrollIntoView(pView, view, top = 0, left = 0) {
+  const config = {
+    behavior: 'instant',
+    top,
+    left,
+  };
+  if (typeof top === 'object') Object.assign(config, top);
+  const t = getOffsetTop(view, pView) + config.top;
+  if (pView.scrollTop <= t) return;
+  config.top = t;
+  pView.scrollTo(config);
+}

@@ -1,6 +1,6 @@
-import { createElementBlock as R, openBlock as A, mergeProps as st, renderSlot as L, Fragment as ct, renderList as j, normalizeClass as dt, createTextVNode as S, toDisplayString as ft, inject as q, reactive as X, onBeforeUnmount as tt, defineComponent as M, onMounted as N, onUnmounted as gt, createVNode as c, useSlots as et, computed as T, toRaw as nt, withDirectives as it, vModelText as ot, render as $, provide as rt, watch as Q, onBeforeMount as ht, isVNode as mt } from "vue";
+import { createElementBlock as R, openBlock as A, mergeProps as st, renderSlot as L, Fragment as ct, renderList as j, normalizeClass as dt, createTextVNode as I, toDisplayString as gt, inject as J, reactive as K, onBeforeUnmount as et, defineComponent as M, onMounted as P, onUnmounted as ft, watch as X, createVNode as c, useSlots as nt, computed as T, toRaw as $, withDirectives as it, vModelText as ot, render as N, provide as rt, onBeforeMount as mt, isVNode as ht } from "vue";
 import { findParentByLocalName as _t } from "@rainbow_ljy/rainbow-element";
-import { arrayRemove as vt, arrayLoopMap as yt, animationDebounced as Y, arrayLoop as bt } from "@rainbow_ljy/rainbow-js";
+import { arrayRemove as vt, arrayLoopMap as yt, animationDebounced as Z, arrayLoop as bt } from "@rainbow_ljy/rainbow-js";
 import { useResizeObserver as kt } from "@rainbow_ljy/v-hooks";
 const xt = ["value"], Ht = ["trigger", "value", "onClick"], Et = {
   __name: "index",
@@ -23,8 +23,8 @@ const xt = ["value"], Ht = ["trigger", "value", "onClick"], Et = {
             value: (d = (u = t.listHook) == null ? void 0 : u.formatterValue) == null ? void 0 : d.call(u, e, o),
             class: dt(["v-r-tab-item", "v-r-tab-item" + o]),
             onClick: (a) => {
-              var i, m;
-              return (m = (i = t.listHook) == null ? void 0 : i.onSelect) == null ? void 0 : m.call(i, e, o);
+              var i, h;
+              return (h = (i = t.listHook) == null ? void 0 : i.onSelect) == null ? void 0 : h.call(i, e, o);
             }
           }, [
             L(n.$slots, "default", {
@@ -33,7 +33,7 @@ const xt = ["value"], Ht = ["trigger", "value", "onClick"], Et = {
             }, () => {
               var a, i;
               return [
-                S(ft((i = (a = t.listHook) == null ? void 0 : a.formatterLabel) == null ? void 0 : i.call(a, e, o)), 1)
+                I(gt((i = (a = t.listHook) == null ? void 0 : a.formatterLabel) == null ? void 0 : i.call(a, e, o)), 1)
               ];
             })
           ], 10, Ht);
@@ -42,10 +42,10 @@ const xt = ["value"], Ht = ["trigger", "value", "onClick"], Et = {
       ], 16, xt);
     };
   }
-}, Nt = Et;
-function J(t = {}) {
+}, jt = Et;
+function Q(t = {}) {
   var u, d;
-  const n = q("RScrollContext") || {}, l = X({
+  const n = J("RScrollContext") || {}, l = K({
     onScrollTop: () => {
     },
     onScrollBottom: () => {
@@ -90,7 +90,7 @@ function J(t = {}) {
   function o() {
     vt(n == null ? void 0 : n.children, l);
   }
-  return tt(() => {
+  return et(() => {
     o();
   }), l;
 }
@@ -106,7 +106,7 @@ function Ct(t = {}) {
     setWidth: s,
     afreshLayout: B,
     getMaxHeightItem: i,
-    getMinHeightItem: m,
+    getMinHeightItem: h,
     setList: o
   };
   o();
@@ -123,7 +123,7 @@ function Ct(t = {}) {
     return yt(n.columns, (r) => ({
       height: 0,
       width: l.width,
-      left: g(r),
+      left: f(r),
       top: 0,
       children: [],
       index: r
@@ -141,11 +141,11 @@ function Ct(t = {}) {
       _.height > r.height && (r = _);
     }), r;
   }
-  function m(r) {
+  function h(r) {
     if (typeof r == "number") return l.list[r];
     let _ = l.list[0];
-    return l.list.forEach((x) => {
-      x.height < _.height && (_ = x);
+    return l.list.forEach((k) => {
+      k.height < _.height && (_ = k);
     }), _;
   }
   function y(r) {
@@ -163,11 +163,11 @@ function Ct(t = {}) {
   function v(...r) {
     r.forEach((_) => {
       if (!_ || !_.style) return;
-      let x = m();
-      x.height && (x.height = x.height + n.gap), _.style.left = x.left, _.style.top = x.height + "px", x.height = x.height + _.offsetHeight;
+      let k = h();
+      k.height && (k.height = k.height + n.gap), _.style.left = k.left, _.style.top = k.height + "px", k.height = k.height + _.offsetHeight;
     });
   }
-  function g(r) {
+  function f(r) {
     return `calc( ${100 / n.columns * r}% - ${(n.columns - 1) * n.gap / n.columns * r}px + ${r * n.gap}px )`;
   }
   return l;
@@ -209,31 +209,35 @@ const Pt = /* @__PURE__ */ M({
     },
     onBeginErrorClick: {
       type: Function
+    },
+    skeletonCount: {
+      type: Number,
+      default: 10
     }
   },
   emits: ["rollToBottom"],
   setup(t, n) {
     (() => {
-      J({
-        onScrollDown: g
+      Q({
+        onScrollDown: f
       });
-      function g(r) {
+      function f(r) {
         const _ = r.contentHeight - r.containerHeight - t.triggerBottomDistance;
         r.scrollTop >= _ && n.emit("rollToBottom", r);
       }
     })();
     let l, s = document.createElement("div");
-    N(e), gt(o);
+    P(e), ft(o);
     function e() {
       s = _t(["r-scroll", "r-scroll-view", "r-nested-scroll"], l.$el), s && s.addEventListener("scrollUp", u);
     }
     function o() {
       s && s.removeEventListener("scrollUp", u);
     }
-    function u(g) {
+    function u(f) {
       if (!s) return;
       const r = s.scrollHeight - s.offsetHeight - t.triggerBottomDistance;
-      s.scrollTop >= r && n.emit("rollToBottom", g);
+      s.scrollTop >= r && n.emit("rollToBottom", f);
     }
     function d() {
       return L(n.slots, "loading", {}, () => [c("div", {
@@ -242,7 +246,7 @@ const Pt = /* @__PURE__ */ M({
         class: "r-pagination-loading-loading-prve"
       }, null), c("div", {
         class: "r-pagination-loading-loading-text"
-      }, [S("加载中")]), c("div", {
+      }, [I("加载中")]), c("div", {
         class: "r-pagination-loading-loading-next"
       }, null)])]);
     }
@@ -253,7 +257,7 @@ const Pt = /* @__PURE__ */ M({
         class: "r-pagination-loading-finished-prve"
       }, null), c("div", {
         class: "r-pagination-loading-finished-text"
-      }, [S("没有更多的了")]), c("div", {
+      }, [I("没有更多的了")]), c("div", {
         class: "r-pagination-loading-finished-next"
       }, null)])]);
     }
@@ -264,11 +268,11 @@ const Pt = /* @__PURE__ */ M({
         class: "r-pagination-loading-empty-prve"
       }, null), c("div", {
         class: "r-pagination-loading-empty-text"
-      }, [S("暂无相关数据，试试其他条件吧")]), c("div", {
+      }, [I("暂无相关数据，试试其他条件吧")]), c("div", {
         class: "r-pagination-loading-empty-next"
       }, null)])]);
     }
-    function m() {
+    function h() {
       return L(n.slots, "begin", {}, () => [c("div", {
         class: "r-pagination-loading-begin"
       }, [c("div", {
@@ -277,17 +281,17 @@ const Pt = /* @__PURE__ */ M({
         class: "r-pagination-loading-begin-prve"
       }, null), c("div", {
         class: "r-pagination-loading-begin-text"
-      }, [S("加载中")]), c("div", {
+      }, [I("加载中")]), c("div", {
         class: "r-pagination-loading-begin-next"
       }, null)]), c("div", {
         class: "r-pagination-loading-begin-skeleton"
-      }, [j(10, () => c("div", {
+      }, [j(t.skeletonCount, () => c("div", {
         class: "r-pagination-loading-begin-skeleton-item"
       }, null))])])]);
     }
     function y() {
-      var g, r;
-      t.onBeginErrorClick ? t.onBeginErrorClick(...arg) : (r = (g = t.loadingHook) == null ? void 0 : g.nextBeginSend) == null || r.call(g);
+      var f, r;
+      t.onBeginErrorClick ? t.onBeginErrorClick(...arg) : (r = (f = t.loadingHook) == null ? void 0 : f.nextBeginSend) == null || r.call(f);
     }
     function V() {
       return L(n.slots, "error", {}, () => [c("div", {
@@ -297,13 +301,13 @@ const Pt = /* @__PURE__ */ M({
         class: "r-pagination-loading-begin-error-prve"
       }, null), c("div", {
         class: "r-pagination-loading-begin-error-text"
-      }, [S("出错了 点击重新加载")]), c("div", {
+      }, [I("出错了 点击重新加载")]), c("div", {
         class: "r-pagination-loading-begin-error-next"
       }, null)])]);
     }
-    function B(...g) {
+    function B(...f) {
       var r, _;
-      t.onErrorLoadClick ? t.onErrorLoadClick(...g) : (_ = (r = t.loadingHook) == null ? void 0 : r.awaitSend) == null || _.call(r);
+      t.onErrorLoadClick ? t.onErrorLoadClick(...f) : (_ = (r = t.loadingHook) == null ? void 0 : r.awaitSend) == null || _.call(r);
     }
     function w() {
       return L(n.slots, "errorLoad", {}, () => [c("div", {
@@ -313,22 +317,24 @@ const Pt = /* @__PURE__ */ M({
         class: "r-pagination-loading-error-prve"
       }, null), c("div", {
         class: "r-pagination-loading-error-text"
-      }, [S("出错了 点击重新加载")]), c("div", {
+      }, [I("出错了 点击重新加载")]), c("div", {
         class: "r-pagination-loading-error-next"
       }, null)])]);
     }
     function v() {
-      const g = t.loadingHook;
-      if (g.begin === !0 && g.error === !0) return V();
-      if (g.error === !0) return w();
-      if (g.begin === !0) return m();
-      if (g.empty === !0 && g.finished === !0) return i();
-      if (g.finished === !0) return a();
-      if (g.loading === !0) return d();
+      const f = t.loadingHook;
+      if (f.error === !0) return w();
+      if (f.empty === !0 && f.finished === !0) return i();
+      if (f.finished === !0) return a();
+      if (f.loading === !0) return d();
     }
-    return (g, r) => {
-      var _, x;
-      return l = g, [(x = (_ = n.slots) == null ? void 0 : _.default) == null ? void 0 : x.call(_), v()];
+    return X(() => t.loadingHook.begin, async () => {
+      console.log([l.$el]);
+    }), (f, r) => {
+      var k, F;
+      l = f;
+      const _ = t.loadingHook;
+      return _.begin === !0 && _.error === !0 ? V() : _.begin === !0 ? h() : [(F = (k = n.slots) == null ? void 0 : k.default) == null ? void 0 : F.call(k), v()];
     };
   }
 }), wt = ["keyExtractor"], Mt = {
@@ -351,13 +357,13 @@ const Pt = /* @__PURE__ */ M({
   setup(t, {
     emit: n
   }) {
-    const l = et(), s = n, e = t, o = T({
+    const l = nt(), s = n, e = t, o = T({
       set(i) {
         if (e.listHook.list) return e.listHook.list = i;
         s("update:modelValue", i);
       },
       get() {
-        return e.listHook.list ? e.listHook.list : nt(e.modelValue);
+        return e.listHook.list ? $(e.listHook.list) : $(e.modelValue);
       }
     }), u = T(() => e.listHook.list ? e.listHook.list : e.modelValue), d = /* @__PURE__ */ M({
       inheritAttrs: !1,
@@ -367,21 +373,21 @@ const Pt = /* @__PURE__ */ M({
       },
       setup(i) {
         return () => {
-          var m, y;
-          return (y = (m = i == null ? void 0 : i.slots) == null ? void 0 : m.item) == null ? void 0 : y.call(m, i.event);
+          var h, y;
+          return (y = (h = i == null ? void 0 : i.slots) == null ? void 0 : h.item) == null ? void 0 : y.call(h, i.event);
         };
       }
     });
     function a(i) {
-      i.item = u.value[i.index], $(c(d, {
+      i.item = u.value[i.index], N(c(d, {
         event: i,
         slots: l,
         key: e.keyExtractor(i),
         "data-key": e.keyExtractor(i)
       }, null), i.ele);
     }
-    return (i, m) => it((A(), R("r-scroll-virtual-grid-list", {
-      "onUpdate:modelValue": m[0] || (m[0] = (y) => o.value = y),
+    return (i, h) => it((A(), R("r-scroll-virtual-grid-list", {
+      "onUpdate:modelValue": h[0] || (h[0] = (y) => o.value = y),
       onrenderItems: a,
       keyExtractor: e.keyExtractor
     }, [L(i.$slots, "default")], 8, wt)), [[ot, o.value]]);
@@ -406,13 +412,13 @@ const Pt = /* @__PURE__ */ M({
   setup(t, {
     emit: n
   }) {
-    const l = et(), s = n, e = t, o = T({
+    const l = nt(), s = n, e = t, o = T({
       set(i) {
         if (e.listHook.list) return e.listHook.list = i;
         s("update:modelValue", i);
       },
       get() {
-        return e.listHook.list ? e.listHook.list : nt(e.modelValue);
+        return e.listHook.list ? $(e.listHook.list) : $(e.modelValue);
       }
     }), u = T(() => e.listHook.list ? e.listHook.list : e.modelValue), d = /* @__PURE__ */ M({
       inheritAttrs: !1,
@@ -421,23 +427,23 @@ const Pt = /* @__PURE__ */ M({
         slots: Object
       },
       setup(i) {
-        return N(() => {
+        return P(() => {
         }), () => {
-          var m, y;
-          return (y = (m = i == null ? void 0 : i.slots) == null ? void 0 : m.item) == null ? void 0 : y.call(m, i.event);
+          var h, y;
+          return (y = (h = i == null ? void 0 : i.slots) == null ? void 0 : h.item) == null ? void 0 : y.call(h, i.event);
         };
       }
     });
     function a(i) {
-      i.item = u.value[i.index], $(c(d, {
+      i.item = u.value[i.index], N(c(d, {
         event: i,
         slots: l,
         key: e.keyExtractor(i),
         "data-key": e.keyExtractor(i)
       }, null), i.ele);
     }
-    return (i, m) => it((A(), R("r-scroll-virtual-falls-list", {
-      "onUpdate:modelValue": m[0] || (m[0] = (y) => o.value = y),
+    return (i, h) => it((A(), R("r-scroll-virtual-falls-list", {
+      "onUpdate:modelValue": h[0] || (h[0] = (y) => o.value = y),
       onrenderItems: a,
       keyExtractor: e.keyExtractor
     }, [L(i.$slots, "default")], 8, Tt)), [[ot, o.value]]);
@@ -492,7 +498,7 @@ const Pt = /* @__PURE__ */ M({
       list: t.list
     }, null);
   }
-}), Z = /* @__PURE__ */ M({
+}), tt = /* @__PURE__ */ M({
   props: {
     item: Object,
     index: Number,
@@ -502,8 +508,8 @@ const Pt = /* @__PURE__ */ M({
     let l;
     kt(() => l.$el, s);
     function s(e) {
-      var d, a, i, m, y;
-      const o = ((a = (d = e == null ? void 0 : e[0]) == null ? void 0 : d.target) == null ? void 0 : a.offsetHeight) ?? 0, u = ((m = (i = t.item) == null ? void 0 : i.__cache__) == null ? void 0 : m.height) ?? 0;
+      var d, a, i, h, y;
+      const o = ((a = (d = e == null ? void 0 : e[0]) == null ? void 0 : d.target) == null ? void 0 : a.offsetHeight) ?? 0, u = ((h = (i = t.item) == null ? void 0 : i.__cache__) == null ? void 0 : h.height) ?? 0;
       o !== 0 && u !== o && (y = t.item) != null && y.__cache__ && (t.item.__cache__.height = o, t.item.__cache__.isResize = !0, n.emit("heightChange", o, u, e));
     }
     return (e) => {
@@ -519,11 +525,11 @@ const Pt = /* @__PURE__ */ M({
   },
   setup(t, n) {
     let l, s = !1;
-    const e = Ct(t), o = T(() => (t.listHook ? t.listHook.list : t.list) || []), u = D(), d = {
+    const e = Ct(t), o = T(() => (t.listHook ? t.listHook.list : t.list) || []), u = F(), d = {
       nodeMap: /* @__PURE__ */ new Map(),
       DivPointer: void 0,
       item: void 0
-    }, a = X({
+    }, a = K({
       context: n,
       slots: n.slots,
       index: 0,
@@ -532,160 +538,160 @@ const Pt = /* @__PURE__ */ M({
       endColumn: e.getMinHeightItem(),
       nodeMap: /* @__PURE__ */ new Map(),
       renderList: [],
-      renderItems: g
+      renderItems: f
     });
     rt("RScrollVirtualFallsListContext", a), n.expose(a);
-    const i = Y(z), m = Y(F), y = J({
-      onScroll: P,
+    const i = Z(U), h = Z(S), y = Q({
+      onScroll: z,
       onResize: i
     }), V = () => {
-      var h, f;
-      return ((f = (h = y == null ? void 0 : y.context) == null ? void 0 : h.element) == null ? void 0 : f.scrollTop) ?? 0;
+      var m, g;
+      return ((g = (m = y == null ? void 0 : y.context) == null ? void 0 : m.element) == null ? void 0 : g.scrollTop) ?? 0;
     }, B = T(() => o.value.length ? (t.avgHeight + t.gap) * Math.ceil(o.value.length / t.columns) - t.gap : 0), w = () => -window.innerHeight + y.getOffsetTop(l), v = () => window.innerHeight * 2 + y.getOffsetTop(l);
-    function g() {
+    function f() {
       if (!l) return;
       u.stop();
-      let h = a.column;
-      a.nodeMap = /* @__PURE__ */ new Map(), d.DivPointer = void 0, a.renderList.forEach((f, p) => {
-        f.__cache__ || (f.__cache__ = {});
-        const E = a.index + p, H = f.__cache__;
-        H.columns = e.list.map((I) => ({
-          ...I
-        })), h.height && (h.height = h.height + t.gap), H.top = h.height, H.left = h.left, H.width = h.width, H.columnIndex = h.index;
-        let k;
-        d.nodeMap.has(f) ? (k = d.nodeMap.get(f), k.setAttribute("data-index", E), $(c(Z, {
-          item: f,
+      let m = a.column;
+      a.nodeMap = /* @__PURE__ */ new Map(), d.DivPointer = void 0, a.renderList.forEach((g, p) => {
+        g.__cache__ || (g.__cache__ = {});
+        const E = a.index + p, H = g.__cache__;
+        H.columns = e.list.map((D) => ({
+          ...D
+        })), m.height && (m.height = m.height + t.gap), H.top = m.height, H.left = m.left, H.width = m.width, H.columnIndex = m.index;
+        let x;
+        d.nodeMap.has(g) ? (x = d.nodeMap.get(g), x.setAttribute("data-index", E), N(c(tt, {
+          item: g,
           index: E,
           slots: n.slots,
           key: t.keyExtractor({
-            item: f,
+            item: g,
             index: E
           }),
-          onHeightChange: m
-        }, null), k), d.DivPointer && (d.DivPointer.nextSibling === k || l.insertBefore(k, d.DivPointer.nextSibling)), d.DivPointer = k, d.nodeMap.delete(f)) : (k = document.createElement("div"), k.setAttribute("data-index", E), k.classList.add("r-scroll-virtual-falls-list-item"), $(c(Z, {
-          item: f,
+          onHeightChange: h
+        }, null), x), d.DivPointer && (d.DivPointer.nextSibling === x || l.insertBefore(x, d.DivPointer.nextSibling)), d.DivPointer = x, d.nodeMap.delete(g)) : (x = document.createElement("div"), x.setAttribute("data-index", E), x.classList.add("r-scroll-virtual-falls-list-item"), N(c(tt, {
+          item: g,
           index: E,
           slots: n.slots,
           key: t.keyExtractor({
-            item: f,
+            item: g,
             index: E
           }),
-          onHeightChange: m
-        }, null), k), d.DivPointer ? (l.insertBefore(k, d.DivPointer.nextSibling), d.DivPointer = k) : (l.insertBefore(k, l.firstChild), d.DivPointer = k)), k.style.top = H.top + "px", k.style.left = H.left, k.style.width = H.width, H.height = k.offsetHeight, h.height = h.height + k.offsetHeight, H.bottom = h.height, H.vTop = H.top + w(), H.vBottom = H.bottom + v(), H.columns2 = e.list.map((I) => ({
-          ...I
-        })), a.endIndex = E + 1, h = e.getMinHeightItem(), a.endColumn = h, a.nodeMap.set(f, k);
-      }), d.nodeMap.forEach((f) => f.remove()), d.DivPointer = void 0, d.nodeMap = a.nodeMap, s = !1, u.rePreLoads(), u.start();
+          onHeightChange: h
+        }, null), x), d.DivPointer ? (l.insertBefore(x, d.DivPointer.nextSibling), d.DivPointer = x) : (l.insertBefore(x, l.firstChild), d.DivPointer = x)), x.style.top = H.top + "px", x.style.left = H.left, x.style.width = H.width, H.height = x.offsetHeight, m.height = m.height + x.offsetHeight, H.bottom = m.height, H.vTop = H.top + w(), H.vBottom = H.bottom + v(), H.columns2 = e.list.map((D) => ({
+          ...D
+        })), a.endIndex = E + 1, m = e.getMinHeightItem(), a.endColumn = m, a.nodeMap.set(g, x);
+      }), d.nodeMap.forEach((g) => g.remove()), d.DivPointer = void 0, d.nodeMap = a.nodeMap, s = !1, u.rePreLoads(), u.start();
     }
-    function r(h) {
-      let f = _(V());
-      if (f === -1 && (f = 0), o.value.length === 0 && l) {
+    function r(m) {
+      let g = _(V());
+      if (g === -1 && (g = 0), o.value.length === 0 && l) {
         l.innerHTML = "";
         return;
       }
-      let p = o.value[f];
-      if (!p || !h && d.item === p) return;
-      s = !0, a.index = f;
+      let p = o.value[g];
+      if (!p || !m && d.item === p) return;
+      s = !0, a.index = g;
       let E = p.__cache__;
-      f === 0 ? (e.setList(), a.column = e.getMinHeightItem()) : (e.list = E.columns, a.column = e.getMinHeightItem(E.columnIndex)), a.renderList = o.value.slice(a.index, a.index + t.renderCount), d.item = p, g();
+      g === 0 ? (e.setList(), a.column = e.getMinHeightItem()) : (e.list = E.columns, a.column = e.getMinHeightItem(E.columnIndex)), a.renderList = o.value.slice(a.index, a.index + t.renderCount), d.item = p, f();
     }
-    function _(h) {
-      return Lt(o.value, (f) => f.__cache__ ? f.__cache__.vTop <= h && h <= f.__cache__.vBottom : !1, (f) => f.__cache__ ? f.__cache__.vTop < h : !1);
+    function _(m) {
+      return Lt(o.value, (g) => g.__cache__ ? g.__cache__.vTop <= m && m <= g.__cache__.vBottom : !1, (g) => g.__cache__ ? g.__cache__.vTop < m : !1);
     }
-    function x() {
+    function k() {
       var p, E;
-      const h = (E = (p = o.value.at(-1)) == null ? void 0 : p.__cache__) == null ? void 0 : E.columns2;
-      if (!h) return B.value;
-      let f = h[0];
-      return h.forEach((H) => {
-        H.height > f.height && (f = H);
-      }), f.height;
+      const m = (E = (p = o.value.at(-1)) == null ? void 0 : p.__cache__) == null ? void 0 : E.columns2;
+      if (!m) return B.value;
+      let g = m[0];
+      return m.forEach((H) => {
+        H.height > g.height && (g = H);
+      }), g.height;
     }
-    function D() {
-      let h, f = 0, p;
+    function F() {
+      let m, g = 0, p;
       const E = window.requestIdleCallback || requestAnimationFrame, H = window.requestIdleCallback ? cancelIdleCallback : cancelAnimationFrame;
-      function k() {
-        f = a.endIndex, p = a.endColumn, U();
+      function x() {
+        g = a.endIndex, p = a.endColumn, G();
       }
-      function I() {
-        const b = o.value[f];
+      function D() {
+        const b = o.value[g];
         if (!b) return;
         let C = p;
         b.__cache__ || (b.__cache__ = {});
         const O = b.__cache__.height || t.avgHeight;
-        b.__cache__.columns = e.list.map((W) => ({
-          ...W
-        })), C.height && (C.height = C.height + t.gap), b.__cache__.top = C.height, b.__cache__.left = C.left, b.__cache__.width = C.width, b.__cache__.columnIndex = C.index, b.__cache__.height = O, C.height = C.height + O, b.__cache__.bottom = C.height, b.__cache__.columns2 = e.list.map((W) => ({
-          ...W
-        })), b.__cache__.vTop = b.__cache__.top + w(), b.__cache__.vBottom = b.__cache__.bottom + v(), f++, p = e.getMinHeightItem();
+        b.__cache__.columns = e.list.map((q) => ({
+          ...q
+        })), C.height && (C.height = C.height + t.gap), b.__cache__.top = C.height, b.__cache__.left = C.left, b.__cache__.width = C.width, b.__cache__.columnIndex = C.index, b.__cache__.height = O, C.height = C.height + O, b.__cache__.bottom = C.height, b.__cache__.columns2 = e.list.map((q) => ({
+          ...q
+        })), b.__cache__.vTop = b.__cache__.top + w(), b.__cache__.vBottom = b.__cache__.bottom + v(), g++, p = e.getMinHeightItem();
       }
-      function U(b = t.preLoadsCount) {
+      function G(b = t.preLoadsCount) {
         let C = 0;
         for (; C < t.preLoadsCount; )
-          I(), C++;
+          D(), C++;
       }
-      function G(b) {
-        if (f >= o.value.length) {
-          K();
+      function W(b) {
+        if (g >= o.value.length) {
+          Y();
           return;
         }
         if (typeof b == "object" && b.timeRemaining && b.timeRemaining() > 0 || typeof b == "number") {
           try {
-            U(10);
+            G(10);
           } catch (O) {
             console.error("Error in callback:", O);
           }
-          (typeof b == "object" && !b.didTimeout || typeof b == "number") && (h = E(G));
+          (typeof b == "object" && !b.didTimeout || typeof b == "number") && (m = E(W));
         }
       }
       function at() {
-        h = E(G);
+        m = E(W);
       }
-      function K() {
-        h && (H(h), h = null);
+      function Y() {
+        m && (H(m), m = null);
       }
       function ut() {
-        E(G);
+        E(W);
       }
       return {
         start: at,
-        stop: K,
+        stop: Y,
         trigger: ut,
-        preLoads: U,
-        preLoad: I,
-        rePreLoads: k
+        preLoads: G,
+        preLoad: D,
+        rePreLoads: x
       };
     }
-    N(() => {
-    }), tt(() => {
+    P(() => {
+    }), et(() => {
       u.stop();
     });
-    function F() {
+    function S() {
       r(!0);
-    }
-    function P() {
-      r();
     }
     function z() {
+      r();
+    }
+    function U() {
       r(!0);
     }
-    return Q(() => o.value.slice(a.index, a.index + t.renderCount), () => {
+    return X(() => o.value.slice(a.index, a.index + t.renderCount), () => {
       s || r(!0);
-    }), Q(() => o.value.length, () => {
+    }), X(() => o.value.length, () => {
       s || r(!0);
     }), () => c("div", null, [c(St, {
       list: o.value.slice(a.index, a.index + t.renderCount)
     }, null), c("div", {
       style: {
-        height: x() + "px"
+        height: k() + "px"
       },
       "data-length": o.value.length,
-      ref: (h) => l = h,
+      ref: (m) => l = m,
       class: "r-scroll-virtual-falls-list"
     }, null)]);
   }
 });
 function It(t) {
-  return typeof t == "function" || Object.prototype.toString.call(t) === "[object Object]" && !mt(t);
+  return typeof t == "function" || Object.prototype.toString.call(t) === "[object Object]" && !ht(t);
 }
 const lt = {
   bothEndsHeight: {
@@ -725,7 +731,7 @@ const lt = {
     index: Number
   },
   setup(t, n) {
-    const l = q("RScrollVirtualGridListContext") || {};
+    const l = J("RScrollVirtualGridListContext") || {};
     let s;
     const e = new IntersectionObserver(([u]) => {
       u.isIntersecting && (l.context.emit("itemVisible", t), o());
@@ -733,9 +739,9 @@ const lt = {
     function o() {
       typeof t.item == "object" && t.item.__markVisible !== l.markVisible && (t.item.__markVisible = l.markVisible, l.context.emit("itemMarkVisible", t));
     }
-    return N(() => {
+    return P(() => {
       e.observe(s);
-    }), ht(() => {
+    }), mt(() => {
       e.disconnect();
     }), () => c("div", {
       ref: (u) => s = u
@@ -746,7 +752,7 @@ const lt = {
     ...lt
   },
   setup(t, n) {
-    const l = q("RScrollVirtualGridListContext") || {};
+    const l = J("RScrollVirtualGridListContext") || {};
     function s(e) {
       typeof e.item == "object" && e.item.__markCount !== l.markCount && (e.item.__markCount = l.markCount, l.context.emit("itemMarkRender", e));
     }
@@ -773,14 +779,14 @@ const lt = {
     let l = {
       index: void 0
     }, s;
-    const e = () => window.innerHeight, o = T(() => `calc( ${100 / t.columns}% - ${(t.columns - 1) * t.gap / t.columns}px )`), u = T(() => (t.listHook ? t.listHook.list : t.list) || []), d = T(() => u.value.length ? (t.avgHeight + t.gap) * Math.ceil(u.value.length / t.columns) - t.gap + t.bothEndsHeight * 2 : 0), a = J({
-      onScroll(v, g) {
+    const e = () => window.innerHeight, o = T(() => `calc( ${100 / t.columns}% - ${(t.columns - 1) * t.gap / t.columns}px )`), u = T(() => (t.listHook ? t.listHook.list : t.list) || []), d = T(() => u.value.length ? (t.avgHeight + t.gap) * Math.ceil(u.value.length / t.columns) - t.gap + t.bothEndsHeight * 2 : 0), a = Q({
+      onScroll(v, f) {
         w();
       },
-      onResize(v, g) {
+      onResize(v, f) {
         w();
       }
-    }), i = X({
+    }), i = K({
       context: n,
       slots: n.slots,
       itemWidth: o,
@@ -803,36 +809,36 @@ const lt = {
       // },
     });
     rt("RScrollVirtualGridListContext", i), n.expose(i);
-    function m(v) {
+    function h(v) {
       return `calc( ${100 / t.columns * v}% - ${(t.columns - 1) * t.gap / t.columns * v}px + ${v * t.gap}px )`;
     }
-    function y(v, g = 0, r = []) {
+    function y(v, f = 0, r = []) {
       return a.context.element.scrollTop, a.getOffsetTop(s), v >= u.value.length ? r : (bt(t.columns, (_) => {
         if (v >= 0) {
-          const x = Math.floor(v / t.columns);
-          let D = x * (t.avgHeight + t.gap) + t.bothEndsHeight + "px";
-          x === 0 && (D = t.bothEndsHeight + "px");
-          const F = m(_), P = o.value, z = t.avgHeight + "px";
+          const k = Math.floor(v / t.columns);
+          let F = k * (t.avgHeight + t.gap) + t.bothEndsHeight + "px";
+          k === 0 && (F = t.bothEndsHeight + "px");
+          const S = h(_), z = o.value, U = t.avgHeight + "px";
           r.push({
             index: v,
             style: {
-              top: D,
-              left: F,
-              width: P,
-              height: z
+              top: F,
+              left: S,
+              width: z,
+              height: U
             },
             item: u.value[v]
           });
         }
         v++;
-      }), g = g + t.avgHeight + t.gap, g < window.innerHeight + e() * 2 ? y(v, g, r) : r);
+      }), f = f + t.avgHeight + t.gap, f < window.innerHeight + e() * 2 ? y(v, f, r) : r);
     }
     function V(v = !0) {
       if (!a.context.element) return;
-      const g = a.context.element.scrollTop, r = a.getOffsetTop(s);
-      if (r - g - window.innerHeight - e() > 0) return;
-      let x = Math.floor(e() / (t.avgHeight + t.gap)) * t.columns, F = Math.floor((g - r) / (t.avgHeight + t.gap)) * t.columns - x;
-      l.index === F && v || (l.index = F, i.renderList = y(F));
+      const f = a.context.element.scrollTop, r = a.getOffsetTop(s);
+      if (r - f - window.innerHeight - e() > 0) return;
+      let k = Math.floor(e() / (t.avgHeight + t.gap)) * t.columns, S = Math.floor((f - r) / (t.avgHeight + t.gap)) * t.columns - k;
+      l.index === S && v || (l.index = S, i.renderList = y(S));
     }
     let B;
     function w(v = !0) {
@@ -857,7 +863,7 @@ export {
   Gt as RScrollVirtualFallsListV3,
   Wt as RScrollVirtualGridList,
   Pt as VRPaginationLoading,
-  Nt as VRTabs,
+  jt as VRTabs,
   Ut as VRVirtualFallsList,
   zt as VRVirtualGridList
 };

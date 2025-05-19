@@ -1,6 +1,9 @@
 <template>
   <div class="scroll-layout-virtual-grid-demo">
     <r-scroll>
+      <r-scroll-sticky style="top: 0;">
+        <button @click="empty">empty</button>
+      </r-scroll-sticky>
       <div class="long-content">宫格布局 回收列表</div>
       <!-- <RLoadingLoad :promiseHook="ListLoad"> -->
       <!-- </RLoadingLoad> -->
@@ -31,7 +34,6 @@
           </template>
         </VRVirtualGridList>
       </div>
-
     </r-scroll>
   </div>
 </template>
@@ -40,10 +42,10 @@ import { arrayLoopMap, } from '@rainbow_ljy/rainbow-js'
 import { VRVirtualGridList } from '@rainbow_ljy/v-views'
 import { ref } from 'vue'
 
-const columns = ref(1)
+const columns = ref(2)
 
 const List = ref(
-  arrayLoopMap(100, (value) => ({
+  arrayLoopMap(4, (value) => ({
     value,
     nth: `第${value}个`,
     id: Math.random(),
@@ -72,6 +74,10 @@ function insert(item, index) {
 
 function remove(item, index) {
   List.value.splice(index, 1)
+}
+
+function empty() {
+  List.value.splice(0)
 }
 
 function change(item, index) {

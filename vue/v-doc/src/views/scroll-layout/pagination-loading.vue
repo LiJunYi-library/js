@@ -11,11 +11,11 @@
           <button @click="errorSend()">errorSend</button>
         </div>
       </r-scroll-sticky>
-     <div>{{ text }}</div>
+      <div>{{ text }}</div>
       <!--  <div>{{ text }}</div> -->
       <!-- <div> -->
       <!-- </div> -->
-      <VRPaginationLoading @rollToBottom="rollToBottom" :loadingHook="listload" >
+      <VRPaginationLoading @rollToBottom="rollToBottom" :loadingHook="listload">
         <div>
           <template v-for="(item, index) in listload.list" :key="item.value">
             <div class="item">index{{ index }}</div>
@@ -26,29 +26,28 @@
   </div>
 </template>
 <script setup>
-import { arrayLoopMap, arrayForcedTransform } from '@rainbow_ljy/rainbow-js'
-import { useListLoad2 } from '@rainbow_ljy/v-hooks'
+import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
 import { VRPaginationLoading } from '@rainbow_ljy/v-views'
-import { Vfetch, VlistLoad } from '@rainbow_ljy/v-hooks'
-import { ref, reactive, render, isRef, computed, onMounted } from 'vue'
+import { VlistLoad } from '@rainbow_ljy/v-hooks'
+import { computed, onMounted } from 'vue'
 import { MFetch } from '@/hooks'
 
 const text = arrayLoopMap(300, () => '帅').join('')
 
 const listload = (() => {
-  let ld = new VlistLoad()
+  let list = new VlistLoad()
   const body = computed(() => ({
     time: 1000,
-    currentPage: ld.currentPage,
-    pageSize: ld.pageSize,
+    currentPage: list.currentPage,
+    pageSize: list.pageSize,
   }))
-  const f = new MFetch({
+  const asyncHook = new MFetch({
     url: '/serve/page',
     method: 'post',
     body,
   })
-  ld = new VlistLoad({ loadHook: f })
-  return ld
+  list = new VlistLoad({ asyncHook })
+  return list
 })()
 
 function errorSend() {

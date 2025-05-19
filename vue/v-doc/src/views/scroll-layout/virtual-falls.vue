@@ -1,10 +1,13 @@
 <template>
   <div class="scroll-layout-virtual-falls-demo">
     <r-scroll>
-      <!-- <div class="long-content">虚拟化瀑布流布局 回收列表</div> -->
-      <!-- <VRVirtualFallsList ref="virtualList" class="my-scroll-virtual-falls-list" v-model="List"
+      <!-- <r-scroll-sticky style="top: 0;">
+        <button @click="empty">empty</button>
+      </r-scroll-sticky> -->
+      <div class="long-content">虚拟化瀑布流布局 回收列表</div>
+      <VRVirtualFallsList ref="virtualList" class="my-scroll-virtual-falls-list" v-model="List"
         :keyExtractor="({ item }) => item.id">
-        <template #default="{ item, index, key }">
+        <template #item="{ item, index, key }">
           <div>index:{{ index }}</div>
           <div>id:{{ item.id }}</div>
           <div>nth:{{ item.nth }}</div>
@@ -16,16 +19,16 @@
             <button @click="transposal(item, index)">置顶</button>
           </r-grid>
         </template>
-      </VRVirtualFallsList> -->
-      <!-- <div class="long-content">虚拟化瀑布流布局 回收列表</div> -->
-      <!-- <div class="long-content">虚拟化瀑布流布局 回收列表</div>
-      <div class="long-content">虚拟化瀑布流布局 回收列表</div> -->
+      </VRVirtualFallsList>
+      <div class="long-content">虚拟化瀑布流布局 回收列表</div>
+      <div class="long-content">虚拟化瀑布流布局 回收列表</div>
+      <div class="long-content">虚拟化瀑布流布局 回收列表</div>
       <div>更多推荐</div>
-      <r-move style="position: fixed;left: 0;top: 200;z-index: 100;background: wheat;">
-      {{ moreList.length }}
+      <r-move style="position: fixed;left: 0;top: 200px;z-index: 100;background: wheat;">
+        {{ moreList.length }}
       </r-move>
       <div class="more-scroll-virtual-falls-list-bg">
-        <VRVirtualFallsList id="vID"  v-model="moreList" :keyExtractor="({ item }) => item?.id"
+        <VRVirtualFallsList id="vID" v-model="moreList" :keyExtractor="({ item }) => item?.id"
           class="more-scroll-virtual-falls-list">
           <template #item="{ item, index, key }">
             <div>index:{{ index }}</div>
@@ -62,6 +65,11 @@ const moreList = ref(
     title: arrayLoopMap(Math.floor(Math.random() * 50 + 50), () => '标题').join(''),
   })),
 )
+
+function empty(params) {
+  List.value.splice(0);
+  console.log(List.value)
+}
 
 function insert(item, index) {
   List.value.splice(index + 1, 0, {

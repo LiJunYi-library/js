@@ -56,3 +56,19 @@ export function objectParseFormData(object, bool) {
   }
   return formData;
 }
+
+export function objectJSONParse(...arg) {
+  try {
+    return JSON.parse(...arg);
+  } catch (error) {
+    return {};
+  }
+}
+
+export function objectJSONStringify(...arg) {
+  try {
+    return JSON.stringify(...arg);
+  } catch (error) {
+    return "";
+  }
+}

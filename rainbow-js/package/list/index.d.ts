@@ -1,2 +1,2 @@
 export * from "./list";
-export * from "./list-load";
+export * from "./load";

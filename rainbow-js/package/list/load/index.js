@@ -1,18 +1,6 @@
 import { arrayForcedTransform } from "@rainbow_ljy/rainbow-js";
 
 export class ListLoad {
-  get loading() {
-    return this.loadHook.loading;
-  }
-
-  get begin() {
-    return this.loadHook.begin;
-  }
-
-  get error() {
-    return this.loadHook.error;
-  }
-
   ___ = {
     list: [],
     finished: false,
@@ -78,7 +66,7 @@ export class ListLoad {
         formatterCurrentPage,
         formatterFinished,
         formatterEmpty,
-      } = this.config;
+      } = this.props;
       this.total = formatterTotal(res, this);
       const arr = arrayForcedTransform(formatterList(res, this));
       this.list.push(...arr);
@@ -90,9 +78,7 @@ export class ListLoad {
     },
   };
 
-  loadHook = {};
-
-  config = {
+  props = {
     formatterList: (res, hooks) => {
       if (!res) return [];
       if (typeof res !== "object") return [];
@@ -114,16 +100,16 @@ export class ListLoad {
       if (hooks.finished !== true) return false;
       return hooks.list.length === 0;
     },
+    asyncHook: {},
   };
 
-  constructor(config = {}) {
-    Object.assign(this.config, config);
-    this.loadHook = config.loadHook;
+  constructor(props = {}) {
+    Object.assign(this.props, props);
   }
 
   async awaitSend(...arg) {
     if (this.finished === true) return;
-    const res = await this.loadHook.awaitSend(...arg);
+    const res = await this.props.asyncHook.awaitSend(...arg);
     return this.__.onSuccess(res);
   }
 
@@ -133,7 +119,7 @@ export class ListLoad {
     this.finished = false;
     this.empty = false;
     this.total = 0;
-    const res = await this.loadHook.nextBeginSend(...arg);
+    const res = await this.props.asyncHook.nextBeginSend(...arg);
     return this.__.onSuccess(res);
   }
 }

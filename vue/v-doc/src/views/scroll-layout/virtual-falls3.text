@@ -24,7 +24,7 @@
 <script setup>
 
 import { arrayLoopMap, } from '@rainbow_ljy/rainbow-js'
-import { RScroll} from '@rainbow_ljy/v-view';
+import { RScroll } from '@rainbow_ljy/v-view';
 import { VRPaginationLoading, RScrollVirtualFallsListV3 } from '@rainbow_ljy/v-views/src/index';
 import { useListLoad2 } from '@rainbow_ljy/v-hooks';
 import { onMounted, ref, computed } from 'vue';

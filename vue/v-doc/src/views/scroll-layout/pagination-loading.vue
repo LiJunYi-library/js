@@ -26,16 +26,26 @@
   </div>
 </template>
 <script setup>
-import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
+import { arrayLoopMap, List } from '@rainbow_ljy/rainbow-js'
 import { VRPaginationLoading } from '@rainbow_ljy/v-views'
 import { VlistLoad } from '@rainbow_ljy/v-hooks'
 import { computed, onMounted } from 'vue'
 import { MFetch } from '@/hooks'
 
+const se = new List({
+  value: 3,
+  label: 'label-5',
+  index: 8,
+  // list: arrayLoopMap(20, (value) => ({ value, label: `label-${value}` }))
+});
+se.updateList(arrayLoopMap(30, (value) => ({ value, label: `label-*-${value}` })), true)
+console.log(se)
+se.sssss()
+console.log("------------------")
 const text = arrayLoopMap(300, () => '帅').join('')
 
 const listload = (() => {
-  let list = new VlistLoad()
+  let list;
   const body = computed(() => ({
     time: 1000,
     currentPage: list.currentPage,

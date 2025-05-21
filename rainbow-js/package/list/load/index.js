@@ -1,6 +1,18 @@
 import { arrayForcedTransform } from "@rainbow_ljy/rainbow-js";
 
 export class ListLoad {
+  get loading() {
+    return this.props.asyncHook.loading;
+  }
+
+  get begin() {
+    return this.props.asyncHook.begin;
+  }
+
+  get error() {
+    return this.props.asyncHook.error;
+  }
+
   ___ = {
     list: [],
     finished: false,
@@ -105,6 +117,11 @@ export class ListLoad {
 
   constructor(props = {}) {
     Object.assign(this.props, props);
+    for (const key in this.props.asyncHook) {
+      console.log(key);
+    }
+    // Object.assign(this, this.props.asyncHook);
+    console.log("props", this.props);
   }
 
   async awaitSend(...arg) {

@@ -72,3 +72,10 @@ export function objectJSONStringify(...arg) {
     return "";
   }
 }
+
+export function objectAssign(o1, o2, keys = []) {
+  for (const key in o2) {
+    if (keys.includes(key)) o1[key] = o2[key];
+  }
+  return o1;
+}

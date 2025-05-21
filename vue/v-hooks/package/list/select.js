@@ -4,7 +4,7 @@ import { ref } from "vue";
 export { getSelectProps, useSelect, useAsyncSelect };
 
 function getSelectProps(options = {}) {
-  return {
+  const config = {
     select: undefined,
     value: undefined,
     label: undefined,
@@ -12,12 +12,28 @@ function getSelectProps(options = {}) {
     cancelSame: false, // 是否取消相同的
     isMultiple: false,
     formRequired: false,
-    formRequiredErrorMessage: '',
+    formRequiredErrorMessage: "",
     onChange: () => undefined,
     validator: () => Promise.resolve(true),
     formatterValue: (item) => item?.value,
     formatterLabel: (item) => item?.label,
     formatterDisabled: (item) => item?.disabled ?? false,
+    formatterSelect: (args = {}) => {
+      let item;
+      if (args.value !== undefined) {
+        item = args.list.find((el) => config.formatterValue(el) === args.value);
+        if (item !== undefined) return item;
+      }
+      if (args.label !== undefined) {
+        item = args.list.find((el) => config.findForLabel(el) === args.value);
+        if (item !== undefined) return item;
+      }
+      if (args.index !== undefined) {
+        item = args.list[args.index];
+        if (item !== undefined) return item;
+      }
+      return undefined;
+    },
     formatterList: (list) => list,
     listRef: ref,
     selectRef: ref,
@@ -28,6 +44,7 @@ function getSelectProps(options = {}) {
     ...options,
     list: options.list || [],
   };
+  return;
 }
 
 function useSelect(props = {}) {

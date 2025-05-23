@@ -10,3 +10,4 @@ export * from "./listLoad";
 export * from "./pagination2";
 export * from "./pagination";
 export * from "./list-load";
+export * from "./radio/index"

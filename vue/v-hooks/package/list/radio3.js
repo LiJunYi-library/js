@@ -7,29 +7,13 @@ export { useRadio3, useAsyncRadio3 };
 
 function useRadio3(props = {}) {
   const config = getSelectProps(props);
-  const { formatterValue, formatterLabel, formatterDisabled } = config;
+  const { formatterValue, formatterLabel, formatterDisabled ,formatterSelect} = config;
   const findForValue = (val) => (el) => config.formatterValue(el) === val;
   const findForLabel = (val) => (el) => config.formatterLabel(el) === val;
   const findIndex = (arr = [], item) => {
     const i = arr.findIndex((val) => val === item);
     return i < 0 ? undefined : i;
   };
-  function formatterSelect(args = {}) {
-    let item;
-    if (args.value !== undefined) {
-      item = args.list.find(findForValue(args.value));
-      if (item !== undefined) return item;
-    }
-    if (args.label !== undefined) {
-      item = args.list.find(findForLabel(args.label));
-      if (item !== undefined) return item;
-    }
-    if (args.index !== undefined) {
-      item = args.list[args.index];
-      if (item !== undefined) return item;
-    }
-    return undefined;
-  }
 
   const list = ref(config.list);
   const select = ref(formatterSelect(config));

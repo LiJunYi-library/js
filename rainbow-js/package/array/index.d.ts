@@ -1,6 +1,10 @@
 export declare function arrayLoop(num: number, cb: (index: number) => boolean): void;
 
-export declare function arrayLoops(start: number, end: number, cb: (index: number) => boolean): void;
+export declare function arrayLoops(
+  start: number,
+  end: number,
+  cb: (index: number) => boolean,
+): void;
 
 export declare function arrayLoopMap<T>(num: number, cb: (index: number) => T): T[];
 
@@ -160,7 +164,9 @@ export declare function arrayForEachFind<T>(
 
 export declare function arrayForcedTransform<T>(v): T[];
 
-export class ListArray extends Array { }
+export declare function arrayFindIndex<T>(array: T[], item: T): number | undefined;
+
+export class ListArray extends Array {}
 
 // 模仿sql查询  //
 export declare function WHERE(compare: any, val: any): boolean;

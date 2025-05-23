@@ -407,3 +407,8 @@ export function arrayForcedTransform(v) {
   if (v instanceof Array) return v;
   return [];
 }
+
+export function arrayFindIndex(arr = [], item) {
+  const i = arr.findIndex((val) => val === item);
+  return i < 0 ? undefined : i;
+}

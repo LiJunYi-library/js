@@ -4,7 +4,7 @@ import "@rainbow_ljy/v-views/build/esm/index.css"
 import { createApp, render } from 'vue'
 import App from './App.vue'
 import router from './router'
-// import "element-plus/dist/index.css";
+import "element-plus/dist/index.css";
 // import "vant/lib/index.css";
 
 

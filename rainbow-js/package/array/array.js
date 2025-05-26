@@ -412,3 +412,10 @@ export function arrayFindIndex(arr = [], item) {
   const i = arr.findIndex((val) => val === item);
   return i < 0 ? undefined : i;
 }
+
+export function arrayFindIndexs(arr = [], items = []) {
+  return arr.reduce((add, el, index) => {
+    if (items.some((item) => item === el)) add.push(index);
+    return add;
+  });
+}

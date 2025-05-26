@@ -166,6 +166,8 @@ export declare function arrayForcedTransform<T>(v): T[];
 
 export declare function arrayFindIndex<T>(array: T[], item: T): number | undefined;
 
+export declare function arrayFindIndexs<T>(array: T[], items:  T[]): number [];
+
 export class ListArray extends Array {}
 
 // 模仿sql查询  //

@@ -2,7 +2,7 @@ import { arrayFindIndex, arrayForcedTransform } from "@rainbow_ljy/rainbow-js";
 import { proxy } from "../../proxy";
 import { getListSelectProps } from "../select";
 
-export function listRadio(props = {}) {
+export function listMultiple(props = {}) {
   const config = getListSelectProps(props);
   const {
     formatterValue,
@@ -28,34 +28,31 @@ export function listRadio(props = {}) {
   const findForLabel = (val) => list.value.find?.(labelPredicate(val));
 
   function same(item) {
-    return select.value === item;
+    return select.value.some((val) => val === item);
   }
 
   async function onSelect(item) {
-    if (config.cancelSame && same(item)) {
-      reset();
-      return false;
+    if (same(item)) {
     }
-    if (same(item)) return true;
-    updateSelect(item);
+    // updateSelect(item);
     return false;
   }
 
   function reset() {
-    select.value = undefined;
-    value.value = undefined;
-    label.value = undefined;
-    index.value = undefined;
+    select.value = [];
+    value.value = [];
+    label.value = [];
+    index.value = [];
   }
 
-  function updateSelect(val) {
+  function updateSelect(val = []) {
     if (typeof val === "function") {
-      select.value = list.value.find(val);
+      select.value = arrayForcedTransform(list.value.filter(val));
     } else {
-      select.value = val;
+      select.value = arrayForcedTransform(val);
     }
-    value.value = formatterValue(select.value);
-    label.value = formatterLabel(select.value);
+    value.value = select.value.map(formatterValue);
+    label.value = select.value.map(formatterLabel);
     index.value = arrayFindIndex(list.value, select.value);
   }
 
@@ -81,7 +78,8 @@ export function listRadio(props = {}) {
   }
 
   function updateList(_list = [], args) {
-    list.value = arrayForcedTransform(_list);
+    list.value = arrayForcedTransform(list);
+    console.log(list.value);
     select.value = (() => {
       if (typeof args === "function") return args();
       if (args === true) return formatterSelect({ ...config, list: list.value });

@@ -1,10 +1,10 @@
 <template>
   <div class="hooks-radio">
     <div>
-      <button @click="multipleList.updateSelect(multipleList.list[9])">updateSelect</button>
-      <button @click="multipleList.updateValue(++multipleList.value)">updateValue</button>
-      <button @click="multipleList.updateLabel(`label-${3}`)">updateLabel</button>
-      <button @click="multipleList.updateIndex(--multipleList.index)">updateIndex</button>
+      <button @click="multipleList.updateSelect([multipleList.list[6], multipleList.list[3]])">updateSelect</button>
+      <button @click="multipleList.updateValue([14, 7])">updateValue</button>
+      <button @click="multipleList.updateLabel([`label-${18}`, `label-${8}`])">updateLabel</button>
+      <button @click="multipleList.updateIndex([19, 9])">updateIndex</button>
       <button @click="updateList">updateList</button>
     </div>
     <div>
@@ -12,6 +12,9 @@
       <div> label: {{ multipleList.label }}</div>
       <div> index: {{ multipleList.index }}</div>
       <div> select: {{ multipleList.select }}</div>
+      <div>getSelectOfValue {{ multipleList.getSelectOfValue([4, 2, 6]) }}</div>
+      <div>getLabelOfValue {{ multipleList.getLabelOfValue([4, 2, 6]) }}</div>
+      <div>getIndexOfValue {{ multipleList.getIndexOfValue([4, 2, 6]) }}</div>
     </div>
     <ElTable :data="multipleList.list">
       <ElTableColumn width="80">
@@ -33,12 +36,17 @@ import { computed, onMounted, ref } from 'vue'
 import { ElTable, ElTableColumn, ElButton } from "element-plus"
 
 const multipleList = useListMultiple({
-  value: 8,
+  value: [9,1],
+  // label: [`label-${17}`, `label-${15}`],
+  // index: [8, 2],
   list: arrayLoopMap(30, (value) => ({ value, label: `label-${value}` }))
 })
 
+console.log(multipleList);
+
+
 function updateList() {
-  multipleList.updateList(arrayLoopMap(50, (value) => ({ value, label: `label-*-${value}` })))
+  multipleList.updateList(arrayLoopMap(50, (value) => ({ value, label: `label-${value}` })), 'value')
 }
 
 </script>

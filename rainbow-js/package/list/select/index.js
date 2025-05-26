@@ -22,7 +22,7 @@ export function getListSelectProps(options = {}) {
         if (item !== undefined) return item;
       }
       if (args.label !== undefined) {
-        item = args.list.find((el) => config.findForLabel(el) === args.value);
+        item = args.list.find((el) => config.formatterLabel(el) === args.label);
         if (item !== undefined) return item;
       }
       if (args.index !== undefined) {

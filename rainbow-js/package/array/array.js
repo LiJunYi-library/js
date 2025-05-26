@@ -414,8 +414,5 @@ export function arrayFindIndex(arr = [], item) {
 }
 
 export function arrayFindIndexs(arr = [], items = []) {
-  return arr.reduce((add, el, index) => {
-    if (items.some((item) => item === el)) add.push(index);
-    return add;
-  });
+  return items.map((item) => arr.indexOf(item)).filter((i) => ~i);
 }

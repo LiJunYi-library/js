@@ -31,12 +31,13 @@
 </template>
 <script setup>
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
-import { useListMultiple } from '@rainbow_ljy/v-hooks'
+import { useListMultiple, useListSelect } from '@rainbow_ljy/v-hooks'
 import { computed, onMounted, ref } from 'vue'
 import { ElTable, ElTableColumn, ElButton } from "element-plus"
 
-const multipleList = useListMultiple({
-  value: [9,1],
+const multipleList = useListSelect({
+  isMultiple: true,
+  value: [9, 1],
   // label: [`label-${17}`, `label-${15}`],
   // index: [8, 2],
   list: arrayLoopMap(30, (value) => ({ value, label: `label-${value}` }))

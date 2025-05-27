@@ -3,7 +3,7 @@ import { proxy } from "../../proxy";
 import { getListSelectProps } from "../select";
 
 function arrayFinds(array = [], vals = [], fn) {
-  return vals.map((val) => array.find((el) => fn(el) === val)).filter(Boolean);
+  return vals.map((val) => array.find((el) => fn(el) === val)).filter((el) => el !== undefined);
 }
 
 function getListMultipleProps(props = {}) {
@@ -101,7 +101,7 @@ export function listMultiple(props = {}) {
 
   function updateIndex(val) {
     index.value = arrayForcedTransform(val);
-    select.value = index.value.map((el) => list.value?.[el]);
+    select.value = index.value.map((el) => list.value?.[el]).filter((el) => el !== undefined);
     value.value = select.value.map(formatterValue);
     label.value = select.value.map(formatterLabel);
   }

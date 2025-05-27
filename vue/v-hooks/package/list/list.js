@@ -1,9 +1,8 @@
 import { ref, watch } from "vue";
 import { usePromise2, useLoading } from "../promise";
 import { useReactive } from "../../other";
-import { useSelect2 } from "./select2";
 
-export { getListProps, useList, useAsyncList, useListSelect, useAsyncListSelect };
+export { getListProps, useList, useAsyncList, useAsyncListSelect };
 
 function getListProps(options = {}) {
   const config = {
@@ -169,29 +168,6 @@ function useAsyncList(props = {}) {
   watch(
     () => asyncHooks.data,
     (data) => config.watchDataChange(params, data),
-  );
-
-  return params;
-}
-
-function useListSelect(props = {}) {
-  const config = {
-    watchListChange: (data, selectHooks, listHooks) => {
-      selectHooks.updateListToResolveValue(data);
-    },
-    ...props,
-  };
-  const listHooks = useList(props);
-  const selectHooks = useSelect2({ ...props, list: listHooks.list });
-
-  const params = useReactive({
-    ...selectHooks.getProto(),
-    ...listHooks.getProto(),
-  });
-
-  watch(
-    () => listHooks.list,
-    (data) => config.watchListChange(data, selectHooks, listHooks),
   );
 
   return params;

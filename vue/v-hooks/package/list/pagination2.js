@@ -3,7 +3,7 @@ import { usePromise2, useLoading } from "../promise";
 import { nextTaskHoc } from "../abandon/async";
 import { useSelect2 } from "./select2";
 import { useReactive } from "../../other";
-import { useListSelect, useList } from "./list";
+import { useList } from "./list";
 
 export { useFetchPagination2, usePaginationList, useSelectPagination };
 

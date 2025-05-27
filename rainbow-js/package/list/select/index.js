@@ -1,4 +1,6 @@
 import { ref } from "../../proxy";
+import { listRadio } from "../radio";
+import { listMultiple } from "../multiple";
 
 export function getListSelectProps(options = {}) {
   const config = {
@@ -15,22 +17,6 @@ export function getListSelectProps(options = {}) {
     formatterValue: (item) => item?.value,
     formatterLabel: (item) => item?.label,
     formatterDisabled: (item) => item?.disabled ?? false,
-    formatterSelect: (args = {}) => {
-      let item;
-      if (args.value !== undefined) {
-        item = args.list.find((el) => config.formatterValue(el) === args.value);
-        if (item !== undefined) return item;
-      }
-      if (args.label !== undefined) {
-        item = args.list.find((el) => config.formatterLabel(el) === args.label);
-        if (item !== undefined) return item;
-      }
-      if (args.index !== undefined) {
-        item = args.list[args.index];
-        if (item !== undefined) return item;
-      }
-      return undefined;
-    },
     formatterList: (list) => list,
     cancelSame: false, // 是否取消相同的
     isMultiple: false, // 是否多选
@@ -42,4 +28,7 @@ export function getListSelectProps(options = {}) {
   return config;
 }
 
-export function listSelect(params) {}
+export function listSelect(props = {}) {
+  if (props.isMultiple) return listMultiple(props);
+  return listRadio(props);
+}

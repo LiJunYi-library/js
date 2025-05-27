@@ -12,3 +12,5 @@ export * from "./pagination";
 export * from "./list-load";
 export * from "./multiple/index";
 export * from "./radio/index";
+export * from "./select/index";
+export * from "./list/index";

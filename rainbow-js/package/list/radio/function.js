@@ -2,8 +2,32 @@ import { arrayFindIndex, arrayForcedTransform } from "@rainbow_ljy/rainbow-js";
 import { proxy } from "../../proxy";
 import { getListSelectProps } from "../select";
 
+function getListRadioProps(props = {}) {
+  const config = getListSelectProps({
+    formatterSelect: (args = {}) => {
+      let item;
+      if (args.value !== undefined) {
+        item = args.list.find((el) => config.formatterValue(el) === args.value);
+        if (item !== undefined) return item;
+      }
+      if (args.label !== undefined) {
+        item = args.list.find((el) => config.formatterLabel(el) === args.label);
+        if (item !== undefined) return item;
+      }
+      if (args.index !== undefined) {
+        item = args.list[args.index];
+        if (item !== undefined) return item;
+      }
+      return undefined;
+    },
+    isMultiple: false,
+    ...props,
+  });
+  return config;
+}
+
 export function listRadio(props = {}) {
-  const config = getListSelectProps(props);
+  const config = getListRadioProps(props);
   const {
     formatterValue,
     formatterLabel,

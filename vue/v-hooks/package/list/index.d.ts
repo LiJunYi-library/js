@@ -30,7 +30,6 @@ export declare function useFetchPagination2(options: any): any; // use
 
 export declare function useList(options: any): any; // use
 export declare function useAsyncList(options: any): any; // use
-export declare function useListSelect(options: any): any; // use
 export declare function useAsyncListSelect(options: any): any; // use
 export declare function useListLoad2(options: any): any; // use
 export declare function useListLoadSelect(options: any): any; // use
@@ -96,3 +95,5 @@ export declare function useTablePagination(options: PaginationListConfig): Table
 export * from "./list-load";
 export * from "./multiple/index";
 export * from "./radio/index";
+export * from "./select/index";
+export * from "./list/index";

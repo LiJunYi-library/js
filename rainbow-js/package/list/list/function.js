@@ -93,6 +93,8 @@ export function list(props = {}) {
     filter,
     manageList,
     sort,
+    ascendingOrder,
+    descendingOrder,
     updateCurrentPage,
     updatePageSize,
     resolveList,
@@ -184,6 +186,16 @@ export function list(props = {}) {
 
   function sort(fun, args = "value") {
     sortFun.value = fun;
+    resolveList(args);
+  }
+
+  function ascendingOrder(formatter, args = "value") {
+    sortFun.value = (a, b) => formatter(a) - formatter(b);
+    resolveList(args);
+  }
+
+  function descendingOrder(formatter, args = "value") {
+    sortFun.value = (a, b) => formatter(b) - formatter(a);
     resolveList(args);
   }
 

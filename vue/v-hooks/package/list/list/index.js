@@ -1,15 +1,15 @@
 import { list } from "@rainbow_ljy/rainbow-js";
 import { ref } from "vue";
-import { useListSelect } from "../select/index";
 
 export function useVList(props = {}) {
   return list({
-    listDataRef: ref,
     currentPageRef: ref,
     pageSizeRef: ref,
+    totalRef: ref,
+    listDataRef: ref,
     filterFunRef: ref,
     sortFunRef: ref,
-    totalRef: ref,
+    manageListFunRef: ref,
 
     selectRef: ref,
     valueRef: ref,

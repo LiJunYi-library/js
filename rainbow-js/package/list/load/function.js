@@ -1,7 +1,7 @@
 import { ref } from "../../proxy";
 import { proxy } from "../../proxy";
 import { listSelect } from "../select";
-import { arrayForcedTransform, arrayRemoves } from "@rainbow_ljy/rainbow-js";
+import { arrayForcedTransform } from "../../array";
 
 function getListProps(props = {}) {
   const config = {
@@ -32,6 +32,7 @@ function getListProps(props = {}) {
     total: 0,
     currentPage: 1,
     pageSize: 10,
+    isSelect: false,
     listRef: ref,
     finishedRef: ref,
     emptyRef: ref,
@@ -58,7 +59,7 @@ export function listLoad(props = {}) {
     totalRef,
     currentPageRef,
     pageSizeRef,
-    asyncHooks,
+    asyncHook,
   } = config;
 
   const list = listRef(config.list);
@@ -67,15 +68,45 @@ export function listLoad(props = {}) {
   const total = totalRef(config.total);
   const currentPage = currentPageRef(config.currentPage);
   const pageSize = pageSizeRef(config.pageSize);
-  const selectHooks = listSelect({ ...props });
+  // const selectHooks = listSelect({ ...props });
 
   const hooks = proxy({
-    ...selectHooks.getPrototype(),
-    ...asyncHooks.getPrototype(),
+    // ...selectHooks.getPrototype(),
+    ...(asyncHook.getPrototype ? asyncHook.getPrototype() : asyncHook),
+    list,
+    finished,
+    empty,
+    total,
+    currentPage,
+    pageSize,
+    awaitConcatSend,
+    nextBeginSend,
   });
+
+  function onSuccess(res) {
+    total.value = formatterTotal(res, hooks);
+    const arr = arrayForcedTransform(formatterList(res, hooks));
+    list.value.push(...arr);
+    finished.value = formatterFinished(res, hooks);
+    empty.value = formatterEmpty(res, hooks);
+    if (finished.value) return res;
+    currentPage.value = formatterCurrentPage(res, hooks);
+    return res;
+  }
 
   function awaitConcatSend(...arg) {
     if (finished.value === true) return Promise.reject("finished");
-    return asyncHooks.awaitSend(...arg).then((res) => thenFun(true, res, ...arg));
+    return asyncHook.awaitSend(...arg).then(onSuccess);
   }
+
+  async function nextBeginSend(...arg) {
+    list.value.splice(0);
+    currentPage.value = 1;
+    finished.value = false;
+    empty.value = false;
+    total.value = 0;
+    return asyncHook.nextBeginSend(...arg).then(onSuccess);
+  }
+
+  return hooks;
 }

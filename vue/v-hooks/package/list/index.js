@@ -9,8 +9,11 @@ export * from "./list";
 export * from "./listLoad";
 export * from "./pagination2";
 export * from "./pagination";
+
 export * from "./list-load";
+export * from "./list/index";
+export * from "./load/index";
 export * from "./multiple/index";
+export * from "./pagination/index";
 export * from "./radio/index";
 export * from "./select/index";
-export * from "./list/index";

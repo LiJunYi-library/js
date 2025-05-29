@@ -60,7 +60,7 @@ export class SpuFetch extends Vfetch {
     interceptResponseSuccess: async (res, data, config) => {
       try {
         if (data instanceof Blob) return data
-        if (data.code !== 200) throw data
+        if (data.code !== 2000) throw data
         return data.data
       } catch (error) {
         rainbow.toast.show({ text: data.message })

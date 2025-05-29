@@ -73,9 +73,9 @@ function creates(values = []) {
   return values.map(value => create(value))
 }
 
-const currentPage= ref(1)
-const pageSize= ref(10)
-const total= ref(66)
+const currentPage = ref(1)
+const pageSize = ref(10)
+const total = ref(66)
 const min = ref(11)
 
 const multipleList = useVList({

@@ -68,24 +68,27 @@ export function listLoad(props = {}) {
   const total = totalRef(config.total);
   const currentPage = currentPageRef(config.currentPage);
   const pageSize = pageSizeRef(config.pageSize);
-  // const selectHooks = listSelect({ ...props });
+  const selectHooks = listSelect(config);
+  let loading = false;
 
   const hooks = proxy({
-    // ...selectHooks.getPrototype(),
-    ...(asyncHook.getPrototype ? asyncHook.getPrototype() : asyncHook),
     list,
+    ...selectHooks.getPrototype(),
+    ...(asyncHook.getPrototype ? asyncHook.getPrototype() : asyncHook),
     finished,
     empty,
     total,
     currentPage,
     pageSize,
-    awaitConcatSend,
-    nextBeginSend,
+    continueAwaitSend,
+    afreshNextBeginSend,
+    afreshNextSend,
   });
 
-  function onSuccess(res) {
+  function onSuccess(res, callBack) {
     total.value = formatterTotal(res, hooks);
     const arr = arrayForcedTransform(formatterList(res, hooks));
+    if (callBack) callBack(arr);
     list.value.push(...arr);
     finished.value = formatterFinished(res, hooks);
     empty.value = formatterEmpty(res, hooks);
@@ -94,18 +97,50 @@ export function listLoad(props = {}) {
     return res;
   }
 
-  function awaitConcatSend(...arg) {
-    if (finished.value === true) return Promise.reject("finished");
-    return asyncHook.awaitSend(...arg).then(onSuccess);
+  async function continuePatch(length = 0, res, ...arg) {
+    if (finished.value === true) return res;
+    if (list.value.length - length >= pageSize.value) return res;
+    res = await asyncHook.awaitSend(...arg).then(onSuccess);
+    return continuePatch(length, res, ...arg);
   }
 
-  async function nextBeginSend(...arg) {
+  async function continueAwaitSend(...arg) {
+    if (finished.value === true) return Promise.reject("list load is finished");
+    return await continuePatch(list.value.length, {}, ...arg);
+  }
+
+  async function afreshPatch(res, ...arg) {
+    if (finished.value === true) return res;
+    if (list.value.length >= pageSize.value) return res;
+    res = await asyncHook.awaitSend(...arg).then(onSuccess);
+    return afreshPatch(res, ...arg);
+  }
+
+  async function afreshNextBeginSend(...arg) {
     list.value.splice(0);
+    selectHooks.reset();
     currentPage.value = 1;
     finished.value = false;
     empty.value = false;
     total.value = 0;
-    return asyncHook.nextBeginSend(...arg).then(onSuccess);
+    let res = await asyncHook.nextBeginSend(...arg);
+    onSuccess(res);
+    res = await afreshPatch(res, ...arg);
+    return res;
+  }
+
+  async function afreshNextSend(...arg) {
+    currentPage.value = 1;
+    finished.value = false;
+    empty.value = false;
+    total.value = 0;
+    let res = await asyncHook.nextSend(...arg);
+    onSuccess(res, () => {
+      list.value.splice(0);
+      selectHooks.reset();
+    });
+    res = await afreshPatch(res, ...arg);
+    return res;
   }
 
   return hooks;

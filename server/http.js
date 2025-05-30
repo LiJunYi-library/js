@@ -149,7 +149,7 @@ server.post("/serve/page", (req, res) => {
   setTimeout(() => {
     if (req.body?.list) {
       paList.list = req.body.list;
-      paList.total = req.body.list.length;
+      paList.total = req.body.total;
     }
     paList.time = time;
     res.writeHead(200, { "Content-Type": "application/json" });

@@ -76,17 +76,17 @@ function creates(values = []) {
 const currentPage = ref(1)
 const pageSize = ref(10)
 const total = ref(66)
-const min = ref(11)
+const min = ref(0)
 
 const multipleList = useVList({
   isMultiple: true,
   value: [9, 1],
-  currentPage: 4,
+  currentPage: 1,
   pageSize: 10,
   // label: [`label-${17}`, `label-${15}`],
   // index: [8, 2],
-  filterFun: filter,
-  list: arrayLoopMap(30, create)
+  // filterFun: filter,
+  // list: arrayLoopMap(30, create)
 })
 
 console.log(multipleList.currentPage);

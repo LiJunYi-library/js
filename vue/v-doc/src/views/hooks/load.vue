@@ -9,6 +9,7 @@
           finished -{{ listload.finished }} empty -{{ listload.empty }}
           <button @click="listload.nextBeginSend()">nextBeginSend</button>
           <button @click="errorSend()">errorSend</button>
+          <button @click="$log(listload)">look</button>
         </div>
       </r-scroll-sticky>
       <div>{{ text }}</div>
@@ -17,7 +18,13 @@
         <div>
           <template v-for="(item, index) in listload.list" :key="item.value">
             <div class="item">
-              <img :src=" item.image " height="100px"/>
+              <img :src="item.image" height="100px" />
+
+              <ElButton size="small" :type="listload.same(item) ? 'primary' : ''" @click="listload.onSelect(item)">
+                {{ item.id }}
+              </ElButton>
+
+              <div>{{ item.name }}</div>
             </div>
           </template>
         </div>
@@ -30,13 +37,8 @@ import { arrayLoopMap, List } from '@rainbow_ljy/rainbow-js'
 import { VRPaginationLoading } from '@rainbow_ljy/v-views'
 import { VlistLoad, useVlistLoad } from '@rainbow_ljy/v-hooks'
 import { computed, onMounted } from 'vue'
-import { SpuFetch } from '@/hooks'
-
-const a = {ss(){}}
-const b = {ss(c){}}
-
-console.log(Object.assign( a,b  ))
-
+import { SpuFetch, useSpuFetch } from '@/hooks'
+import { ElButton } from "element-plus"
 const text = arrayLoopMap(100, () => '帅').join('')
 
 const listload = (() => {
@@ -46,15 +48,21 @@ const listload = (() => {
     page: list.currentPage,
     rows: list.pageSize,
   }))
-  const asyncHook = new SpuFetch({
+  const asyncHook = useSpuFetch({
     url: '/spu/list',
     method: 'post',
     body,
   })
-  list = useVlistLoad({ asyncHook, formatterList: (res) => res?.records || [] })
+  list = useVlistLoad({
+    asyncHook,
+    isMultiple: true,
+    formatterList: (res) => res?.records || [],
+    formatterValue: (item) => item?.id,
+    formatterLabel: (item) => item?.name,
+  })
   return list
 })()
-  console.log(listload)
+
 
 function errorSend() {
   listload.nextBeginSend({
@@ -66,12 +74,7 @@ function errorSend() {
 }
 
 function rollToBottom(params) {
-  listload.awaitSend({
-    body: {
-      time: 1000,
-      code: 400,
-    },
-  })
+  listload.awaitConcatSend()
 }
 
 onMounted(() => {

@@ -53,3 +53,5 @@ export class Fetch<T = any, D = any> {
   abort: () => void;
   constructor(props?: FetchConfig<T, D> )
 }
+
+export declare function fetchHOC(props:any):any

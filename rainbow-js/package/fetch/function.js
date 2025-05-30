@@ -221,23 +221,29 @@ export function fetchHOC(opt = {}) {
       abort();
       return send(args);
     }
+
     function awaitSend(args) {
       return send(args, { throwLoad: true });
     }
+
     function beginSend(args) {
       return send(args, { isBegin: true });
     }
+
     function nextBeginSend(args) {
       abort();
       return send(args, { isBegin: true });
     }
+
     function awaitBeginSend(args) {
       return send(args, { throwLoad: true, isBegin: true });
     }
+
     function abortPrve() {
       controller.abort(errAbout);
       clearTimeout(timeoutId);
     }
+
     function abort() {
       fetchEvents.events.forEach((el) => {
         el.controller.abort(errAbout);

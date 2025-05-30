@@ -15,6 +15,8 @@
     <div>
       <button @click="pList.afreshNextBeginSend()">afreshNextBeginSend</button>
       <button @click="pList.afreshNextSend()">afreshNextSend</button>
+      <button @click="pList.invertSelect()">invertSelect</button>
+      <button @click="pList.allSelect()">allSelect</button>
     </div>
 
     <div>

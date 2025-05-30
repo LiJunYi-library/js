@@ -67,6 +67,18 @@ export function listMultiple(props = {}) {
     return false;
   }
 
+  function invertSelect() {
+    select.value = list.value.filter(
+      (val, i) => !formatterDisabled(val, i) && !select.value.some((el) => el === val),
+    );
+    updateSelect(select.value);
+  }
+
+  function allSelect() {
+    select.value = list.value.filter((val, i) => !formatterDisabled(val, i));
+    updateSelect(select.value);
+  }
+
   function reset() {
     select.value = [];
     value.value = [];
@@ -142,6 +154,8 @@ export function listMultiple(props = {}) {
     same,
     reset,
     onSelect,
+    invertSelect,
+    allSelect,
     formatterValue,
     formatterLabel,
     formatterDisabled,

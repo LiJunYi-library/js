@@ -106,7 +106,14 @@ export function listLoad(props = {}) {
 
   async function continueAwaitSend(...arg) {
     if (finished.value === true) return Promise.reject("list load is finished");
-    return await continuePatch(list.value.length, {}, ...arg);
+    if (loading === true) return Promise.reject("list load is loadinged");
+    loading = true;
+    try {
+      let res = await continuePatch(list.value.length, {}, ...arg);
+      return res;
+    } finally {
+      loading = false;
+    }
   }
 
   async function afreshPatch(res, ...arg) {
@@ -123,10 +130,15 @@ export function listLoad(props = {}) {
     finished.value = false;
     empty.value = false;
     total.value = 0;
-    let res = await asyncHook.nextBeginSend(...arg);
-    onSuccess(res);
-    res = await afreshPatch(res, ...arg);
-    return res;
+    loading = true;
+    try {
+      let res = await asyncHook.nextBeginSend(...arg);
+      onSuccess(res);
+      res = await afreshPatch(res, ...arg);
+      return res;
+    } finally {
+      loading = false;
+    }
   }
 
   async function afreshNextSend(...arg) {
@@ -134,13 +146,18 @@ export function listLoad(props = {}) {
     finished.value = false;
     empty.value = false;
     total.value = 0;
-    let res = await asyncHook.nextSend(...arg);
-    onSuccess(res, () => {
-      list.value.splice(0);
-      selectHooks.reset();
-    });
-    res = await afreshPatch(res, ...arg);
-    return res;
+    loading = true;
+    try {
+      let res = await asyncHook.nextSend(...arg);
+      onSuccess(res, () => {
+        list.value.splice(0);
+        selectHooks.reset();
+      });
+      res = await afreshPatch(res, ...arg);
+      return res;
+    } finally {
+      loading = false;
+    }
   }
 
   return hooks;

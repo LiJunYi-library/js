@@ -3,7 +3,7 @@ import { proxy } from "../../proxy";
 import { listSelect } from "../select";
 import { arrayForcedTransform } from "../../array";
 
-function getListProps(props = {}) {
+function getListLoadProps(props = {}) {
   const config = {
     formatterList: (res, hooks) => {
       if (!res) return [];
@@ -46,7 +46,7 @@ function getListProps(props = {}) {
 }
 
 export function listLoad(props = {}) {
-  const config = getListProps(props);
+  const config = getListLoadProps(props);
   const {
     formatterList,
     formatterTotal,

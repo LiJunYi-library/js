@@ -71,9 +71,9 @@ const listload = (() => {
     time: 2000,
     ...req.value,
     page: list.currentPage,
-    rows: 3,
+    rows: list.pageSize,
     total: 100,
-    list: arrayLoopMap(3, () => ({ id: Math.random(), name: Math.random() }))
+    list: arrayLoopMap(10, () => ({ id: Math.random(), name: Math.random() }))
   }))
   // const asyncHook = useSpuFetch({
   //   url: '/spu/list',

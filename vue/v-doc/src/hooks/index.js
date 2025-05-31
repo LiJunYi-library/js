@@ -88,7 +88,7 @@ export const useSpuFetch = useVFetchHOC({
     rainbow.toast.show({ text: '请求超时', ms: 1000 })
   },
   interceptRequest(config) {
-    console.log(config)
+    // console.log(config)
   },
   interceptResponseError: (error, config, resolve, reject) => {
     rainbow.toast.show({ text: error, ms: 1000 })

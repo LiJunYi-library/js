@@ -143,12 +143,4 @@ function calculateAngle(dx, dy) {
   return angleNormalized;
 }
 
-function getDirection(x, y) {
-  if (x > y) {
-    return "horizontal";
-  }
-  if (y > x) {
-    return "vertical";
-  }
-  return "";
-}
+

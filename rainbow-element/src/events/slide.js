@@ -78,7 +78,7 @@ export class SlideEvent extends CustomEvent {
   document.addEventListener("pointerup", onPointerup);
   let isVerdict = false;
   let beginEvent;
-  let prveEvent;
+  let prevEvent;
   let intervalEvent;
   let direction;
   let orientation;
@@ -90,7 +90,7 @@ export class SlideEvent extends CustomEvent {
     extendedEventArgs(event);
     dispatchEvent("slideDown", event);
     beginEvent = event;
-    prveEvent = event;
+    prevEvent = event;
     intervalEvent = event;
     isVerdict = false;
     isStart = true;
@@ -102,7 +102,7 @@ export class SlideEvent extends CustomEvent {
   function onPointermove(event) {
     clearTimeout(timer);
     extendedEventArgs(event);
-    prveEvent = event;
+    prevEvent = event;
     // console.log('onPointermove')
     if (!isVerdict) {
       if (event.deltaC > 8) {
@@ -123,13 +123,13 @@ export class SlideEvent extends CustomEvent {
       return;
     }
     if (isStart) {
-      dispatchEvent("slideStrat", event);
-      if (event.moveX < 0) dispatchEvent("slideRightStrat", event);
-      if (event.moveY < 0) dispatchEvent("slideBottomStrat", event);
-      if (event.moveX > 0) dispatchEvent("slideLeftStrat", event);
-      if (event.moveY > 0) dispatchEvent("slideTopStrat", event);
-      if (event.moveX !== 0) dispatchEvent("slideHorizontalStrat", event);
-      if (event.moveY !== 0) dispatchEvent("slideVerticalStrat", event);
+      dispatchEvent("slideStart", event);
+      if (event.moveX < 0) dispatchEvent("slideRightStart", event);
+      if (event.moveY < 0) dispatchEvent("slideBottomStart", event);
+      if (event.moveX > 0) dispatchEvent("slideLeftStart", event);
+      if (event.moveY > 0) dispatchEvent("slideTopStart", event);
+      if (event.moveX !== 0) dispatchEvent("slideHorizontalStart", event);
+      if (event.moveY !== 0) dispatchEvent("slideVerticalStart", event);
       isStart = false;
       return;
     }
@@ -175,10 +175,10 @@ export class SlideEvent extends CustomEvent {
     event.deltaY = event.pageY - (beginEvent?.pageY ?? 0);
     event.deltaC = calcHypotenuse(event.deltaX, event.deltaY);
     event.deltaAng = calculateAngle(event.deltaX, event.deltaY);
-    if (!prveEvent) return;
-    event.moveX = (prveEvent?.pageX ?? 0) - event.pageX;
-    event.moveY = (prveEvent?.pageY ?? 0) - event.pageY;
-    event.deltaTime = event.currentTime - (prveEvent?.currentTime ?? 0);
+    if (!prevEvent) return;
+    event.moveX = (prevEvent?.pageX ?? 0) - event.pageX;
+    event.moveY = (prevEvent?.pageY ?? 0) - event.pageY;
+    event.deltaTime = event.currentTime - (prevEvent?.currentTime ?? 0);
     event.speedX = event.moveX / event.deltaTime;
     event.speedY = event.moveY / event.deltaTime;
     if (!intervalEvent) return;
@@ -234,7 +234,7 @@ export function extendedSlideEvents(view = document.createElement("div"), option
     compute.isGetPdownLock = false;
   }
 
-  function onCapturePointerdownFinsh(event) {
+  function onCapturePointerdownFinish(event) {
     compute.srcViews = [...srcViews];
     currentView = srcViews.at(-1);
     srcViews = [];
@@ -242,7 +242,7 @@ export function extendedSlideEvents(view = document.createElement("div"), option
 
   function onPointerdown(event) {
     if (!compute.isGetPdownLock) {
-      onCapturePointerdownFinsh(event);
+      onCapturePointerdownFinish(event);
       compute.isGetPdownLock = true;
     }
     $set("slideEventViews", [...compute.srcViews]);
@@ -305,4 +305,52 @@ function calculateAngle(dx, dy) {
 function stringUpperFirstCase(str) {
   const s = str[0].toUpperCase() + str.slice(1);
   return s;
+}
+
+export function useTouch(props = {}) {
+  const config = { ...props, MIN_DISTANCE: 10 };
+  function getDirection(x, y) {
+    if (x > y && x > config.MIN_DISTANCE) {
+      return "horizontal";
+    }
+
+    if (y > x && y > config.MIN_DISTANCE) {
+      return "vertical";
+    }
+
+    return "";
+  }
+
+  let startE = {};
+  let direction = "";
+  var isVertical = () => direction === "vertical";
+
+  var isHorizontal = () => direction === "horizontal";
+
+  var reset = () => {
+    startE = {};
+    direction = "";
+  };
+
+  var start = (event) => {
+    reset();
+    startE = event;
+  };
+
+  var move = (event) => {
+    event.deltaX = event.clientX < 0 ? 0 : event.clientX - startE.clientX;
+    event.deltaY = event.clientY - startE.clientY;
+    if (!direction) {
+      direction = getDirection(Math.abs(event.deltaX), Math.abs(event.deltaY));
+    }
+  };
+
+  return {
+    direction,
+    move,
+    start,
+    reset,
+    isVertical,
+    isHorizontal,
+  };
 }

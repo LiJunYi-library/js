@@ -21,13 +21,21 @@
 
     <div>
       <div>value: {{ pList.value }}</div>
-      <div>label: {{ pList.label }}</div>
-      <div>index: {{ pList.index }}</div>
+      <!-- <div>label: {{ pList.label }}</div>
+      <div>index: {{ pList.index }}</div> -->
       <!-- <div>select: {{ pList.select }}</div> -->
     </div>
 
     <ElTable :data="pList.list" @sort-change="sortChange">
       <ElTableColumn width="80">
+        <template #header>
+          <r-grid style="--r-columns: 3">
+            <span class="iconfont" @click="pList.invertSelect()">&#xe60d;</span>
+            <span class="iconfont"  @click="pList.allSelect()">&#xe60d;</span>
+            <span class="iconfont"  @click="pList.reset()">&#xe60d;</span>
+          </r-grid>
+
+        </template>
         <template #default="{ row }">
           <ElButton size="small" :type="pList.same(row) ? 'primary' : ''" @click="pList.onSelect(row)">{{ row.value }}
           </ElButton>
@@ -45,7 +53,7 @@
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
 import { useVListPagination } from '@rainbow_ljy/v-hooks'
 import { computed, onMounted, ref } from 'vue'
-import { ElTable, ElTableColumn, ElButton, ElSelect, ElOption, ElPagination } from 'element-plus'
+import { ElTable, ElTableColumn, ElButton, ElSelect, ElOption, ElPagination, ElCheckbox } from 'element-plus'
 import { SpuFetch, useSpuFetch, useMFetch } from '@/hooks'
 
 
@@ -79,6 +87,7 @@ const pList = (() => {
     formatterList: (res) => res?.records || [],
     formatterValue: (item) => item?.id,
     formatterLabel: (item) => item?.name,
+    updateListArg: 'value'
   })
   return list
 })()

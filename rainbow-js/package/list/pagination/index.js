@@ -71,39 +71,41 @@ export function listPagination(props = {}) {
     afreshNextSend,
   });
 
-  async function nextBeginSend(...arg) {
+  async function nextBeginSend(options = {}, ...arg) {
     list.value.splice(0);
     empty.value = false;
-    let res = await asyncHook.nextBeginSend(...arg);
+    let res = await asyncHook.nextBeginSend(options, ...arg);
     total.value = formatterTotal(res, hooks);
     const arr = arrayForcedTransform(formatterList(res, hooks));
     list.value.push(...arr);
-    selectHooks.updateList(list.value, "value");
+    const updateListArg = options?.updateListArg || config.updateListArg;
+    selectHooks.updateList(list.value, updateListArg);
     empty.value = formatterEmpty(res, hooks);
     return res;
   }
 
-  async function afreshNextBeginSend(...arg) {
+  async function afreshNextBeginSend(options = {}, ...arg) {
     currentPage.value = 1;
     total.value = 0;
-    return nextBeginSend(...arg);
+    return nextBeginSend(options, ...arg);
   }
 
-  async function nextSend(...arg) {
+  async function nextSend(options = {}, ...arg) {
     empty.value = false;
-    let res = await asyncHook.nextSend(...arg);
+    let res = await asyncHook.nextSend(options, ...arg);
     total.value = formatterTotal(res, hooks);
     const arr = arrayForcedTransform(formatterList(res, hooks));
     list.value.splice(0);
     list.value.push(...arr);
-    selectHooks.updateList(list.value, "value");
+    const updateListArg = options?.updateListArg || config.updateListArg;
+    selectHooks.updateList(list.value, updateListArg);
     empty.value = formatterEmpty(res, hooks);
     return res;
   }
 
-  async function afreshNextSend(...arg) {
+  async function afreshNextSend(options = {}, ...arg) {
     currentPage.value = 1;
-    return nextSend(...arg);
+    return nextSend(options, ...arg);
   }
 
   return hooks;

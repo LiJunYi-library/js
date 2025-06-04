@@ -341,14 +341,20 @@ export function functionInvokeKey(o = {}, key) {
   return o[key] || o["default"] || f;
 }
 
+export function getChildren(node, localName) {
+  let cs = Array.from(node.children);
+  if (!localName) return cs;
+  return cs.filter((c) => c.localName === localName);
+}
+
 //TODO
 export function scrollIntoView(pView, view, top = 0, left = 0) {
   const config = {
-    behavior: 'instant',
+    behavior: "instant",
     top,
     left,
   };
-  if (typeof top === 'object') Object.assign(config, top);
+  if (typeof top === "object") Object.assign(config, top);
   const t = getOffsetTop(view, pView) + config.top;
   if (pView.scrollTop <= t) return;
   config.top = t;

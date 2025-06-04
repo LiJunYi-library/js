@@ -105,7 +105,8 @@ export class SlideEvent extends CustomEvent {
     prevEvent = event;
     // console.log('onPointermove')
     if (!isVerdict) {
-      if (event.deltaC > 8) {
+      orientation = getDirection(Math.abs(event.deltaX), Math.abs(event.deltaY));
+      if (orientation) {
         const ang = event.deltaAng;
         const isRightAng = 315 <= ang || ang < 45;
         const isTopAng = 45 <= ang && ang < 135;
@@ -115,11 +116,24 @@ export class SlideEvent extends CustomEvent {
         if (isTopAng) direction = "top";
         if (isLeftAng) direction = "left";
         if (isBottomAng) direction = "bottom";
-        if (isRightAng || isLeftAng) orientation = "horizontal";
-        if (isTopAng || isBottomAng) orientation = "vertical";
         isVerdict = true;
         return;
       }
+      // if (event.deltaC > 8) {
+      // const ang = event.deltaAng;
+      // const isRightAng = 315 <= ang || ang < 45;
+      // const isTopAng = 45 <= ang && ang < 135;
+      // const isLeftAng = 135 <= ang && ang < 225;
+      // const isBottomAng = 225 <= ang && ang < 315;
+      // if (isRightAng) direction = "right";
+      // if (isTopAng) direction = "top";
+      // if (isLeftAng) direction = "left";
+      // if (isBottomAng) direction = "bottom";
+      //   if (isRightAng || isLeftAng) orientation = "horizontal";
+      //   if (isTopAng || isBottomAng) orientation = "vertical";
+      //   isVerdict = true;
+      //   return;
+      // }
       return;
     }
     if (isStart) {
@@ -305,6 +319,18 @@ function calculateAngle(dx, dy) {
 function stringUpperFirstCase(str) {
   const s = str[0].toUpperCase() + str.slice(1);
   return s;
+}
+
+function getDirection(x, y) {
+  if (x > y && x > 10) {
+    return "horizontal";
+  }
+
+  if (y > x && y > 10) {
+    return "vertical";
+  }
+
+  return "";
 }
 
 export function useTouch(props = {}) {

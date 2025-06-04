@@ -45,13 +45,13 @@ export class RNestedScroll extends RainbowElement {
     onWheelUp: (event) => {},
     onWheelDown: (event) => {},
     onCapturePointerdown: (event) => {
-      console.log('onCapturePointerdown',[this.$$.nestedParent]);
+      console.log("onCapturePointerdown", [this.$$.nestedParent]);
       if (this.$$.nestedParent) this.$$.nestedParent.$$.nestedChild = this;
     },
     onPointermove: (event) => {
       event.stopPropagation();
       event.preventDefault();
-      console.log('onPointermove');
+      console.log("onPointermove");
     },
   };
 
@@ -66,58 +66,8 @@ export class RNestedScroll extends RainbowElement {
     //
     this.addEventListener("pointerdown", this.$$.onCapturePointerdown, opt());
     this.addEventListener("pointermove", this.$$.onPointermove, opt());
-
-    // this.$$.slideEvent.bindEvents();
-    this.addEventListener("touchstart", (event) => {
-      console.log(event);
-      this.beginEvent = event.touches[0];
-      this.isVerdict = false;
-    });
-
-    this.addEventListener("touchmove", (eeee) => {
-      console.log('touchmove');
-
-      // const event = eeee.touches[0];
-      // const { beginEvent } = this;
-      // event.deltaX = event.pageX - (beginEvent?.pageX ?? 0);
-      // event.deltaY = event.pageY - (beginEvent?.pageY ?? 0);
-      // event.deltaC = calcHypotenuse(event.deltaX, event.deltaY);
-      // event.deltaAng = calculateAngle(event.deltaX, event.deltaY);
-      // let direction, orientation;
-
-      // if (!this.isVerdict) {
-      //   this.offsetX = Math.abs(event.deltaX);
-      //   this.offsetY = Math.abs(event.deltaY);
-      //   if (this.offsetX < 10 && this.offsetY < 10) {
-      //     orientation = getDirection(this.offsetX, this.offsetY);
-      //     this.isVerdict = true;
-      //     console.log(orientation);
-      //     return;
-      //   }
-      // }
-
-      // if (!this.isVerdict) {
-      //   if (event.deltaC > 10) {
-      //     const ang = event.deltaAng;
-      //     console.log(ang);
-      //     const isRightAng = 315 <= ang || ang < 45;
-      //     const isTopAng = 45 <= ang && ang < 135;
-      //     const isLeftAng = 135 <= ang && ang < 225;
-      //     const isBottomAng = 225 <= ang && ang < 315;
-      //     if (isRightAng) direction = "right";
-      //     if (isTopAng) direction = "top";
-      //     if (isLeftAng) direction = "left";
-      //     if (isBottomAng) direction = "bottom";
-      //     if (isRightAng || isLeftAng) orientation = "horizontal";
-      //     if (isTopAng || isBottomAng) orientation = "vertical";
-      //     console.log(direction);
-      //     console.log(orientation);
-      //     this.isVerdict = true;
-      //     return;
-      //   }
-      // }
-    });
-
+    this.addEventListener("touchstart", (event) => {});
+    this.addEventListener("touchmove", (eeee) => {});
     this.addEventListener("touchend", (event) => {});
   }
 
@@ -131,16 +81,3 @@ export class RNestedScroll extends RainbowElement {
     super.disconnectedCallback(...arg);
   }
 }
-
-function calcHypotenuse(a, b) {
-  return Math.sqrt(a * a + b * b);
-}
-
-function calculateAngle(dx, dy) {
-  const angleRadians = Math.atan2(dy, dx);
-  const angleDegrees = angleRadians * (180 / Math.PI);
-  const angleNormalized = 360 - ((angleDegrees + 360) % 360);
-  return angleNormalized;
-}
-
-

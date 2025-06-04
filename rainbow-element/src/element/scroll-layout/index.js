@@ -1,6 +1,7 @@
-// export * from "./nested-scroll/index.js";
+export * from "./nested-scroll/index.js";
 export * from "./scroll/index.js";
 export * from "./scroll-memory-bubble/index.js";
+export * from "./scroll-page/index.js";
 export * from "./scroll-refresh/index.js";
 export * from "./scroll-sticky/index.js";
 export * from "./scroll-top/index.js";

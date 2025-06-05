@@ -10,6 +10,7 @@ import {
   findParentByLocalName,
   addEventListenerOnce,
   removeEventListener,
+  getChildren,
 } from "../../../utils/index.js";
 import "./index.css";
 
@@ -60,6 +61,7 @@ export class RTabs extends RainbowElement {
 
   set controller(controller) {
     this.$$.controller = controller;
+    controller.tabs = this;
   }
 
   get controller() {
@@ -90,9 +92,7 @@ export class RTabs extends RainbowElement {
   $onRender(forceBehavior) {
     this.$$.activeChild = (() => {
       if (this.value === undefined) return undefined;
-      const children = Array.from(this.children).filter(
-        (child) => child.localName === "r-tab-item",
-      );
+      const children = getChildren(this, "r-tab-item");
       return arrayForEachFind(children, (child, index) => {
         const bool = this.value === child.value;
         const prveChild = children[index - 1];

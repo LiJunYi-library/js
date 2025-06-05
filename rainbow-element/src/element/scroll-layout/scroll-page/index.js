@@ -17,9 +17,19 @@ export class RScrollPage extends RainbowElement {
     "r-scroll-offset-top": String, // px
   });
   $value = undefined;
-  controller = undefined;
+
+  set controller(controller) {
+    this.$$.controller = controller;
+    controller.scrollPage = this;
+  }
+
+  get controller() {
+    return this.$$.controller;
+  }
+
   $$ = (() => {
     return {
+      controller: {},
       index: -1,
       scrollView: undefined,
       activeChild: createElement("div"),

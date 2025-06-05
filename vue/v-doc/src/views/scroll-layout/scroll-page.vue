@@ -11,8 +11,12 @@
     </div> -->
     <r-scroll-sticky style="top: 0;" class="sticky">
       <div>v: {{ value }}</div>
-      <div @click="value = '1'" ref="div1">v1 </div>
-      <div @click="value = '2'" ref="div2">v2 </div>
+      <div class="rrrr">
+        <div @click="value = '1'" ref="div1">v1 </div>
+        <div @click="value = '2'" ref="div2">v2 </div>
+        <div @click="value = '3'" ref="div3">v3 </div>
+      </div>
+
     </r-scroll-sticky>
     <!-- .... -->
     <r-scroll-page v-model="value" :controller="controller">
@@ -22,7 +26,7 @@
       <r-scroll-page-item value="2">
         <div class="scroll-page-item">{{ text2 }}</div>
       </r-scroll-page-item>
-       <r-scroll-page-item value="3">
+      <r-scroll-page-item value="3">
         <div class="scroll-page-item">{{ text3 }}</div>
       </r-scroll-page-item>
       <!-- <div class="scroll-page-item">{{ text }}</div> -->
@@ -40,14 +44,14 @@ const text = arrayLoopMap(100, () => '我').join('')
 const text2 = arrayLoopMap(10, () => '李').join('')
 const text3 = arrayLoopMap(10, () => '好').join('')
 const bool = ref(true)
-const value = ref("2")
+const value = ref("1")
 const div1 = ref("div1")
 const div2 = ref("div2")
 const controller = {
   views: [div1, div2],
   layout: ({ child, index }) => {
 
-   if(controller.views[index]?.value)  controller.views[index].value.style.background
+    if (controller.views[index]?.value) controller.views[index].value.style.background
       = `linear-gradient(90deg, red 0%, red ${child.$$.ratio * 100}%,transparent ${child.$$.ratio * 100}%, transparent 100%)`
   }
 }
@@ -80,7 +84,6 @@ const controller = {
 
 .rrrr {
   display: grid;
-  --repeat: calc(100vw / 50);
-  grid-template-columns: fit-content(40%);
+  grid-template-columns: repeat(3, 1fr);
 }
 </style>

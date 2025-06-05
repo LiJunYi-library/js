@@ -34,6 +34,7 @@ export class RScrollPage extends RainbowElement {
         console.log("onScroll");
 
         const { scrollTop } = event;
+        const scrollBottom = scrollTop + this.$$.scrollView.offsetHeight;
         this.$$.activeChild = (() => {
           if (this.value === undefined) return undefined;
           const children = getChildren(this, "r-scroll-page-item");
@@ -41,12 +42,17 @@ export class RScrollPage extends RainbowElement {
           let activeChild = arrayForEachFind(children, (child, index) => {
             const scrollOffsetTop = child.$.DATA.rScrollOffsetTop || 0;
             const offsetTop = getOffsetTop(child, this.$$.scrollView);
+            const offsetBottom = offsetTop + child.offsetHeight;
             const top = Math.max(0, offsetTop - scrollOffsetTop);
             min = Math.min(...[min, top].filter((el) => el !== undefined));
             const bottom = top + child.offsetHeight;
             max = Math.max(...[max, bottom].filter((el) => el !== undefined));
-            const bool = top <= scrollTop && scrollTop <= bottom;
-            toggleClass(child, bool, "r-scroll-page-item-act");
+            const bool = (() => {
+              if (top <= scrollTop && scrollTop <= bottom) return true;
+              if (top > scrollTop && scrollBottom >= offsetBottom) return true;
+              return false;
+            })();
+            toggleClass(child, false, "r-scroll-page-item-act");
             const ratioH = Math.max(0, scrollTop - offsetTop + this.$$.scrollView.offsetHeight);
             const ratio = ratioH / child.offsetHeight;
             child.$$.ratio = Math.min(1, ratio);
@@ -64,6 +70,7 @@ export class RScrollPage extends RainbowElement {
           }
           return activeChild;
         })();
+        toggleClass(this.$$.activeChild, true, "r-scroll-page-item-act");
         if (this.$$.activeChild?.value && this.value !== this.$$.activeChild?.value) {
           this.$$.updateValue(this.$$.activeChild?.value);
         }
@@ -93,9 +100,17 @@ export class RScrollPage extends RainbowElement {
     const children = getChildren(this, "r-scroll-page-item");
     this.$$.index = children.findIndex((c) => c.value === this.value);
     this.$$.activeChild = children.find((c) => c.value === this.value);
-    const top = getOffsetTop(this.$$.activeChild, this.$$.scrollView);
-    const scrollOffsetTop = this.$$.activeChild.$.DATA.rScrollOffsetTop || 0;
-    this.$$.scrollView.scrollTop = Math.max(0, top - scrollOffsetTop);
+    const { activeChild, scrollView } = this.$$;
+    const offsetTop = getOffsetTop(activeChild, scrollView);
+    const scrollOffsetTop = activeChild.$.DATA.rScrollOffsetTop || 0;
+    const scrollTop = (() => {
+      if (activeChild.offsetHeight < scrollView.offsetHeight) {
+        return offsetTop - (scrollView.offsetHeight - activeChild.offsetHeight);
+      }
+      return offsetTop - scrollOffsetTop;
+    })();
+    console.log(scrollTop);
+    this.$$.scrollView.scrollTop = scrollTop;
   }
 }
 

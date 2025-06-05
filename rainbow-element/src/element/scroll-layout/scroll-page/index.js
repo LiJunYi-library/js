@@ -20,7 +20,7 @@ export class RScrollPage extends RainbowElement {
     "r-scroll-offset-top": String, // px
   });
   $value = undefined;
-
+  controller = undefined;
   $$ = (() => {
     return {
       index: -1,
@@ -31,6 +31,8 @@ export class RScrollPage extends RainbowElement {
         this.dispatchEvent(createCustomEvent("change", { value }));
       },
       onScroll: (event) => {
+        console.log("onScroll");
+
         const { scrollTop } = event;
         this.$$.activeChild = (() => {
           if (this.value === undefined) return undefined;
@@ -38,17 +40,20 @@ export class RScrollPage extends RainbowElement {
           let min, max;
           let activeChild = arrayForEachFind(children, (child, index) => {
             const scrollOffsetTop = child.$.DATA.rScrollOffsetTop || 0;
-            const t = getOffsetTop(child, this.$$.scrollView) - scrollOffsetTop;
-            const top = Math.max(0, t);
+            const offsetTop = getOffsetTop(child, this.$$.scrollView);
+            const top = Math.max(0, offsetTop - scrollOffsetTop);
             min = Math.min(...[min, top].filter((el) => el !== undefined));
             const bottom = top + child.offsetHeight;
             max = Math.max(...[max, bottom].filter((el) => el !== undefined));
             const bool = top <= scrollTop && scrollTop <= bottom;
             toggleClass(child, bool, "r-scroll-page-item-act");
+            const ratioH = Math.max(0, scrollTop - offsetTop + this.$$.scrollView.offsetHeight);
+            const ratio = ratioH / child.offsetHeight;
+            child.$$.ratio = Math.min(1, ratio);
+            this.controller?.layout?.({ child, index });
             if (bool) this.$$.index = index;
             return bool;
           });
-          // console.log("onScroll");
           if (scrollTop < min) {
             this.$$.index = 0;
             activeChild = children[0];
@@ -62,7 +67,6 @@ export class RScrollPage extends RainbowElement {
         if (this.$$.activeChild?.value && this.value !== this.$$.activeChild?.value) {
           this.$$.updateValue(this.$$.activeChild?.value);
         }
-        // console.log(this.value, this.$$.index, this.$$.activeChild?.value);
       },
     };
   })();
@@ -92,7 +96,6 @@ export class RScrollPage extends RainbowElement {
     const top = getOffsetTop(this.$$.activeChild, this.$$.scrollView);
     const scrollOffsetTop = this.$$.activeChild.$.DATA.rScrollOffsetTop || 0;
     this.$$.scrollView.scrollTop = Math.max(0, top - scrollOffsetTop);
-    // console.log(this.$$.index, this.$$.activeChild);
   }
 }
 
@@ -105,6 +108,7 @@ export class RScrollPageItem extends RainbowElement {
 
   $$ = {
     valueParent: undefined,
+    ratio: 0,
     click: () => {},
     setActive: () => {
       if (!this.$$.valueParent) return;

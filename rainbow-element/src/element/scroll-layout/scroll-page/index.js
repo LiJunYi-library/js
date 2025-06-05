@@ -75,7 +75,7 @@ export class RScrollPage extends RainbowElement {
 
   $onValueChange(...arg) {
     super.$onValueChange(...arg);
-    this.$onRender();
+    this.$render();
   }
 
   connectedCallback(...arg) {
@@ -83,7 +83,7 @@ export class RScrollPage extends RainbowElement {
     const pName = ["r-scroll", "r-scroll-view", "r-nested-scroll"];
     this.$$.scrollView = findParentByLocalName(pName, this);
     addEventListenerOnce(this.$$.scrollView, "scroll", this.$$.onScroll);
-    this.$onRender();
+    this.$render();
   }
 
   disconnectedCallback(...arg) {
@@ -91,7 +91,7 @@ export class RScrollPage extends RainbowElement {
     removeEventListener(this.$$.scrollView, "scroll", this.$$.onScroll);
   }
 
-  $onRender() {
+  $render() {
     if (this.value === undefined) {
       this.$$.index = -1;
       this.$$.activeChild = undefined;
@@ -111,7 +111,6 @@ export class RScrollPage extends RainbowElement {
       return offsetTop - scrollOffsetTop;
     })();
     scrollTop = Math.max(0, scrollTop);
-    console.log(scrollTop)
     this.$$.scrollView.scrollTop = scrollTop;
     if (scrollTop === 0) this.$$.onScroll({ scrollTop });
   }
@@ -145,6 +144,7 @@ export class RScrollPageItem extends RainbowElement {
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     this.$$.valueParent = findParentByLocalName("r-scroll-page", this);
+    this.$$.valueParent.$render();
   }
 
   disconnectedCallback(...arg) {

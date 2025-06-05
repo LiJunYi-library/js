@@ -4,7 +4,6 @@ r-tabs {
   overflow: auto;
   position: relative;
   touch-action: pan-x;
-  gap: 10px;
   --r-trigger: click;
 }
 

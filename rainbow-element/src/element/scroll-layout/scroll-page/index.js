@@ -4,9 +4,6 @@ import {
   toggleClass,
   createCustomEvent,
   createElement,
-  createSlot,
-  resizeObserver,
-  getBoundingClientRect,
   findParentByLocalName,
   addEventListenerOnce,
   removeEventListener,
@@ -31,8 +28,6 @@ export class RScrollPage extends RainbowElement {
         this.dispatchEvent(createCustomEvent("change", { value }));
       },
       onScroll: (event) => {
-        console.log("onScroll");
-
         const { scrollTop } = event;
         const scrollBottom = scrollTop + this.$$.scrollView.offsetHeight;
         this.$$.activeChild = (() => {
@@ -91,6 +86,11 @@ export class RScrollPage extends RainbowElement {
     this.$onRender();
   }
 
+  disconnectedCallback(...arg) {
+    super.disconnectedCallback(...arg);
+    removeEventListener(this.$$.scrollView, "scroll", this.$$.onScroll);
+  }
+
   $onRender() {
     if (this.value === undefined) {
       this.$$.index = -1;
@@ -109,8 +109,8 @@ export class RScrollPage extends RainbowElement {
       }
       return offsetTop - scrollOffsetTop;
     })();
-    console.log(scrollTop);
     this.$$.scrollView.scrollTop = scrollTop;
+    if (scrollTop === 0) this.$$.onScroll({ scrollTop });
   }
 }
 

@@ -21,8 +21,15 @@ export class RScroll extends RainbowElement {
     onScroll: (event) => {
       event.scrollTop = this.scrollTop;
       event.moveY = this.$$.prveScrollTop - this.scrollTop;
-      if (event.moveY < 0) this.dispatchEvent(createCustomEvent("scrollUp", event));
-      if (event.moveY > 0) this.dispatchEvent(createCustomEvent("scrollDown", event));
+      if (event.moveY < 0) {
+        const max = this.scrollHeight - this.offsetHeight - 0;
+        const bool = this.scrollTop >= max;
+        this.dispatchEvent(createCustomEvent("scrollUp", event));
+        if (bool) this.dispatchEvent(createCustomEvent("scrollArriveBottom", event));
+      }
+      if (event.moveY > 0) {
+        this.dispatchEvent(createCustomEvent("scrollDown", event));
+      }
       this.$$.prveScrollTop = this.scrollTop;
     },
     disabledScroll: () => {

@@ -11,14 +11,17 @@ export const VRPaginationLoading = defineComponent({
     onBeginErrorClick: { type: Function },
     skeletonCount: { type: Number, default: 10 },
   },
-  emits: ["rollToBottom"],
+  emits: ["rollToBottom", "scrollArriveBottom"],
   setup(props, ctx) {
     (() => {
       useScrollController({ onScrollDown });
       function onScrollDown(event) {
         const max = event.contentHeight - event.containerHeight - props.triggerBottomDistance;
         const bool = event.scrollTop >= max;
-        if (bool) ctx.emit("rollToBottom", event);
+        if (bool) {
+          ctx.emit("rollToBottom", event);
+          ctx.emit("scrollArriveBottom", event);
+        }
       }
     })();
     let vm;
@@ -42,7 +45,10 @@ export const VRPaginationLoading = defineComponent({
       if (!scrollView) return;
       const max = scrollView.scrollHeight - scrollView.offsetHeight - props.triggerBottomDistance;
       const bool = scrollView.scrollTop >= max;
-      if (bool) ctx.emit("rollToBottom", event);
+      if (bool) {
+        ctx.emit("rollToBottom", event);
+        ctx.emit("scrollArriveBottom", event);
+      }
     }
 
     function renderLoading() {

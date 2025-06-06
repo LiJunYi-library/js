@@ -88,6 +88,12 @@ export class RScrollPage extends RainbowElement {
     this.$render();
   }
 
+  $onHeightChange(...arg) {
+    super.$onHeightChange(...arg);
+    const scrollTop = this.$$.scrollView.scrollTop;
+    this.$$.onScroll({ scrollTop });
+  }
+
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     const pName = ["r-scroll", "r-scroll-view", "r-nested-scroll"];

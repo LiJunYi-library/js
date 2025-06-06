@@ -269,6 +269,7 @@ export class RainbowElement extends HTMLElement {
     if (!bool) this.$onResize(...args);
     if (offset.width !== cacheOffset.width) this.$onWidthChange(...args);
     if (offset.height !== cacheOffset.height) this.$onHeightChange(...args);
+    this.$.cache.offset = { ...offset };
   }
 
   $onResize() {

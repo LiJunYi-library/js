@@ -29,8 +29,19 @@ r-tabs .r-tab-active-line {
   transform: translateX(-50%);
 }
 
-
 .r-tabs-vertical {
   flex-direction: column;
   touch-action: pan-y;
+}
+
+r-tabs[css-name~="r-tab-ratio"] r-tab-item {
+  position: relative;
+}
+
+r-tabs[css-name~="r-tab-ratio"] .r-tab-item-ratio-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: rgb(200, 200, 200);
+  height: 0.8px;
 }

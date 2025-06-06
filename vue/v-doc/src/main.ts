@@ -1,5 +1,5 @@
 import {defineElements} from '@rainbow_ljy/rainbow-element/main'
-import '@rainbow_ljy/rainbow-element/build/index.css'
+// import '@rainbow_ljy/rainbow-element/build/index.css'
 import "@rainbow_ljy/v-views/build/esm/index.css"
 import { createApp, render } from 'vue'
 import App from './App.vue'

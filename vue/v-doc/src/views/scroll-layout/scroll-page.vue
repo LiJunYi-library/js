@@ -1,24 +1,14 @@
 <template>
   <r-scroll class="scroll-page-demo">
-    <!-- <div class="rrrr">
-      <div>1</div>
-      <div>1</div>
-      <div>1</div>
-      <div>1</div>
-      <div>1</div>
-      <div>1</div>
-      <div>1</div>
-    </div> -->
-    <r-scroll-sticky style="top: 0;" class="sticky">
-      <div>v: {{ value }}</div>
+
+    <!-- <r-scroll-sticky style="top: 0;" class="sticky">
+      <div>v: {{ page.value }}</div>
       <div class="rrrr">
         <div @click="value = '1'" ref="div1">v1 </div>
         <div @click="value = '2'" ref="div2">v2 </div>
         <div @click="value = '3'" ref="div3">v3 </div>
       </div>
-
     </r-scroll-sticky>
-    <!-- .... -->
     <r-scroll-page v-model="value" :controller="controller">
       <r-scroll-page-item value="1">
         <div class="scroll-page-item">{{ text }}</div>
@@ -29,32 +19,57 @@
       <r-scroll-page-item value="3">
         <div class="scroll-page-item">{{ text3 }}</div>
       </r-scroll-page-item>
-      <!-- <div class="scroll-page-item">{{ text }}</div> -->
     </r-scroll-page>
-    <!-- .... -->
+    <div class="scroll-page-item">{{ text }}</div> -->
+
+
+    <r-scroll-sticky style="top: 0;" class="sticky">
+      <div>v: {{ page.value }}</div>
+
+      <r-tabs :value="page.value" :controller="controller" @change="(e) => page.updateValue(e.value)">
+        <template v-for="(item, index) in page.list" :key="item.value">
+          <r-tab-item :value="item.value">
+            {{ item.label }}
+          </r-tab-item>
+        </template>
+      </r-tabs>
+
+    </r-scroll-sticky>
+
+    <r-scroll-page :value="page.value" :controller="controller" @change="(e) => page.updateValue(e.value)">
+      <template v-for="item in page.list" :key="item.value">
+        <r-scroll-page-item :value="item.value">
+          <div>{{ item.label }}</div>
+          <div class="scroll-page-item">
+            {{ item.text }}
+          </div>
+        </r-scroll-page-item>
+      </template>
+    </r-scroll-page>
+
+
   </r-scroll>
 </template>
 <script setup>
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
-import { useRadio2 } from '@rainbow_ljy/v-hooks'
+import { useListRadio } from '@rainbow_ljy/v-hooks'
 import { ref, onMounted } from 'vue'
 import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
+import { createTabsSrollPageController } from "@rainbow_ljy/rainbow-element/main"
 
-const text = arrayLoopMap(100, () => '我').join('')
-const text2 = arrayLoopMap(10, () => '李').join('')
-const text3 = arrayLoopMap(10, () => '好').join('')
-const bool = ref(true)
-const value = ref("1")
-const div1 = ref("div1")
-const div2 = ref("div2")
-const controller = {
-  views: [div1, div2],
-  layout: ({ child, index }) => {
+const page = useListRadio({
+  value: 2,
+  list: [
+    { value: 1, label: '宝贝', text: arrayLoopMap(50, () => '我').join('') },
+    { value: 2, label: '评---论', text: arrayLoopMap(20, () => '李').join('') },
+    { value: 3, label: '详-----情', text: arrayLoopMap(10, () => '好').join('') },
+    { value: 4, label: '更多', text: arrayLoopMap(10, () => '多').join('') },
+  ]
+})
 
-    if (controller.views[index]?.value) controller.views[index].value.style.background
-      = `linear-gradient(90deg, red 0%, red ${child.$$.ratio * 100}%,transparent ${child.$$.ratio * 100}%, transparent 100%)`
-  }
-}
+const controller = createTabsSrollPageController()
+
+
 </script>
 
 <style lang="scss">
@@ -65,10 +80,31 @@ const controller = {
     overflow: hidden;
     height: 100px;
 
-    div {
-      margin: 10px 0;
+  }
+
+  r-tabs {
+    gap: 0px;
+
+    &::part(r-tab-active) {
+      display: none;
+    }
+
+    r-tab-item {
+      padding: 5px 12px;
+      color: rgb(91, 91, 91);
+      flex: 1;
+      text-align: center;
+
+      &.r-tab-item-act {
+        color: black;
+      }
     }
   }
+
+
+
+
+
 
   r-scroll-page,
   r-scroll-page-item {

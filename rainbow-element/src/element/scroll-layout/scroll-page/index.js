@@ -80,6 +80,10 @@ export class RScrollPage extends RainbowElement {
           this.$$.updateValue(this.$$.activeChild?.value);
         }
       },
+      scrollHeightChange: (event) => {
+        const scrollTop = this.$$.scrollView.scrollTop;
+        this.$$.onScroll({ scrollTop });
+      },
     };
   })();
 
@@ -99,12 +103,14 @@ export class RScrollPage extends RainbowElement {
     const pName = ["r-scroll", "r-scroll-view", "r-nested-scroll"];
     this.$$.scrollView = findParentByLocalName(pName, this);
     addEventListenerOnce(this.$$.scrollView, "scroll", this.$$.onScroll);
+    addEventListenerOnce(this.$$.scrollView, "scrollHeightChange", this.$$.scrollHeightChange);
     this.$render();
   }
 
   disconnectedCallback(...arg) {
     super.disconnectedCallback(...arg);
     removeEventListener(this.$$.scrollView, "scroll", this.$$.onScroll);
+    addEventListenerOnce(this.$$.scrollView, "scrollHeightChange", this.$$.scrollHeightChange);
   }
 
   $render() {

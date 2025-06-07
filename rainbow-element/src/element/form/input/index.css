@@ -1,0 +1,9 @@
+r-inpput {
+  display: block;
+}
+
+r-inpput::part(r-input-inner) {
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+}

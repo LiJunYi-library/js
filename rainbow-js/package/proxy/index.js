@@ -37,5 +37,6 @@ export function proxy(target) {
     },
   });
   p.getPrototype = () => target;
+  p.original = target;
   return p;
 }

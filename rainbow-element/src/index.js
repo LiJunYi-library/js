@@ -3,4 +3,4 @@ export * from "./global.js";
 export * from "./element/index.js";
 export * from "./events/index.js";
 export * from "./utils/index.js";
-import "./style/style.scss";
+import "./style/element/index.scss";

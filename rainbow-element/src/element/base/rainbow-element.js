@@ -59,6 +59,7 @@ export class RainbowElement extends HTMLElement {
       },
       data: {},
       DATA: new Proxy({}, { get: (target, prop) => this.$.data[camelCaseToKebabCase(prop)] }),
+      ATTRS: new Proxy({}, { get: (target, prop) => this.getAttribute(prop) }),
       resolvePercentum: (v = "", node = this, fmt = (node) => node.offsetWidth) => {
         if (/\d+?%/.test(v)) return fmt(node) * (v.replaceAll("%", "") / 100);
         return v;

@@ -3,7 +3,7 @@ r-input {
   position: relative;
   --r-label: 名字;
   border-bottom: 1px solid var(--primary-color);
-  background: rgb(218, 218, 218);
+  background: rgb(244, 244, 244);
   height: 40px;
 
   &::part(r-input-floating) {
@@ -15,10 +15,20 @@ r-input {
     transform: translateY(-50%);
     transition: 0.25s;
     z-index: 2;
+    pointer-events: none;
   }
 
   &::part(r-input-label) {
     transition: 0.25s;
+  }
+
+  &::part(r-input-message) {
+    color: red;
+    width: 1px;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &::part(r-input-space) {
@@ -29,6 +39,8 @@ r-input {
     font-family: "iconfont" !important;
     display: none;
     font-size: 12px;
+    cursor: pointer;
+    pointer-events: all;
 
     &::before {
       content: '\e600'
@@ -39,6 +51,8 @@ r-input {
     font-family: "iconfont" !important;
     display: none;
     font-size: 12px;
+    cursor: pointer;
+    pointer-events: all;
 
     &::before {
       content: '\e607'
@@ -54,7 +68,6 @@ r-input {
     display: flex;
     position: relative;
     height: 100%;
-    z-index: 3;
   }
 
   &::part(r-input-inner) {
@@ -68,6 +81,7 @@ r-input {
     margin: 0;
     background: transparent;
     padding-top: 20px;
+    caret-color: var(--primary-color);
 
     &::placeholder {
       visibility: hidden;

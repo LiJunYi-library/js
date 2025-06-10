@@ -36,6 +36,7 @@ export class RInput extends RainbowElement {
   $$ = {
     floating: createElement("div", "r-input-floating"),
     label: createElement("div", "r-input-label"),
+    message: createElement("div", "r-input-message"),
     space: createElement("div", "r-input-space"),
     clear: createElement("div", "r-input-clear"),
     password: createElement("div", "r-input-password"),
@@ -54,15 +55,13 @@ export class RInput extends RainbowElement {
       this.$updateValue(undefined);
       this.dispatchEvent(createCustomEvent("clear", { event }));
       this.$layout();
+      this.$$.input.focus();
     },
     onfocus: (event) => {
       this.cssList.toggle(true, "r-input-focus", "r-input-blur");
     },
     onblur: (event) => {
       this.cssList.toggle(false, "r-input-focus", "r-input-blur");
-    },
-    onclick: (event) => {
-      this.$$.input.focus();
     },
     onpasswordClick: (event) => {
       this.$$.secret = !this.$$.secret;
@@ -73,13 +72,33 @@ export class RInput extends RainbowElement {
       if (type !== "password") return;
       this.cssList.toggle(Boolean(this.$$.secret), "r-input-secret", "r-input-no-secret");
       this.$$.input.setAttribute("type", this.$$.secret ? "password" : "text");
+      this.$$.input.focus();
     },
+    requiredVerify: () => {
+      if (this.value) return;
+      const { label, maxlength, type } = this.$.ATTRS;
+      this.$$.message.innerText = "请输入" + label;
+    },
+    clearRequiredVerify: () => {
+      this.$$.message.innerText = "";
+    },
+  };
+
+  Verify = {
+    required: {
+      trigger: "blur",
+      relieve: "focus",
+    },
+    aaaa:{
+
+    }
   };
 
   constructor(...arg) {
     super(...arg);
     this.attachShadow({ mode: "open" });
     this.$$.floating.append(this.$$.label);
+    this.$$.floating.append(this.$$.message);
     this.$$.floating.append(this.$$.space);
     this.$$.floating.append(this.$$.clear);
     this.$$.floating.append(this.$$.password);
@@ -88,15 +107,18 @@ export class RInput extends RainbowElement {
     this.shadowRoot.append(this.$$.floating);
     this.shadowRoot.append(this.$$.container);
     addEventListenerOnce(this.$$.input, "input", this.$$.oninput);
-    addEventListenerOnce(this.$$.input, "focus", this.$$.onfocus);
-    addEventListenerOnce(this.$$.input, "blur", this.$$.onblur);
+    addEventListenerOnce(this, "focus", this.$$.onfocus);
+    addEventListenerOnce(this, "blur", this.$$.onblur);
     addEventListenerOnce(this.$$.clear, "click", this.$$.onclear);
     addEventListenerOnce(this.$$.password, "click", this.$$.onpasswordClick);
-    addEventListenerOnce(this, "click", this.$$.onclick);
+
+    addEventListenerOnce(this, "focus", this.$$.clearRequiredVerify);
+    addEventListenerOnce(this, "blur", this.$$.requiredVerify);
   }
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
+    this.setAttribute("tabindex", -1);
     this.$$.secret = this.$.ATTRS.type === "password";
     this.$$.setTypePassword();
     this.$layout();

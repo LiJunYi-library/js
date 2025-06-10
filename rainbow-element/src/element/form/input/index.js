@@ -50,11 +50,16 @@ export class RInput extends RainbowElement {
       this.$layout();
     },
     onclear: (event) => {
-      event.value = undefined;
-      this.$$.input.value = undefined;
-      this.$updateValue(undefined);
+      event.value = null;
+      this.$$.input.value = null;
+      this.$updateValue(null);
       this.dispatchEvent(createCustomEvent("clear", { event }));
       this.$layout();
+      this.$$.input.focus();
+    },
+    onpasswordClick: (event) => {
+      this.$$.secret = !this.$$.secret;
+      this.$$.setTypePassword();
       this.$$.input.focus();
     },
     onfocus: (event) => {
@@ -63,24 +68,21 @@ export class RInput extends RainbowElement {
     onblur: (event) => {
       this.cssList.toggle(false, "r-input-focus", "r-input-blur");
     },
-    onpasswordClick: (event) => {
-      this.$$.secret = !this.$$.secret;
-      this.$$.setTypePassword();
-    },
     setTypePassword: () => {
       const { type } = this.$.ATTRS;
       if (type !== "password") return;
       this.cssList.toggle(Boolean(this.$$.secret), "r-input-secret", "r-input-no-secret");
       this.$$.input.setAttribute("type", this.$$.secret ? "password" : "text");
-      this.$$.input.focus();
     },
     requiredVerify: () => {
       if (this.value) return;
       const { label, maxlength, type } = this.$.ATTRS;
       this.$$.message.innerText = "请输入" + label;
+      this.cssList.toggle(true, "r-input-error", "r-input-no-error");
     },
     clearRequiredVerify: () => {
       this.$$.message.innerText = "";
+      this.cssList.toggle(false, "r-input-error", "r-input-no-error");
     },
   };
 
@@ -89,23 +91,30 @@ export class RInput extends RainbowElement {
       trigger: "blur",
       relieve: "focus",
     },
-    aaaa:{
-
-    }
+    aaaa: {},
   };
 
   constructor(...arg) {
     super(...arg);
     this.attachShadow({ mode: "open" });
-    this.$$.floating.append(this.$$.label);
-    this.$$.floating.append(this.$$.message);
-    this.$$.floating.append(this.$$.space);
-    this.$$.floating.append(this.$$.clear);
-    this.$$.floating.append(this.$$.password);
-    this.$$.floating.append(this.$$.limit);
+    // this.$$.floating.append(this.$$.label);
+    // this.$$.floating.append(this.$$.message);
+    // this.$$.floating.append(this.$$.space);
+    // this.$$.floating.append(this.$$.clear);
+    // this.$$.floating.append(this.$$.password);
+    // this.$$.floating.append(this.$$.limit);
+    // this.$$.container.append(this.$$.input);
+    // this.shadowRoot.append(this.$$.floating);
+    // this.shadowRoot.append(this.$$.container);
+
+    this.shadowRoot.append(this.$$.label);
     this.$$.container.append(this.$$.input);
-    this.shadowRoot.append(this.$$.floating);
+    this.$$.container.append(this.$$.clear);
+    this.$$.container.append(this.$$.password);
+    this.$$.container.append(this.$$.limit);
+    this.$$.container.append(this.$$.message);
     this.shadowRoot.append(this.$$.container);
+
     addEventListenerOnce(this.$$.input, "input", this.$$.oninput);
     addEventListenerOnce(this, "focus", this.$$.onfocus);
     addEventListenerOnce(this, "blur", this.$$.onblur);

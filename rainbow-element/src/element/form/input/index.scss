@@ -1,43 +1,205 @@
+// r-input {
+//   display: block;
+//   position: relative;
+//   --r-label: 名字;
+//   border-bottom: 1px solid gray;
+//   background: rgb(244, 244, 244);
+//   height: 40px;
+
+//   &::part(r-input-floating) {
+//     width: 100%;
+//     display: flex;
+//     position: absolute;
+//     align-items: center;
+//     top: 50%;
+//     transform: translateY(-50%);
+//     transition: 0.25s;
+//     z-index: 2;
+//     pointer-events: none;
+//   }
+
+//   &::part(r-input-label) {
+//     transition: 0.25s;
+//   }
+
+//   &::part(r-input-message) {
+//     color: red;
+//     width: 1px;
+//     flex: 1;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+//     white-space: nowrap;
+//   }
+
+//   &::part(r-input-space) {
+//     margin-left: auto;
+//   }
+
+//   &::part(r-input-clear) {
+//     font-family: "iconfont" !important;
+//     display: none;
+//     font-size: 12px;
+//     cursor: pointer;
+//     pointer-events: all;
+
+//     &::before {
+//       content: '\e600'
+//     }
+//   }
+
+//   &::part(r-input-password) {
+//     font-family: "iconfont" !important;
+//     display: none;
+//     font-size: 12px;
+//     cursor: pointer;
+//     pointer-events: all;
+
+//     &::before {
+//       content: '\e607'
+//     }
+//   }
+
+//   &::part(r-input-limit) {
+//     font-size: 12px;
+//   }
+
+
+//   &::part(r-input-container) {
+//     display: flex;
+//     position: relative;
+//     height: 100%;
+//   }
+
+//   &::part(r-input-inner) {
+//     width: 100%;
+//     height: 100%;
+//     display: block;
+//     box-sizing: border-box;
+//     outline: none;
+//     border: none;
+//     padding: 0;
+//     margin: 0;
+//     background: transparent;
+//     padding-top: 20px;
+//     caret-color: var(--primary-color);
+
+//     &::placeholder {
+//       visibility: hidden;
+//     }
+//   }
+
+
+//   &[css-name~="r-input-no-secret"] {
+//     &::part(r-input-password) {
+//       &::before {
+//         content: '\e641'
+//       }
+//     }
+//   }
+
+//   &[css-name~="r-input-focus"] {
+//     &::part(r-input-floating) {
+//       top: 0;
+//       transform: translateY(0);
+//       z-index: 4;
+//     }
+
+//     &::part(r-input-label) {
+//       font-size: 12px;
+//     }
+
+//     &::part(r-input-inner) {
+//       &::placeholder {
+//         visibility: visible;
+//       }
+//     }
+//   }
+
+//   &[css-name~="r-input-have-value"] {
+//     &::part(r-input-floating) {
+//       top: 0;
+//       transform: translateY(0);
+//       z-index: 4;
+//     }
+
+//     &::part(r-input-label) {
+//       font-size: 12px;
+//     }
+//   }
+
+//   &[css-name~="r-input-focus"][css-name~="r-input-have-value"] {
+//     &::part(r-input-clear) {
+//       display: block;
+//     }
+//   }
+
+//   &:hover[css-name~="r-input-have-value"] {
+//     &::part(r-input-clear) {
+//       display: block;
+//     }
+//   }
+
+//   &[css-name~="r-input-focus"][type="password"] {
+//     &::part(r-input-password) {
+//       display: block;
+//     }
+//   }
+
+
+//   &:hover[type="password"] {
+//     &::part(r-input-password) {
+//       display: block;
+//     }
+//   }
+
+//   &[css-name~="r-input-error"] {
+//     border-bottom: 1px solid red;
+//   }
+// }
+
+
 r-input {
-  display: block;
   position: relative;
   --r-label: 名字;
-  border-bottom: 1px solid var(--primary-color);
   background: rgb(244, 244, 244);
-  height: 40px;
-
-  &::part(r-input-floating) {
-    width: 100%;
-    display: flex;
-    position: absolute;
-    align-items: center;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: 0.25s;
-    z-index: 2;
-    pointer-events: none;
-  }
+  height: 30px;
+  display: flex;
+  align-items: center;
 
   &::part(r-input-label) {
-    transition: 0.25s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
   }
 
-  &::part(r-input-message) {
-    color: red;
+  &::part(r-input-container) {
     width: 1px;
     flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    position: relative;
+    height: 100%;
+    border: 1px solid gray;
+    box-sizing: border-box;
   }
 
-  &::part(r-input-space) {
-    margin-left: auto;
+  &::part(r-input-inner) {
+    width: 100%;
+    height: 100%;
+    display: block;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    caret-color: var(--primary-color);
   }
 
   &::part(r-input-clear) {
     font-family: "iconfont" !important;
-    display: none;
     font-size: 12px;
     cursor: pointer;
     pointer-events: all;
@@ -49,7 +211,6 @@ r-input {
 
   &::part(r-input-password) {
     font-family: "iconfont" !important;
-    display: none;
     font-size: 12px;
     cursor: pointer;
     pointer-events: all;
@@ -63,93 +224,37 @@ r-input {
     font-size: 12px;
   }
 
-
-  &::part(r-input-container) {
-    display: flex;
-    position: relative;
-    height: 100%;
-  }
-
-  &::part(r-input-inner) {
+  &::part(r-input-message) {
+    color: red;
     width: 100%;
-    height: 100%;
-    display: block;
-    box-sizing: border-box;
-    outline: none;
-    border: none;
-    padding: 0;
-    margin: 0;
-    background: transparent;
-    padding-top: 20px;
-    caret-color: var(--primary-color);
-
-    &::placeholder {
-      visibility: hidden;
-    }
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transform: translateY(100%);
   }
 
 
-  &[css-name~="r-input-no-secret"] {
-    &::part(r-input-password) {
-      &::before {
-        content: '\e641'
-      }
-    }
-  }
-
-  &[css-name~="r-input-focus"] {
-    &::part(r-input-floating) {
-      top: 0;
-      transform: translateY(0);
-      z-index: 4;
-    }
-
-    &::part(r-input-label) {
-      font-size: 12px;
-    }
-
-    &::part(r-input-inner) {
-      &::placeholder {
-        visibility: visible;
-      }
-    }
-  }
-
-  &[css-name~="r-input-have-value"] {
-    &::part(r-input-floating) {
-      top: 0;
-      transform: translateY(0);
-      z-index: 4;
-    }
-
-    &::part(r-input-label) {
-      font-size: 12px;
-    }
-  }
-
-  &[css-name~="r-input-focus"][css-name~="r-input-have-value"] {
-    &::part(r-input-clear) {
-      display: block;
-    }
-  }
-
-  &:hover[css-name~="r-input-have-value"] {
-    &::part(r-input-clear) {
-      display: block;
-    }
-  }
-
-  &[css-name~="r-input-focus"][type="password"] {
-    &::part(r-input-password) {
-      display: block;
-    }
-  }
 
 
-  &:hover[type="password"] {
-    &::part(r-input-password) {
-      display: block;
-    }
-  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

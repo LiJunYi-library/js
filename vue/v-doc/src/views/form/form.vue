@@ -1,6 +1,6 @@
 <template>
   <div @blur="">
-    <r-input type="date" label="名字" name="names" :maxlength="maxlength" autocomplete="off" v-model="text"
+    <r-input type="text" label="名字" name="names" :maxlength="maxlength" autocomplete="off" v-model="text"
       @input="input" @clear="clear" @focus="focus"   @blur="blur" placeholder="请输入名字"></r-input>
 
     <!-- <div tabindex="0">
@@ -31,6 +31,7 @@
       @blur="blur"
       @focus="focus"
     /> -->
+    <div style="height: 10px;"></div>
     <button @click="$log(text)">log {{ text }}</button>
     <button @click="label += '9'">maxlength</button>
   </div>
@@ -64,9 +65,6 @@ function blur(params) {
 }
 
 function click(params) {
-  console.log('click', inputel.value.setSelectionRange)
-
-  inputel.value.focus()
 }
 </script>
 

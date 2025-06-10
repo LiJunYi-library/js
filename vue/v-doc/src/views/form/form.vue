@@ -1,8 +1,12 @@
 <template>
   <div @blur="">
-    <r-input type="text" label="名字" name="names" :maxlength="maxlength" autocomplete="off" v-model="text"
-      @input="input" @clear="clear" @focus="focus"   @blur="blur" placeholder="请输入名字"></r-input>
-
+    <r-input type="text" label="名字" name="names" :maxlength="maxlength" autocomplete="off" v-model="text" @input="input"
+      @clear="clear" @focus="focus" @blur="blur" placeholder="请输入名字">
+      <div slot="prefix">prefix</div>
+      <div slot="suffix">suffix</div>
+      <div slot="prepend">prepend</div>
+      <div slot="append">append</div>
+    </r-input>
     <!-- <div tabindex="0">
       <input type="text" @focus="focus" ref="inputel" @blur="blur" name="inputel" />
       <span class="po1">
@@ -33,7 +37,7 @@
     /> -->
     <div style="height: 10px;"></div>
     <button @click="$log(text)">log {{ text }}</button>
-    <button @click="label += '9'">maxlength</button>
+    <!-- <button @click="label += '9'">maxlength</button> -->
   </div>
 </template>
 

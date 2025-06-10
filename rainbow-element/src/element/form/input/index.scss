@@ -198,11 +198,15 @@ r-input {
     caret-color: var(--primary-color);
   }
 
+  &::part(r-input-suffix) {
+    display: flex;
+    align-items: center;
+  }
+
   &::part(r-input-clear) {
     font-family: "iconfont" !important;
     font-size: 12px;
     cursor: pointer;
-    pointer-events: all;
 
     &::before {
       content: '\e600'
@@ -213,7 +217,6 @@ r-input {
     font-family: "iconfont" !important;
     font-size: 12px;
     cursor: pointer;
-    pointer-events: all;
 
     &::before {
       content: '\e607'

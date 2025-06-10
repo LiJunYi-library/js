@@ -41,6 +41,14 @@ export class RInput extends RainbowElement {
     clear: createElement("div", "r-input-clear"),
     password: createElement("div", "r-input-password"),
     limit: createElement("div", "r-input-limit"),
+    prefix: createElement("div", "r-input-prefix"),
+    suffix: createElement("div", "r-input-suffix"),
+    prefixSolt: createSlot("slot", "prefix"),
+    suffixSolt: createSlot("slot", "suffix"),
+    prepend: createSlot("div", "r-input-prepend"),
+    append: createSlot("div", "r-input-append"),
+    prependSolt: createSlot("slot", "prepend"),
+    appendSolt: createSlot("slot", "append"),
     container: createElement("div", "r-input-container"),
     input: createElement("input", "r-input-inner"),
     secret: false,
@@ -60,6 +68,9 @@ export class RInput extends RainbowElement {
     onpasswordClick: (event) => {
       this.$$.secret = !this.$$.secret;
       this.$$.setTypePassword();
+      this.$$.input.focus();
+    },
+    onContainerClick: (event) => {
       this.$$.input.focus();
     },
     onfocus: (event) => {
@@ -106,20 +117,17 @@ export class RInput extends RainbowElement {
     // this.$$.container.append(this.$$.input);
     // this.shadowRoot.append(this.$$.floating);
     // this.shadowRoot.append(this.$$.container);
-
-    this.shadowRoot.append(this.$$.label);
-    this.$$.container.append(this.$$.input);
-    this.$$.container.append(this.$$.clear);
-    this.$$.container.append(this.$$.password);
-    this.$$.container.append(this.$$.limit);
-    this.$$.container.append(this.$$.message);
-    this.shadowRoot.append(this.$$.container);
-
+    this.$$.prepend.append(this.$$.prependSolt);
+    this.$$.prefix.append(this.$$.prefixSolt);
+    this.$$.suffix.append(this.$$.clear, this.$$.password, this.$$.limit, this.$$.suffixSolt);
+    this.$$.container.append(this.$$.prefix, this.$$.input, this.$$.suffix, this.$$.message);
+    this.shadowRoot.append(this.$$.prepend, this.$$.label, this.$$.container, this.$$.appendSolt);
     addEventListenerOnce(this.$$.input, "input", this.$$.oninput);
     addEventListenerOnce(this, "focus", this.$$.onfocus);
     addEventListenerOnce(this, "blur", this.$$.onblur);
     addEventListenerOnce(this.$$.clear, "click", this.$$.onclear);
     addEventListenerOnce(this.$$.password, "click", this.$$.onpasswordClick);
+    addEventListenerOnce(this.$$.container, "click", this.$$.onContainerClick);
 
     addEventListenerOnce(this, "focus", this.$$.clearRequiredVerify);
     addEventListenerOnce(this, "blur", this.$$.requiredVerify);
@@ -127,7 +135,7 @@ export class RInput extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.setAttribute("tabindex", -1);
+    this.$$.container.setAttribute("tabindex", -1);
     this.$$.secret = this.$.ATTRS.type === "password";
     this.$$.setTypePassword();
     this.$layout();

@@ -1,12 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const cors = require('cors');
+const cors = require("cors");
 const server = express();
-const fs = require('fs');
-const path = require('path');
-
-
-
+const fs = require("fs");
+const path = require("path");
 
 function arrayLoopMap(num, cb) {
   const arr = [];
@@ -85,16 +82,39 @@ const pagin = {
     total: 100,
     list,
   },
-  code: 200,
+  code: 2000,
 };
 
 const configs = {
   message: "操作成功",
   data: {
-    list,
-    classlist,
+    children: [
+      {
+        server: {},
+        view: {
+          src: "http://192.168.192.202:8080/element/juan/index.js",
+          css: "http://192.168.192.202:8080/element/juan/index.css",
+          loadText: "配置的换一批",
+        },
+        children: [],
+      },
+      {
+        server: {},
+        view: {
+          src: "http://192.168.192.202:8080/element/yh/index.js",
+          css: "http://192.168.192.202:8080/element/yh/index.css",
+        },
+      },
+      {
+        server: {},
+        view: {
+          src: "http://192.168.192.202:8080/element/list/index.js",
+          css: "http://192.168.192.202:8080/element/list/index.css",
+        },
+      },
+    ],
   },
-  code: 200,
+  code: 2000,
 };
 
 const page = {
@@ -179,20 +199,19 @@ server.get("/", (req, res) => {
 });
 
 server.get("/aaa.html", (req, res) => {
-
-  const filePath = path.join(__dirname,  'aaa.html');
+  const filePath = path.join(__dirname, "aaa.html");
 
   // 读取文件内容
-  fs.readFile(filePath, 'utf8', (err, data) => {
+  fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
       // 如果读取失败，返回 500 错误
-      return res.status(500).send('Error loading the HTML file.');
+      return res.status(500).send("Error loading the HTML file.");
     }
 
     // 设置响应头并返回文件内容
-    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.writeHead(200, { "Content-Type": "text/html" });
     res.end(data);
   });
 });
 
-server.listen(5000, () => { });
+server.listen(5000, () => {});

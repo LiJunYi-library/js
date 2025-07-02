@@ -1,20 +1,16 @@
 .r-image {
-  display: inline-block;
-  .r-picture {
-    display: block;
+  img {
     width: 100%;
     height: 100%;
+    display: block;
   }
-  .r-picture-error{
-    display: none;
-  }
-  .r-img-error {
+  .error {
+    width: 100%;
+    height: 100%;
     display: block;
     object-fit: contain;
-    width: 100%;
-    height: 100%;
   }
-  .r-img-loading {
+  .loading {
     width: 100%;
     height: 100%;
     display: block;

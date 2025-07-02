@@ -1,6 +1,6 @@
 import { defineComponent, renderSlot, watch } from "vue";
 import "./index.scss";
-import { RTab } from "../tab";
+import { RTab } from "../tab/tab";
 import { useRadio2 } from "@rainbow_ljy/v-hooks";
 import { arrayLoopMap } from "@rainbow_ljy/rainbow-js";
 import { RRow } from "../flex";

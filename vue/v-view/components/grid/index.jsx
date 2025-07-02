@@ -1,118 +1,31 @@
 import { RResize } from "../resize";
-import { defineComponent, watch, computed, renderSlot, renderList, ref, onMounted, onBeforeUnmount } from "vue";
+import { defineComponent, reactive, renderSlot, renderList } from "vue";
 import "./index.scss";
-import './base'
 
-export const RGridProps = {
+const RGridProps = {
   columns: { type: Number, default: 1 },
   gap: [Number, String],
   inline: Boolean,
-  minAutoWidth: Number,
-  wrap: Boolean,
-  columnWidth:  { type: String, default: '1fr' },
-  stretch: Boolean,
+  minWidth: Number,
 };
 
 export const RGrid = defineComponent({
   props: RGridProps,
   setup(props, context) {
-    let vm;
-    const offset = ref();
-    const container = computed(() => vm.$el);
-    const newColumns = computed(() => {
-      if (props.minAutoWidth && offset.value) return Math.floor(offset.value.width / props.minAutoWidth);
-      return props.columns
-    });
-    const style = computed(() => {
-      return {
-        "grid-template-columns": ` repeat(${newColumns.value}, ${props.columnWidth})`,
-        "grid-gap": props.gap + "px",
-      }
+    function changeWidth(offset) {
+      if (!props.minWidth) return;
+      const newColumns = Math.floor(offset.width / props.minWidth);
+      style["grid-template-columns"] = ` repeat(${newColumns}, 1fr)`;
+    }
+
+    const style = reactive({
+      "grid-template-columns": ` repeat(${props.columns}, 1fr)`,
+      "grid-gap": props.gap + "px",
     });
 
-    const mObserver = (() => {
-      function callback(mutationsList) {
-        for (let mutation of mutationsList) {
-          if (mutation.type === "childList") {
-            onChildChange(mutation)
-          } else if (mutation.type === "attributes") {
-            onAttributeChange(mutation)
-          }
-        }
-      };
-      const obs = new MutationObserver(callback);
-      obs.observeChildren = (node) => {
-        //subtree: true,attributes: true,
-        obs.observe(node, { childList: true, })
-      }
-      return obs
-    })()
-
-
-    function setGridColumn() {
-      let children = Array.from(container.value.children)
-      let clumnList = children.map(el => el.getAttribute('grid-column') * 1 || 1)
-      let start = 1;
-      let gridColumns = [];
-      let maxColumn = newColumns.value + 1;
-      clumnList.forEach((num, index) => {
-        let end = start + num;
-        if (props.wrap) {
-          if (end > maxColumn) {
-            if (props.stretch) {
-              if (gridColumns[index - 1]) gridColumns[index - 1].end = maxColumn;
-            }
-            start = 1;
-            let end2 = start + num
-            end = end2 > maxColumn ? maxColumn : end2;
-          }
-        } else {
-          if (end > maxColumn) end = maxColumn
-        }
-        gridColumns.push({
-          start: start,
-          end: end,
-          index
-        })
-        start = start + num
-        if (start > newColumns.value) start = 1
-      });
-      children.forEach((el, index) => {
-        el.style['grid-column-start'] = gridColumns[index].start
-        el.style['grid-column-end'] = gridColumns[index].end
-      });
-    }
-
-    function onWidthChange(off) {
-      offset.value = off;
-      setGridColumn();
-    }
-
-    function onChildChange() {
-      setGridColumn();
-    }
-
-    function onAttributeChange() {
-
-    }
-
-    onMounted(() => {
-      offset.value = container.value.getBoundingClientRect();
-      mObserver.observeChildren(container.value);
-    })
-
-    onBeforeUnmount(() => {
-      mObserver.disconnect();
-    })
-
-    watch(() => [props.columns, props.gap, props.inline, props.minAutoWidth, props.wrap, props.stretch], () => {
-      setGridColumn();
-    })
-
-    return (v) => {
-      vm = v;
+    return () => {
       return (
-        <RResize class={["r-grid", props.inline && "r-grid-inline"]} style={style.value} onChangeWidth={onWidthChange} time={true}>
+        <RResize class={[props.inline ? "r-grid-inline" : "r-grid"]} style={style} onChangeWidth={changeWidth} time={true}>
           {renderSlot(context.slots, "default")}
         </RResize>
       );
@@ -120,8 +33,7 @@ export const RGrid = defineComponent({
   },
 });
 
-export const RGridListProps = {
-  ...RGridProps,
+const RGridListProps = {
   listHook: Object,
   list: Array,
   renderCount: Number,
@@ -133,7 +45,7 @@ export const RGridList = defineComponent({
     return () => {
       const LIST = (props.listHook ? props.listHook.list : props.list) || [];
       return (
-        <RGrid {...props}>
+        <RGrid {...context.attrs}>
           {renderList(props.renderCount || LIST, (item, index) => {
             return context.slots?.default?.({ item, index });
           })}
@@ -149,7 +61,7 @@ export const RGridListSelect = defineComponent({
   setup(props, context) {
     return () => {
       return (
-        <RGridList  {...props}>
+        <RGridList {...context.attrs} {...props}>
           {{
             default: ({ item, index }) => {
               return (
@@ -160,9 +72,9 @@ export const RGridListSelect = defineComponent({
                     props.listHook.same(item) && "r-grid-item-same",
                   ]}
                   key={index}
-                  onClick={async (event) => {
+                  onClick={(event) => {
                     if (props.listHook.formatterDisabled(item, index)) return;
-                    if (await props.listHook.onSelect(item, index)) return;
+                    if (props.listHook.onSelect(item, index)) return;
                     context.emit("change", item, index);
                   }}
                 >

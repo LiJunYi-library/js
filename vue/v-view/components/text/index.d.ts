@@ -1,1 +1,1 @@
-export * from "./foldText";
+export * from "./text";

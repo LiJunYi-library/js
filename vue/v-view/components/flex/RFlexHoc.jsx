@@ -4,7 +4,7 @@ export const RFlexHoc = (optinos = {}) => {
     const config = {
         className: "r-row",
         reverseClassName: "r-row-reverse",
-        props: {},
+        props:{},
         ...optinos
     }
 
@@ -16,20 +16,14 @@ export const RFlexHoc = (optinos = {}) => {
             align: { type: String, default: "" },
             alignSelf: { type: String, default: "" },
             auto: { type: [String, Boolean], default: "" },
-            fill:  { type: [String, Boolean], default: "" },
-            gap: { type: [Number, String], default: "" },
+            fill: Boolean,
             ...config.props,
         },
 
         setup(props, context) {
-            function px(num) {
-                if (typeof (num * 1) === 'number') return num + 'px'
-                return num
-            }
             return () => {
                 return (
                     <div
-                        style={{ 'grid-gap': px(props.gap) }}
                         class={[
                             config.className,
                             props.reverse && config.reverseClassName,
@@ -38,7 +32,7 @@ export const RFlexHoc = (optinos = {}) => {
                             props.align && `r-flex-align-${props.align}`,
                             props.auto && `r-flex-justify-auto-${props.auto}`,
                             props.alignSelf && `r-flex-align-self-${props.alignSelf}`,
-                            props.fill && `r-flex-fill-${props.fill}`,
+                            props.fill && "r-flex-fill",
                         ]}
                     >
                         {context.slots?.default?.()}

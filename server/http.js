@@ -93,7 +93,7 @@ const configs = {
         server: {},
         view: {
           src: "http://192.168.192.202:8080/element/juan/index.js",
-          css: "http://192.168.192.202:8080/element/juan/index.css",
+          css: "http://192.168.192.202:8080/element/juan/mini.css",
           loadText: "配置的换一批",
         },
         children: [],
@@ -150,7 +150,7 @@ function response(data, code = 200, message = "操作成功") {
 //   }, 3000);
 // });
 
-server.post("/serve/list", (req, res) => {
+server.get("/serve/list", (req, res) => {
   const time = req?.body?.time ?? 3000;
   setTimeout(() => {
     if (req.body?.list) {

@@ -175,6 +175,7 @@ export const RFalls = defineComponent({
     }
 
     function onChildChange(mutation) {
+
       const addedNodes = Array.from(mutation.addedNodes).filter(el => el.style);
       const removedNodes = Array.from(mutation.removedNodes).filter(el => el.style);
       setChildrenAbsolute(addedNodes);

@@ -5,10 +5,10 @@ import './index.scss';
 
 export const RScrollMemoryBubble = defineComponent({
   props: {
-    top: String,
-    left: String,
-    right: String,
-    bottom: String,
+    top: Number,
+    left: Number,
+    right: Number,
+    bottom: Number,
     position: { type: String, default: "right" },
     visible: { type: Boolean, default: true },
     visibleDistance: { type: Number, default: 100 },
@@ -20,8 +20,8 @@ export const RScrollMemoryBubble = defineComponent({
     const visible = ref(props.visible);
     const cache = { stop: 0 }
     const scrollController = props.visibleReversal
-      ? useScrollController({ onScrollUp: setVisibleTrue, onScrollDown: setVisibleFalse })
-      : useScrollController({ onScrollUp: setVisibleFalse, onScrollDown: setVisibleTrue })
+      ? useScrollController({ onScrollUp: setVisibleFalse, onScrollDown: setVisibleTrue })
+      : useScrollController({ onScrollUp: setVisibleTrue, onScrollDown: setVisibleFalse })
 
     function setVisibleTrue(event, stop) {
       if (visible.value === true) return;

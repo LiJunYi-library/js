@@ -12,7 +12,8 @@ export const RFloatingBubble = defineComponent({
   setup(props, context) {
     function is0(num) {
       if (num === 0) return true;
-      return Boolean(num);
+      if (!num) return false;
+      return true;
     }
     let el;
     const maxWidth = window.screen.width;

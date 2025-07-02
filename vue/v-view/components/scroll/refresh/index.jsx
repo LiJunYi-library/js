@@ -1,4 +1,4 @@
-import { defineComponent, ref, onBeforeUnmount, computed, renderSlot, reactive } from 'vue';
+import { defineComponent, ref, onBeforeUnmount, computed, nextTick } from 'vue';
 import { Circle } from 'vant';
 import { useScrollController } from "../scroll";
 import { RILoading } from '../../icon'
@@ -6,8 +6,8 @@ import './index.scss';
 
 export const RScrollRefresh = defineComponent({
   props: {
-    maxHeight: { type: Number, default: 200 },
-    refreshHeight: { type: Number, default: 100 },
+    maxHeight: { type: Number, default: 70 },
+    refreshHeight: { type: Number, default: 50 },
     minTime: { type: Number, default: 500 },
   },
   setup(props, context) {
@@ -23,7 +23,7 @@ export const RScrollRefresh = defineComponent({
 
 
     useScrollController({
-      onScrollRefreshMove(event, rh) {
+      onScrollRefresh(event, rh) {
         if (loading.value) return event.preventDefault();
         if (rh < 0) rh = 0;
         height.value = (rh / (props.maxHeight / 2 + rh)) * props.maxHeight
@@ -49,7 +49,7 @@ export const RScrollRefresh = defineComponent({
 
     async function onRefresh() {
       if (loading.value) return
-      if (!context.attrs.onRefresh) return height.value = 0;
+      if (!context.attrs.onRefresh) return;
       const res = context.attrs.onRefresh();
       if (res instanceof Promise) {
         loading.value = true;
@@ -57,21 +57,12 @@ export const RScrollRefresh = defineComponent({
           loading.value = false;
           height.value = 0;
         });
-      } else {
-        await minTimer();
-        height.value = 0;
       }
-
     }
 
     function onTransitionEnd() {
       isTransition.value = false
     }
-
-    const ctx = reactive({
-      loading,
-      isRelease
-    })
 
     function renderState() {
       if (loading.value) return <span>正在刷新</span>;
@@ -91,13 +82,9 @@ export const RScrollRefresh = defineComponent({
           <div class="refresh-content-top-space"> </div>
           <div class="refresh-container">
             <div class="refresh-content">
-              {
-                renderSlot(context.slots, 'default', ctx, () => [
-                  renderIcon(),
-                  <div class="refresh-content-space"> </div>,
-                  renderState()
-                ])
-              }
+              {renderIcon()}
+              <div class="refresh-content-space"> </div>
+              {renderState()}
             </div>
           </div>
         </div>

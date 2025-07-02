@@ -142,9 +142,9 @@ const Context = defineComponent({
     });
 
     watchEffect(() => {
-      // console.log("watchEffect");
-      // isTransition.value = true;
+      console.log("watchEffect");
       translateX.value = width.value * -props.listHook.index;
+      isTransition.value = true;
       setTranslateX(width.value * -props.listHook.index);
     });
 
@@ -158,65 +158,65 @@ const Context = defineComponent({
       isTransition.value = false;
     }
 
-    // function onTouchStart(event) {
-    //   // let tou = event.touches[0];
-    //   // var pressure = tou.force / tou.radiusX / tou.radiusY;
-    //   // console.log(" onTouchStart tou.force", tou.force, pressure);
-    //   isTransition.value = false;
-    //   touch.start(event);
-    // }
+    function onTouchStart(event) {
+      // let tou = event.touches[0];
+      // var pressure = tou.force / tou.radiusX / tou.radiusY;
+      // console.log(" onTouchStart tou.force", tou.force, pressure);
+      isTransition.value = false;
+      touch.start(event);
+    }
 
-    // function onTouchMove(event) {
-    //   // let tou = event.touches[0];
-    //   // var pressure = tou.force / tou.radiusX / tou.radiusY;
-    //   // console.log(" onTouchMove tou.force", event);
-    //   // console.log(" onTouchMove tou.force", tou.force, tou.maxForce);
-    //   touch.move(event);
-    //   if (touch.isHorizontal()) onSwipHorizontal(event);
-    // }
+    function onTouchMove(event) {
+      // let tou = event.touches[0];
+      // var pressure = tou.force / tou.radiusX / tou.radiusY;
+      // console.log(" onTouchMove tou.force", event);
+      // console.log(" onTouchMove tou.force", tou.force, tou.maxForce);
+      touch.move(event);
+      if (touch.isHorizontal()) onSwipHorizontal(event);
+    }
 
-    // function onTouchEnd(event) {
-    //   // let tou = event.touches[0];
-    //   // console.log("onTouchEnd tou.force", event);
-    //   if (touch.isHorizontal()) onSwipHorizontalEnd(event);
-    // }
+    function onTouchEnd(event) {
+      // let tou = event.touches[0];
+      // console.log("onTouchEnd tou.force", event);
+      if (touch.isHorizontal()) onSwipHorizontalEnd(event);
+    }
 
-    // function onSwipHorizontal(event) {
-    //   if (disableSwipHorizontal.value) return;
-    //   event.stopPropagation();
-    //   event.preventDefault();
-    //   setTranslateX(translateX.value + touch.deltaX.value);
-    // }
+    function onSwipHorizontal(event) {
+      if (disableSwipHorizontal.value) return;
+      event.stopPropagation();
+      event.preventDefault();
+      setTranslateX(translateX.value + touch.deltaX.value);
+    }
 
-    // function onSwipHorizontalEnd(event) {
-    //   if (disableSwipHorizontal.value) return;
-    //   event.stopPropagation();
-    //   event.preventDefault();
-    //   if (touch.deltaX.value < 0) onSwipLeft();
-    //   if (touch.deltaX.value > 0) onSwipRight();
-    // }
+    function onSwipHorizontalEnd(event) {
+      if (disableSwipHorizontal.value) return;
+      event.stopPropagation();
+      event.preventDefault();
+      if (touch.deltaX.value < 0) onSwipLeft();
+      if (touch.deltaX.value > 0) onSwipRight();
+    }
 
-    // function onSwipLeft() {
-    //   isTransition.value = true;
-    //   if (touch.offsetX.value > width.value / 3) {
-    //     const index = props.listHook.index + 1;
-    //     if (index >= props.listHook?.list?.length) return;
-    //     props?.listHook?.updateIndex(index);
-    //   } else {
-    //     setTranslateX(translateX.value);
-    //   }
-    // }
+    function onSwipLeft() {
+      isTransition.value = true;
+      if (touch.offsetX.value > width.value / 3) {
+        const index = props.listHook.index + 1;
+        if (index >= props.listHook?.list?.length) return;
+        props?.listHook?.updateIndex(index);
+      } else {
+        setTranslateX(translateX.value);
+      }
+    }
 
-    // function onSwipRight() {
-    //   isTransition.value = true;
-    //   if (touch.offsetX.value > width.value / 3) {
-    //     const index = props.listHook.index - 1;
-    //     if (index < 0) return;
-    //     props?.listHook?.updateIndex(index);
-    //   } else {
-    //     setTranslateX(translateX.value);
-    //   }
-    // }
+    function onSwipRight() {
+      isTransition.value = true;
+      if (touch.offsetX.value > width.value / 3) {
+        const index = props.listHook.index - 1;
+        if (index < 0) return;
+        props?.listHook?.updateIndex(index);
+      } else {
+        setTranslateX(translateX.value);
+      }
+    }
 
     function onScrollend(params) {
       //
@@ -281,10 +281,10 @@ const Context = defineComponent({
         <div
           class={["r-page-view"]}
           ref={(el) => (containerHtml.value = el)}
-          // onTouchstart={onTouchStart}
-          // onTouchmove={onTouchMove}
-          // onTouchend={onTouchEnd}
-          // onTouchcancel={onTouchEnd}
+          onTouchstart={onTouchStart}
+          onTouchmove={onTouchMove}
+          onTouchend={onTouchEnd}
+          onTouchcancel={onTouchEnd}
         >
           <div class={["r-page-view-win"]} style={{ height: height.value + "px" }}>
             <div
@@ -292,7 +292,7 @@ const Context = defineComponent({
               onTransitionend={onTransitionEnd}
               class={[
                 "r-page-view-list",
-                parentHtml && "r-page-view-list-transition",
+                isTransition.value && "r-page-view-list-transition",
                 props.flex && "r-page-view-list-flex",
               ]}
               style={{ width: parentW.value }}

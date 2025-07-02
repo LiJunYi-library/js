@@ -46,6 +46,7 @@ useRPopup.create = (config = {}) => {
     instance = VNode;
     VNode.component.exposed.open();
     create.close = VNode.component.exposed.close;
+    create.instance = VNode?.component?.exposed;
   }
 
   function create(node) {

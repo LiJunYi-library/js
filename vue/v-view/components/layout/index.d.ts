@@ -1,3 +1,3 @@
-export * from "./paginationLoading";
-export * from "./virtualGridList";
-export * from "./virtualFallsList";
+import { DefineComponent } from "vue";
+
+export declare const RLayoutAspectRatio: DefineComponent<any>;

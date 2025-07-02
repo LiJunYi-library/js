@@ -1,14 +1,21 @@
 {
   "name": "@rainbow_ljy/v-view",
-  "version": "1.0.97",
+  "version": "1.0.106",
   "description": "",
-  "main": "index.js",
+  "main": "build/iife/index.js",
+  "module": "build/esm/index.js",
+  "type": "module",
   "private": false,
   "typings": "index.d.ts",
   "author": "",
   "license": "ISC",
-  "dependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  }
+    "build": "vite build"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
 }

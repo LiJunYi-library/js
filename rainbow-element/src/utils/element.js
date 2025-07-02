@@ -359,4 +359,5 @@ export function scrollIntoView(pView, view, top = 0, left = 0) {
   if (pView.scrollTop <= t) return;
   config.top = t;
   pView.scrollTo(config);
+  return config
 }

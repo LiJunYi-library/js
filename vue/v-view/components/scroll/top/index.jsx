@@ -4,7 +4,7 @@ import { useScrollController } from "../index";
 
 export const RScrollTop = defineComponent({
   props: {
-    src: { type: [Object, String], default: () => ''/*require("./top.png")*/ },
+    src: { type: [Object, String], default: () => '' },
     isBack: { type: Boolean, default: true },
     behavior: { type: String, default: "instant" }, // smooth  instant
     backText: { type: String, default: "返回" },
@@ -162,7 +162,7 @@ export const RScrollTop = defineComponent({
           class="scroll-top"
         >
           {renderSlot(context.slots, "default", { onOff: onOff.value }, () => [
-            renderSlot(context.slots, "icon", { onOff: onOff.value }, () => [
+            renderSlot(context.slots, "default", { onOff: onOff.value }, () => [
               <img
                 src={props.src}
                 class={["scroll-top-icon", onOff.value && "scroll-top-icon-act"]}

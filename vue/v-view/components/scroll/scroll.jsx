@@ -1,7 +1,17 @@
-import { defineComponent, renderSlot, onMounted, onBeforeUnmount, inject, reactive, provide } from "vue";
+import {
+    defineComponent,
+    renderSlot,
+    computed,
+    onMounted,
+    onBeforeUnmount,
+    inject,
+    reactive,
+    provide,
+    ref,
+} from "vue";
+import "./index.scss";
 import { arrayRemove } from "@rainbow_ljy/rainbow-js";
 import { RGlobal } from "../../global";
-import "./scroll.scss";
 
 export class ScrollController {
     onScroll = () => 0;
@@ -58,7 +68,7 @@ export function useScrollController(props = {}) {
         onScrollDown: () => undefined,
         onScroll: () => undefined,
         onScrollend: () => undefined,
-        onScrollRefreshMove: () => undefined,
+        onScrollRefresh: () => undefined,
         onResize: () => undefined,
         onMounted: () => undefined,
         onTouchstart: () => undefined,
@@ -104,8 +114,9 @@ export const RScroll = defineComponent({
         popupDisableScroll: { type: Boolean, default: false },
         contentStyle: [Object, String, Array],
         triggerScrollBottomHeight: { type: [Number, String], default: 2 },
+        rubberBand: { type: Boolean, default: true },
     },
-    emits: ["scrollChange", "scrollDown", "scrollUp", "scrollTop", "scrollBottom", "scrollRefresh"],
+    emits: ["scrollDown", "scrollUp", "scrollChange", "scrollBottom", "scrollRefresh"],
     setup(props, context) {
         const { scrollController: SC } = props;
         const RScrollContext = reactive({
@@ -118,6 +129,7 @@ export const RScroll = defineComponent({
             isHandActuated: false,
         });
         provide("RScrollContext", RScrollContext);
+        const judgeorientation = useTouch();
         let prveTop = 0;
         let scrollTop = 0;
         let resizeObserver;
@@ -194,32 +206,35 @@ export const RScroll = defineComponent({
 
             const maxTop = RScrollContext.element?.scrollHeight - RScrollContext.element?.offsetHeight;
 
-            if (scrollTop < 0) scrollTop = 0;
+            if(props.rubberBand){
+              if (scrollTop < 0) scrollTop = 0;
 
-            if (scrollTop > maxTop) {
-                scrollTop = maxTop;
-                RScrollContext.element.scrollTop = maxTop
+              if (scrollTop > maxTop) {
+                  scrollTop = maxTop;
+                  RScrollContext.element.scrollTop = maxTop
+              }
             }
+         
 
             const space = scrollTop - prveTop;
 
             event.space = space;
             event.scrollTop = scrollTop;
-            event.scrollHeight = RScrollContext.element.offsetHeight;
-            event.containerHeight = RScrollContext.contentElement.offsetHeight;
+            event.containerHeight = RScrollContext.element.offsetHeight;
+            event.contentHeight = RScrollContext.contentElement.offsetHeight;
 
-            if (space > 0) { 
-                RScrollContext.children.forEach((el) => {
-                    el.onScrollUp(event, scrollTop);
-                });
-                context.emit("scrollUp", scrollTop);
-            }
-
-            if (space < 0) {
+            if (space > 0) {
                 RScrollContext.children.forEach((el) => {
                     el.onScrollDown(event, scrollTop);
                 });
                 context.emit("scrollDown", scrollTop);
+            }
+
+            if (space < 0) {
+                RScrollContext.children.forEach((el) => {
+                    el.onScrollUp(event, scrollTop);
+                });
+                context.emit("scrollUp", scrollTop);
             }
 
             RScrollContext.children.forEach((el) => {
@@ -323,6 +338,7 @@ export const RScroll = defineComponent({
                 el?.onTouchstart?.(event);
             });
             if (scrollTop > 0) return scrollLock = true;
+            judgeorientation.start(event);
             stratTouche = event.touches[0];
         }
 
@@ -330,6 +346,8 @@ export const RScroll = defineComponent({
             if (!stratTouche) return;
             if (scrollTop > 0) return scrollLock = true;
             if (scrollLock === true) return console.log('滚动锁');
+            judgeorientation.move(event);
+            if( !judgeorientation.isVertical())return;
             const moveTouche = event.touches[0];
             if (!moveTouche) return;
             const moveY = moveTouche.pageY - stratTouche.pageY;
@@ -340,7 +358,7 @@ export const RScroll = defineComponent({
                 let refreshHeight = moveY - 10;
                 event.refreshHeight = refreshHeight
                 RScrollContext.children.forEach((el) => {
-                    el.onScrollRefreshMove(event, refreshHeight);
+                    el.onScrollRefresh(event, refreshHeight);
                 });
                 context.emit("scrollRefresh", refreshHeight);
             }
@@ -350,6 +368,7 @@ export const RScroll = defineComponent({
             refreshLock = false;
             scrollLock = false;
             stratTouche = undefined;
+            judgeorientation.reset();
             RScrollContext.children.forEach((el) => {
                 el?.onTouchend?.(event);
             });
@@ -374,3 +393,74 @@ export const RScroll = defineComponent({
         };
     },
 });
+
+
+var MIN_DISTANCE = 10;
+
+function getDirection(x, y) {
+  if (x > y && x > MIN_DISTANCE) {
+    return 'horizontal';
+  }
+
+  if (y > x && y > MIN_DISTANCE) {
+    return 'vertical';
+  }
+
+  return '';
+}
+
+export function useTouch() {
+  var startX = ref(0);
+  var startY = ref(0);
+  var deltaX = ref(0);
+  var deltaY = ref(0);
+  var offsetX = ref(0);
+  var offsetY = ref(0);
+  var direction = ref('');
+
+  var isVertical = () => direction.value === 'vertical';
+
+  var isHorizontal = () => direction.value === 'horizontal';
+
+  var reset = () => {
+    deltaX.value = 0;
+    deltaY.value = 0;
+    offsetX.value = 0;
+    offsetY.value = 0;
+    direction.value = '';
+  };
+
+  var start = event => {
+    reset();
+    startX.value = event.touches[0].clientX;
+    startY.value = event.touches[0].clientY;
+  };
+
+  var move = event => {
+    var touch = event.touches[0];
+
+    deltaX.value = touch.clientX < 0 ? 0 : touch.clientX - startX.value;
+    deltaY.value = touch.clientY - startY.value;
+    offsetX.value = Math.abs(deltaX.value);
+    offsetY.value = Math.abs(deltaY.value);
+
+    if (!direction.value) {
+      direction.value = getDirection(offsetX.value, offsetY.value);
+    }
+  };
+
+  return {
+    move,
+    start,
+    reset,
+    startX,
+    startY,
+    deltaX,
+    deltaY,
+    offsetX,
+    offsetY,
+    direction,
+    isVertical,
+    isHorizontal
+  };
+}

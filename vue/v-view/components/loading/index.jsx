@@ -10,7 +10,6 @@ import {
 import { useLoading } from "@rainbow_ljy/v-hooks";
 import { RILoading } from "../icon";
 import "./index.scss";
-import { RGlobal } from "../../global";
 
 export const loadingProps = {
   skelectonCount: {
@@ -35,7 +34,7 @@ export const loadingProps = {
   },
   emptySrc: {
     type: [Number, String],
-    default: RGlobal.loadingProps.emptySrc,
+    default: '',
   },
   emptyText: {
     type: [Number, String],
@@ -253,6 +252,137 @@ export function useListLoadingHoc(aaaaa, props, context, configs = {}) {
 
   return { renderLoading, renderBegin, renderfinished, renderEmpty, renderError, renderContent };
 }
+/**
+ *
+ */
+export const RLoading = defineComponent({
+  props: {
+    promiseHook: [Object, Array],
+    loadingHook: [Object, Array],
+    isLoad: Boolean,
+    className: String,
+    ...loadingProps,
+  },
+  emits: ["loadClick", "errorClick", "intersectionBottom", "firstIntersectionBottom"],
+  setup(props, context) {
+    let isobserver = false;
+    let intersectionHtml;
+    const observe = new IntersectionObserver(([entries]) => {
+      if (!entries.isIntersecting) return;
+      if (!isobserver) context.emit("firstIntersectionBottom");
+      if (isobserver) context.emit("intersectionBottom");
+      isobserver = true;
+    });
+    function setIntersectionHtml(el) {
+      intersectionHtml = el;
+    }
+    onMounted(() => {
+      if (intersectionHtml) observe.observe(intersectionHtml);
+    });
+    onBeforeMount(() => {
+      observe.disconnect();
+    });
+
+    const asyncHooks = useLoading(props);
+    function renderError() {
+      return renderSlot(context.slots, "error", asyncHooks, () => [
+        <div class="r-c-error r-error" onClick={() => context.emit("errorClick")}>
+          <div class="r-c-error-text r-error-text">{props.errorText}</div>
+        </div>,
+      ]);
+    }
+    function renderBegin() {
+      return renderSlot(context.slots, "begin", asyncHooks, () => [
+        <div class="r-c-begin r-begin">
+          <RILoading class="r-c-loading-icon r-loading-icon" />
+          <div class={["r-c-begin-text r-begin-text"]}>{props.beginText}</div>
+        </div>,
+      ]);
+    }
+    function renderLoading() {
+      return renderSlot(context.slots, "loading", asyncHooks, () => [
+        <div class={["r-c-loading r-loading"]}>
+          <RILoading class="r-c-loading-icon r-loading-icon" />
+          <div class={["r-c-loading-text r-loading-text"]}>{props.loadingText}</div>
+        </div>,
+      ]);
+    }
+    function renderfinished() {
+      if (!props.finishedText) return null;
+      return renderSlot(context.slots, "finished", asyncHooks, () => [
+        <div class="r-c-finished r-finished">{props.finishedText}</div>,
+      ]);
+    }
+    function renderEmpty() {
+      if (!props.emptySrc && !props.emptyText) return null;
+      return renderSlot(context.slots, "empty", asyncHooks, () => [
+        <div class="r-c-empty r-empty">
+          {renderSlot(context.slots, "emptyImg", asyncHooks, () => [
+            props.emptySrc && (
+              <img class={"r-c-empty-img r-empty-img"} fit="contain" src={props.emptySrc} />
+            ),
+          ])}
+          {props.emptyText && <div class={"r-c-empty-text r-empty-text"}>{props.emptyText}</div>}
+        </div>,
+      ]);
+    }
+    function renderLoad() {
+      if (!props.loadText) return null;
+      return renderSlot(context.slots, "load", asyncHooks, () => [
+        <div class={["r-c-load r-load"]}>
+          <div onClick={() => context.emit("loadClick")} class={["r-c-load-text r-load-text"]}>
+            {props.loadText}
+          </div>
+        </div>,
+      ]);
+    }
+
+    function renderLoadState() {
+      if (asyncHooks.error) return renderError();
+      if (asyncHooks.begin) return renderBegin();
+      if (asyncHooks.finished){
+         if (asyncHooks.empty) return renderEmpty();
+         return renderfinished();
+      }
+      if (asyncHooks.finished === false) return renderLoading();
+      if (asyncHooks.finished === false) return renderLoad();
+      return null;
+    }
+
+    function renderState() {
+      if (asyncHooks.error) return renderError();
+      if (asyncHooks.begin) return renderBegin();
+      if (asyncHooks.loading) return renderLoading();
+      if (asyncHooks.empty) return renderEmpty();
+      if (asyncHooks.finished) return renderfinished();
+      return null;
+    }
+
+    return () => {
+      const vNode = renderState();
+      if (props.isLoad) {
+        return [
+          [
+            !asyncHooks.begin && renderSlot(context.slots, "default"),
+            <div
+              class={[
+                "r-loading-component",
+                props.className,
+                props.isLoad && "r-loading-component-load",
+              ]}
+            >
+              <div ref={setIntersectionHtml} class="intersection"></div>
+              {renderLoadState()}
+            </div>,
+          ],
+        ];
+      }
+      if (vNode) return <div class={["r-loading-component", props.className]}>{vNode}</div>;
+      return renderSlot(context.slots, "default");
+    };
+  },
+});
+
 /**
  *
  */

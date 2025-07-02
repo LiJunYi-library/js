@@ -22,24 +22,6 @@ function useDocumentTouchstart(cb) {
 
 const dialogZIndex = 300000;
 
-export const RDialogProps = {
-  visible: Boolean,
-  scrollController: Object,
-  teleport: [Object, String],
-  lazy: { type: Boolean, default: true },
-  destroy: { type: Boolean, default: false },
-  cache: { type: Boolean, default: true },
-  closeOnClickOverlay: { type: Boolean, default: true },
-  closeOnClickEmpty: { type: Boolean, default: true },
-  left: { type: [Number, String], default: "" },
-  right: { type: [Number, String], default: "" },
-  top: { type: [Number, String], default: "" },
-  bottom: { type: [Number, String], default: "" },
-  position: { type: String, default: "bottom" }, // center top bottom right left
-  popClass: { type: String, default: "" },
-  overlayClass: { type: String, default: "" },
-}
-
 export const RDialogHoc = (options = {}) => {
   const config = {
     class: "",
@@ -61,7 +43,21 @@ export const RDialogHoc = (options = {}) => {
   };
   return defineComponent({
     props: {
-      ...RDialogProps,
+      visible: Boolean,
+      scrollController: Object,
+      teleport: [Object, String],
+      lazy: { type: Boolean, default: true },
+      destroy: { type: Boolean, default: false },
+      cache: { type: Boolean, default: true },
+      closeOnClickOverlay: { type: Boolean, default: true },
+      closeOnClickEmpty: { type: Boolean, default: true },
+      left: { type: [Number, String], default: "" },
+      right: { type: [Number, String], default: "" },
+      top: { type: [Number, String], default: "" },
+      bottom: { type: [Number, String], default: "" },
+      position: { type: String, default: "bottom" }, // center top bottom right left
+      popClass: { type: String, default: "" },
+      overlayClass: { type: String, default: "" },
       ...config.props,
     },
     emits: [
@@ -237,7 +233,8 @@ export const RDialogHoc = (options = {}) => {
 
       return (vm) => {
         ctx.vm = vm;
-        return  <Teleport to={teleport.value} disabled={!teleport.value}>
+        return [
+          <Teleport to={teleport.value} disabled={!teleport.value}>
             <Transition
               name={"popup-" + props.position}
               onAfterLeave={onAfterLeave}
@@ -254,8 +251,8 @@ export const RDialogHoc = (options = {}) => {
                 <Transition name={"popup-content-" + props.position}>{renderContent()}</Transition>
               </div>
             </Transition>
-          </Teleport>
-        ;
+          </Teleport>,
+        ];
       };
     },
   });
@@ -287,6 +284,7 @@ useRDialog.create = (config = {}) => {
     instance = VNode;
     VNode?.component?.exposed?.open?.();
     create.close = VNode?.component?.exposed?.close;
+    create.instance = VNode?.component?.exposed;
   }
 
   function create(node) {

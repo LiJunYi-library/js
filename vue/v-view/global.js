@@ -27,9 +27,4 @@ export const RGlobal = {
       RGlobal.scrolls.forEach((el) => el?.setCanScroll?.(true));
     },
   }),
-  loadingProps: {
-    errorSrc: "", // require('./image/error.png'),
-    beginSrc: "", // require('./image/skelecton.png'),
-    emptySrc: "", // require('./image/empty.png'),
-  },
 };

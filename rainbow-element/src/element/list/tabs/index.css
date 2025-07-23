@@ -25,6 +25,6 @@ r-tabs .r-tab-active-line {
   width: 60%;
   height: 3px;
   left: 50%;
-  bottom: 6px;
+  bottom: 4px;
   transform: translateX(-50%);
 }

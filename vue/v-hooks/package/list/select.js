@@ -44,7 +44,7 @@ function getSelectProps(options = {}) {
     ...options,
     list: options.list || [],
   };
-  return;
+  return config;
 }
 
 function useSelect(props = {}) {

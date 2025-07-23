@@ -14,7 +14,7 @@ import {
 } from "../../../utils/index.js";
 import "./index.css";
 
-export class RTabs extends RainbowElement {
+export class RTab extends RainbowElement {
   static observedAttributes = this.$registerProps({});
 
   $$ = (() => {
@@ -180,7 +180,7 @@ export class RTabItem extends RainbowElement {
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
-    this.$$.valueParent = findParentByLocalName("r-tabs", this);
+    this.$$.valueParent = findParentByLocalName("r-tab", this);
     this.$$.setActive();
     const { rTrigger } = this.$.DATA;
     if (rTrigger && rTrigger !== "none") addEventListenerOnce(this, rTrigger, this.$$.click);

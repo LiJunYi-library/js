@@ -1,4 +1,4 @@
-r-tabs {
+r-tab {
   display: flex;
   max-width: 100%;
   overflow: auto;
@@ -7,8 +7,8 @@ r-tabs {
   --r-trigger: click;
 }
 
-r-tabs::part(r-tab-active),
-r-tabs .r-tab-active {
+r-tab::part(r-tab-active),
+r-tab .r-tab-active {
   position: absolute;
   overflow: hidden;
 }
@@ -18,27 +18,27 @@ r-tabs .r-tab-active {
   transition: 0.25s;
 }
 
-r-tabs::part(r-tab-active-line),
-r-tabs .r-tab-active-line {
+r-tab::part(r-tab-active-line),
+r-tab .r-tab-active-line {
   background: cyan;
   position: absolute;
   width: 60%;
   height: 3px;
   left: 50%;
-  bottom: 6px;
+  bottom: 3px;
   transform: translateX(-50%);
 }
 
-.r-tabs-vertical {
+.r-tab-vertical {
   flex-direction: column;
   touch-action: pan-y;
 }
 
-r-tabs[css-name~="r-tab-ratio"] r-tab-item {
+r-tab[css-name~="r-tab-ratio"] r-tab-item {
   position: relative;
 }
 
-r-tabs[css-name~="r-tab-ratio"] .r-tab-item-ratio-line {
+r-tab[css-name~="r-tab-ratio"] .r-tab-item-ratio-line {
   position: absolute;
   bottom: 0;
   left: 0;

@@ -1,5 +1,4 @@
 import "./index.css";
-import { setTimeoutPromise } from "@rainbow_ljy/rainbow-js";
 import { RainbowElement } from "../../base/index.js";
 import { createCustomEvent, createElement, createSlot } from "../../../utils/index.js";
 

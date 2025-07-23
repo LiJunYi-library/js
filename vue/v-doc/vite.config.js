@@ -22,6 +22,8 @@ export default defineConfig({
     },
   },
   server: {
+    host: '0.0.0.0',
+    port: '1111',
     proxy: {
       'https://spu-test.manmanbuy.com': {
         target: 'https://spu-test.manmanbuy.com',

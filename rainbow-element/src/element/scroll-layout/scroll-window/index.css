@@ -4,5 +4,5 @@ r-scroll-window {
 
 r-scroll-window::part(r-scroll-window-content) {
     display: block;
-    filter: opacity(1);
+    transform: translate(0);
 }

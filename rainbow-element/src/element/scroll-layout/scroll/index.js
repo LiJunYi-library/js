@@ -20,6 +20,8 @@ export class RScroll extends RainbowElement {
     prveScrollTop: 0,
     onScroll: (event) => {
       event.scrollTop = this.scrollTop;
+      this.style.setProperty("--scrollTopPx", this.scrollTop + "px");
+      this.style.setProperty("--scrollTop", this.scrollTop);
       event.moveY = this.$$.prveScrollTop - this.scrollTop;
       if (event.moveY < 0) {
         const max = this.scrollHeight - this.offsetHeight - 0;
@@ -63,6 +65,8 @@ export class RScroll extends RainbowElement {
     if (this.$$.refreshView) this.$$.refreshView.$$.scrollView = this;
     this.$$.cache.container.offset = { ...getBoundingClientRect(this.$$.def) };
     this.$$.resizeObserver.observe(this.$$.def);
+    this.style.setProperty("--scrollTopPx", this.scrollTop + "px");
+    this.style.setProperty("--scrollTop", this.scrollTop);
   }
 
   disconnectedCallback(...arg) {

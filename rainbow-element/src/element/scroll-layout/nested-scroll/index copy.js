@@ -407,7 +407,6 @@ function Animation(config = {}) {
     from: 0,
     to: 300,
     avg: 10,
-    duration: 500,
     onanimationend: () => undefined,
     onanimation: () => undefined,
     ...config,

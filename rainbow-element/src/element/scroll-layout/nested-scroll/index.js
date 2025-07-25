@@ -1,7 +1,8 @@
 import "./index.css";
 import { RainbowElement } from "../../base/index.js";
 import { createCustomEvent, findParentByLocalName } from "../../../utils/index";
-import { extendedSlideEvents } from "../../../events/slide.js";
+import { usePointerScroll } from "../../../events/index.js";
+import { createSpeedAnimation } from "../../../animation/index.js";
 const LOG = (...arg) => console.log(...arg);
 
 export class RNestedScroll extends RainbowElement {
@@ -21,9 +22,10 @@ export class RNestedScroll extends RainbowElement {
     nestedChild: undefined,
     nestedChildren: [],
     nestedParent: undefined,
+    flyingAni: undefined,
+    coefficient: 15,
     disabledScroll: () => {},
     dispatchWheel: () => {},
-    slideEvent: extendedSlideEvents(this, {}),
     onWheel: (event) => {
       console.log("onWheel");
       if (event.deltaY > 0) return;
@@ -35,7 +37,6 @@ export class RNestedScroll extends RainbowElement {
     },
     onCaptureWheel: (event) => {
       console.log("onCaptureWheel");
-
       if (event.deltaY < 0) return;
       if (this.$$isScrollToBottomEnd) return;
       event.stopPropagation();
@@ -45,14 +46,105 @@ export class RNestedScroll extends RainbowElement {
     onWheelUp: (event) => {},
     onWheelDown: (event) => {},
     onCapturePointerdown: (event) => {
-      console.log("onCapturePointerdown", [this.$$.nestedParent]);
-      if (this.$$.nestedParent) this.$$.nestedParent.$$.nestedChild = this;
-    },
-    onPointermove: (event) => {
-      event.stopPropagation();
       event.preventDefault();
-      console.log("onPointermove");
+      this.$$.flyingAni?.stop?.();
+      this.$$.capturePointer.start(event);
+      // console.log(event.orientation);
+      console.log("onCapturePointerdown");
     },
+    onCapturePointermove: (event) => {
+      event.preventDefault();
+      console.log(this.className, event, this.$$isScrollToBottomEnd);
+      this.$$.capturePointer.move(event);
+    },
+    onCapturePointerup: (event) => {
+      event.preventDefault();
+      this.$$.capturePointer.end(event);
+    },
+    doScrollTopFlying: (event, velocity) => {
+      const moveY = Math.ceil(velocity * this.$$.coefficient);
+      if (moveY <= 0) return;
+      this.scrollTop = moveY + this.scrollTop;
+      if (this.$$isScrollToBottomEnd) {
+        this.$$.flyingAni?.stop?.();
+        this.$$.nestedChild?.$$?.dispatchScrollTopFlying?.(event, velocity);
+      }
+    },
+    doScrollTopFlyingEnd: (event, velocity) => {},
+    dispatchScrollTopFlying: (event, velocity) => {
+      this.$$.flyingAni?.stop?.();
+      this.$$.flyingAni = createSpeedAnimation({
+        velocity,
+        onanimation: (v) => this.$$.doScrollTopFlying(event, v),
+        onanimationEnd: (v) => this.$$.doScrollTopFlyingEnd(event, v),
+        // onanimation: (v) => {
+        //   console.log("onanimation");
+        //   const moveY = Math.ceil(v * coefficient);
+        //   if (moveY <= 0) return;
+        //   this.scrollTop = moveY + this.scrollTop;
+        //   // if (moveY > 0) {
+        //   //   // this.scrollTop = moveY + this.scrollTop;
+        //   //   // doScrollTop(moveY, event);
+        //   //   // if (isScrollToBottomEnd()) {
+        //   //   //   ani?.stop?.();
+        //   //   //   LOG("滚动停止 到底停止");
+        //   //   //   // view.$$.nestedChild?.$$?.scrollEvent?.dispatchScrollTopFlying?.(v, event);
+        //   //   // }
+        //   // }
+        // },
+        // onanimationEnd(v) {
+        //   LOG("滚动停止 scrollEnd ");
+        //   // view.dispatchEvent(createEvent("scrollEnd", event));
+        // },
+      });
+      this.$$.flyingAni.start();
+    },
+    capturePointer: usePointerScroll({
+      onMoveTop: (event) => {
+        // 如果滚动到了顶部 就不消费事件 return 出去
+        // console.log(this.className, event, this.$$isScrollToBottomEnd);
+        if (this.$$isScrollToBottomEnd) return;
+        // 如果没滚动顶部 就去消费事件 并阻止事件向上冒泡
+        event.stopPropagation();
+        // console.log(this.className);
+        this.scrollTop = event.moveY + this.scrollTop;
+      },
+      onEndTop: (event) => {
+        this.$$.dispatchScrollTopFlying(event, event.velocityY);
+      },
+      onMoveBottom: (event) => {
+        this.scrollTop = event.moveY + this.scrollTop;
+      },
+      onEndBottom: (event) => {
+        const coefficient = 15;
+        this.$$.flyingAni?.stop?.();
+        this.$$.flyingAni = createSpeedAnimation({
+          velocity: event.velocityY,
+          onanimation: (v) => {
+            const moveY = Math.ceil(v * coefficient);
+            if (moveY >= 0) return;
+            this.scrollTop = moveY + this.scrollTop;
+            if (this.$$isScrollToTopEnd) {
+              this.$$.flyingAni?.stop?.();
+            }
+            // if (moveY < 0) {
+            //   doScrollBottom(moveY, event);
+            //   if (isScrollToTopEnd()) {
+            //     ani?.stop?.();
+            //     LOG("滚动停止 到顶部停止");
+            //     parent()?.$$?.scrollEvent?.dispatchScrollBottomFlying?.(v, event);
+            //     // expose.parent?.dispatchScrollBottomFlying?.(v)
+            //   }
+            // }
+          },
+          onanimationEnd(v) {
+            LOG("滚动停止 scrollEnd ");
+            // view.dispatchEvent(createEvent("scrollEnd", event));
+          },
+        });
+        this.$$.flyingAni.start();
+      },
+    }),
   };
 
   isVerdict = false;
@@ -65,7 +157,8 @@ export class RNestedScroll extends RainbowElement {
 
     //
     this.addEventListener("pointerdown", this.$$.onCapturePointerdown, opt());
-    this.addEventListener("pointermove", this.$$.onPointermove, opt());
+    this.addEventListener("pointermove", this.$$.onCapturePointermove, opt());
+    this.addEventListener("pointerup", this.$$.onCapturePointerup, opt());
     this.addEventListener("touchstart", (event) => {});
     this.addEventListener("touchmove", (eeee) => {});
     this.addEventListener("touchend", (event) => {});

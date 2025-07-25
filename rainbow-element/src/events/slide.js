@@ -1,7 +1,6 @@
 const COMPUTE_INTERVAL = 30;
 let currentView = document.createElement("div");
 let srcViews = [];
-let timer;
 export const customEventNameMap = new Map();
 const compute = {
   isGetPdownLock: false,
@@ -71,165 +70,166 @@ export class SlideEvent extends CustomEvent {
   }
 }
 
-(() => {
-  // **TODO pointercancel
-  document.addEventListener("pointerdown", onPointerdown);
-  document.addEventListener("pointermove", onPointermove);
-  document.addEventListener("pointerup", onPointerup);
-  let isVerdict = false;
-  let beginEvent;
-  let prevEvent;
-  let intervalEvent;
-  let direction;
-  let orientation;
-  let isStart = true;
-  let pressures = [];
+// (() => {
+//   // **TODO pointercancel
+//   document.addEventListener("pointerdown", onPointerdown);
+//   document.addEventListener("pointermove", onPointermove);
+//   document.addEventListener("pointerup", onPointerup);
+//   let isVerdict = false;
+//   let beginEvent;
+//   let prevEvent;
+//   let intervalEvent;
+//   let direction;
+//   let orientation;
+//   let isStart = true;
+//   let timer;
+//   let pressures = [];
 
-  function onPointerdown(event) {
-    clearTimeout(timer);
-    extendedEventArgs(event);
-    dispatchEvent("slideDown", event);
-    beginEvent = event;
-    prevEvent = event;
-    intervalEvent = event;
-    isVerdict = false;
-    isStart = true;
-    direction = undefined;
-    orientation = undefined;
-    pressures = [];
-  }
+//   function onPointerdown(event) {
+//     clearTimeout(timer);
+//     extendedEventArgs(event);
+//     dispatchEvent("slideDown", event);
+//     beginEvent = event;
+//     prevEvent = event;
+//     intervalEvent = event;
+//     isVerdict = false;
+//     isStart = true;
+//     direction = undefined;
+//     orientation = undefined;
+//     pressures = [];
+//   }
 
-  function onPointermove(event) {
-    clearTimeout(timer);
-    extendedEventArgs(event);
-    prevEvent = event;
-    // console.log('onPointermove')
-    if (!isVerdict) {
-      orientation = getDirection(Math.abs(event.deltaX), Math.abs(event.deltaY));
-      if (orientation) {
-        const ang = event.deltaAng;
-        const isRightAng = 315 <= ang || ang < 45;
-        const isTopAng = 45 <= ang && ang < 135;
-        const isLeftAng = 135 <= ang && ang < 225;
-        const isBottomAng = 225 <= ang && ang < 315;
-        if (isRightAng) direction = "right";
-        if (isTopAng) direction = "top";
-        if (isLeftAng) direction = "left";
-        if (isBottomAng) direction = "bottom";
-        isVerdict = true;
-        return;
-      }
-      // if (event.deltaC > 8) {
-      // const ang = event.deltaAng;
-      // const isRightAng = 315 <= ang || ang < 45;
-      // const isTopAng = 45 <= ang && ang < 135;
-      // const isLeftAng = 135 <= ang && ang < 225;
-      // const isBottomAng = 225 <= ang && ang < 315;
-      // if (isRightAng) direction = "right";
-      // if (isTopAng) direction = "top";
-      // if (isLeftAng) direction = "left";
-      // if (isBottomAng) direction = "bottom";
-      //   if (isRightAng || isLeftAng) orientation = "horizontal";
-      //   if (isTopAng || isBottomAng) orientation = "vertical";
-      //   isVerdict = true;
-      //   return;
-      // }
-      return;
-    }
-    if (isStart) {
-      dispatchEvent("slideStart", event);
-      if (event.moveX < 0) dispatchEvent("slideRightStart", event);
-      if (event.moveY < 0) dispatchEvent("slideBottomStart", event);
-      if (event.moveX > 0) dispatchEvent("slideLeftStart", event);
-      if (event.moveY > 0) dispatchEvent("slideTopStart", event);
-      if (event.moveX !== 0) dispatchEvent("slideHorizontalStart", event);
-      if (event.moveY !== 0) dispatchEvent("slideVerticalStart", event);
-      isStart = false;
-      return;
-    }
+//   function onPointermove(event) {
+//     clearTimeout(timer);
+//     extendedEventArgs(event);
+//     prevEvent = event;
+//     // console.log('onPointermove')
+//     if (!isVerdict) {
+//       orientation = getDirection(Math.abs(event.deltaX), Math.abs(event.deltaY));
+//       if (orientation) {
+//         const ang = event.deltaAng;
+//         const isRightAng = 315 <= ang || ang < 45;
+//         const isTopAng = 45 <= ang && ang < 135;
+//         const isLeftAng = 135 <= ang && ang < 225;
+//         const isBottomAng = 225 <= ang && ang < 315;
+//         if (isRightAng) direction = "right";
+//         if (isTopAng) direction = "top";
+//         if (isLeftAng) direction = "left";
+//         if (isBottomAng) direction = "bottom";
+//         isVerdict = true;
+//         return;
+//       }
+//       // if (event.deltaC > 8) {
+//       // const ang = event.deltaAng;
+//       // const isRightAng = 315 <= ang || ang < 45;
+//       // const isTopAng = 45 <= ang && ang < 135;
+//       // const isLeftAng = 135 <= ang && ang < 225;
+//       // const isBottomAng = 225 <= ang && ang < 315;
+//       // if (isRightAng) direction = "right";
+//       // if (isTopAng) direction = "top";
+//       // if (isLeftAng) direction = "left";
+//       // if (isBottomAng) direction = "bottom";
+//       //   if (isRightAng || isLeftAng) orientation = "horizontal";
+//       //   if (isTopAng || isBottomAng) orientation = "vertical";
+//       //   isVerdict = true;
+//       //   return;
+//       // }
+//       return;
+//     }
+//     if (isStart) {
+//       dispatchEvent("slideStart", event);
+//       if (event.moveX < 0) dispatchEvent("slideRightStart", event);
+//       if (event.moveY < 0) dispatchEvent("slideBottomStart", event);
+//       if (event.moveX > 0) dispatchEvent("slideLeftStart", event);
+//       if (event.moveY > 0) dispatchEvent("slideTopStart", event);
+//       if (event.moveX !== 0) dispatchEvent("slideHorizontalStart", event);
+//       if (event.moveY !== 0) dispatchEvent("slideVerticalStart", event);
+//       isStart = false;
+//       return;
+//     }
 
-    dispatchEvent("slideMove", event);
-    if (event.moveX < 0) dispatchEvent("slideRight", event);
-    if (event.moveY < 0) dispatchEvent("slideBottom", event);
-    if (event.moveX > 0) dispatchEvent("slideLeft", event);
-    if (event.moveY > 0) dispatchEvent("slideTop", event);
-    if (event.moveX !== 0) dispatchEvent("slideHorizontal", event);
-    if (event.moveY !== 0) dispatchEvent("slideVertical", event);
-    dispatchEvent("slideAfterMove", event);
-    timer = setTimeout(() => {
-      intervalEvent = event;
-    }, COMPUTE_INTERVAL);
-  }
+//     dispatchEvent("slideMove", event);
+//     if (event.moveX < 0) dispatchEvent("slideRight", event);
+//     if (event.moveY < 0) dispatchEvent("slideBottom", event);
+//     if (event.moveX > 0) dispatchEvent("slideLeft", event);
+//     if (event.moveY > 0) dispatchEvent("slideTop", event);
+//     if (event.moveX !== 0) dispatchEvent("slideHorizontal", event);
+//     if (event.moveY !== 0) dispatchEvent("slideVertical", event);
+//     dispatchEvent("slideAfterMove", event);
+//     timer = setTimeout(() => {
+//       intervalEvent = event;
+//     }, COMPUTE_INTERVAL);
+//   }
 
-  function onPointerup(event) {
-    clearTimeout(timer);
-    extendedEventArgs(event);
-    if (isVerdict) {
-      dispatchEvent("slideEnd", event);
-      if (event.velocityX < 0) dispatchEvent("slideRightEnd", event);
-      if (event.velocityY < 0) dispatchEvent("slideBottomEnd", event);
-      if (event.velocityX > 0) dispatchEvent("slideLeftEnd", event);
-      if (event.velocityY > 0) dispatchEvent("slideTopEnd", event);
-      if (event.velocityX !== 0) dispatchEvent("slideHorizontalEnd", event);
-      if (event.velocityY !== 0) dispatchEvent("slideVerticalEnd", event);
-      dispatchEvent("slideAfterEnd", event);
-    }
-    dispatchEvent("slideUp", event);
-    currentView = undefined;
-  }
+//   function onPointerup(event) {
+//     clearTimeout(timer);
+//     extendedEventArgs(event);
+//     if (isVerdict) {
+//       dispatchEvent("slideEnd", event);
+//       if (event.velocityX < 0) dispatchEvent("slideRightEnd", event);
+//       if (event.velocityY < 0) dispatchEvent("slideBottomEnd", event);
+//       if (event.velocityX > 0) dispatchEvent("slideLeftEnd", event);
+//       if (event.velocityY > 0) dispatchEvent("slideTopEnd", event);
+//       if (event.velocityX !== 0) dispatchEvent("slideHorizontalEnd", event);
+//       if (event.velocityY !== 0) dispatchEvent("slideVerticalEnd", event);
+//       dispatchEvent("slideAfterEnd", event);
+//     }
+//     dispatchEvent("slideUp", event);
+//     currentView = undefined;
+//   }
 
-  function extendedEventArgs(event) {
-    pressures.push(event.pressure);
-    event.srcViews = compute.srcViews;
-    event.currentTime = Date.now();
-    event.direction = direction;
-    event.orientation = orientation;
-    if (!beginEvent) return;
-    event.deltaX = event.pageX - (beginEvent?.pageX ?? 0);
-    event.deltaY = event.pageY - (beginEvent?.pageY ?? 0);
-    event.deltaC = calcHypotenuse(event.deltaX, event.deltaY);
-    event.deltaAng = calculateAngle(event.deltaX, event.deltaY);
-    if (!prevEvent) return;
-    event.moveX = (prevEvent?.pageX ?? 0) - event.pageX;
-    event.moveY = (prevEvent?.pageY ?? 0) - event.pageY;
-    event.deltaTime = event.currentTime - (prevEvent?.currentTime ?? 0);
-    event.speedX = event.moveX / event.deltaTime;
-    event.speedY = event.moveY / event.deltaTime;
-    if (!intervalEvent) return;
-    event.velocityX = undefinedReturn(intervalEvent.velocityX, event.speedX);
-    event.velocityY = undefinedReturn(intervalEvent.velocityY, event.speedY);
-    if (event.currentTime - intervalEvent.currentTime >= COMPUTE_INTERVAL) {
-      let avgPressure = 1;
-      // let avgPressure = pressures.reduce((add, v) => { add = v + add; return add }, 0) / pressures.length;
-      // // TODO 兼容性需处理
-      // if (avgPressure < 0.8) avgPressure = 0.8
-      // if (avgPressure > 1.8) avgPressure = avgPressure - 1
-      // if (avgPressure > 2.8) avgPressure = avgPressure - 2
-      // if (avgPressure > 3.8) avgPressure = avgPressure - 3
-      // if (avgPressure > 4.8) avgPressure = 1.8;
-      // console.log('avgPressure', avgPressure);
-      // console.log('avgPressure', intervalEvent?.pageY, event.pageY);
-      const moveX = (intervalEvent?.pageX ?? 0) - event.pageX;
-      const moveY = (intervalEvent?.pageY ?? 0) - event.pageY;
-      const deltaTime = event.currentTime - (intervalEvent?.currentTime ?? 0);
-      event.velocityX = Number(((moveX / deltaTime) * avgPressure).toFixed(2));
-      event.velocityY = Number(((moveY / deltaTime) * avgPressure).toFixed(2));
-      intervalEvent = event;
-      pressures = [];
-    }
-  }
+//   function extendedEventArgs(event) {
+//     pressures.push(event.pressure);
+//     event.srcViews = compute.srcViews;
+//     event.currentTime = Date.now();
+//     event.direction = direction;
+//     event.orientation = orientation;
+//     if (!beginEvent) return;
+//     event.deltaX = event.pageX - (beginEvent?.pageX ?? 0);
+//     event.deltaY = event.pageY - (beginEvent?.pageY ?? 0);
+//     event.deltaC = calcHypotenuse(event.deltaX, event.deltaY);
+//     event.deltaAng = calculateAngle(event.deltaX, event.deltaY);
+//     if (!prevEvent) return;
+//     event.moveX = (prevEvent?.pageX ?? 0) - event.pageX;
+//     event.moveY = (prevEvent?.pageY ?? 0) - event.pageY;
+//     event.deltaTime = event.currentTime - (prevEvent?.currentTime ?? 0);
+//     event.speedX = event.moveX / event.deltaTime;
+//     event.speedY = event.moveY / event.deltaTime;
+//     if (!intervalEvent) return;
+//     event.velocityX = undefinedReturn(intervalEvent.velocityX, event.speedX);
+//     event.velocityY = undefinedReturn(intervalEvent.velocityY, event.speedY);
+//     if (event.currentTime - intervalEvent.currentTime >= COMPUTE_INTERVAL) {
+//       let avgPressure = 1;
+//       // let avgPressure = pressures.reduce((add, v) => { add = v + add; return add }, 0) / pressures.length;
+//       // // TODO 兼容性需处理
+//       // if (avgPressure < 0.8) avgPressure = 0.8
+//       // if (avgPressure > 1.8) avgPressure = avgPressure - 1
+//       // if (avgPressure > 2.8) avgPressure = avgPressure - 2
+//       // if (avgPressure > 3.8) avgPressure = avgPressure - 3
+//       // if (avgPressure > 4.8) avgPressure = 1.8;
+//       // console.log('avgPressure', avgPressure);
+//       // console.log('avgPressure', intervalEvent?.pageY, event.pageY);
+//       const moveX = (intervalEvent?.pageX ?? 0) - event.pageX;
+//       const moveY = (intervalEvent?.pageY ?? 0) - event.pageY;
+//       const deltaTime = event.currentTime - (intervalEvent?.currentTime ?? 0);
+//       event.velocityX = Number(((moveX / deltaTime) * avgPressure).toFixed(2));
+//       event.velocityY = Number(((moveY / deltaTime) * avgPressure).toFixed(2));
+//       intervalEvent = event;
+//       pressures = [];
+//     }
+//   }
 
-  function dispatchEvent(name, event) {
-    if (!currentView) return;
-    const slideEvent = inheritPointerEvent(name, event);
-    currentView.dispatchEvent(slideEvent);
-    customEventNameMap.forEach((value) => {
-      const customEventName = name.replace(/(Slide|slide)/, value);
-      const customSlideEven = inheritPointerEvent(customEventName, event);
-      currentView.dispatchEvent(customSlideEven);
-    });
-  }
-})();
+//   function dispatchEvent(name, event) {
+//     if (!currentView) return;
+//     const slideEvent = inheritPointerEvent(name, event);
+//     currentView.dispatchEvent(slideEvent);
+//     customEventNameMap.forEach((value) => {
+//       const customEventName = name.replace(/(Slide|slide)/, value);
+//       const customSlideEven = inheritPointerEvent(customEventName, event);
+//       currentView.dispatchEvent(customSlideEven);
+//     });
+//   }
+// })();
 
 /**
  *
@@ -263,10 +263,7 @@ export function extendedSlideEvents(view = document.createElement("div"), option
   }
 
   function destroy() {
-    view.removeEventListener("pointerdown", onCapturePointerdown, {
-      passive: false,
-      capture: true,
-    });
+    view.removeEventListener("pointerdown", onCapturePointerdown);
     view.removeEventListener("pointerdown", onPointerdown);
   }
 
@@ -331,52 +328,4 @@ function getDirection(x, y) {
   }
 
   return "";
-}
-
-export function useTouch(props = {}) {
-  const config = { ...props, MIN_DISTANCE: 10 };
-  function getDirection(x, y) {
-    if (x > y && x > config.MIN_DISTANCE) {
-      return "horizontal";
-    }
-
-    if (y > x && y > config.MIN_DISTANCE) {
-      return "vertical";
-    }
-
-    return "";
-  }
-
-  let startE = {};
-  let direction = "";
-  var isVertical = () => direction === "vertical";
-
-  var isHorizontal = () => direction === "horizontal";
-
-  var reset = () => {
-    startE = {};
-    direction = "";
-  };
-
-  var start = (event) => {
-    reset();
-    startE = event;
-  };
-
-  var move = (event) => {
-    event.deltaX = event.clientX < 0 ? 0 : event.clientX - startE.clientX;
-    event.deltaY = event.clientY - startE.clientY;
-    if (!direction) {
-      direction = getDirection(Math.abs(event.deltaX), Math.abs(event.deltaY));
-    }
-  };
-
-  return {
-    direction,
-    move,
-    start,
-    reset,
-    isVertical,
-    isHorizontal,
-  };
 }

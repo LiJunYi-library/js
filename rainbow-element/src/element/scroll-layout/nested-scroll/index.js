@@ -53,8 +53,8 @@ export class RNestedScroll extends RainbowElement {
       console.log("onCapturePointerdown");
     },
     onCapturePointermove: (event) => {
+      event.className = this.className;
       event.preventDefault();
-      console.log(this.className, event, this.$$isScrollToBottomEnd);
       this.$$.capturePointer.move(event);
     },
     onCapturePointerup: (event) => {
@@ -106,7 +106,7 @@ export class RNestedScroll extends RainbowElement {
         if (this.$$isScrollToBottomEnd) return;
         // 如果没滚动顶部 就去消费事件 并阻止事件向上冒泡
         event.stopPropagation();
-        // console.log(this.className);
+        console.log(this.className);
         this.scrollTop = event.moveY + this.scrollTop;
       },
       onEndTop: (event) => {

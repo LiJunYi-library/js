@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont";
   src: url('iconfont.woff2') format('woff2'),
-       url('iconfont.woff') format('woff'),
-       url('iconfont.ttf') format('truetype');
+    url('iconfont.woff') format('woff'),
+    url('iconfont.ttf') format('truetype');
 }
 
 .iconfont {
@@ -13,8 +13,7 @@
 }
 
 .loading-icon {
-  font-family: "iconfont" !important;
-  font-style: normal;
+  font-family: "iconfont";
   animation: rotating 2s linear infinite;
 }
 

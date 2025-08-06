@@ -90,3 +90,21 @@ export function objectClear(obj) {
 export function objectIncludes(obj, key) {
   return Object.keys(obj).includes(key);
 }
+
+export function objectForIn(params = {}, fmt) {
+  if (!params) return;
+  for (const key in params) {
+    if (Object.prototype.hasOwnProperty.call(params, key)) {
+      fmt(params[key], key, params);
+    }
+  }
+}
+
+export function objectForMap(params = {}, fmt) {
+  const o = {};
+  if (!params) return o;
+  forIn(params, (item, key) => {
+    o[key] = fmt(item, key, params);
+  });
+  return o;
+}

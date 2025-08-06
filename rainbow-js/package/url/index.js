@@ -1,5 +1,5 @@
 import { arrayRemoves } from "../array";
-import { objectClear, objectIncludes } from "../object";
+import { objectClear, objectIncludes, objectForIn } from "../object";
 
 function getSearchValue(value) {
   if (value === "undefined") return undefined;
@@ -15,30 +15,58 @@ function JSONParse(val) {
   return JSON.parse(val);
 }
 
-class RURL extends URL {
-  searchs = {};
+export class RURL extends URL {
+  __searchs = {};
+
+  searchs = new Proxy(this.__searchs, {
+    get: (target, key, value, receiver) => {
+      return this.__searchs[key];
+    },
+    set: (target, key, value, receiver) => {
+      this.searchParams.convertSet(key, value);
+      return Reflect.set(target, key, value, receiver);
+    },
+    deleteProperty: (target, key) => {
+      this.searchParams.convertDelete(key);
+      return Reflect.deleteProperty(target, key);
+    },
+  });
 
   constructor(url, base, args = {}) {
     try {
       if (url === undefined) url = window?.location?.href;
     } catch (error) {}
     super(url, base);
-    this._syncSearchs();
+    objectForIn(args, (item, key) => this.searchParams.set(key, JSON.stringify(item)));
+
+    (() => {
+      const o = {};
+      for (const [key, value] of this.searchParams) {
+        let val = getSearchValue(value);
+        if (!objectIncludes(o, key)) {
+          o[key] = val;
+        } else {
+          o[key] = [o[key], val].flat(Infinity);
+        }
+      }
+      objectClear(this.__searchs);
+      Object.assign(this.__searchs, o);
+    })();
 
     this.searchParams.convertSet = (name, value) => {
       const val = JSON.stringify(value);
       this.searchParams.set(name, val);
-      this.searchs[name] = JSONParse(val);
+      this.__searchs[name] = JSONParse(val);
     };
 
     this.searchParams.convertAppend = (name, value) => {
       const val = JSON.stringify(value);
       const newV = JSONParse(val);
       this.searchParams.append(name, val);
-      if (objectIncludes(this.searchs, name)) {
-        this.searchs[name] = [this.searchs[name], newV].flat(Infinity);
+      if (objectIncludes(this.__searchs, name)) {
+        this.__searchs[name] = [this.__searchs[name], newV].flat(Infinity);
       } else {
-        this.searchs[name] = newV;
+        this.__searchs[name] = newV;
       }
     };
 
@@ -46,60 +74,34 @@ class RURL extends URL {
       const val = JSON.stringify(value);
       this.searchParams.delete(name, val);
       (() => {
-        if (!(this.searchs[name] instanceof Array) || value === undefined) {
-          delete this.searchs[name];
+        if (!(this.__searchs[name] instanceof Array) || value === undefined) {
+          delete this.__searchs[name];
           return;
         }
-        arrayRemoves(this.searchs[name], JSONParse(val));
+        arrayRemoves(this.__searchs[name], JSONParse(val));
       })();
     };
   }
-
-  _syncSearchs() {
-    const o = {};
-    for (const [key, value] of this.searchParams) {
-      let val = getSearchValue(value);
-      if (!objectIncludes(o, key)) {
-        o[key] = val;
-      } else {
-        o[key] = [o[key], val].flat(Infinity);
-      }
-    }
-    objectClear(this.searchs);
-    Object.assign(this.searchs, o);
-  }
 }
 
-let uuu = new RURL();
-console.log(uuu);
-let newUrl = new RURL("/h5/aaa.html?a=5&b=6&b=8", "https://www.baidu.com", {
-  cc: 9,
-  dd: [1, 2, 3],
-  ee: { a: 1 },
-});
-// newUrl.searchParams.convertSet("c", "9");
-// newUrl.searchParams.convertSet("d", undefined);
-// newUrl.searchParams.convertAppend("d", "11");
-// newUrl.searchParams.convertAppend("e", undefined);
-// newUrl.searchParams.convertAppend("e", '44');
-// newUrl.searchParams.convertAppend("e", 12);
-// newUrl.searchParams.convertDelete("e", '44');
-console.log();
-console.log(newUrl);
-// const aa = stringUriToObject(window.location.href);
-// const bb = stringObjectToUri(aa);
-// const cc = stringUriToObject(bb);
+// let uuu = new RURL();
+// console.log(uuu);
+// let newUrl = new RURL("/h5/aaa.html?a=5&b=6&b=8", "https://www.baidu.com", {
+//   cc: 9,
+//   dd: [1, "2", 3],
+//   ee: { a: "1" },
+// });
+// newUrl.searchParams.convertSet("c", "c");
+// newUrl.searchParams.convertSet("d", "d");
+// // newUrl.searchParams.convertAppend("d", "11");
+// // newUrl.searchParams.convertAppend("e", undefined);
+// // newUrl.searchParams.convertAppend("e", '44');
+// // newUrl.searchParams.convertAppend("e", 12);
+// // newUrl.searchParams.convertDelete("e", '44');
+// newUrl.searchs.dd = Infinity
+// newUrl.searchs.ee = 456789;
+// console.log();
+// console.log(newUrl);
+// let newUrl2 = new RURL(newUrl.href);
+// console.log(newUrl2);
 
-// console.log("toString", uuu.searchParams.toString());
-
-// const params1 = new URLSearchParams(
-//   "?tt=undefined&a=1&b=张三%23section1&c=%5B1%2C2%5D&d=http%3A%2F%2Fwww.baidu.com%3Fdfg%3D123456&e=undefined&f=1,2,3",
-// );
-// console.log(params1.toString());
-// // params1.set("ssss", { 5: 6 });
-
-// for (const [key, value] of params1) {
-//   console.log(key, value);
-// }
-// console.log(bb);
-// console.log(cc);

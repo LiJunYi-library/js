@@ -79,3 +79,10 @@ export function objectAssign(o1, o2, keys = []) {
   }
   return o1;
 }
+
+export function objectClear(obj) {
+  if (typeof obj !== "object" || obj === null) return;
+  Object.keys(obj).forEach((key) => {
+    delete obj[key];
+  });
+}

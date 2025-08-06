@@ -13,3 +13,4 @@ export * from "./package/regExp";
 export * from "./package/string";
 export * from "./package/timer";
 export * from "./package/tree";
+export * from "./package/url";

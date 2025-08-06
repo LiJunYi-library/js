@@ -4,3 +4,6 @@ export declare function objectEqualitys(o1: object = {}, o2: object = {}): boole
 export declare function objectParseUri(url: string, obj: object): string;
 export declare function objectParseFormData(obj: object, bool: boolean): FormData;
 export declare function objectAssign(o1: object = {}, o2: object = {}, keys: string[]): object;
+export declare function objectClear(obj: object): void;
+export declare function objectIncludes(obj: object,key:string): boolean;
+

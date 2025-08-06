@@ -1,45 +1,19 @@
-// export function stringUriToObject(str) {
-//   if (!stringIsUseful(str)) return {};
-//   let queryString = str;
-//   if (str.includes("?")) queryString = str.split("?")[1];
-//   const params = {};
-//   const pairs = queryString.split("&");
-//   pairs.forEach((pair) => {
-//     if (!pair) return;
-//     try {
-//       pair = decodeURIComponent(pair);
-//     } catch (e) {}
-//     try {
-//       pair = decodeURIComponent(pair);
-//     } catch (e) {}
-//     const [key, ...valueParts] = pair.split("=");
-//     if (!key) return;
-//     const encodedValue = valueParts.length ? valueParts.join("=") : ""; // 处理 value 中含 "="
-//     let val = encodedValue;
-//     if (val === "null") val = null;
-//     if (val === "undefined") val = undefined;
-//     try {
-//       val = JSON.parse(val);
-//     } catch (error) {}
-//     params[key] = val;
-//   });
-//   return params;
-// }
+import { arrayRemoves } from "../array";
+import { objectClear, objectIncludes } from "../object";
 
-// export function stringObjectToUri(object) {
-//   if (!object) return "";
-//   if (typeof object !== "object") return object;
-//   if (!Object.keys(object).length) return "";
-//   const parts = [];
-//   for (const [key, val] of Object.entries(object)) {
-//     if (val === undefined) continue;
-//     let value = val;
-//     if (typeof val === "object") value = JSON.stringify(val);
-//     if (typeof value === "number" && !isFinite(value)) value = null;
-//     parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
-//   }
-//   return parts.join("&");
-// }
+function getSearchValue(value) {
+  if (value === "undefined") return undefined;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
+}
+
+function JSONParse(val) {
+  if (val === undefined) return undefined;
+  return JSON.parse(val);
+}
 
 class RURL extends URL {
   searchs = {};
@@ -54,39 +28,63 @@ class RURL extends URL {
     this.searchParams.convertSet = (name, value) => {
       const val = JSON.stringify(value);
       this.searchParams.set(name, val);
+      this.searchs[name] = JSONParse(val);
     };
 
     this.searchParams.convertAppend = (name, value) => {
       const val = JSON.stringify(value);
+      const newV = JSONParse(val);
       this.searchParams.append(name, val);
+      if (objectIncludes(this.searchs, name)) {
+        this.searchs[name] = [this.searchs[name], newV].flat(Infinity);
+      } else {
+        this.searchs[name] = newV;
+      }
+    };
+
+    this.searchParams.convertDelete = (name, value) => {
+      const val = JSON.stringify(value);
+      this.searchParams.delete(name, val);
+      (() => {
+        if (!(this.searchs[name] instanceof Array) || value === undefined) {
+          delete this.searchs[name];
+          return;
+        }
+        arrayRemoves(this.searchs[name], JSONParse(val));
+      })();
     };
   }
 
   _syncSearchs() {
     const o = {};
     for (const [key, value] of this.searchParams) {
-      let val = (() => {
-        if (value === "undefined") return undefined;
-        try {
-          return JSON.parse(value);
-        } catch {
-          return value;
-        }
-      })();
-      if (!Object.keys(o).includes(key)) {
+      let val = getSearchValue(value);
+      if (!objectIncludes(o, key)) {
         o[key] = val;
       } else {
         o[key] = [o[key], val].flat(Infinity);
       }
     }
+    objectClear(this.searchs);
     Object.assign(this.searchs, o);
   }
 }
 
 let uuu = new RURL();
 console.log(uuu);
-let newUrl = new RURL("/h5/aaa.html?a=5&b=6&b=8", "https://www.baidu.com", {});
-console.log(newUrl.searchParams.convertSet("c", "9"));
+let newUrl = new RURL("/h5/aaa.html?a=5&b=6&b=8", "https://www.baidu.com", {
+  cc: 9,
+  dd: [1, 2, 3],
+  ee: { a: 1 },
+});
+// newUrl.searchParams.convertSet("c", "9");
+// newUrl.searchParams.convertSet("d", undefined);
+// newUrl.searchParams.convertAppend("d", "11");
+// newUrl.searchParams.convertAppend("e", undefined);
+// newUrl.searchParams.convertAppend("e", '44');
+// newUrl.searchParams.convertAppend("e", 12);
+// newUrl.searchParams.convertDelete("e", '44');
+console.log();
 console.log(newUrl);
 // const aa = stringUriToObject(window.location.href);
 // const bb = stringObjectToUri(aa);

@@ -86,3 +86,7 @@ export function objectClear(obj) {
     delete obj[key];
   });
 }
+
+export function objectIncludes(obj, key) {
+  return Object.keys(obj).includes(key);
+}

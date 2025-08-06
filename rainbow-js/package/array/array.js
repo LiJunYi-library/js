@@ -125,10 +125,9 @@ export function arrayRemoveLast(list = [], item) {
 }
 // 删除数组中的所有 相同的 item 改变数组
 export function arrayRemoves(list = [], item) {
-  const sames = list.filter((el) => el === item);
-  sames.forEach((el) => {
-    arrayRemove(list, el);
-  });
+  const sames = list.filter((el) => el !== item);
+  list.splice(0);
+  list.push(...sames);
   return list;
 }
 // 切割数组的index

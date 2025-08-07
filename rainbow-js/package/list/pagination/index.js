@@ -73,7 +73,6 @@ export function listPagination(props = {}) {
 
   async function nextBeginSend(options = {}, ...arg) {
     list.value.splice(0);
-    empty.value = false;
     let res = await asyncHook.nextBeginSend(options, ...arg);
     total.value = formatterTotal(res, hooks);
     const arr = arrayForcedTransform(formatterList(res, hooks));
@@ -91,7 +90,6 @@ export function listPagination(props = {}) {
   }
 
   async function nextSend(options = {}, ...arg) {
-    empty.value = false;
     let res = await asyncHook.nextSend(options, ...arg);
     total.value = formatterTotal(res, hooks);
     const arr = arrayForcedTransform(formatterList(res, hooks));

@@ -26,7 +26,7 @@ export function objectEqualitys(o1 = {}, o2 = {}) {
 }
 
 export function objectParseUri(url = "", object) {
-  if (typeof object !== "object") return object;
+  if (typeof object !== "object") return "";
   if (!objectIsEmpty(object)) return "";
   const params = new URLSearchParams();
   objectForIn(object, (item, key) => {
@@ -34,8 +34,9 @@ export function objectParseUri(url = "", object) {
     if (typeof item === "object" && !(item instanceof Array)) item = JSON.stringify(item);
     params.set(key, item);
   });
-  if (url && url.includes("?")) return `&${params.toString()}`;
-  return `?${params.toString()}`;
+  const str = params.toString() || ''
+  if (url && url.includes("?")) return `&${str}`;
+  return `?${str}`;
 }
 
 export function objectParseFormData(object, bool) {

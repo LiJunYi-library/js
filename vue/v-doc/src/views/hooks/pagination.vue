@@ -5,17 +5,20 @@
         <ElSelect v-model="req.isPass" size="small" clearable>
           <ElOption value="0" label="0"></ElOption>
           <ElOption value="1" label="1"></ElOption>
+          <ElOption value="5" label="5"></ElOption>
         </ElSelect>
 
         <ElSelect v-model="req.modelSearchKeyword" size="small" clearable>
           <ElOption value="小熊巾" label="小熊巾"></ElOption>
           <ElOption value="玻尿酸" label="玻尿酸"></ElOption>
+          <ElOption value="哇哇哇哇哇" label="哇哇哇哇哇"></ElOption>
         </ElSelect>
       </r-grid>
 
       <div>
         <button @click="pList.afreshNextBeginSend()">afreshNextBeginSend</button>
         <button @click="pList.afreshNextSend()">afreshNextSend</button>
+        <button @click="errorSend()">errorSend</button>
         <button @click="pList.invertSelect()">invertSelect</button>
         <button @click="pList.allSelect()">allSelect</button>
         <button @click="$log(pList)">look</button>
@@ -25,12 +28,19 @@
         <div>value: {{ pList.value }}</div>
         <div>label: {{ pList.label }}</div>
         <div>index: {{ pList.index }}</div>
-        <!-- <div>select: {{ pList.select }}</div> -->
+        <!-- <div>select: {{ pList.select }}</div>  size="small"-->
       </div>
     </div>
 
-    <RPaginationTable :listHook="pList" v-model:sortProp="req.sortProp" v-model:sortOrder="req.sortOrder" border
-      @currentPageChange="changePagin" @sort-change="sortChange">
+    <RPaginationTable
+      :listHook="pList"
+
+      v-model:sortProp="req.sortProp"
+      v-model:sortOrder="req.sortOrder"
+      border
+      @currentPageChange="changePagin"
+      @sort-change="sortChange"
+    >
       <ElTableColumn width="80">
         <template #header>
           <r-grid style="--r-columns: 3">
@@ -40,12 +50,19 @@
           </r-grid>
         </template>
         <template #default="{ row }">
-          <ElButton size="small" :type="pList.same(row) ? 'primary' : ''" @click="pList.onSelect(row)">{{ row.value }}
+          <ElButton
+            size="small"
+            :type="pList.same(row) ? 'primary' : ''"
+            @click="pList.onSelect(row)"
+            >{{ row.value }}
           </ElButton>
         </template>
       </ElTableColumn>
       <ElTableColumn prop="id" label="id" sortable="custom"></ElTableColumn>
-      <ElTableColumn prop="name" label="name" width="800" sortable="custom"></ElTableColumn>
+      <ElTableColumn prop="name" label="name" width="300" sortable="custom"></ElTableColumn>
+      <template #empty>
+        <div>emptyemptyempty</div>
+      </template>
     </RPaginationTable>
 
     <!-- <div class="r-el-pagination-table">
@@ -90,14 +107,13 @@ import {
   ElCheckbox,
 } from 'element-plus'
 import { SpuFetch, useSpuFetch, useMFetch } from '@/hooks'
-const rElTableBox = ref('rElTableBox')
 import RPaginationTable from './r-el-pagination-table.vue'
 
 const req = reactive({
   isPass: '',
   modelSearchKeyword: '',
   sortOrder: 'descending',
-  sortProp: 'name'
+  sortProp: 'name',
 })
 
 const pList = (() => {
@@ -131,15 +147,19 @@ const pList = (() => {
 
 function changePagin(currentPage, pageSize) {
   console.log('changePagin  ---', req)
-  req.sortOrder = 'ascending'
-  req.sortProp = 'id'
-  req.isPass = "1"
-  // pList.nextSend()
+  pList.nextSend()
 }
 
 function sortChange(params) {
   console.log('sortChange  ---')
   console.log(params)
+  pList.nextSend()
+}
+
+function errorSend() {
+  //afreshNextBeginSend  afreshNextSend  nextSend
+  // pList.afreshNextSend({ url: '/spu/list2',})
+  pList.loading = true
 }
 
 onMounted(() => {
@@ -151,9 +171,7 @@ onMounted(() => {
 .hooks-pagination {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
-
-  .header {}
+  height: 100%;
+  overflow: auto;
 }
 </style>

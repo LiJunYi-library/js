@@ -1,7 +1,6 @@
 import {
   arrayRewriteFunction,
   arrayLoopMap,
-  ListArray,
   arrayBinaryFindIndex,
   arrayLoop,
   arrayLoops,
@@ -274,10 +273,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
   };
 
   set value(v) {
-    if (v instanceof ListArray) {
-      v.removeEventListener("change", this.$$.onValueChange);
-      v.addEventListener("change", this.$$.onValueChange);
-    } else arrayRewriteFunction(v, () => this.$$.layout());
+    arrayRewriteFunction(v, () => this.$$.layout());
     this.$$.value = v;
     this.$$.layout();
   }

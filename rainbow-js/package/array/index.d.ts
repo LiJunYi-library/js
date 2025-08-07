@@ -168,8 +168,6 @@ export declare function arrayFindIndex<T>(array: T[], item: T): number | undefin
 
 export declare function arrayFindIndexs<T>(array: T[], items:  T[]): number [];
 
-export class ListArray extends Array {}
-
 // 模仿sql查询  //
 export declare function WHERE(compare: any, val: any): boolean;
 

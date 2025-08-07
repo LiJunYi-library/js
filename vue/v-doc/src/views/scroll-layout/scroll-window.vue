@@ -26,12 +26,15 @@ import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
 import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
 const text = arrayLoopMap(300, () => '帅').join('')
 async function onrefresh() {
-  return setTimeoutPromise(3000)
+  return setTimeoutPromise(300000)
 }
 </script>
 
 <style lang="scss">
 .scroll-refresh-demo {
+  r-scroll-refresh{
+    background: chartreuse;
+  }
   .flexed {
     position: fixed;
     top: 50px;

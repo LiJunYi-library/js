@@ -1,4 +1,4 @@
-import { arrayRewriteFunction, ListArray } from "@rainbow_ljy/rainbow-js";
+import { arrayRewriteFunction } from "@rainbow_ljy/rainbow-js";
 import { RainbowElement } from "../../base/index.js";
 import {
   renderChildren,
@@ -128,10 +128,7 @@ export class RScrollVirtualGridList extends RainbowElement {
   };
 
   set value(v) {
-    if (v instanceof ListArray) {
-      v.removeEventListener("change", this.$$.onValueChange);
-      v.addEventListener("change", this.$$.onValueChange);
-    } else arrayRewriteFunction(v, () => this.$$.layout());
+    arrayRewriteFunction(v, () => this.$$.layout());
     this.$$.value = v;
     this.$$.layout();
   }

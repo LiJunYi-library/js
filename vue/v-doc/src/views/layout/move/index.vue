@@ -19,7 +19,6 @@
   </div>
 </template>
 <script setup lang="jsx">
-import { arrayLoopMap, ListArray, setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
 import { useRadio2, useListLoad2 } from '@rainbow_ljy/v-hooks'
 import { ref, render, defineComponent, toRaw, computed, onMounted } from 'vue'
 

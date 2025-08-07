@@ -37,6 +37,7 @@ export class RScrollVirtualFallsList extends RainbowElement {
   });
 
   keyExtractor = (val) => val.item;
+  itemClassName = () => "";
   onrenderItems = () => undefined;
   visibleCount = 50;
 
@@ -167,7 +168,12 @@ export class RScrollVirtualFallsList extends RainbowElement {
         onCreateNode: (val, index, key) => {
           let ele = this.$$.createElement();
           ele.setAttribute("key", key);
-          ele.classList.add("r-scroll-virtual-falls-list-item");
+          ele.classList.add(
+            ...[
+              "r-scroll-virtual-falls-list-item",
+              this.itemClassName({ ele: ele, ...val, key }),
+            ].filter(Boolean),
+          );
           ele.style.position = "absolute";
           const event = createCustomEvent("renderItems", { ele: ele, ...val, key });
           this.dispatchEvent(event);

@@ -19,6 +19,7 @@ export class RScrollVirtualGridList extends RainbowElement {
   });
 
   keyExtractor = (val) => val.item;
+  itemClassName = () => "";
   onrenderItems = () => undefined;
 
   get $$columns() {
@@ -90,7 +91,12 @@ export class RScrollVirtualGridList extends RainbowElement {
           let node = this.$$.createElement();
           // console.log( this.$$.recycle.divs.length);
           node.setAttribute("key", key);
-          node.classList.add("r-scroll-virtual-grid-list-item");
+          node.classList.add(
+            ...[
+              "r-scroll-virtual-grid-list-item",
+              this.itemClassName({ ele: node, ...val, key }),
+            ].filter(Boolean),
+          );
           node.style.height = `${rAvgHeight}px`;
           node.style.position = "absolute";
           this.$$.measure(node, val, rAvgHeight, rowGap, columnGap);

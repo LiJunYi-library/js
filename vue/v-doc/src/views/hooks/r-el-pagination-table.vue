@@ -183,6 +183,7 @@ function RenderState() {
     top: 0;
     z-index: 20;
     background: rgba(0, 0, 0, 0.5);
+    min-height: 200px;
   }
 
   .r-el-pagination-table-state-empty {

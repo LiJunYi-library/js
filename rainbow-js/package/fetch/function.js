@@ -157,8 +157,10 @@ export function fetchHOC(opt = {}) {
 
         const fail = (e) => {
           loading.value = false;
-          errorData.value = e;
+          data.value = undefined;
           error.value = true;
+          begin.value = false;
+          errorData.value = e;
           config.onResponse(config);
           reject(e);
         };

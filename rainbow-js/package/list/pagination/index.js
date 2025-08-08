@@ -71,9 +71,19 @@ export function listPagination(props = {}) {
     afreshNextSend,
   });
 
+  function handleError() {
+    total.value = 0;
+    list.value.splice(0);
+    selectHooks.updateList([]);
+    selectHooks?.reset?.();
+  }
+
   async function nextBeginSend(options = {}, ...arg) {
     list.value.splice(0);
-    let res = await asyncHook.nextBeginSend(options, ...arg);
+    let res = await asyncHook.nextBeginSend(options, ...arg).catch((err) => {
+      handleError();
+      return Promise.reject(err);
+    });
     total.value = formatterTotal(res, hooks);
     const arr = arrayForcedTransform(formatterList(res, hooks));
     list.value.push(...arr);
@@ -90,7 +100,10 @@ export function listPagination(props = {}) {
   }
 
   async function nextSend(options = {}, ...arg) {
-    let res = await asyncHook.nextSend(options, ...arg);
+    let res = await asyncHook.nextSend(options, ...arg).catch((err) => {
+      handleError();
+      return Promise.reject(err);
+    });
     total.value = formatterTotal(res, hooks);
     const arr = arrayForcedTransform(formatterList(res, hooks));
     list.value.splice(0);

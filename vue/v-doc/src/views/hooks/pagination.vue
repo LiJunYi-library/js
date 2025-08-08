@@ -55,8 +55,7 @@
             size="small"
             :type="pList.same(row) ? 'primary' : ''"
             @click="pList.onSelect(row)"
-            >{{ row.value }}
-          </ElButton>
+          />
         </template>
       </ElTableColumn>
       <ElTableColumn prop="id" label="id" sortable="custom"></ElTableColumn>
@@ -161,7 +160,7 @@ function sortChange(params) {
 
 function errorSend() {
   //afreshNextBeginSend  afreshNextSend  nextSend
-  pList.afreshNextSend({ url: '/spu/list2',})
+  pList.afreshNextSend({ url: '/spu/list2' })
   // pList.loading = true
 }
 

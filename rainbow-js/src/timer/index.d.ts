@@ -24,7 +24,7 @@ export declare function timerThrottle(
   delay?: number
 ): Function;
 
-export declare function timeRefush(props: {
+export declare function timerRefush(props: {
   formatterTime?: (date: Date) => any;
   onChange?: (time: any) => undefined;
   once?: boolean;

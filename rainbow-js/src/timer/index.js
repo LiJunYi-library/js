@@ -44,7 +44,7 @@ export function timerThrottle(callback, delay = 500) {
 /***
  *
  */
-export function timeRefush(props = {}) {
+export function timerRefush(props = {}) {
   const config = {
     formatterTime: (date) => date.getDate(),
     onChange: () => undefined,

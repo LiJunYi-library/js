@@ -25,7 +25,7 @@
       </div>
 
       <div>
-        <div>value: {{ pList.value }}</div>
+        <div v-on-intersection="intersection">value: {{ pList.value }}</div>
         <div>label: {{ pList.label }}</div>
         <div>index: {{ pList.index }}</div>
         <!-- <div>select: {{ pList.select }}</div>  size="small"-->
@@ -34,7 +34,8 @@
 
     <RPaginationTable
       :listHook="pList"
-
+      height="flex-auto-height"
+      :class="['44555','ccccc']"
       v-model:sortProp="req.sortProp"
       v-model:sortOrder="req.sortOrder"
       border
@@ -59,7 +60,9 @@
         </template>
       </ElTableColumn>
       <ElTableColumn prop="id" label="id" sortable="custom"></ElTableColumn>
-      <ElTableColumn prop="name" label="name" width="300" sortable="custom"></ElTableColumn>
+      <ElTableColumn prop="name" label="name" width="180" sortable="custom"></ElTableColumn>
+      <ElTableColumn prop="spuSearchName" label="spuSearchName" sortable="custom"></ElTableColumn>
+
       <template #empty>
         <div>emptyemptyempty</div>
       </template>
@@ -160,6 +163,10 @@ function errorSend() {
   //afreshNextBeginSend  afreshNextSend  nextSend
   // pList.afreshNextSend({ url: '/spu/list2',})
   pList.loading = true
+}
+
+function intersection(params) {
+  console.log('intersection  ---', params)
 }
 
 onMounted(() => {

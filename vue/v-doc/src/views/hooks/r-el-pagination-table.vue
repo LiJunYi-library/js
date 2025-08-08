@@ -1,16 +1,22 @@
 <template>
   <div
     class="r-el-pagination-table"
-    :class="[maxHeight === 'auto' && 'r-el-pagination-table-max-height-auto']"
+    :class="[
+      boolAutoFlex(props.height, 'flex-auto-height', ''),
+      boolAutoFlex(props.maxHeight, 'flex-auto-height', ''),
+      props.class,
+    ]"
     ref="rElPaginationTable"
     v-on-resize="onResize"
+    :style="[props.style, innerStyle]"
   >
     <div class="r-el-table-box">
       <ElTable
         ref="elTable"
         :data="data"
         v-bind="{ ...$attrs }"
-        :max-height="maxH"
+
+        :height="tableHeight"
         :default-sort="defaultSort"
         @sort-change="sortChange"
       >
@@ -51,7 +57,7 @@
 </template>
 
 <script setup lang="jsx">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, reactive } from 'vue'
 import { ElTable, ElPagination, ElSkeleton } from 'element-plus'
 
 const props = defineProps({
@@ -59,6 +65,10 @@ const props = defineProps({
   sortProp: [String, null],
   sortOrder: [String, null],
   maxHeight: [String, Number],
+  height: [String, Number],
+  skeletonRows: { type: Number, default: 10 },
+  style: [String, Object, Array],
+  class: [String, Object, Array],
 })
 
 const emits = defineEmits([
@@ -70,20 +80,31 @@ const emits = defineEmits([
   'update:sortProp',
 ])
 
-const tMaxH = ref(0)
-const rElPaginationTable = ref('rElPaginationTable')
-const rElPagination = ref('rElPagination')
 const elTable = ref('elTable')
+const rElPaginationTable = ref('rElPaginationTable')
+const PTH = ref(0)
+const rElPagination = ref('rElPagination')
+const PH = ref(0)
+const CH = ref(0)
 const defaultSort = { prop: props.sortProp, order: props.sortOrder }
-onMounted(mounted)
 watch(() => [props.sortOrder, props.sortProp], watchSort)
-const maxH = computed(() => (props.maxHeight === undefined ? tMaxH.value : props.maxHeight))
 const data = computed(() => (props.listHook.error ? [] : props.listHook.list))
+const innerStyle = computed(() => ({ maxHeight: props.maxHeight, height: props.height }))
+const boolAutoFlex = (v, a, b) => (v === 'flex-auto-height' ? a : b)
+const tableMaxHeight = computed(() =>
+  boolAutoFlex(props.maxHeight, `${CH.value}px`, `calc( ${props.maxHeight} - ${PH.value}px)`),
+)
+const tableHeight = computed(() =>
+  boolAutoFlex(props.height, `${CH.value}px`, `calc( ${props.height} - ${PH.value}px)`),
+)
+onMounted(mounted)
 
 function onResize() {
-  const pH = rElPaginationTable.value?.offsetHeight ?? 0
-  const cH = rElPagination.value?.offsetHeight ?? 0
-  tMaxH.value = pH - cH
+  PTH.value = rElPaginationTable.value?.offsetHeight ?? 0
+  PH.value = rElPagination.value?.offsetHeight ?? 0
+  CH.value = PTH.value - PH.value
+  console.log('onResize');
+
 }
 
 function watchSort() {
@@ -112,7 +133,7 @@ function sortChange(data, ...arg) {
   emits('update:sortOrder', data?.order)
   emits('sortChange', data, ...arg)
 }
-
+console.log(props.class)
 function mounted() {}
 
 function RenderState() {
@@ -123,7 +144,7 @@ function RenderState() {
   if (props.listHook.begin) {
     return (
       <div class="r-el-pagination-table-state-begin">
-        <ElSkeleton rows={5} animated />
+        <ElSkeleton rows={props.skeletonRows} animated />
       </div>
     )
   }
@@ -136,16 +157,12 @@ function RenderState() {
 
 <style lang="scss">
 .r-el-pagination-table {
-  display: flex;
-  flex-direction: column;
-  height: 1px;
-  flex: 1;
-  overflow: hidden;
-
-  &.r-el-pagination-table-max-height-auto {
-    flex: none;
-    height: auto;
-    overflow: unset;
+  &.flex-auto-height {
+    display: flex;
+    flex-direction: column;
+    height: 1px;
+    flex: 1;
+    overflow: hidden;
   }
 
   .r-el-pagination-table-state-error {

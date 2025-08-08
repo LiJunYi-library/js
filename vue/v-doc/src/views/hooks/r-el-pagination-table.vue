@@ -150,7 +150,12 @@ function RenderState() {
   }
 
   if (props.listHook.loading) {
-    return <div class="r-el-pagination-table-state-loading"></div>
+    return [
+      <div class="r-el-pagination-table-state-loading"></div>,
+      props.listHook?.list?.length === 0 && !props.listHook.begin && !props.listHook.error && (
+        <div class="r-el-pagination-table-state-loading-placeholder"></div>
+      ),
+    ]
   }
 }
 </script>
@@ -183,7 +188,11 @@ function RenderState() {
     top: 0;
     z-index: 20;
     background: rgba(0, 0, 0, 0.5);
-    min-height: 200px;
+  }
+
+  .r-el-pagination-table-state-loading-placeholder {
+    height: 200px;
+    line-height: 200px;
   }
 
   .r-el-pagination-table-state-empty {

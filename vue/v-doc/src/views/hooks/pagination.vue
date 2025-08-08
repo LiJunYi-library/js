@@ -1,5 +1,6 @@
 <template>
   <div class="hooks-pagination">
+    {{ aaa.a }} <button @click="aaa.a++">add</button>
     <div>
       <r-grid style="--r-columns: 2">
         <ElSelect v-model="req.isPass" size="small" clearable>
@@ -41,7 +42,6 @@
       border
       @currentPageChange="changePagin"
       @sort-change="sortChange"
-
     >
       <ElTableColumn width="80">
         <template #header>
@@ -72,7 +72,7 @@
 <script setup>
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
 import { useVListPagination } from '@rainbow_ljy/v-hooks'
-import { computed, onMounted, ref, reactive } from 'vue'
+import { computed, onMounted, customRef, reactive } from 'vue'
 import {
   ElTable,
   ElTableColumn,
@@ -82,8 +82,34 @@ import {
   ElPagination,
   ElCheckbox,
 } from 'element-plus'
-import {useSpuFetch, useMFetch } from '@/hooks'
+import { useSpuFetch, useMFetch } from '@/hooks'
 import RPaginationTable from './r-el-pagination-table.vue'
+
+ function useLocalVal(key, defaultValue) {
+  return customRef((track, trigger) => {
+    return {
+      get() {
+        track()
+        const localVal = window.localStorage.getItem(key)
+        if (localVal === null) return defaultValue
+        try {
+          return JSON.parse(localVal)
+        } catch (error) {
+          return localVal
+        }
+      },
+      set(newValue) {
+        // console.log('set');
+
+        window.localStorage.setItem(key, JSON.stringify(newValue))
+        trigger()
+      },
+    }
+  })
+}
+
+const aaa = useLocalVal('aaa', {a:10})
+aaa.value =  {a:10}
 
 const req = reactive({
   isPass: '',

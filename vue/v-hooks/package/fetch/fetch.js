@@ -1,6 +1,6 @@
 import { isRef, ref } from "vue";
 import { useReactive } from "../../other";
-import { downloadFile, arrayEvents, arrayRemove, createOverload } from "@rainbow_ljy/rainbow-js";
+import { arrayEvents, arrayRemove, createOverload } from "@rainbow_ljy/rainbow-js";
 
 // todo AbortController 有兼容问题需要手动实现
 function AbortController(...arg) {
@@ -289,7 +289,7 @@ export function useFetchHOC(props = {}) {
 
         if (config.isDownloadFile) {
           const fileName = await config.formatterFileName(res, config);
-          downloadFile(d, fileName);
+          // downloadFile(d, fileName);
         }
 
         config.onResponse(res, config);

@@ -1,6 +1,5 @@
 import { ref, reactive } from "vue";
 export * from "./fetch.js";
-export * from "./index-n.js";
 export * from "./index-new.js";
 export { createHttpRequest, useFetchHoc, createHttpFetch };
 

@@ -92,7 +92,7 @@ export declare type TablePaginationHooks = PaginationListHooks & {
 };
 export declare function useTablePagination(options: PaginationListConfig): TablePaginationHooks;
 
-export * from "./list-load";
+
 export * from "./list/index";
 export * from "./load/index";
 export * from "./multiple/index";

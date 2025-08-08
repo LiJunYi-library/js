@@ -1,5 +1,4 @@
 export * from "./package/array";
-export * from "./package/browser";
 export * from "./package/date";
 export * from "./package/fetch";
 export * from "./package/function";

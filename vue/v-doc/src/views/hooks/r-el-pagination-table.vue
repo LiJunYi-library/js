@@ -57,8 +57,10 @@
 </template>
 
 <script setup lang="jsx">
-import { ref, computed, watch, onMounted, reactive } from 'vue'
+import { ref, computed, watch, onMounted, useAttrs } from 'vue'
 import { ElTable, ElPagination, ElSkeleton } from 'element-plus'
+
+const attrs = useAttrs()
 
 const props = defineProps({
   listHook: Object,
@@ -134,11 +136,23 @@ function sortChange(data, ...arg) {
   emits('sortChange', data, ...arg)
 }
 
+async function onErrClick(...arg) {
+  if (attrs?.onErrClick) {
+    attrs.onErrClick(...arg)
+    return
+  }
+  props.listHook?.afreshNextSend?.()
+}
+
 function mounted() {}
 
 function RenderState() {
   if (props.listHook.error) {
-    return <div class="r-el-pagination-table-state-error">出错了</div>
+    return (
+      <div class="r-el-pagination-table-state-error">
+        <span onClick={onErrClick}>出错了</span>
+      </div>
+    )
   }
 
   if (props.listHook.begin) {

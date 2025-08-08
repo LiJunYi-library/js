@@ -34,13 +34,14 @@
 
     <RPaginationTable
       :listHook="pList"
-      max-height="550px"
+      max-height="flex-auto-height"
       :class="['44555', 'ccccc']"
       v-model:sortProp="req.sortProp"
       v-model:sortOrder="req.sortOrder"
       border
       @currentPageChange="changePagin"
       @sort-change="sortChange"
+
     >
       <ElTableColumn width="80">
         <template #header>
@@ -66,33 +67,6 @@
         <div>emptyemptyempty</div>
       </template>
     </RPaginationTable>
-
-    <!-- <div class="r-el-pagination-table">
-      <div class="r-el-table-box" ref="rElTableBox">
-        <ElTable :data="pList.list" @sort-change="sortChange" border :height="rElTableBox?.offsetHeight">
-          <ElTableColumn width="80">
-            <template #header>
-              <r-grid style="--r-columns: 3">
-                <span class="iconfont" @click="pList.invertSelect()">&#xe60d;</span>
-                <span class="iconfont" @click="pList.allSelect()">&#xe60d;</span>
-                <span class="iconfont" @click="pList.reset()">&#xe60d;</span>
-              </r-grid>
-
-            </template>
-            <template #default="{ row }">
-              <ElButton size="small" :type="pList.same(row) ? 'primary' : ''" @click="pList.onSelect(row)">{{ row.value
-                }}
-              </ElButton>
-            </template>
-          </ElTableColumn>
-          <ElTableColumn prop="id" label="value" sortable="custom"></ElTableColumn>
-          <ElTableColumn prop="name" label="label" width="100"></ElTableColumn>
-        </ElTable>
-      </div>
-      <ElPagination layout="total, sizes, prev, pager, next, jumper" v-model:current-page="pList.currentPage"
-        v-model:page-size="pList.pageSize" :total="pList.total" @current-change="changePagin">
-      </ElPagination>
-    </div> -->
   </div>
 </template>
 <script setup>

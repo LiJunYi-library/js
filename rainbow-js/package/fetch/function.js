@@ -1,5 +1,4 @@
-import { ref } from "../proxy";
-import { proxy } from "../proxy";
+import { proxy, ref } from "../proxy";
 import { arrayEvents } from "../array";
 import { objectParseFormData, objectParseUri } from "../object";
 

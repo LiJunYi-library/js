@@ -1,21 +1,23 @@
 import { useQueue } from "@rainbow_ljy/rainbow-js";
 
-window.rainbow = (() => {
-  return {
-    toast: undefined,
-    overlay: undefined,
-    customRender(node, parent) {},
-    zIndex: 100,
-    zIndexAdd: 3,
-    zIndexPlus() {
-      this.zIndex = this.zIndex + this.zIndexAdd;
-      return this.zIndex;
-    },
-    overlayQueue: useQueue(),
-    dialogQueue: useQueue(),
-    history: createHistory(),
-  };
-})();
+if (!window.rainbow) {
+  window.rainbow = (() => {
+    return {
+      toast: undefined,
+      overlay: undefined,
+      customRender(node, parent) {},
+      zIndex: 100,
+      zIndexAdd: 3,
+      zIndexPlus() {
+        this.zIndex = this.zIndex + this.zIndexAdd;
+        return this.zIndex;
+      },
+      overlayQueue: useQueue(),
+      dialogQueue: useQueue(),
+      history: createHistory(),
+    };
+  })();
+}
 
 function createHistory() {
   let historyStack = 0;

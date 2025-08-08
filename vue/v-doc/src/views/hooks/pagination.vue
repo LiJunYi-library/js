@@ -82,7 +82,7 @@ import {
   ElPagination,
   ElCheckbox,
 } from 'element-plus'
-import { SpuFetch, useSpuFetch, useMFetch } from '@/hooks'
+import {useSpuFetch, useMFetch } from '@/hooks'
 import RPaginationTable from './r-el-pagination-table.vue'
 
 const req = reactive({

@@ -1,4 +1,4 @@
-import { createElementBlock as R, openBlock as A, mergeProps as st, renderSlot as L, Fragment as ct, renderList as j, normalizeClass as dt, createTextVNode as I, toDisplayString as gt, inject as J, reactive as K, onBeforeUnmount as et, defineComponent as M, onMounted as P, onUnmounted as ft, watch as X, createVNode as c, useSlots as nt, computed as T, toRaw as $, withDirectives as it, vModelText as ot, render as N, provide as rt, onBeforeMount as mt, isVNode as ht } from "vue";
+import { createElementBlock as D, openBlock as R, mergeProps as st, renderSlot as p, Fragment as ct, renderList as j, normalizeClass as dt, createTextVNode as I, toDisplayString as gt, inject as J, reactive as K, onBeforeUnmount as et, defineComponent as w, onMounted as P, onUnmounted as ft, watch as X, createVNode as c, useSlots as nt, computed as M, toRaw as O, withDirectives as it, vModelText as ot, render as $, provide as rt, onBeforeMount as mt, isVNode as ht } from "vue";
 import { findParentByLocalName as _t } from "@rainbow_ljy/rainbow-element";
 import { arrayRemove as vt, arrayLoopMap as yt, animationDebounced as Z, arrayLoop as bt } from "@rainbow_ljy/rainbow-js";
 import { useResizeObserver as kt } from "@rainbow_ljy/v-hooks";
@@ -12,12 +12,12 @@ const xt = ["value"], Ht = ["trigger", "value", "onClick"], Et = {
   setup(t) {
     return (n, l) => {
       var s;
-      return A(), R("r-tabs", st({
+      return R(), D("r-tabs", st({
         value: t.listHook.value
       }, { ...n.$attrs }), [
-        (A(!0), R(ct, null, j(((s = t.listHook) == null ? void 0 : s.list) ?? [], (e, o) => {
+        (R(!0), D(ct, null, j(((s = t.listHook) == null ? void 0 : s.list) ?? [], (e, o) => {
           var u, d;
-          return A(), R("r-tab-item", {
+          return R(), D("r-tab-item", {
             key: t.keyExtractor(e, o),
             trigger: t.trigger,
             value: (d = (u = t.listHook) == null ? void 0 : u.formatterValue) == null ? void 0 : d.call(u, e, o),
@@ -27,7 +27,7 @@ const xt = ["value"], Ht = ["trigger", "value", "onClick"], Et = {
               return (h = (i = t.listHook) == null ? void 0 : i.onSelect) == null ? void 0 : h.call(i, e, o);
             }
           }, [
-            L(n.$slots, "default", {
+            p(n.$slots, "default", {
               item: e,
               index: o
             }, () => {
@@ -38,7 +38,7 @@ const xt = ["value"], Ht = ["trigger", "value", "onClick"], Et = {
             })
           ], 10, Ht);
         }), 128)),
-        L(n.$slots, "active")
+        p(n.$slots, "active")
       ], 16, xt);
     };
   }
@@ -99,12 +99,12 @@ function Ct(t = {}) {
     width: e(),
     list: void 0,
     setColumns: a,
-    afreshConfig: V,
+    afreshConfig: T,
     push: v,
-    layout: w,
+    layout: B,
     setConfig: y,
     setWidth: s,
-    afreshLayout: B,
+    afreshLayout: V,
     getMaxHeightItem: i,
     getMinHeightItem: h,
     setList: o
@@ -151,13 +151,13 @@ function Ct(t = {}) {
   function y(r) {
     Object.assign(n, r), n.columns = d(r.width);
   }
-  function V(r) {
+  function T(r) {
     y(r), s(), o();
   }
-  function B(r, _ = []) {
-    y(r), s(), w(_);
+  function V(r, _ = []) {
+    y(r), s(), B(_);
   }
-  function w(r = []) {
+  function B(r = []) {
     o(), v(...r);
   }
   function v(...r) {
@@ -172,7 +172,7 @@ function Ct(t = {}) {
   }
   return l;
 }
-function pt(t = (e, o) => e.right = o - 1, n = [], l, s) {
+function Lt(t = (e, o) => e.right = o - 1, n = [], l, s) {
   const e = {
     left: 0,
     right: n.length - 1,
@@ -184,8 +184,8 @@ function pt(t = (e, o) => e.right = o - 1, n = [], l, s) {
   }
   return e.result;
 }
-function Lt(t = [], n, l) {
-  return pt(
+function pt(t = [], n, l) {
+  return Lt(
     (s, e) => {
       s.right = e - 1;
     },
@@ -194,7 +194,7 @@ function Lt(t = [], n, l) {
     l
   );
 }
-const Pt = /* @__PURE__ */ M({
+const Pt = /* @__PURE__ */ w({
   props: {
     triggerBottomDistance: {
       type: Number,
@@ -215,7 +215,7 @@ const Pt = /* @__PURE__ */ M({
       default: 10
     }
   },
-  emits: ["rollToBottom"],
+  emits: ["rollToBottom", "scrollArriveBottom"],
   setup(t, n) {
     (() => {
       Q({
@@ -223,13 +223,13 @@ const Pt = /* @__PURE__ */ M({
       });
       function f(r) {
         const _ = r.contentHeight - r.containerHeight - t.triggerBottomDistance;
-        r.scrollTop >= _ && n.emit("rollToBottom", r);
+        r.scrollTop >= _ && (n.emit("rollToBottom", r), n.emit("scrollArriveBottom", r));
       }
     })();
     let l, s = document.createElement("div");
     P(e), ft(o);
     function e() {
-      s = _t(["r-scroll", "r-scroll-view", "r-nested-scroll"], l.$el), s && s.addEventListener("scrollUp", u);
+      console.log("findParentByLocalName222"), s = _t(["r-scroll", "r-scroll-view", "r-nested-scroll"], l.$el), s && s.addEventListener("scrollUp", u);
     }
     function o() {
       s && s.removeEventListener("scrollUp", u);
@@ -237,10 +237,10 @@ const Pt = /* @__PURE__ */ M({
     function u(f) {
       if (!s) return;
       const r = s.scrollHeight - s.offsetHeight - t.triggerBottomDistance;
-      s.scrollTop >= r && n.emit("rollToBottom", f);
+      s.scrollTop >= r && (n.emit("rollToBottom", f), n.emit("scrollArriveBottom", f));
     }
     function d() {
-      return L(n.slots, "loading", {}, () => [c("div", {
+      return p(n.slots, "loading", {}, () => [c("div", {
         class: "r-pagination-loading-loading"
       }, [c("div", {
         class: "r-pagination-loading-loading-prve"
@@ -251,7 +251,7 @@ const Pt = /* @__PURE__ */ M({
       }, null)])]);
     }
     function a() {
-      return L(n.slots, "finished", {}, () => [c("div", {
+      return p(n.slots, "finished", {}, () => [c("div", {
         class: "r-pagination-loading-finished"
       }, [c("div", {
         class: "r-pagination-loading-finished-prve"
@@ -262,7 +262,7 @@ const Pt = /* @__PURE__ */ M({
       }, null)])]);
     }
     function i() {
-      return L(n.slots, "empty", {}, () => [c("div", {
+      return p(n.slots, "empty", {}, () => [c("div", {
         class: "r-pagination-loading-empty"
       }, [c("div", {
         class: "r-pagination-loading-empty-prve"
@@ -273,7 +273,7 @@ const Pt = /* @__PURE__ */ M({
       }, null)])]);
     }
     function h() {
-      return L(n.slots, "begin", {}, () => [c("div", {
+      return p(n.slots, "begin", {}, () => [c("div", {
         class: "r-pagination-loading-begin"
       }, [c("div", {
         class: "r-pagination-loading-begin-loading"
@@ -293,8 +293,8 @@ const Pt = /* @__PURE__ */ M({
       var f, r;
       t.onBeginErrorClick ? t.onBeginErrorClick(...arg) : (r = (f = t.loadingHook) == null ? void 0 : f.nextBeginSend) == null || r.call(f);
     }
-    function V() {
-      return L(n.slots, "error", {}, () => [c("div", {
+    function T() {
+      return p(n.slots, "error", {}, () => [c("div", {
         class: "r-pagination-loading-begin-error",
         onClick: y
       }, [c("div", {
@@ -305,14 +305,14 @@ const Pt = /* @__PURE__ */ M({
         class: "r-pagination-loading-begin-error-next"
       }, null)])]);
     }
-    function B(...f) {
+    function V(...f) {
       var r, _;
       t.onErrorLoadClick ? t.onErrorLoadClick(...f) : (_ = (r = t.loadingHook) == null ? void 0 : r.awaitSend) == null || _.call(r);
     }
-    function w() {
-      return L(n.slots, "errorLoad", {}, () => [c("div", {
+    function B() {
+      return p(n.slots, "errorLoad", {}, () => [c("div", {
         class: "r-pagination-loading-error",
-        onClick: B
+        onClick: V
       }, [c("div", {
         class: "r-pagination-loading-error-prve"
       }, null), c("div", {
@@ -323,7 +323,7 @@ const Pt = /* @__PURE__ */ M({
     }
     function v() {
       const f = t.loadingHook;
-      if (f.error === !0) return w();
+      if (f.error === !0) return B();
       if (f.empty === !0 && f.finished === !0) return i();
       if (f.finished === !0) return a();
       if (f.loading === !0) return d();
@@ -334,10 +334,10 @@ const Pt = /* @__PURE__ */ M({
       var k, F;
       l = f;
       const _ = t.loadingHook;
-      return _.begin === !0 && _.error === !0 ? V() : _.begin === !0 ? h() : [(F = (k = n.slots) == null ? void 0 : k.default) == null ? void 0 : F.call(k), v()];
+      return _.begin === !0 && _.error === !0 ? T() : _.begin === !0 ? h() : [(F = (k = n.slots) == null ? void 0 : k.default) == null ? void 0 : F.call(k), v()];
     };
   }
-}), wt = ["keyExtractor"], Mt = {
+}), Bt = ["keyExtractor"], wt = {
   __name: "index",
   props: {
     modelValue: {
@@ -357,15 +357,15 @@ const Pt = /* @__PURE__ */ M({
   setup(t, {
     emit: n
   }) {
-    const l = nt(), s = n, e = t, o = T({
+    const l = nt(), s = n, e = t, o = M({
       set(i) {
         if (e.listHook.list) return e.listHook.list = i;
         s("update:modelValue", i);
       },
       get() {
-        return e.listHook.list ? $(e.listHook.list) : $(e.modelValue);
+        return e.listHook.list ? O(e.listHook.list) : O(e.modelValue);
       }
-    }), u = T(() => e.listHook.list ? e.listHook.list : e.modelValue), d = /* @__PURE__ */ M({
+    }), u = M(() => e.listHook.list ? e.listHook.list : e.modelValue), d = /* @__PURE__ */ w({
       inheritAttrs: !1,
       props: {
         event: Object,
@@ -379,20 +379,20 @@ const Pt = /* @__PURE__ */ M({
       }
     });
     function a(i) {
-      i.item = u.value[i.index], N(c(d, {
+      i.item = u.value[i.index], $(c(d, {
         event: i,
         slots: l,
         key: e.keyExtractor(i),
         "data-key": e.keyExtractor(i)
       }, null), i.ele);
     }
-    return (i, h) => it((A(), R("r-scroll-virtual-grid-list", {
+    return (i, h) => it((R(), D("r-scroll-virtual-grid-list", {
       "onUpdate:modelValue": h[0] || (h[0] = (y) => o.value = y),
       onrenderItems: a,
       keyExtractor: e.keyExtractor
-    }, [L(i.$slots, "default")], 8, wt)), [[ot, o.value]]);
+    }, [p(i.$slots, "default")], 8, Bt)), [[ot, o.value]]);
   }
-}, zt = Mt, Tt = ["keyExtractor"], Vt = {
+}, zt = wt, Mt = ["keyExtractor"], Tt = {
   __name: "index",
   props: {
     modelValue: {
@@ -412,15 +412,15 @@ const Pt = /* @__PURE__ */ M({
   setup(t, {
     emit: n
   }) {
-    const l = nt(), s = n, e = t, o = T({
+    const l = nt(), s = n, e = t, o = M({
       set(i) {
         if (e.listHook.list) return e.listHook.list = i;
         s("update:modelValue", i);
       },
       get() {
-        return e.listHook.list ? $(e.listHook.list) : $(e.modelValue);
+        return e.listHook.list ? O(e.listHook.list) : O(e.modelValue);
       }
-    }), u = T(() => e.listHook.list ? e.listHook.list : e.modelValue), d = /* @__PURE__ */ M({
+    }), u = M(() => e.listHook.list ? e.listHook.list : e.modelValue), d = /* @__PURE__ */ w({
       inheritAttrs: !1,
       props: {
         event: Object,
@@ -435,20 +435,20 @@ const Pt = /* @__PURE__ */ M({
       }
     });
     function a(i) {
-      i.item = u.value[i.index], N(c(d, {
+      i.item = u.value[i.index], $(c(d, {
         event: i,
         slots: l,
         key: e.keyExtractor(i),
         "data-key": e.keyExtractor(i)
       }, null), i.ele);
     }
-    return (i, h) => it((A(), R("r-scroll-virtual-falls-list", {
+    return (i, h) => it((R(), D("r-scroll-virtual-falls-list", {
       "onUpdate:modelValue": h[0] || (h[0] = (y) => o.value = y),
       onrenderItems: a,
       keyExtractor: e.keyExtractor
-    }, [L(i.$slots, "default")], 8, Tt)), [[ot, o.value]]);
+    }, [p(i.$slots, "default")], 8, Mt)), [[ot, o.value]]);
   }
-}, Ut = Vt, Bt = {
+}, Ut = Tt, Vt = {
   avgHeight: {
     type: Number,
     default: 200
@@ -482,14 +482,14 @@ const Pt = /* @__PURE__ */ M({
     type: Number,
     default: 30
   }
-}, Ft = /* @__PURE__ */ M({
+}, Ft = /* @__PURE__ */ w({
   props: {
     list: Array
   },
   setup(t, n) {
     return () => (j(t.list || [], (l, s) => null), null);
   }
-}), St = /* @__PURE__ */ M({
+}), St = /* @__PURE__ */ w({
   props: {
     list: Array
   },
@@ -498,7 +498,7 @@ const Pt = /* @__PURE__ */ M({
       list: t.list
     }, null);
   }
-}), tt = /* @__PURE__ */ M({
+}), tt = /* @__PURE__ */ w({
   props: {
     item: Object,
     index: Number,
@@ -519,13 +519,13 @@ const Pt = /* @__PURE__ */ M({
       }, [(u = (o = t == null ? void 0 : t.slots) == null ? void 0 : o.default) == null ? void 0 : u.call(o, t)]);
     };
   }
-}), Gt = /* @__PURE__ */ M({
+}), Gt = /* @__PURE__ */ w({
   props: {
-    ...Bt
+    ...Vt
   },
   setup(t, n) {
     let l, s = !1;
-    const e = Ct(t), o = T(() => (t.listHook ? t.listHook.list : t.list) || []), u = F(), d = {
+    const e = Ct(t), o = M(() => (t.listHook ? t.listHook.list : t.list) || []), u = F(), d = {
       nodeMap: /* @__PURE__ */ new Map(),
       DivPointer: void 0,
       item: void 0
@@ -544,22 +544,22 @@ const Pt = /* @__PURE__ */ M({
     const i = Z(U), h = Z(S), y = Q({
       onScroll: z,
       onResize: i
-    }), V = () => {
+    }), T = () => {
       var m, g;
       return ((g = (m = y == null ? void 0 : y.context) == null ? void 0 : m.element) == null ? void 0 : g.scrollTop) ?? 0;
-    }, B = T(() => o.value.length ? (t.avgHeight + t.gap) * Math.ceil(o.value.length / t.columns) - t.gap : 0), w = () => -window.innerHeight + y.getOffsetTop(l), v = () => window.innerHeight * 2 + y.getOffsetTop(l);
+    }, V = M(() => o.value.length ? (t.avgHeight + t.gap) * Math.ceil(o.value.length / t.columns) - t.gap : 0), B = () => -window.innerHeight + y.getOffsetTop(l), v = () => window.innerHeight * 2 + y.getOffsetTop(l);
     function f() {
       if (!l) return;
       u.stop();
       let m = a.column;
-      a.nodeMap = /* @__PURE__ */ new Map(), d.DivPointer = void 0, a.renderList.forEach((g, p) => {
+      a.nodeMap = /* @__PURE__ */ new Map(), d.DivPointer = void 0, a.renderList.forEach((g, L) => {
         g.__cache__ || (g.__cache__ = {});
-        const E = a.index + p, H = g.__cache__;
-        H.columns = e.list.map((D) => ({
-          ...D
+        const E = a.index + L, H = g.__cache__;
+        H.columns = e.list.map((A) => ({
+          ...A
         })), m.height && (m.height = m.height + t.gap), H.top = m.height, H.left = m.left, H.width = m.width, H.columnIndex = m.index;
         let x;
-        d.nodeMap.has(g) ? (x = d.nodeMap.get(g), x.setAttribute("data-index", E), N(c(tt, {
+        d.nodeMap.has(g) ? (x = d.nodeMap.get(g), x.setAttribute("data-index", E), $(c(tt, {
           item: g,
           index: E,
           slots: n.slots,
@@ -568,7 +568,7 @@ const Pt = /* @__PURE__ */ M({
             index: E
           }),
           onHeightChange: h
-        }, null), x), d.DivPointer && (d.DivPointer.nextSibling === x || l.insertBefore(x, d.DivPointer.nextSibling)), d.DivPointer = x, d.nodeMap.delete(g)) : (x = document.createElement("div"), x.setAttribute("data-index", E), x.classList.add("r-scroll-virtual-falls-list-item"), N(c(tt, {
+        }, null), x), d.DivPointer && (d.DivPointer.nextSibling === x || l.insertBefore(x, d.DivPointer.nextSibling)), d.DivPointer = x, d.nodeMap.delete(g)) : (x = document.createElement("div"), x.setAttribute("data-index", E), x.classList.add("r-scroll-virtual-falls-list-item"), $(c(tt, {
           item: g,
           index: E,
           slots: n.slots,
@@ -577,57 +577,57 @@ const Pt = /* @__PURE__ */ M({
             index: E
           }),
           onHeightChange: h
-        }, null), x), d.DivPointer ? (l.insertBefore(x, d.DivPointer.nextSibling), d.DivPointer = x) : (l.insertBefore(x, l.firstChild), d.DivPointer = x)), x.style.top = H.top + "px", x.style.left = H.left, x.style.width = H.width, H.height = x.offsetHeight, m.height = m.height + x.offsetHeight, H.bottom = m.height, H.vTop = H.top + w(), H.vBottom = H.bottom + v(), H.columns2 = e.list.map((D) => ({
-          ...D
+        }, null), x), d.DivPointer ? (l.insertBefore(x, d.DivPointer.nextSibling), d.DivPointer = x) : (l.insertBefore(x, l.firstChild), d.DivPointer = x)), x.style.top = H.top + "px", x.style.left = H.left, x.style.width = H.width, H.height = x.offsetHeight, m.height = m.height + x.offsetHeight, H.bottom = m.height, H.vTop = H.top + B(), H.vBottom = H.bottom + v(), H.columns2 = e.list.map((A) => ({
+          ...A
         })), a.endIndex = E + 1, m = e.getMinHeightItem(), a.endColumn = m, a.nodeMap.set(g, x);
       }), d.nodeMap.forEach((g) => g.remove()), d.DivPointer = void 0, d.nodeMap = a.nodeMap, s = !1, u.rePreLoads(), u.start();
     }
     function r(m) {
-      let g = _(V());
+      let g = _(T());
       if (g === -1 && (g = 0), o.value.length === 0 && l) {
         l.innerHTML = "";
         return;
       }
-      let p = o.value[g];
-      if (!p || !m && d.item === p) return;
+      let L = o.value[g];
+      if (!L || !m && d.item === L) return;
       s = !0, a.index = g;
-      let E = p.__cache__;
-      g === 0 ? (e.setList(), a.column = e.getMinHeightItem()) : (e.list = E.columns, a.column = e.getMinHeightItem(E.columnIndex)), a.renderList = o.value.slice(a.index, a.index + t.renderCount), d.item = p, f();
+      let E = L.__cache__;
+      g === 0 ? (e.setList(), a.column = e.getMinHeightItem()) : (e.list = E.columns, a.column = e.getMinHeightItem(E.columnIndex)), a.renderList = o.value.slice(a.index, a.index + t.renderCount), d.item = L, f();
     }
     function _(m) {
-      return Lt(o.value, (g) => g.__cache__ ? g.__cache__.vTop <= m && m <= g.__cache__.vBottom : !1, (g) => g.__cache__ ? g.__cache__.vTop < m : !1);
+      return pt(o.value, (g) => g.__cache__ ? g.__cache__.vTop <= m && m <= g.__cache__.vBottom : !1, (g) => g.__cache__ ? g.__cache__.vTop < m : !1);
     }
     function k() {
-      var p, E;
-      const m = (E = (p = o.value.at(-1)) == null ? void 0 : p.__cache__) == null ? void 0 : E.columns2;
-      if (!m) return B.value;
+      var L, E;
+      const m = (E = (L = o.value.at(-1)) == null ? void 0 : L.__cache__) == null ? void 0 : E.columns2;
+      if (!m) return V.value;
       let g = m[0];
       return m.forEach((H) => {
         H.height > g.height && (g = H);
       }), g.height;
     }
     function F() {
-      let m, g = 0, p;
+      let m, g = 0, L;
       const E = window.requestIdleCallback || requestAnimationFrame, H = window.requestIdleCallback ? cancelIdleCallback : cancelAnimationFrame;
       function x() {
-        g = a.endIndex, p = a.endColumn, G();
+        g = a.endIndex, L = a.endColumn, G();
       }
-      function D() {
+      function A() {
         const b = o.value[g];
         if (!b) return;
-        let C = p;
+        let C = L;
         b.__cache__ || (b.__cache__ = {});
-        const O = b.__cache__.height || t.avgHeight;
+        const N = b.__cache__.height || t.avgHeight;
         b.__cache__.columns = e.list.map((q) => ({
           ...q
-        })), C.height && (C.height = C.height + t.gap), b.__cache__.top = C.height, b.__cache__.left = C.left, b.__cache__.width = C.width, b.__cache__.columnIndex = C.index, b.__cache__.height = O, C.height = C.height + O, b.__cache__.bottom = C.height, b.__cache__.columns2 = e.list.map((q) => ({
+        })), C.height && (C.height = C.height + t.gap), b.__cache__.top = C.height, b.__cache__.left = C.left, b.__cache__.width = C.width, b.__cache__.columnIndex = C.index, b.__cache__.height = N, C.height = C.height + N, b.__cache__.bottom = C.height, b.__cache__.columns2 = e.list.map((q) => ({
           ...q
-        })), b.__cache__.vTop = b.__cache__.top + w(), b.__cache__.vBottom = b.__cache__.bottom + v(), g++, p = e.getMinHeightItem();
+        })), b.__cache__.vTop = b.__cache__.top + B(), b.__cache__.vBottom = b.__cache__.bottom + v(), g++, L = e.getMinHeightItem();
       }
       function G(b = t.preLoadsCount) {
         let C = 0;
         for (; C < t.preLoadsCount; )
-          D(), C++;
+          A(), C++;
       }
       function W(b) {
         if (g >= o.value.length) {
@@ -637,8 +637,8 @@ const Pt = /* @__PURE__ */ M({
         if (typeof b == "object" && b.timeRemaining && b.timeRemaining() > 0 || typeof b == "number") {
           try {
             G(10);
-          } catch (O) {
-            console.error("Error in callback:", O);
+          } catch (N) {
+            console.error("Error in callback:", N);
           }
           (typeof b == "object" && !b.didTimeout || typeof b == "number") && (m = E(W));
         }
@@ -657,7 +657,7 @@ const Pt = /* @__PURE__ */ M({
         stop: Y,
         trigger: ut,
         preLoads: G,
-        preLoad: D,
+        preLoad: A,
         rePreLoads: x
       };
     }
@@ -725,7 +725,7 @@ const lt = {
   list: Array,
   openAnimationFrame: Boolean
   //
-}, Dt = /* @__PURE__ */ M({
+}, At = /* @__PURE__ */ w({
   props: {
     item: [Object, Array, String, Number],
     index: Number
@@ -745,9 +745,9 @@ const lt = {
       e.disconnect();
     }), () => c("div", {
       ref: (u) => s = u
-    }, [L(n.slots, "default", t)]);
+    }, [p(n.slots, "default", t)]);
   }
-}), Rt = /* @__PURE__ */ M({
+}), Dt = /* @__PURE__ */ w({
   props: {
     ...lt
   },
@@ -758,19 +758,19 @@ const lt = {
     }
     return () => j(l.renderList, (e, o) => {
       let u;
-      return s(e), c(Dt, {
+      return s(e), c(At, {
         "data-index": e.index,
         class: "r-scroll-virtual-grid-list-item",
         style: e.style,
         item: e.item,
         index: e.index,
         key: t.keyExtractor(e)
-      }, It(u = L(l.slots, "default", e)) ? u : {
+      }, It(u = p(l.slots, "default", e)) ? u : {
         default: () => [u]
       });
     });
   }
-}), Wt = /* @__PURE__ */ M({
+}), Wt = /* @__PURE__ */ w({
   props: {
     ...lt
   },
@@ -779,12 +779,12 @@ const lt = {
     let l = {
       index: void 0
     }, s;
-    const e = () => window.innerHeight, o = T(() => `calc( ${100 / t.columns}% - ${(t.columns - 1) * t.gap / t.columns}px )`), u = T(() => (t.listHook ? t.listHook.list : t.list) || []), d = T(() => u.value.length ? (t.avgHeight + t.gap) * Math.ceil(u.value.length / t.columns) - t.gap + t.bothEndsHeight * 2 : 0), a = Q({
+    const e = () => window.innerHeight, o = M(() => `calc( ${100 / t.columns}% - ${(t.columns - 1) * t.gap / t.columns}px )`), u = M(() => (t.listHook ? t.listHook.list : t.list) || []), d = M(() => u.value.length ? (t.avgHeight + t.gap) * Math.ceil(u.value.length / t.columns) - t.gap + t.bothEndsHeight * 2 : 0), a = Q({
       onScroll(v, f) {
-        w();
+        B();
       },
       onResize(v, f) {
-        w();
+        B();
       }
     }), i = K({
       context: n,
@@ -833,28 +833,28 @@ const lt = {
         v++;
       }), f = f + t.avgHeight + t.gap, f < window.innerHeight + e() * 2 ? y(v, f, r) : r);
     }
-    function V(v = !0) {
+    function T(v = !0) {
       if (!a.context.element) return;
       const f = a.context.element.scrollTop, r = a.getOffsetTop(s);
       if (r - f - window.innerHeight - e() > 0) return;
       let k = Math.floor(e() / (t.avgHeight + t.gap)) * t.columns, S = Math.floor((f - r) / (t.avgHeight + t.gap)) * t.columns - k;
       l.index === S && v || (l.index = S, i.renderList = y(S));
     }
-    let B;
-    function w(v = !0) {
-      if (!t.openAnimationFrame) return V(v);
-      cancelAnimationFrame(B), B = requestAnimationFrame(() => {
-        V(v);
+    let V;
+    function B(v = !0) {
+      if (!t.openAnimationFrame) return T(v);
+      cancelAnimationFrame(V), V = requestAnimationFrame(() => {
+        T(v);
       });
     }
-    return () => (w(!1), c("div", {
+    return () => (B(!1), c("div", {
       "data-length": u.value.length,
       ref: (v) => s = v,
       style: {
         height: d.value + "px"
       },
       class: "r-scroll-virtual-grid-list"
-    }, [c(Rt, {
+    }, [c(Dt, {
       keyExtractor: t.keyExtractor
     }, null)]));
   }

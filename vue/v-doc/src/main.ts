@@ -40,6 +40,7 @@ export const directiveEvents = {
 }
 
 defineElements()
+console.log(rainbow)
 rainbow.customRender = render
 const app = createApp(App)
 app.use(directiveEvents)

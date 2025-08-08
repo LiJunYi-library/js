@@ -72,7 +72,7 @@
 <script setup>
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
 import { useVListPagination } from '@rainbow_ljy/v-hooks'
-import { computed, onMounted, customRef, reactive } from 'vue'
+import { computed, onMounted, customRef, reactive,ref } from 'vue'
 import {
   ElTable,
   ElTableColumn,
@@ -109,7 +109,8 @@ import RPaginationTable from './r-el-pagination-table.vue'
 }
 
 const aaa = useLocalVal('aaa', {a:10})
-aaa.value =  {a:10}
+console.log(ref( {a:10}));
+
 
 const req = reactive({
   isPass: '',

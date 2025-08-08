@@ -1,3 +1,1 @@
-export * from './class'
-export * from './function'
-
+export * from "./function";

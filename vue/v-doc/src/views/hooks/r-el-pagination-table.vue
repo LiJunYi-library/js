@@ -15,8 +15,8 @@
         ref="elTable"
         :data="data"
         v-bind="{ ...$attrs }"
-
         :height="tableHeight"
+        :max-height="tableMaxHeight"
         :default-sort="defaultSort"
         @sort-change="sortChange"
       >
@@ -39,7 +39,7 @@
     <div
       ref="rElPagination"
       class="r-el-pagination-bottom"
-      v-if="!listHook.begin"
+      v-if="!listHook.begin && !listHook.error"
       v-on-resize="onResize"
     >
       <ElPagination
@@ -91,20 +91,20 @@ watch(() => [props.sortOrder, props.sortProp], watchSort)
 const data = computed(() => (props.listHook.error ? [] : props.listHook.list))
 const innerStyle = computed(() => ({ maxHeight: props.maxHeight, height: props.height }))
 const boolAutoFlex = (v, a, b) => (v === 'flex-auto-height' ? a : b)
-const tableMaxHeight = computed(() =>
-  boolAutoFlex(props.maxHeight, `${CH.value}px`, `calc( ${props.maxHeight} - ${PH.value}px)`),
-)
-const tableHeight = computed(() =>
-  boolAutoFlex(props.height, `${CH.value}px`, `calc( ${props.height} - ${PH.value}px)`),
-)
+const tableMaxHeight = computed(() => {
+  if (props.maxHeight === undefined) return undefined
+  return boolAutoFlex(props.maxHeight, `${CH.value}px`, `calc( ${props.maxHeight} - ${PH.value}px)`)
+})
+const tableHeight = computed(() => {
+  if (props.height === undefined) return undefined
+  return boolAutoFlex(props.height, `${CH.value}px`, `calc( ${props.height} - ${PH.value}px)`)
+})
 onMounted(mounted)
 
 function onResize() {
   PTH.value = rElPaginationTable.value?.offsetHeight ?? 0
   PH.value = rElPagination.value?.offsetHeight ?? 0
   CH.value = PTH.value - PH.value
-  console.log('onResize');
-
 }
 
 function watchSort() {
@@ -133,7 +133,7 @@ function sortChange(data, ...arg) {
   emits('update:sortOrder', data?.order)
   emits('sortChange', data, ...arg)
 }
-console.log(props.class)
+
 function mounted() {}
 
 function RenderState() {

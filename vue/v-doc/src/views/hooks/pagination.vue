@@ -34,8 +34,8 @@
 
     <RPaginationTable
       :listHook="pList"
-      height="flex-auto-height"
-      :class="['44555','ccccc']"
+      max-height="550px"
+      :class="['44555', 'ccccc']"
       v-model:sortProp="req.sortProp"
       v-model:sortOrder="req.sortOrder"
       border
@@ -161,8 +161,8 @@ function sortChange(params) {
 
 function errorSend() {
   //afreshNextBeginSend  afreshNextSend  nextSend
-  // pList.afreshNextSend({ url: '/spu/list2',})
-  pList.loading = true
+  pList.afreshNextSend({ url: '/spu/list2',})
+  // pList.loading = true
 }
 
 function intersection(params) {

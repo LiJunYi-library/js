@@ -143,8 +143,6 @@ export function listLoad(props = {}) {
 
   async function afreshNextSend(...arg) {
     currentPage.value = 1;
-    finished.value = false;
-    empty.value = false;
     total.value = 0;
     loading = true;
     try {

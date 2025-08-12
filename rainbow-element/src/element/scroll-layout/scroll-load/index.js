@@ -5,45 +5,20 @@ import {
   createCustomEvent,
   createElement,
   createSlot,
-  resizeObserver,
-  getBoundingClientRect,
+  addEventListenerOnce,
 } from "../../../utils/index.js";
 
 export class RScrollLoad extends RainbowElement {
-  $$ = {
-    loading: false,
-    finished: false,
-    empty: false,
-    begin: false,
-    beginError: false,
-    error: false,
-
-    defaultSlot: createSlot("slot"),
-
-    loadingEl: createElement("div", "r-scroll-load-loading"),
-    loadingSlot: createSlot("loading-slot"),
-
-    finishedEl: createElement("div", "r-scroll-load-finished"),
-    finishedSlot: createSlot("finished-slot"),
-
-    emptyEl: createElement("div", "r-scroll-load-empty"),
-    emptySlot: createSlot("empty-slot"),
-
-    beginEl: createElement("div", "r-scroll-load-begin"),
-    beginSlot: createSlot("begin-slot"),
-
-    beginErrorEl: createElement("div", "r-scroll-load-begin-error"),
-    beginErrorSlot: createSlot("begin-error-slot"),
-
-    errorEl: createElement("div", "r-scroll-load-error"),
-    errorSlot: createSlot("error-slot"),
-  };
+  static observedAttributes = this.$registerProps({
+    "r-trigger-bottom-distance": String, // 0px
+  });
 
   get loading() {
     return this.$$.loading;
   }
   set loading(v) {
     this.$$.loading = v;
+    this.$render();
   }
 
   get finished() {
@@ -51,6 +26,7 @@ export class RScrollLoad extends RainbowElement {
   }
   set finished(v) {
     this.$$.finished = v;
+    this.$render();
   }
 
   get empty() {
@@ -58,6 +34,7 @@ export class RScrollLoad extends RainbowElement {
   }
   set empty(v) {
     this.$$.empty = v;
+    this.$render();
   }
 
   get begin() {
@@ -66,6 +43,7 @@ export class RScrollLoad extends RainbowElement {
 
   set begin(v) {
     this.$$.begin = v;
+    this.$render();
   }
 
   get beginError() {
@@ -73,6 +51,7 @@ export class RScrollLoad extends RainbowElement {
   }
   set beginError(v) {
     this.$$.beginError = v;
+    this.$render();
   }
 
   get error() {
@@ -80,28 +59,104 @@ export class RScrollLoad extends RainbowElement {
   }
   set error(v) {
     this.$$.error = v;
+    this.$render();
   }
+
+  $$ = {
+    loading: false,
+    finished: false,
+    empty: false,
+    begin: false,
+    beginError: false,
+    error: false,
+    scrollParent: document.createElement("div"),
+
+    defaultSlot: createSlot("slot"),
+
+    beginEl: createElement("div", "r-scroll-load-begin"),
+    beginSlot: createSlot("slot", "begin"),
+
+    loadingEl: createElement("div", "r-scroll-load-loading"),
+    loadingSlot: createSlot("slot", "loading"),
+
+    finishedEl: createElement("div", "r-scroll-load-finished"),
+    finishedSlot: createSlot("slot", "finished"),
+
+    emptyEl: createElement("div", "r-scroll-load-empty"),
+    emptySlot: createSlot("slot", "empty"),
+
+    beginErrorEl: createElement("div", "r-scroll-load-begin-error"),
+    beginErrorSlot: createSlot("slot", "begin-error"),
+
+    errorEl: createElement("div", "r-scroll-load-error"),
+    errorSlot: createSlot("slot", "error"),
+
+    renderState: (...nodes) => {
+      [
+        this.$$.defaultSlot,
+        this.$$.loadingSlot,
+        this.$$.finishedSlot,
+        this.$$.emptySlot,
+        this.$$.beginSlot,
+        this.$$.beginErrorSlot,
+        this.$$.errorSlot,
+      ].forEach((item) => {
+        if (nodes.includes(item)) this.shadowRoot.appendChild(item);
+        else item.remove();
+      });
+    },
+
+    onScrollUp: (event) => {
+      const { rTriggerBottomDistance } = this.$.DATA;
+      console.log(rTriggerBottomDistance);
+      const { scrollParent: sp } = this.$$;
+      const max = sp.scrollHeight - sp.offsetHeight - rTriggerBottomDistance;
+      const bool = sp.scrollTop >= max;
+      if (bool) this.dispatchEvent(createCustomEvent("rollToBottom", event));
+    },
+  };
 
   constructor(...arg) {
     super(...arg);
     this.attachShadow({ mode: "open" });
-    this.appendChild(this.$$.defaultSlot)
+    this.$render();
   }
 
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
+    this.$render();
+    const scrollName = ["r-scroll", "r-scroll-view", "r-nested-scroll"];
+    this.$$.scrollParent = findParentByLocalName(scrollName, this);
+    addEventListenerOnce(this.$$.scrollParent, "scrollUp", this.$$.onScrollUp);
   }
 
   disconnectedCallback(...arg) {
     super.disconnectedCallback(...arg);
   }
 
-  renderState() {
-    this.removeChild(this.loadingEl);
-    this.removeChild(this.finishedEl);
-    this.removeChild(this.emptyEl);
-    this.removeChild(this.beginEl);
-    this.removeChild(this.beginErrorEl);
-    this.removeChild(this.errorEl);
+  $render() {
+    if (this.begin === true && this.error === true) {
+      this.$$.renderState(this.$$.beginErrorSlot);
+      return;
+    }
+
+    if (this.begin === true) {
+      this.$$.renderState(this.$$.loadingSlot, this.$$.beginSlot);
+      return;
+    }
+
+    if (this.finished === true && this.empty === true) {
+      this.$$.renderState(this.$$.emptySlot);
+      return;
+    }
+
+    this.$$.renderState(
+      ...[
+        this.empty === true ? this.$$.emptySlot : this.$$.defaultSlot,
+        this.loading === true && this.$$.loadingSlot,
+        this.finished === true && this.$$.finishedSlot,
+        this.error === true && this.$$.errorSlot,
+      ].filter(Boolean),
+    );
   }
 }

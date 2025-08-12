@@ -130,7 +130,7 @@ function rollToBottom(params) {
   .item {
     height: 150px;
     background: cyan;
-    margin-top: 10px;
+    margin-bottom: 10px;
   }
 }
 </style>

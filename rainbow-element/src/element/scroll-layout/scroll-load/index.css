@@ -1,5 +1,4 @@
 r-scroll-load {
- display: block;
+  display: block;
+  --r-trigger-bottom-distance: 50vh;
 }
-
-

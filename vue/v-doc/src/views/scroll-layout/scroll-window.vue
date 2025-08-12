@@ -28,11 +28,33 @@ const text = arrayLoopMap(300, () => '帅').join('')
 async function onrefresh() {
   return setTimeoutPromise(300000)
 }
+
+function scroll(params) {
+
+}
+
+function animationFrameSetTimeout(cb, time) {
+  const st = Date.now()
+  function step() {
+    const et = Date.now()
+    if (et - st >= time) {
+      cb()
+    } else {
+      requestAnimationFrame(step)
+    }
+  }
+  requestAnimationFrame(step)
+}
+
+animationFrameSetTimeout(() => {
+  const aa = new URLSearchParams(location.search)
+  console.log('2000', aa.getAll('aaa'))
+}, 2000)
 </script>
 
 <style lang="scss">
 .scroll-refresh-demo {
-  r-scroll-refresh{
+  r-scroll-refresh {
     background: chartreuse;
   }
   .flexed {
@@ -56,8 +78,8 @@ async function onrefresh() {
     height: 50px;
     display: flex;
     justify-content: space-between;
-    .sticky-input{
-      width: calc(100% - (min(1, var(--scrollTop) / 200) * 105px) - 55px );
+    .sticky-input {
+      width: calc(100% - (min(1, var(--scrollTop) / 200) * 105px) - 55px);
     }
   }
   .absolute {

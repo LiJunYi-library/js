@@ -6,6 +6,7 @@ import {
   createElement,
   createSlot,
   addEventListenerOnce,
+  removeEventListener,
 } from "../../../utils/index.js";
 
 export class RScrollLoad extends RainbowElement {
@@ -132,6 +133,7 @@ export class RScrollLoad extends RainbowElement {
 
   disconnectedCallback(...arg) {
     super.disconnectedCallback(...arg);
+    removeEventListener(this.$$.scrollParent, "scrollUp", this.$$.onScrollUp);
   }
 
   $render() {

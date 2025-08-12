@@ -1,0 +1,75 @@
+r-result {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  font-size: 14px;
+
+  .r-result-prve,
+  .r-result-next {
+    font-family: "iconfont";
+  }
+}
+
+.r-result-begin-error {
+  color: var(--error-color);
+  flex-direction: column;
+
+  .r-result-prve::before {
+    content: '\e616';
+    font-size: 120px;
+  }
+
+  .r-result-text::before {
+    content: '出错了点击重新加载';
+  }
+}
+
+.r-result-loading {
+  .r-result-prve {
+    animation: rotating 2s linear infinite;
+  }
+
+  .r-result-prve::before {
+    content: '\e607';
+  }
+
+  .r-result-text::before {
+    content: '加载中';
+  }
+}
+
+.r-result-error {
+  color: var(--error-color);
+
+  .r-result-prve::before {
+    content: '\e628';
+  }
+
+  .r-result-text::before {
+    content: '出错了点击继续加载';
+  }
+}
+
+.r-result-finished {
+  .r-result-prve::before {
+    content: '\e611';
+  }
+
+  .r-result-text::before {
+    content: '没有更多的了';
+  }
+}
+
+.r-result-empty {
+  flex-direction: column;
+
+  .r-result-prve::before {
+    content: '\e601';
+    font-size: 120px;
+  }
+
+  .r-result-text::before {
+    content: '暂无数据';
+  }
+}

@@ -48,12 +48,25 @@
           @rollToBottom="onrollToBottom"
         >
           <div slot="begin">开始加载</div>
-          <div slot="loading">正在加载中</div>
-          <div slot="finished">没有更多的了</div>
-          <div slot="empty">暂无数据</div>
-          <div slot="error" @click="listload.continueAwaitSend()">出错了点击继续加载</div>
-          <div slot="begin-error" @click="listload.afreshNextBeginSend()">出错了点击重新加载</div>
+          <r-result slot="loading" class="r-result-loading" />
+          <r-result slot="finished" class="r-result-finished" />
+          <r-result slot="empty" class="r-result-empty" />
+          <r-result slot="error" class="r-result-error" @click="listload.continueAwaitSend()" />
+          <r-result
+            slot="begin-error"
+            class="r-result-begin-error"
+            @click="listload.afreshNextBeginSend()"
+          />
 
+          <!-- <div
+            slot="begin-error"
+            class="r-pagination-loading-begin-error"
+            @click="listload.afreshNextBeginSend()"
+          >
+            <div class="r-pagination-loading-begin-error-prve"></div>
+            <div class="r-pagination-loading-begin-error-text">出错了点击重新加载</div>
+            <div class="r-pagination-loading-begin-error-next"></div>
+          </div> -->
           <!--
           <div>
             <template v-for="(item, index) in listload.list" :key="item.value">
@@ -171,6 +184,116 @@ onMounted(() => {
     --r-columns: 2;
     --r-column-gap: 5px;
     --r-row-gap: 2px;
+  }
+}
+
+.r-pagination-loading-loading,
+.r-pagination-loading-finished,
+.r-pagination-loading-error,
+.r-pagination-loading-begin-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.r-pagination-loading-loading,
+.r-pagination-loading-finished,
+.r-pagination-loading-error {
+  height: 50px;
+}
+
+.r-pagination-loading-empty,
+.r-pagination-loading-begin-error {
+  height: 200px;
+}
+
+.r-pagination-loading-error {
+  color: var(--error-color);
+}
+
+.r-pagination-loading-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .r-pagination-loading-empty-prve {
+    font-size: 80px;
+  }
+}
+
+.r-pagination-loading-begin-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: var(--error-color);
+  .r-pagination-loading-begin-error-prve {
+    font-size: 80px;
+  }
+}
+
+/////////
+
+.r-pagination-loading-loading-prve,
+.r-pagination-loading-begin-error-prve,
+.r-pagination-loading-error-prve,
+.r-pagination-loading-empty-prve,
+.r-pagination-loading-finished-prve {
+  font-family: 'iconfont';
+}
+
+.r-pagination-loading-begin-error-prve::before {
+  content: '\e616';
+}
+
+.r-pagination-loading-error-prve::before {
+  content: '\e628';
+}
+
+.r-pagination-loading-empty-prve::before {
+  content: '\e601';
+}
+
+.r-pagination-loading-finished-prve::before {
+  content: '\e611';
+}
+
+.r-pagination-loading-loading-prve {
+  animation: rotating 2s linear infinite;
+
+  &::before {
+    content: '\e607';
+  }
+}
+
+.r-pagination-loading-begin {
+  .r-pagination-loading-begin-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+  }
+
+  .r-pagination-loading-begin-prve {
+    animation: rotating 2s linear infinite;
+    font-family: 'iconfont';
+
+    &::before {
+      content: '\e607';
+    }
+  }
+
+  .r-pagination-loading-begin-skeleton {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    row-gap: 10px;
+    column-gap: 10px;
+  }
+
+  .r-pagination-loading-begin-skeleton-item {
+    height: 130px;
+    background-size: cover;
   }
 }
 </style>

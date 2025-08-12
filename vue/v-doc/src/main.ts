@@ -4,7 +4,7 @@ import { defineElements } from '@rainbow_ljy/rainbow-element/main'
 import { createApp, render } from 'vue'
 import App from './App.vue'
 import router from './router'
-import 'element-plus/dist/index.css'
+// import 'element-plus/dist/index.css'
 // import "vant/lib/index.css";
 
 export const directiveEvents = {

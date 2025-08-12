@@ -7,7 +7,7 @@
             listload.pageSize
           }}
           finished -{{ listload.finished }} empty -{{ listload.empty }}
-          <button @click="listload.nextBeginSend()">nextBeginSend</button>
+          <button @click="listload.afreshNextBeginSend()">afreshNextBeginSend</button>
           <button @click="errorSend()">errorSend</button>
         </div>
       </r-scroll-sticky>
@@ -28,9 +28,9 @@
 <script setup>
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
 import { VRPaginationLoading } from '@rainbow_ljy/v-views'
-import { VlistLoad } from '@rainbow_ljy/v-hooks'
+import { useVlistLoad } from '@rainbow_ljy/v-hooks'
 import { computed, onMounted } from 'vue'
-import { MFetch } from '@/hooks'
+import { useMFetch } from '@/hooks'
 
 console.log('------------------')
 const text = arrayLoopMap(300, () => '我').join('')
@@ -42,12 +42,12 @@ const listload = (() => {
     currentPage: list.currentPage,
     pageSize: list.pageSize,
   }))
-  const asyncHook = new MFetch({
+  const asyncHook = useMFetch({
     url: '/serve/page',
     method: 'post',
     body,
   })
-  list = new VlistLoad({ asyncHook })
+  list = useVlistLoad({ asyncHook })
   return list
 })()
 
@@ -70,7 +70,7 @@ function rollToBottom(params) {
 }
 
 onMounted(() => {
-  listload.nextBeginSend()
+  listload.afreshNextBeginSend()
 })
 </script>
 

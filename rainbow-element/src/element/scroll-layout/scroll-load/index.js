@@ -109,7 +109,6 @@ export class RScrollLoad extends RainbowElement {
 
     onScrollUp: (event) => {
       const { rTriggerBottomDistance } = this.$.DATA;
-      console.log(rTriggerBottomDistance);
       const { scrollParent: sp } = this.$$;
       const max = sp.scrollHeight - sp.offsetHeight - rTriggerBottomDistance;
       const bool = sp.scrollTop >= max;

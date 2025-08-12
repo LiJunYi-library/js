@@ -47,7 +47,8 @@
           :error="listload.error"
           @rollToBottom="onrollToBottom"
         >
-          <div slot="begin">开始加载</div>
+          <States></States>
+          <!-- <div slot="begin">开始加载</div>
           <r-result slot="loading" class="r-result-loading" />
           <r-result slot="finished" class="r-result-finished" />
           <r-result slot="empty" class="r-result-empty" />
@@ -56,17 +57,7 @@
             slot="begin-error"
             class="r-result-begin-error"
             @click="listload.afreshNextBeginSend()"
-          />
-
-          <!-- <div
-            slot="begin-error"
-            class="r-pagination-loading-begin-error"
-            @click="listload.afreshNextBeginSend()"
-          >
-            <div class="r-pagination-loading-begin-error-prve"></div>
-            <div class="r-pagination-loading-begin-error-text">出错了点击重新加载</div>
-            <div class="r-pagination-loading-begin-error-next"></div>
-          </div> -->
+          /> -->
           <!--
           <div>
             <template v-for="(item, index) in listload.list" :key="item.value">
@@ -93,13 +84,24 @@
     </r-scroll-window>
   </div>
 </template>
-<script setup>
+<script setup lang="jsx">
 import { computed, onMounted } from 'vue'
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
 import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
 import { useVlistLoad } from '@rainbow_ljy/v-hooks'
 import { useSpuFetch, useMFetch } from '@/hooks'
 import { VRVirtualGridList } from '@rainbow_ljy/v-views'
+
+function States(params) {
+  return [
+    <div slot="begin">开始加载</div>,
+    <r-result slot="loading" class="r-result-loading" />,
+    <r-result slot="finished" class="r-result-finished" />,
+    <r-result slot="empty" class="r-result-empty" />,
+    <r-result slot="error" class="r-result-error" />,
+    <r-result slot="begin-error" class="r-result-begin-error" />,
+  ]
+}
 
 const text = arrayLoopMap(10, () => '我').join('')
 
@@ -138,8 +140,8 @@ async function onrefresh() {
 }
 
 async function onrollToBottom() {
-  // await listload.continueAwaitSend()
-  errorSend()
+  await listload.continueAwaitSend()
+  // errorSend()
 }
 
 function errorSend() {

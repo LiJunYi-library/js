@@ -6,7 +6,7 @@
       <r-tab-item value="3" class="item"> label3 </r-tab-item>
       <r-tab-item value="4" class="item" v-if="bool"> label4 </r-tab-item>
       <r-tab-item value="5" class="item"> label5 </r-tab-item>
-      <div slot="active" class="item-active">123</div>
+      <!-- <div slot="active" class="item-active">123</div> -->
     </r-tab>
     <div>------------------------------------------------</div>
     <r-tab :value="Radio2.value" :class="tabclass" @change="change">

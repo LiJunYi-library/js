@@ -110,20 +110,47 @@ export const VRPaginationLoading = defineComponent({
   },
 });
 
-export function VRScrollLoadStates(props = {}) {
-  return [
-    <div slot="begin">
-      <r-result slot="loading" class="r-result-loading" />
-      <div class="r-skeleton-grid">
-        {renderList(props.skeletonCount ?? 10, () => (
-          <div class="r-skeleton-animation" />
-        ))}
-      </div>
-    </div>,
-    <r-result slot="loading" class="r-result-loading" />,
-    <r-result slot="finished" class="r-result-finished" />,
-    <r-result slot="empty" class="r-result-empty" />,
-    <r-result slot="error" class="r-result-error" />,
-    <r-result slot="begin-error" class="r-result-begin-error" />,
-  ];
-}
+export const VRScrollLoadStates = defineComponent({
+  props: {
+    loadingHook: { type: Object, default: () => ({}) },
+    onErrorLoadClick: { type: Function },
+    onBeginErrorClick: { type: Function },
+    skeletonCount: { type: Number, default: 10 },
+  },
+  setup(props, ctx) {
+    function rs(name, node) {
+      return renderSlot(ctx.slots, name, {}, () => [node]);
+    }
+    function onErrorClick() {
+      if (props.onBeginErrorClick) props.onBeginErrorClick(...arg);
+      else props.loadingHook?.afreshNextBeginSend?.();
+    }
+    function onErrorLoadClick(...arg) {
+      if (props.onErrorLoadClick) props.onErrorLoadClick(...arg);
+      else props.loadingHook?.continueAwaitSend?.();
+    }
+    return () => {
+      return [
+        rs(
+          "begin",
+          <div slot="begin">
+            <r-result slot="loading" class="r-result-loading" />
+            <div class="r-skeleton-grid">
+              {renderList(props.skeletonCount ?? 10, () => (
+                <div class="r-skeleton-animation" />
+              ))}
+            </div>
+          </div>,
+        ),
+        rs("loading", <r-result slot="loading" class="r-result-loading" />),
+        rs("finished", <r-result slot="finished" class="r-result-finished" />),
+        rs("empty", <r-result slot="empty" class="r-result-empty" />),
+        rs("error", <r-result slot="error" class="r-result-error" onClick={onErrorLoadClick} />),
+        rs(
+          "begin-error",
+          <r-result slot="begin-error" class="r-result-begin-error" onClick={onErrorClick} />,
+        ),
+      ];
+    };
+  },
+});

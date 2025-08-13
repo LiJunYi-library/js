@@ -57,7 +57,7 @@
           :error="listload.error"
           @rollToBottom="onrollToBottom"
         >
-          <VRScrollLoadStates />
+          <VRScrollLoadStates :loadingHook="listload" />
           <div>
             <template v-for="(item, index) in listload.list" :key="item.value">
               <div class="item">index{{ index }} {{ item.id }}</div>

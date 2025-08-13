@@ -1,0 +1,4 @@
+.r-scroll-window-content {
+    display: block;
+    transform: translate(0);
+}

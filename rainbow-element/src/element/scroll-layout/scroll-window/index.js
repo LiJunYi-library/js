@@ -1,6 +1,7 @@
 import "./index.css";
 import { RainbowElement } from "../../base/index.js";
-import { createCustomEvent, createElement, createSlot } from "../../../utils/index.js";
+import { createElement, createSlot } from "../../../utils/index.js";
+import innerCss from "./index.icss";
 
 export class RScrollWindow extends RainbowElement {
   static observedAttributes = this.$registerProps({});
@@ -21,6 +22,8 @@ export class RScrollWindow extends RainbowElement {
     this.attachShadow({ mode: "open" });
     this.$$.content.append(this.$$.defaultSlot);
     this.shadowRoot.append(this.$$.topSlot, this.$$.content);
+    this.shadowRoot.appendChild(this.$.styleNode);
+    this.innerCss = innerCss;
   }
 
   disconnectedCallback(...arg) {

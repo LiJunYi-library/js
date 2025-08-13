@@ -1,8 +1,3 @@
 r-scroll-window {
     display: block;
 }
-
-r-scroll-window::part(r-scroll-window-content) {
-    display: block;
-    transform: translate(0);
-}

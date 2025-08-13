@@ -13,7 +13,14 @@ export default defineConfig({
         },
       },
     }),
-    vueJsx(),
+    vueJsx({
+      isCustomElement: (tag) => tag.startsWith('r-'),
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith('r-'),
+        },
+      },
+    }),
     vueDevTools(),
   ],
   resolve: {

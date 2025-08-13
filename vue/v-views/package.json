@@ -3,7 +3,7 @@
   "version": "1.0.8",
   "description": "",
   "main": "src/index.js",
-  "module": "src/index.js", 
+  "module": "src/index.js",
   "type": "module",
   "private": false,
   "typings": "index.d.ts",

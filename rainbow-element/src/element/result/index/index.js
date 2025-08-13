@@ -1,13 +1,6 @@
 import "./index.scss";
 import { RainbowElement } from "../../base/index.js";
-import {
-  findParentByLocalName,
-  createCustomEvent,
-  createElement,
-  createSlot,
-  addEventListenerOnce,
-  removeEventListener,
-} from "../../../utils/index.js";
+import { createElement } from "../../../utils/index.js";
 
 export class RResult extends RainbowElement {
   $$ = {
@@ -17,7 +10,7 @@ export class RResult extends RainbowElement {
   };
 
   connectedCallback(...arg) {
-    super.connectedCallback(...arg)
+    super.connectedCallback(...arg);
     this.append(this.$$.prveEl, this.$$.textEl, this.$$.nextEl);
   }
 }

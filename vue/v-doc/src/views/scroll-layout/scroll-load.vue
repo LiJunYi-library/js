@@ -39,6 +39,16 @@
           {{ listload.begin + '' }}
           {{ listload.error + '' }}
         </div>
+
+        <!-- <div>
+          <div v-if="listload.begin" class="r-result-begin">开始加载</div>
+          <div v-else>
+            <template v-for="(item, index) in listload.list" :key="item.value">
+              <div class="item">index{{ index }} {{ item.id }}</div>
+            </template>
+          </div>
+        </div> -->
+
         <r-scroll-load
           :loading="listload.loading"
           :finished="listload.finished"
@@ -48,24 +58,22 @@
           @rollToBottom="onrollToBottom"
         >
           <States></States>
-          <!-- <div slot="begin">开始加载</div>
-          <r-result slot="loading" class="r-result-loading" />
-          <r-result slot="finished" class="r-result-finished" />
-          <r-result slot="empty" class="r-result-empty" />
-          <r-result slot="error" class="r-result-error" @click="listload.continueAwaitSend()" />
-          <r-result
-            slot="begin-error"
-            class="r-result-begin-error"
-            @click="listload.afreshNextBeginSend()"
-          /> -->
-          <!--
           <div>
             <template v-for="(item, index) in listload.list" :key="item.value">
               <div class="item">index{{ index }} {{ item.id }}</div>
             </template>
-          </div> -->
+          </div>
+        </r-scroll-load>
 
-          <VRVirtualGridList
+        <!-- <VRPaginationLoading @rollToBottom="onrollToBottom" :loadingHook="listload">
+          <div>
+            <template v-for="(item, index) in listload.list" :key="item.value">
+              <div class="item">index{{ index }} {{ item.id }}</div>
+            </template>
+          </div>
+        </VRPaginationLoading> -->
+
+        <!-- <VRVirtualGridList
             v-model="listload.list"
             :keyExtractor="({ item }) => item?.id"
             class="more-scroll-virtual-grid-list"
@@ -78,8 +86,7 @@
                 <div class="title">{{ item?.title }}</div>
               </div>
             </template>
-          </VRVirtualGridList>
-        </r-scroll-load>
+          </VRVirtualGridList> -->
       </r-scroll>
     </r-scroll-window>
   </div>
@@ -90,11 +97,14 @@ import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
 import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
 import { useVlistLoad } from '@rainbow_ljy/v-hooks'
 import { useSpuFetch, useMFetch } from '@/hooks'
-import { VRVirtualGridList } from '@rainbow_ljy/v-views'
+import { VRVirtualGridList, VRPaginationLoading } from '@rainbow_ljy/v-views'
 
 function States(params) {
   return [
-    <div slot="begin">开始加载</div>,
+    <div slot="begin">
+      <r-result slot="loading" class="r-result-loading" />
+      <div class="r-result-begin">开始加载</div>
+    </div>,
     <r-result slot="loading" class="r-result-loading" />,
     <r-result slot="finished" class="r-result-finished" />,
     <r-result slot="empty" class="r-result-empty" />,
@@ -140,8 +150,8 @@ async function onrefresh() {
 }
 
 async function onrollToBottom() {
-  await listload.continueAwaitSend()
-  // errorSend()
+  // await listload.continueAwaitSend()
+  errorSend()
 }
 
 function errorSend() {
@@ -161,11 +171,11 @@ onMounted(() => {
     },
   })
   console.log(listload)
-  listload.begin = true
-  listload.loading = true
-  listload.finished = false
-  listload.empty = false
-  listload.error = false
+  // listload.begin = true
+  // listload.loading = true
+  // listload.finished = false
+  // listload.empty = false
+  // listload.error = false
 })
 </script>
 
@@ -178,7 +188,7 @@ onMounted(() => {
   .item {
     height: 150px;
     background: cyan;
-    height: 100%;
+    // height: 100%;
   }
 
   .more-scroll-virtual-grid-list {
@@ -189,113 +199,8 @@ onMounted(() => {
   }
 }
 
-.r-pagination-loading-loading,
-.r-pagination-loading-finished,
-.r-pagination-loading-error,
-.r-pagination-loading-begin-error {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.r-pagination-loading-loading,
-.r-pagination-loading-finished,
-.r-pagination-loading-error {
-  height: 50px;
-}
-
-.r-pagination-loading-empty,
-.r-pagination-loading-begin-error {
-  height: 200px;
-}
-
-.r-pagination-loading-error {
-  color: var(--error-color);
-}
-
-.r-pagination-loading-empty {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  .r-pagination-loading-empty-prve {
-    font-size: 80px;
-  }
-}
-
-.r-pagination-loading-begin-error {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  color: var(--error-color);
-  .r-pagination-loading-begin-error-prve {
-    font-size: 80px;
-  }
-}
-
-/////////
-
-.r-pagination-loading-loading-prve,
-.r-pagination-loading-begin-error-prve,
-.r-pagination-loading-error-prve,
-.r-pagination-loading-empty-prve,
-.r-pagination-loading-finished-prve {
-  font-family: 'iconfont';
-}
-
-.r-pagination-loading-begin-error-prve::before {
-  content: '\e616';
-}
-
-.r-pagination-loading-error-prve::before {
-  content: '\e628';
-}
-
-.r-pagination-loading-empty-prve::before {
-  content: '\e601';
-}
-
-.r-pagination-loading-finished-prve::before {
-  content: '\e611';
-}
-
-.r-pagination-loading-loading-prve {
-  animation: rotating 2s linear infinite;
-
-  &::before {
-    content: '\e607';
-  }
-}
-
-.r-pagination-loading-begin {
-  .r-pagination-loading-begin-loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
-  }
-
-  .r-pagination-loading-begin-prve {
-    animation: rotating 2s linear infinite;
-    font-family: 'iconfont';
-
-    &::before {
-      content: '\e607';
-    }
-  }
-
-  .r-pagination-loading-begin-skeleton {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    row-gap: 10px;
-    column-gap: 10px;
-  }
-
-  .r-pagination-loading-begin-skeleton-item {
-    height: 130px;
-    background-size: cover;
-  }
+.r-result-begin {
+  height: 2600px;
+  background: red;
 }
 </style>

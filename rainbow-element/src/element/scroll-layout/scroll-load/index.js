@@ -21,7 +21,6 @@ export class RScrollLoad extends RainbowElement {
     this.$$.loading = v;
     this.$render();
   }
-
   get finished() {
     return this.$$.finished;
   }
@@ -29,7 +28,6 @@ export class RScrollLoad extends RainbowElement {
     this.$$.finished = v;
     this.$render();
   }
-
   get empty() {
     return this.$$.empty;
   }
@@ -37,16 +35,13 @@ export class RScrollLoad extends RainbowElement {
     this.$$.empty = v;
     this.$render();
   }
-
   get begin() {
     return this.$$.begin;
   }
-
   set begin(v) {
     this.$$.begin = v;
     this.$render();
   }
-
   get beginError() {
     return this.$$.beginError;
   }
@@ -54,7 +49,6 @@ export class RScrollLoad extends RainbowElement {
     this.$$.beginError = v;
     this.$render();
   }
-
   get error() {
     return this.$$.error;
   }
@@ -130,7 +124,7 @@ export class RScrollLoad extends RainbowElement {
     }
 
     if (this.begin === true) {
-      this.$$.renderState(this.$$.loadingSlot, this.$$.beginSlot);
+      this.$$.renderState(this.$$.beginSlot);
       return;
     }
 

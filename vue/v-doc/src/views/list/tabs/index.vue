@@ -48,7 +48,7 @@ import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
 import { useRadio2 } from '@rainbow_ljy/v-hooks'
 import { ref, onMounted, watch } from 'vue'
 import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
-import { VRTabs } from '@rainbow_ljy/v-view'
+import { VRTabs } from '@rainbow_ljy/v-views'
 class List {
   __value = undefined
   __label = undefined

@@ -39,58 +39,9 @@ export const VRPaginationLoading = defineComponent({
       }
     }
 
-    function renderLoading() {
-      return renderSlot(ctx.slots, "loading", {}, () => [
-        <div class="r-pagination-loading-loading">
-          <div class="r-pagination-loading-loading-prve"></div>
-          <div class="r-pagination-loading-loading-text">加载中</div>
-          <div class="r-pagination-loading-loading-next"></div>
-        </div>,
-      ]);
-    }
-
-    function renderFinished() {
-      return renderSlot(ctx.slots, "finished", {}, () => [
-        <div class="r-pagination-loading-finished">
-          <div class="r-pagination-loading-finished-prve"></div>
-          <div class="r-pagination-loading-finished-text">没有更多的了</div>
-          <div class="r-pagination-loading-finished-next"></div>
-        </div>,
-      ]);
-    }
-
-    function renderEmpty() {
-      return renderSlot(ctx.slots, "empty", {}, () => (
-        <r-result slot="empty" class="r-result-empty" />
-      ));
-    }
-
-    function renderBegin() {
-      return renderSlot(ctx.slots, "begin", {}, () => [
-        <div class="r-pagination-loading-begin">
-          <div class="r-pagination-loading-begin-loading">
-            <div class="r-pagination-loading-begin-prve"></div>
-            <div class="r-pagination-loading-begin-text">加载中</div>
-            <div class="r-pagination-loading-begin-next"></div>
-          </div>
-          <div class="r-pagination-loading-begin-skeleton">
-            {renderList(props.skeletonCount, () => (
-              <div class="r-pagination-loading-begin-skeleton-item" />
-            ))}
-          </div>
-        </div>,
-      ]);
-    }
-
     function onBeginErrorClick() {
       if (props.onBeginErrorClick) props.onBeginErrorClick(...arg);
       else props.loadingHook?.nextBeginSend?.();
-    }
-
-    function renderError() {
-      return renderSlot(ctx.slots, "error", {}, () => (
-        <r-result onClick={onBeginErrorClick} class="r-result-begin-error" />
-      ));
     }
 
     function onErrorLoadClick(...arg) {
@@ -98,13 +49,54 @@ export const VRPaginationLoading = defineComponent({
       else props.loadingHook?.awaitSend?.();
     }
 
+    function renderLoading() {
+      return renderSlot(ctx.slots, "loading", {}, () => [<r-result class="r-result-loading" />]);
+    }
+
+    function renderFinished() {
+      return renderSlot(ctx.slots, "finished", {}, () => [<r-result class="r-result-finished" />]);
+    }
+
+    function renderEmpty() {
+      return renderSlot(ctx.slots, "empty", {}, () => [<r-result class="r-result-empty" />]);
+    }
+
+    function renderBegin() {
+      return renderSlot(ctx.slots, "begin", {}, () => [
+        <div>
+          <r-result class="r-result-loading" />
+          <div class="r-result-begin">开始加载</div>
+        </div>,
+      ]);
+    }
+
+    // function renderBegin() {
+    //   return renderSlot(ctx.slots, "begin", {}, () => [
+    //     <div class="r-pagination-loading-begin">
+    //       <div class="r-pagination-loading-begin-loading">
+    //         <div class="r-pagination-loading-begin-prve"></div>
+    //         <div class="r-pagination-loading-begin-text">加载中--</div>
+    //         <div class="r-pagination-loading-begin-next"></div>
+    //       </div>
+    //       <div class="r-result-begin">开始加载</div>
+    //       {/* <div class="r-pagination-loading-begin-skeleton">
+    //         {renderList(props.skeletonCount, () => (
+    //           <div class="r-pagination-loading-begin-skeleton-item" />
+    //         ))}
+    //       </div> */}
+    //     </div>,
+    //   ]);
+    // }
+
+    function renderError() {
+      return renderSlot(ctx.slots, "error", {}, () => [
+        <r-result onClick={onBeginErrorClick} class="r-result-begin-error" />,
+      ]);
+    }
+
     function renderLoadError() {
       return renderSlot(ctx.slots, "errorLoad", {}, () => [
-        <div class="r-pagination-loading-error" onClick={onErrorLoadClick}>
-          <div class="r-pagination-loading-error-prve"></div>
-          <div class="r-pagination-loading-error-text">出错了 点击重新加载</div>
-          <div class="r-pagination-loading-error-next"></div>
-        </div>,
+        <r-result onClick={onErrorLoadClick} class="r-result-error" />,
       ]);
     }
 
@@ -119,7 +111,7 @@ export const VRPaginationLoading = defineComponent({
     watch(
       () => props.loadingHook.begin,
       async () => {
-        console.log([vm.$el]);
+        console.log("console--", [vm.$el]);
       },
     );
 

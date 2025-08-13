@@ -73,23 +73,11 @@ export class RScrollLoad extends RainbowElement {
     scrollParent: document.createElement("div"),
 
     defaultSlot: createSlot("slot"),
-
-    beginEl: createElement("div", "r-scroll-load-begin"),
     beginSlot: createSlot("slot", "begin"),
-
-    loadingEl: createElement("div", "r-scroll-load-loading"),
     loadingSlot: createSlot("slot", "loading"),
-
-    finishedEl: createElement("div", "r-scroll-load-finished"),
     finishedSlot: createSlot("slot", "finished"),
-
-    emptyEl: createElement("div", "r-scroll-load-empty"),
     emptySlot: createSlot("slot", "empty"),
-
-    beginErrorEl: createElement("div", "r-scroll-load-begin-error"),
     beginErrorSlot: createSlot("slot", "begin-error"),
-
-    errorEl: createElement("div", "r-scroll-load-error"),
     errorSlot: createSlot("slot", "error"),
 
     renderState: (...nodes) => {

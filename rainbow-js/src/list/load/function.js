@@ -33,12 +33,14 @@ function getListLoadProps(props = {}) {
     currentPage: 1,
     pageSize: 10,
     isSelect: false,
+    begin: false,
     listRef: ref,
     finishedRef: ref,
     emptyRef: ref,
     totalRef: ref,
     currentPageRef: ref,
     pageSizeRef: ref,
+    beginRef: ref,
     asyncHooks: {},
     ...props,
   };
@@ -59,6 +61,7 @@ export function listLoad(props = {}) {
     totalRef,
     currentPageRef,
     pageSizeRef,
+    beginRef,
     asyncHook,
   } = config;
 
@@ -69,6 +72,7 @@ export function listLoad(props = {}) {
   const currentPage = currentPageRef(config.currentPage);
   const pageSize = pageSizeRef(config.pageSize);
   const selectHooks = listSelect(config);
+  const begin = beginRef(config.begin);
   let loading = false;
 
   const hooks = proxy({
@@ -80,6 +84,7 @@ export function listLoad(props = {}) {
     total,
     currentPage,
     pageSize,
+    begin,
     continueAwaitSend,
     afreshNextBeginSend,
     afreshNextSend,
@@ -92,6 +97,7 @@ export function listLoad(props = {}) {
     list.value.push(...arr);
     finished.value = formatterFinished(res, hooks);
     empty.value = formatterEmpty(res, hooks);
+    begin.value = false;
     if (finished.value) return res;
     currentPage.value = formatterCurrentPage(res, hooks);
     return res;
@@ -124,6 +130,7 @@ export function listLoad(props = {}) {
   }
 
   async function afreshNextBeginSend(...arg) {
+    begin.value = true;
     list.value.splice(0);
     selectHooks.reset();
     currentPage.value = 1;

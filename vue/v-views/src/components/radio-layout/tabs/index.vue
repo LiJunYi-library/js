@@ -1,5 +1,5 @@
 <template>
-  <r-tabs :value="listHook.value" v-bind="{ ...$attrs }">
+  <r-tab :value="listHook.value" v-bind="{ ...$attrs }">
     <template v-for="(item, index) in listHook?.list ?? []" :key="keyExtractor(item, index)">
       <r-tab-item
         :trigger="trigger"
@@ -12,7 +12,7 @@
       </r-tab-item>
     </template>
     <slot name="active"></slot>
-  </r-tabs>
+  </r-tab>
 </template>
 
 <script setup>

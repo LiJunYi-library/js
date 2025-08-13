@@ -1,15 +1,15 @@
 <template>
   <div>
-    <r-tabs value="3" @change="change">
+    <r-tab value="3" @change="change">
       <r-tab-item value="1" class="item"> label1 </r-tab-item>
       <r-tab-item value="2" class="item"> label2 </r-tab-item>
       <r-tab-item value="3" class="item"> label3 </r-tab-item>
       <r-tab-item value="4" class="item" v-if="bool"> label4 </r-tab-item>
       <r-tab-item value="5" class="item"> label5 </r-tab-item>
       <div slot="active" class="item-active">123</div>
-    </r-tabs>
+    </r-tab>
     <div>------------------------------------------------</div>
-    <r-tabs :value="Radio2.value" :class="tabclass" @change="change">
+    <r-tab :value="Radio2.value" :class="tabclass" @change="change">
       <template v-for="(item, index) in Radio2.list" :key="item.value">
         <r-tab-item
           trigger="none"
@@ -22,7 +22,7 @@
         </r-tab-item>
       </template>
       <div slot="active" class="item-active">123</div>
-    </r-tabs>
+    </r-tab>
     <div>------------------------------------------------</div>
     <VRTabs :listHook="Radio2" @change="change"></VRTabs>
     <div>------------------------------------------------</div>

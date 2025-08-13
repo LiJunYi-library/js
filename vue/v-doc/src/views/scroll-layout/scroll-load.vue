@@ -49,7 +49,7 @@
           </div>
         </div> -->
 
-        <!-- <r-scroll-load
+        <r-scroll-load
           :loading="listload.loading"
           :finished="listload.finished"
           :empty="listload.empty"
@@ -57,21 +57,21 @@
           :error="listload.error"
           @rollToBottom="onrollToBottom"
         >
-          <States></States>
+          <VRScrollLoadStates />
           <div>
             <template v-for="(item, index) in listload.list" :key="item.value">
               <div class="item">index{{ index }} {{ item.id }}</div>
             </template>
           </div>
-        </r-scroll-load> -->
+        </r-scroll-load>
 
-        <VRPaginationLoading @rollToBottom="onrollToBottom" :loadingHook="listload">
+        <!-- <VRPaginationLoading @rollToBottom="onrollToBottom" :loadingHook="listload">
           <div>
             <template v-for="(item, index) in listload.list" :key="item.value">
               <div class="item">index{{ index }} {{ item.id }}</div>
             </template>
           </div>
-        </VRPaginationLoading>
+        </VRPaginationLoading> -->
 
         <!-- <VRVirtualGridList
             v-model="listload.list"
@@ -92,26 +92,12 @@
   </div>
 </template>
 <script setup lang="jsx">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, renderList } from 'vue'
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
 import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
 import { useVlistLoad } from '@rainbow_ljy/v-hooks'
 import { useSpuFetch, useMFetch } from '@/hooks'
-import { VRVirtualGridList, VRPaginationLoading } from '@rainbow_ljy/v-views'
-
-function States(params) {
-  return [
-    <div slot="begin">
-      <r-result slot="loading" class="r-result-loading" />
-      <div class="r-result-begin">开始加载</div>
-    </div>,
-    <r-result slot="loading" class="r-result-loading" />,
-    <r-result slot="finished" class="r-result-finished" />,
-    <r-result slot="empty" class="r-result-empty" />,
-    <r-result slot="error" class="r-result-error" />,
-    <r-result slot="begin-error" class="r-result-begin-error" />,
-  ]
-}
+import { VRVirtualGridList, VRPaginationLoading, VRScrollLoadStates } from '@rainbow_ljy/v-views'
 
 const text = arrayLoopMap(10, () => '我').join('')
 

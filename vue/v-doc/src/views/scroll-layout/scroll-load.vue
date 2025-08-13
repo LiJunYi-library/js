@@ -49,7 +49,7 @@
           </div>
         </div> -->
 
-        <r-scroll-load
+        <!-- <r-scroll-load
           :loading="listload.loading"
           :finished="listload.finished"
           :empty="listload.empty"
@@ -63,15 +63,15 @@
               <div class="item">index{{ index }} {{ item.id }}</div>
             </template>
           </div>
-        </r-scroll-load>
+        </r-scroll-load> -->
 
-        <!-- <VRPaginationLoading @rollToBottom="onrollToBottom" :loadingHook="listload">
+        <VRPaginationLoading @rollToBottom="onrollToBottom" :loadingHook="listload">
           <div>
             <template v-for="(item, index) in listload.list" :key="item.value">
               <div class="item">index{{ index }} {{ item.id }}</div>
             </template>
           </div>
-        </VRPaginationLoading> -->
+        </VRPaginationLoading>
 
         <!-- <VRVirtualGridList
             v-model="listload.list"
@@ -164,18 +164,18 @@ function errorSend() {
 }
 
 onMounted(() => {
-  listload.afreshNextBeginSend({
-    body: {
-      time: 1000,
-      code: 400,
-    },
-  })
+  // listload.afreshNextBeginSend({
+  //   body: {
+  //     time: 1000,
+  //     // code: 400,
+  //   },
+  // })
   console.log(listload)
-  // listload.begin = true
-  // listload.loading = true
-  // listload.finished = false
-  // listload.empty = false
-  // listload.error = false
+  listload.begin = true
+  listload.loading = true
+  listload.finished = false
+  listload.empty = false
+  listload.error = false
 })
 </script>
 

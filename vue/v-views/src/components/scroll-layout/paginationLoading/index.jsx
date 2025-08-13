@@ -1,6 +1,5 @@
 import { defineComponent, onUnmounted, onMounted, renderSlot, renderList, watch } from "vue";
 import { findParentByLocalName } from "@rainbow_ljy/rainbow-element";
-import "./index.scss";
 
 export const VRPaginationLoading = defineComponent({
   props: {
@@ -65,28 +64,14 @@ export const VRPaginationLoading = defineComponent({
       return renderSlot(ctx.slots, "begin", {}, () => [
         <div>
           <r-result class="r-result-loading" />
-          <div class="r-result-begin">开始加载</div>
+          <div class="r-skeleton-grid">
+            {renderList(props.skeletonCount, () => (
+              <div class="r-skeleton-animation" />
+            ))}
+          </div>
         </div>,
       ]);
     }
-
-    // function renderBegin() {
-    //   return renderSlot(ctx.slots, "begin", {}, () => [
-    //     <div class="r-pagination-loading-begin">
-    //       <div class="r-pagination-loading-begin-loading">
-    //         <div class="r-pagination-loading-begin-prve"></div>
-    //         <div class="r-pagination-loading-begin-text">加载中--</div>
-    //         <div class="r-pagination-loading-begin-next"></div>
-    //       </div>
-    //       <div class="r-result-begin">开始加载</div>
-    //       {/* <div class="r-pagination-loading-begin-skeleton">
-    //         {renderList(props.skeletonCount, () => (
-    //           <div class="r-pagination-loading-begin-skeleton-item" />
-    //         ))}
-    //       </div> */}
-    //     </div>,
-    //   ]);
-    // }
 
     function renderError() {
       return renderSlot(ctx.slots, "error", {}, () => [

@@ -60,13 +60,9 @@ export const VRPaginationLoading = defineComponent({
     }
 
     function renderEmpty() {
-      return renderSlot(ctx.slots, "empty", {}, () => [
-        <div class="r-pagination-loading-empty">
-          <div class="r-pagination-loading-empty-prve"></div>
-          <div class="r-pagination-loading-empty-text">暂无相关数据，试试其他条件吧</div>
-          <div class="r-pagination-loading-empty-next"></div>
-        </div>,
-      ]);
+      return renderSlot(ctx.slots, "empty", {}, () => (
+        <r-result slot="empty" class="r-result-empty" />
+      ));
     }
 
     function renderBegin() {
@@ -92,13 +88,9 @@ export const VRPaginationLoading = defineComponent({
     }
 
     function renderError() {
-      return renderSlot(ctx.slots, "error", {}, () => [
-        <div class="r-pagination-loading-begin-error" onClick={onBeginErrorClick}>
-          <div class="r-pagination-loading-begin-error-prve"></div>
-          <div class="r-pagination-loading-begin-error-text">出错了 点击重新加载</div>
-          <div class="r-pagination-loading-begin-error-next"></div>
-        </div>,
-      ]);
+      return renderSlot(ctx.slots, "error", {}, () => (
+        <r-result onClick={onBeginErrorClick} class="r-result-begin-error" />
+      ));
     }
 
     function onErrorLoadClick(...arg) {

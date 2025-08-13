@@ -9,6 +9,7 @@ export function useVlistLoad(props) {
     indexRef: ref,
     listRef: ref,
 
+    beginRef: ref,
     finishedRef: ref,
     emptyRef: ref,
     totalRef: ref,

@@ -7,18 +7,6 @@ r-tab {
   --r-trigger: click;
 }
 
-r-tab::part(r-tab-active),
-r-tab .r-tab-active {
-  position: absolute;
-  overflow: hidden;
-}
-
-[css-name~="r-tab-active-transition"]::part(r-tab-active),
-[css-name~="r-tab-active-transition"] .r-tab-active {
-  transition: 0.25s;
-}
-
-r-tab::part(r-tab-active-line),
 r-tab .r-tab-active-line {
   background: cyan;
   position: absolute;

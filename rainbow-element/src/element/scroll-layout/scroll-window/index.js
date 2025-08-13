@@ -20,10 +20,10 @@ export class RScrollWindow extends RainbowElement {
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     this.attachShadow({ mode: "open" });
-    this.$$.content.append(this.$$.defaultSlot);
-    this.shadowRoot.append(this.$$.topSlot, this.$$.content);
     this.shadowRoot.appendChild(this.$.styleNode);
     this.innerCss = innerCss;
+    this.$$.content.append(this.$$.defaultSlot);
+    this.shadowRoot.append(this.$$.topSlot, this.$$.content);
   }
 
   disconnectedCallback(...arg) {

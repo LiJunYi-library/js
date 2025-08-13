@@ -13,6 +13,7 @@ import {
   getChildren,
 } from "../../../utils/index.js";
 import "./index.css";
+import innerCss from "./index.icss";
 
 export class RTab extends RainbowElement {
   static observedAttributes = this.$registerProps({});
@@ -29,12 +30,9 @@ export class RTab extends RainbowElement {
       isActiveTransition: false,
       cache: { value: undefined },
       value: undefined,
-      active: createElement("div", "r-tab-active"),
-      activeSlot: createSlot("slot", "r-tab-active-solt", "active"),
-      def: createElement("div", "r-tab-def"),
+      active: createSlot("slot", "r-tab-active", "active"),
       defSlot: createSlot("slot"),
       activeChild: createElement("div"),
-      activeLine: createElement("div", "r-tab-active-line"),
       updateValue: (value) => {
         this.value = value;
         this.dispatchEvent(createCustomEvent("input", { value }));
@@ -43,6 +41,7 @@ export class RTab extends RainbowElement {
       onActiveTransitionend: () => {
         this.$$.isActiveTransition = false;
         this.cssList.remove("r-tab-active-transition");
+        this.$$.active.classList.remove("r-tab-active-transition");
         this.$$.active.removeEventListener("transitionend", this.$$.onActiveTransitionend);
       },
       onResize,
@@ -71,8 +70,8 @@ export class RTab extends RainbowElement {
   constructor(...arg) {
     super(...arg);
     this.attachShadow({ mode: "open" });
-    this.$$.active.appendChild(this.$$.activeLine);
-    this.$$.active.appendChild(this.$$.activeSlot);
+    this.shadowRoot.appendChild(this.$.styleNode);
+    this.innerCss = innerCss;
     this.shadowRoot.appendChild(this.$$.defSlot);
     this.shadowRoot.appendChild(this.$$.active);
     this.$$.resizeObserver.observe(this);
@@ -129,6 +128,7 @@ export class RTab extends RainbowElement {
     if (this.$$.isActiveTransition === true) behavior = "smooth";
     if (forceBehavior) behavior = forceBehavior;
     this.cssList.toggle(behavior === "smooth", "r-tab-active-transition");
+    toggleClass(this.$$.active, behavior === "smooth", "r-tab-active-transition");
     if (behavior === "smooth") this.$$.isActiveTransition = true;
     const activeOffset = activeChild.getBoundingClientRect();
     const parentOffset = this.getBoundingClientRect();

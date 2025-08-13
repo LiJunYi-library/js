@@ -21,17 +21,21 @@
           {{ item.label }}
         </r-tab-item>
       </template>
-      <div slot="active" class="item-active">123</div>
+      <div slot="active" class=" r-tab-active-line" />
     </r-tab>
     <div>------------------------------------------------</div>
-    <VRTabs :listHook="Radio2" @change="change"></VRTabs>
+    <VRTabs :listHook="Radio2" @change="change">
+      <template #active>
+        <div slot="active" class="item-active">123</div>
+      </template>
+    </VRTabs>
     <div>------------------------------------------------</div>
     <VRTabs :listHook="Radio2" @change="change">
       <template #default="{ item, index }">
         <div>i-{{ index }}v-{{ item.value }}</div>
       </template>
       <template #active>
-        <div slot="active" class="item-active">123</div>
+        <div slot="active" class="r-tab-active-line"></div>
       </template>
     </VRTabs>
 

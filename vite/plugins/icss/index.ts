@@ -16,13 +16,13 @@ export  function icssPlugin(): Plugin {
           const code = await fs.promises.readFile(id, 'utf-8')
 
           // 2. 使用 csso 压缩 CSS
-          let minifiedCss: string
-          try {
-            minifiedCss = csso.minify(code).css
-          } catch (e) {
-            this.error(`CSS 压缩失败 in ${id}: ${e}`)
-            minifiedCss = code // 失败时回退到原始内容
-          }
+          let minifiedCss: string = code
+          // try {
+          //   minifiedCss = csso.minify(code).css
+          // } catch (e) {
+          //   this.error(`CSS 压缩失败 in ${id}: ${e}`)
+          //   minifiedCss = code // 失败时回退到原始内容
+          // }
 
           // 3. 返回 JS 模块：导出压缩后的 CSS 字符串
           return `

@@ -123,9 +123,12 @@ export function arrayRemoveLast(list = [], item) {
   if (~index) list.splice(index, 1);
   return list;
 }
-// 删除数组中的所有 相同的 item 改变数组
-export function arrayRemoves(list = [], item) {
-  const sames = list.filter((el) => el !== item);
+// 删除数组中的所有 相同的 item 不改变数组
+export function arrayRemoves(list = [], item, ...args) {
+  let fn;
+  if (item instanceof Function) fn = item;
+  else fn = (el) => ![item, ...args].includes(el);
+  const sames = list.filter(fn);
   list.splice(0);
   list.push(...sames);
   return list;

@@ -7,6 +7,10 @@ r-tab {
   --r-trigger: click;
 }
 
+r-tab.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 r-tab .r-tab-active-line {
   background: cyan;
   position: absolute;

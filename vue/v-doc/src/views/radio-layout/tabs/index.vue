@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="radio-layout-tabs-demo">
     <!-- <r-tabs value="3" @change="change">
       <r-tab-item value="1" class="item"> label1 </r-tab-item>
       <div slot="active" class="item-active">123</div>
@@ -39,7 +39,9 @@
         <div slot="active" class="item-active">123</div>
       </template>
     </VRTabs> -->
-    <RRenderList :listHook="Radio2" tagName="r-tab" tagItemName="r-tab-item" />
+    <RRenderList :listHook="Radio2" tagName="r-tab" tagItemName="r-tab-item" style-item="456" lopItem="456">
+      <div slot="active" class="r-tab-active-line" />
+    </RRenderList>
 
     <div>123</div>
     <div>123</div>
@@ -56,6 +58,8 @@ import { useRadio2 } from '@rainbow_ljy/v-hooks'
 import { ref, onMounted, renderList, h, defineComponent } from 'vue'
 import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
 import { VRTabs } from '@rainbow_ljy/v-views'
+// list 布局  支持 滚动居中 activite定位 拖拽修改顺序
+//
 
 const RRenderList = defineComponent({
   props: {
@@ -66,6 +70,8 @@ const RRenderList = defineComponent({
   },
   setup(props, context) {
     return () => {
+      console.log(context)
+
       return h(
         props.tagName,
         {
@@ -73,16 +79,19 @@ const RRenderList = defineComponent({
           class: props.className,
           value: props.listHook.value,
         },
-        renderList(props.listHook.list, (item, index) => {
-          return h(
-            props.tagItemName,
-            {
-              value: props.listHook?.formatterValue?.(item, index),
-              class: props.className + '-item',
-            },
-            [props.listHook?.formatterLabel?.(item, index)],
-          )
-        }),
+        [
+          renderList(props.listHook.list, (item, index) => {
+            return h(
+              props.tagItemName,
+              {
+                value: props.listHook?.formatterValue?.(item, index),
+                class: props.className + '-item',
+              },
+              [props.listHook?.formatterLabel?.(item, index)],
+            )
+          }),
+          context.slots.default(),
+        ],
       )
     }
   },
@@ -107,47 +116,45 @@ function change(params) {
 }
 
 function setH() {
-  // console.log(Radio2)
-  // tabclass.value = 'my-tab'
   Radio2.updateValue(1)
-
-  // activeVal.value.label='newlabel--'
 }
 </script>
 
-<style scoped lang="scss">
-.item {
-  padding: 10px;
-  margin: 0 10px;
-  background: rgba(255, 255, 0, 0.5);
-}
-
-.item-active {
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 255, 0, 0.5);
-}
-
-.r-tab-item-act {
-  font-size: 30px;
-}
-
-.my-tab {
+<style lang="scss">
+.radio-layout-tabs-demo {
   .item {
-    padding: 20px;
-    margin: 0 5px;
-    background: rgba(255, 100, 0, 0.5);
+    padding: 10px;
+    margin: 0 10px;
+    background: rgba(255, 255, 0, 0.5);
   }
 
   .item-active {
     width: 100%;
     height: 100%;
-    background: rgba(100, 0, 255, 0.5);
+    background: rgba(0, 255, 0, 0.5);
   }
-}
 
-.vertical-tab {
-  width: 150px;
-  height: 200px;
+  .r-tab-item-act {
+    font-size: 30px;
+  }
+
+  .my-tab {
+    .item {
+      padding: 20px;
+      margin: 0 5px;
+      background: rgba(255, 100, 0, 0.5);
+    }
+
+    .item-active {
+      width: 100%;
+      height: 100%;
+      background: rgba(100, 0, 255, 0.5);
+    }
+  }
+
+  .vertical-tab {
+    width: 150px;
+    height: 200px;
+  }
 }
 </style>

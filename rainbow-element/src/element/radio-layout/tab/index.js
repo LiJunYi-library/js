@@ -122,7 +122,7 @@ export class RTab extends RainbowElement {
     this.$$.cache.value = this.value;
   }
 
-  $layout(behavior = "smooth", forceBehavior) {
+  $layout(behavior = "smooth", forceBehavior, isScroll = true) {
     const { activeChild } = this.$$;
     if (!activeChild) return;
     if (this.$$.isActiveTransition === true) behavior = "smooth";
@@ -138,7 +138,8 @@ export class RTab extends RainbowElement {
     this.$$.active.style.height = activeOffset.height + "px";
     this.$$.active.style.left = `${activeChild.offsetLeft}px`;
     this.$$.active.style.top = `${activeChild.offsetTop}px`;
-    this.scrollTo({ left: scrollLeft, behavior, top: scrollTop });
+    // if (isScroll) this.scrollTo({ left: scrollLeft, behavior, top: scrollTop });
+    activeChild.scrollIntoView({ behavior, block: "center", inline: "center" });
     this.$$.resizeObserver.observe(activeChild);
     this.$$.active.removeEventListener("transitionend", this.$$.onActiveTransitionend);
     this.$$.active.addEventListener("transitionend", this.$$.onActiveTransitionend);
@@ -160,6 +161,8 @@ export class RTabItem extends RainbowElement {
       toggleClass(this, this.value === this.$$.valueParent?.value, "r-tab-item-act");
       if (this.value === this.$$.valueParent?.value) {
         this.$$.valueParent?.$onRender?.();
+      } else {
+        this.$$.valueParent?.$layout?.("instant", undefined, false);
       }
     },
   };
@@ -190,5 +193,10 @@ export class RTabItem extends RainbowElement {
     super.disconnectedCallback(...arg);
     const { rTrigger } = this.$.DATA;
     removeEventListener(this, rTrigger, this.$$.click);
+    if (this.value === this.$$.valueParent?.value) {
+      this.$$.valueParent?.$$?.updateValue?.(undefined);
+    } else {
+      this.$$.valueParent?.$layout?.("instant", undefined, false);
+    }
   }
 }

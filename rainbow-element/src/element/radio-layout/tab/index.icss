@@ -1,9 +1,10 @@
  .r-tab-active {
-     position: absolute;
-     overflow: hidden;
-     display: block;
+   position: absolute;
+   overflow: hidden;
+   display: block;
+   z-index: -1;
  }
 
  .r-tab-active-transition {
-     transition: 0.25s;
+   transition: 0.25s;
  }

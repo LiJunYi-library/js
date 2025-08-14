@@ -1,4 +1,4 @@
-import { arrayForcedTransform, arrayRemoves } from "@rainbow_ljy/rainbow-js";
+import { arrayForcedTransform, arrayRemoves } from "../../array";
 import { listSelect } from "../select";
 import { ref } from "../../proxy";
 import { proxy } from "../../proxy";
@@ -81,15 +81,17 @@ export function list(props = {}) {
     sortFun,
     manageListFun,
     push,
-    add,
+    pushed,
     unshift,
-    increase,
+    unshifted,
     splice,
+    spliced,
     insert,
+    inserted,
     pop,
     shift,
     remove,
-    expurgate,
+    removed,
     filter,
     manageList,
     sort,
@@ -97,8 +99,8 @@ export function list(props = {}) {
     descendingOrder,
     updateCurrentPage,
     updatePageSize,
-    resolveList,
     updateList,
+    resolveList,
   });
 
   function resolveList(...args) {
@@ -129,8 +131,8 @@ export function list(props = {}) {
     resolveList("value");
   }
 
-  function add(items = [], args = "value") {
-    listData.value.push(...arrayForcedTransform(items));
+  function pushed(items = [], args = "value") {
+    listData.value.push(...items);
     resolveList(args);
   }
 
@@ -139,18 +141,46 @@ export function list(props = {}) {
     resolveList("value");
   }
 
-  function increase(items = [], args = "value") {
-    listData.value.unshift(...arrayForcedTransform(items));
+  function unshifted(items = [], args = "value") {
+    listData.value.unshift(...items);
     resolveList(args);
   }
 
+  function _splice(i, deleteCount, ...items) {
+    let start;
+    if (i instanceof Function) {
+      start = listData.value.findIndex(i);
+      if (start === -1) return;
+    } else start = i;
+    listData.value.splice(start, deleteCount, ...items);
+  }
+
   function splice(...args) {
-    listData.value.splice(...args);
+    _splice(...args);
     resolveList("value");
   }
 
-  function insert(start, deleteCount, items = [], args = "value") {
+  function spliced(start, deleteCount, items = [], args = "value") {
+    _splice(start, deleteCount, ...items);
+    resolveList(args);
+  }
+
+  function _insert(item, index = 0, deleteCount, ...items) {
+    let fn;
+    if (item instanceof Function) fn = item;
+    else fn = (el) => el === item;
+    const start = listData.value.findIndex(fn) + index;
+    if (start === -1) return;
     listData.value.splice(start, deleteCount, ...items);
+  }
+
+  function insert(item, index = 0, deleteCount, ...items) {
+    _insert(item, index, deleteCount, ...items);
+    resolveList("value");
+  }
+
+  function inserted(item, index = 0, deleteCount, items = [], args = "value") {
+    _insert(item, index, deleteCount, ...items);
     resolveList(args);
   }
 
@@ -165,12 +195,12 @@ export function list(props = {}) {
   }
 
   function remove(...items) {
-    listData.value = listData.value.filter((el) => !items.includes(el));
+    arrayRemoves(listData.value, ...items);
     resolveList("value");
   }
 
-  function expurgate(items = [], args = "value") {
-    listData.value = listData.value.filter((el) => !items.includes(el));
+  function removed(items = [], args = "value") {
+    arrayRemoves(listData.value, ...items);
     resolveList(args);
   }
 

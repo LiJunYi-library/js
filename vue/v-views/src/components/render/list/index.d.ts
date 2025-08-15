@@ -1,2 +1,2 @@
 import { DefineComponent } from "vue";
-export declare const VRTabs: DefineComponent<any>;
+export declare const VRRenderList: DefineComponent<any>;

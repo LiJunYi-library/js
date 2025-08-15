@@ -44,6 +44,7 @@
       <div>
         <button @click="multipleList.filter(filter)">filter</button>
         <button @click="multipleList.sort(sort)">sort</button>
+          <button @click="multipleList.sort(undefined)">sort empty</button>
       </div>
     </div>
     <div>

@@ -16,8 +16,8 @@
           {{ item.label }}
         </r-tab-item>
       </template>
-      <div slot="active" class="item-active">123</div>
-    </r-tabs> -->
+<div slot="active" class="item-active">123</div>
+</r-tabs> -->
     <div>------------------------------------------------</div>
     <!-- <r-tabs :value="Radio2.value" class="r-tabs-vertical vertical-tab" @change="change">
       <template v-for="(item, index) in Radio2.list" :key="item.value">
@@ -39,27 +39,41 @@
         <div slot="active" class="item-active">123</div>
       </template>
     </VRTabs> -->
-    <RRenderList :listHook="Radio2" tagName="r-tab" tagItemName="r-tab-item" style-item="456" lopItem="456">
-      <div slot="active" class="r-tab-active-line" />
-    </RRenderList>
+    <VRRenderList :listHook="Radio2"  @triggerDisabled="change">
+      <div class="parent"></div>
+      <template #item="{ item, index }">
+        <div :class="[bool && 'parent-item']"></div>
+      </template>
+      <template #children>
+        <div class="r-tab-active-line" />
+      </template>
+    </VRRenderList>
+
+    <r-marquee>
+      <div>我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法</div>
+      <div>我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法</div>
+      <div>我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法</div>
+      <div>我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法</div>
+      <div>我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法</div>
+    </r-marquee>
 
     <div>123</div>
     <div>123</div>
     <div>123</div>
     <div>123</div>
     <div>Radio2.value {{ Radio2.value }}</div>
-    <div style="width: 30px; font-size: 80px; height: 1500px; word-wrap: break-word">123456789</div>
-    <button @click="bool = !bool">bool</button>
+    <div>bool.value {{ bool }}</div>
+    <!-- <div style="width: 30px; font-size: 80px; height: 1500px; word-wrap: break-word">123456789</div> -->
+    <button @click="bool = !bool" disabled>bool</button>
   </div>
 </template>
 <script setup lang="jsx">
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
-import { useRadio2 } from '@rainbow_ljy/v-hooks'
-import { ref, onMounted, renderList, h, defineComponent } from 'vue'
+import { useListRadio, useListMultiple } from '@rainbow_ljy/v-hooks'
+import { ref, onMounted, renderList, h, defineComponent, cloneVNode } from 'vue'
 import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
-import { VRTabs } from '@rainbow_ljy/v-views'
+import { VRRenderList } from '@rainbow_ljy/v-views'
 // list 布局  支持 滚动居中 activite定位 拖拽修改顺序
-//
 
 const RRenderList = defineComponent({
   props: {
@@ -68,34 +82,49 @@ const RRenderList = defineComponent({
     tagItemName: String,
     listHook: { type: Object, default: () => ({}) },
   },
+  emits: ['change'],
   setup(props, context) {
     return () => {
-      console.log(context)
 
-      return h(
-        props.tagName,
-        {
-          ...context.attrs,
-          class: props.className,
-          value: props.listHook.value,
-        },
-        [
-          renderList(props.listHook.list, (item, index) => {
-            return h(
-              props.tagItemName,
-              {
-                value: props.listHook?.formatterValue?.(item, index),
-                class: props.className + '-item',
-              },
-              [props.listHook?.formatterLabel?.(item, index)],
-            )
-          }),
-          context.slots.default(),
-        ],
-      )
+
+
+      async function trigger(item, index) {
+        const bool = await props.listHook?.onSelect?.(item, index);
+        if (bool) return
+        console.log(bool);
+        context.emit("change", item, index);
+      }
+
+      return renderList(props.listHook.list, (item, index) => {
+        const itemNodes = context.slots?.item?.({ item, index })
+        let nodes = itemNodes
+        if (itemNodes.length === 1 && itemNodes[0].children === null) {
+          nodes = itemNodes.map((el) => {
+            // console.log(el.props)
+            return h(el.type, {
+              disabled: props.listHook?.formatterDisabled?.(item, index),
+              ...el.props,
+              class: [
+                el.props.class,
+                'select-item',
+                props.listHook?.same?.(props.listHook.list[index + 1], index + 1) && 'select-item-prve',
+                props.listHook?.same?.(item, index) && 'select-item-checked',
+                props.listHook?.same?.(props.listHook.list[index - 1], index - 1) && 'select-item-next',
+                props.listHook?.formatterDisabled?.(item, index) && 'select-item-disabled',
+              ],
+              onClick: (e) => trigger(item, index)
+            }, [
+              props.listHook?.formatterLabel?.(item, index),
+            ])
+          })
+        }
+        return nodes
+      })
+
     }
   },
 })
+
 const d = arrayLoopMap(10, (value) => ({
   value,
   label: 'label' + value,
@@ -108,7 +137,11 @@ const index = ref(0)
 const tabclass = ref('')
 const bool = ref(true)
 
-const Radio2 = useRadio2({ value: 3, list: d })
+const Radio2 = useListMultiple({
+  value: [3], list: d, formatterDisabled: (item) => {
+    return item?.value === 8
+  }
+})
 
 function change(params) {
   console.log('change')
@@ -121,6 +154,19 @@ function setH() {
 </script>
 
 <style lang="scss">
+.select-item {
+  cursor: pointer;
+}
+
+.select-item-checked {
+  color: white;
+  background: black;
+}
+
+.select-item-disabled {
+  cursor: not-allowed;
+}
+
 .radio-layout-tabs-demo {
   .item {
     padding: 10px;

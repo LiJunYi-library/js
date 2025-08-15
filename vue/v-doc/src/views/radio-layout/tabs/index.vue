@@ -39,15 +39,20 @@
         <div slot="active" class="item-active">123</div>
       </template>
     </VRTabs> -->
-    <VRRenderList :listHook="Radio2"  @triggerDisabled="change">
-      <div class="parent"></div>
+    <VRRenderList :listHook="Radio2" @triggerDisabled="change">
       <template #item="{ item, index }">
-        <div :class="[bool && 'parent-item']"></div>
-      </template>
-      <template #children>
-        <div class="r-tab-active-line" />
+        <div :class="[bool && 'parent-item']" v-if="index"></div>
       </template>
     </VRRenderList>
+
+    <r-tab class="parent" :value="Radio2.value">
+      <VRRenderList :listHook="Radio2" @triggerDisabled="change">
+        <template #item="{ item, index }">
+          <r-tab-item :value="item.value" />
+        </template>
+      </VRRenderList>
+      <div slot="active" class="item-active">123</div>
+    </r-tab>
 
     <r-marquee>
       <div>我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法我的顺丰到付方法</div>
@@ -137,8 +142,8 @@ const index = ref(0)
 const tabclass = ref('')
 const bool = ref(true)
 
-const Radio2 = useListMultiple({
-  value: [3], list: d, formatterDisabled: (item) => {
+const Radio2 = useListRadio({
+  value: 3, list: d, formatterDisabled: (item) => {
     return item?.value === 8
   }
 })
@@ -159,8 +164,8 @@ function setH() {
 }
 
 .select-item-checked {
-  color: white;
-  background: black;
+  color: rgba(255, 255, 255, 0.255);
+  background: rgba(0, 0, 0, 0.255);
 }
 
 .select-item-disabled {
@@ -180,27 +185,13 @@ function setH() {
     background: rgba(0, 255, 0, 0.5);
   }
 
-  .r-tab-item-act {
-    font-size: 30px;
+
+  r-tab {
+    --r-trigger: none;
   }
 
-  .my-tab {
-    .item {
-      padding: 20px;
-      margin: 0 5px;
-      background: rgba(255, 100, 0, 0.5);
-    }
 
-    .item-active {
-      width: 100%;
-      height: 100%;
-      background: rgba(100, 0, 255, 0.5);
-    }
-  }
 
-  .vertical-tab {
-    width: 150px;
-    height: 200px;
-  }
+
 }
 </style>

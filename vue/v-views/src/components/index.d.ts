@@ -1,3 +1,3 @@
 export * from "./layout";
-export * from "./radio-layout";
+export * from "./render";
 export * from "./scroll-layout";

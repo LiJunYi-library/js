@@ -56,8 +56,9 @@ export function listMultiple(props = {}) {
     return select.value.some((val) => val === item);
   }
 
-  async function onSelect(item) {
-    if (same(item)) {
+  async function onSelect(item, i) {
+    if (formatterDisabled(item, i)) return true;
+    if (same(item, i)) {
       arrayRemove(select.value, item);
       updateSelect(select.value);
     } else {

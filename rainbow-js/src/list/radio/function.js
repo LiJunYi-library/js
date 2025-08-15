@@ -55,12 +55,13 @@ export function listRadio(props = {}) {
     return select.value === item;
   }
 
-  async function onSelect(item) {
-    if (config.cancelSame && same(item)) {
+  async function onSelect(item, i) {
+    if (formatterDisabled(item, i)) return true;
+    if (config.cancelSame && same(item, i)) {
       reset();
       return false;
     }
-    if (same(item)) return true;
+    if (same(item, i)) return true;
     updateSelect(item);
     return false;
   }

@@ -11,18 +11,18 @@ export const VRRenderList = defineComponent({
   },
   emits: ["change", "triggerDisabled"],
   setup(props, context) {
-    return () => {S
+    return () => {
       async function trigger(event, item, index) {
         if (props.stopPropagation) event.stopPropagation();
         if (props.preventDefault) event.preventDefault();
-        if (props.beforeTrigger) await props.beforeTrigger(event, item, index);
+        if (props.beforeTrigger) await props.beforeTrigger(item, index, event);
         if (props.listHook?.formatterDisabled?.(item, index)) {
-          context.emit("triggerDisabled", event, item, index);
+          context.emit("triggerDisabled", item, index, event);
           return;
         }
         const bool = await props.listHook?.onSelect?.(item, index);
         if (bool) return;
-        context.emit("change", event, item, index);
+        context.emit("change", item, index, event);
       }
 
       const itemVNodeList = renderList(props.listHook.list, (item, index) => {

@@ -47,5 +47,5 @@ app.use(directiveEvents)
 app.use(router)
 app.mount('#app')
 app.config.globalProperties.$log = console.log
-
+// console.log("app",app)
 export default app

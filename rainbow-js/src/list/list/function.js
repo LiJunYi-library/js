@@ -6,7 +6,7 @@ import { proxy } from "../../proxy";
 function getListProps(props = {}) {
   const config = {
     currentPage: 1,
-    pageSize: 10,
+    pageSize: -1,
     total: 0,
     listData: [],
     filterFun: undefined,

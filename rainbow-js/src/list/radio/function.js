@@ -52,6 +52,7 @@ export function listRadio(props = {}) {
   const findForLabel = (val) => list.value.find?.(labelPredicate(val));
 
   function same(item) {
+    if (item === undefined && select.value === undefined) return false;
     return select.value === item;
   }
 

@@ -92,6 +92,8 @@ export function list(props = {}) {
     shift,
     remove,
     removed,
+    changeIndex,
+    change,
     filter,
     manageList,
     sort,
@@ -201,6 +203,23 @@ export function list(props = {}) {
 
   function removed(items = [], args = "value") {
     arrayRemoves(listData.value, ...items);
+    resolveList(args);
+  }
+
+  function change(item1, item2, args = "value") {
+    const index1 = listData.value.indexOf(item1);
+    const index2 = listData.value.indexOf(item2);
+    if (index1 === -1 || index2 === -1) return;
+    listData.value[index1] = item2;
+    listData.value[index2] = item1;
+    resolveList(args);
+  }
+
+  function changeIndex(index1, index2, args = "value") {
+    const item1 = listData.value[index1];
+    const item2 = listData.value[index2];
+    listData.value[index1] = item2;
+    listData.value[index2] = item1;
     resolveList(args);
   }
 

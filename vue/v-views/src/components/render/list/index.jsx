@@ -28,11 +28,15 @@ export const VRRenderList = defineComponent({
     hideItemDefaultChildren: Boolean,
     stopPropagation: Boolean,
     preventDefault: Boolean,
+    draggable: { type: Boolean, default: false },
+    unScrollIntoView: Boolean,
   },
-  emits: ["change", "triggerDisabled"],
+  emits: ["change", "disabledTrigger"],
   setup(props, context) {
     const activeEL = ref(document.createElement("div"));
     const pEL = ref();
+    let draggedItem;
+    let draggedIndex;
     const activeItemEL = ref();
     const resizeObs = resizeObserver(onResize);
     watch(activeItemEL, watchActiveItemEL);
@@ -56,11 +60,14 @@ export const VRRenderList = defineComponent({
       if (props.preventDefault) event.preventDefault();
       if (props.beforeTrigger) await props.beforeTrigger(item, index, event);
       if (props.listHook?.formatterDisabled?.(item, index)) {
-        context.emit("triggerDisabled", item, index, event);
+        context.emit("disabledTrigger", item, index, event);
         return;
       }
       const bool = await props.listHook?.onSelect?.(item, index);
-      if (bool) return;
+      if (bool) {
+        context.emit("sameTrigger", item, index, event);
+        return;
+      }
       context.emit("change", item, index, event);
       activeItemEL.value = event.currentTarget;
     }
@@ -75,7 +82,9 @@ export const VRRenderList = defineComponent({
         active.style.top = `${0}px`;
         return;
       }
-      child.scrollIntoView({ behavior, block: "center", inline: "center" });
+      if (!props.unScrollIntoView) {
+        child.scrollIntoView({ behavior, block: "center", inline: "center" });
+      }
       if (behavior === "smooth") active.classList.add("select-active-transition");
       active.style.position = "absolute";
       active.style.width = child.offsetWidth + "px";
@@ -104,6 +113,23 @@ export const VRRenderList = defineComponent({
       moveActive(activeItemEL.value, "instant");
     }
 
+    function onDrag() {}
+    function onDragstart(event, item, index) {
+      draggedItem = item;
+      draggedIndex = index;
+    }
+    function onDragend() {}
+    //
+    function onDragover(event) {
+      event.preventDefault();
+    }
+    function onDragenter(event) {}
+    function onDragleave(event) {}
+    function onDrop(event, item, index) {
+      event.preventDefault();
+      props.listHook.changeIndex(draggedIndex, index);
+    }
+
     return () => {
       const itemVNodeList = renderList(props.listHook.list, (item, index) => {
         const itemNodes = context.slots?.item?.({ item, index });
@@ -111,11 +137,28 @@ export const VRRenderList = defineComponent({
 
         nodes = itemNodes.map((el) => {
           activeItemEL.value = undefined;
+          const draggableAttrs = (() => {
+            if (props.draggable) {
+              return {
+                draggable: true,
+                onDrag: (e) => onDrag(e, item, index),
+                onDragstart: (e) => onDragstart(e, item, index),
+                onDragend: (e) => onDragend(e, item, index),
+                onDragover: (e) => onDragover(e, item, index),
+                onDragenter: (e) => onDragenter(e, item, index),
+                onDragleave: (e) => onDragleave(e, item, index),
+                onDrop: (e) => onDrop(e, item, index),
+              };
+            }
+            return {
+              [props.eventName]: (e) => trigger(e, item, index),
+            };
+          })();
           return extendVNode(
             el,
             {
               disabled: props.listHook?.formatterDisabled?.(item, index),
-              [props.eventName]: (e) => trigger(e, item, index),
+              ...draggableAttrs,
               ...el.props,
               ref: (e) => getActiveItemEL(e, item, index),
               class: [

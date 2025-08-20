@@ -31,7 +31,7 @@ export const VRRenderList = defineComponent({
     draggable: { type: Boolean, default: false },
     unScrollIntoView: Boolean,
   },
-  emits: ["change", "disabledTrigger"],
+  emits: ["change", "disabledTrigger", "sameTrigger"],
   setup(props, context) {
     const activeEL = ref(document.createElement("div"));
     const pEL = ref();

@@ -361,3 +361,20 @@ export function scrollIntoView(pView, view, top = 0, left = 0) {
   pView.scrollTo(config);
   return config;
 }
+
+export function emptyChildren(node) {
+  for (let i = 0; i < node.children.length; i++) {
+    const child = node.children[i];
+    node.removeChild(child);
+  }
+}
+
+export function copyChildren(node = document.createElement("div")) {
+  let list = [];
+  for (let i = 0; i < node.children.length; i++) {
+    const child = node.children[i];
+    const cloneChild = child.cloneNode(true);
+    list.push(cloneChild);
+  }
+  return list;
+}

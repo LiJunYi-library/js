@@ -1,45 +1,36 @@
 import "./index.scss";
 import { RainbowElement } from "../../base/index.js";
-import { createElement, createSlot } from "../../../utils/index.js";
+import { createElement, createSlot, emptyChildren, copyChildren } from "../../../utils/index.js";
+import innerCss from "./index.icss";
 
-export class RMarquee extends HTMLElement {
-  constructor() {
-    super();
-    // 创建 Shadow DOM
-    this.attachShadow({ mode: 'open' });
+export class RMarquee extends RainbowElement {
+  $$ = {
+    list: createElement("div", "r-marquee-list", "r-marquee-list"),
+    copyChildren: createElement("div", "r-marquee-copy-children", "r-marquee-copy-children"),
+    defaultSlot: createSlot("slot", "r-marquee-default-slot", ""),
+  };
+
+  constructor(...props) {
+    super(...props);
+    this.attachShadow({ mode: "open" });
+    this.$$.list.append(this.$$.defaultSlot, this.$$.copyChildren);
+    this.shadowRoot.append(this.$$.list);
   }
 
-  connectedCallback() {
-    // 每次连接时重新渲染（可选：也可在 constructor 中做）
-    this.render();
+  connectedCallback(...arg) {
+    super.connectedCallback(...arg);
+    this.shadowRoot.appendChild(this.$.styleNode);
+    this.innerCss = innerCss;
+    this.$render();
   }
 
-  render() {
-    // 清空 shadowRoot
-    this.shadowRoot.innerHTML = '';
+  $render() {
+    emptyChildren(this.$$.copyChildren);
+    this.$$.copyChildren.append(...copyChildren(this));
+  }
 
-    // 创建两个默认插槽（用于无缝滚动）
-    const slot1 = document.createElement('slot');
-    const slot2 = document.createElement('slot');
-
-    // 可选：给插槽命名（但默认插槽不需要 name）
-    // slot1.name = ''; // 默认插槽
-    // slot2.name = '';
-
-    // 将两个插槽放入 shadow root
-    this.shadowRoot.appendChild(slot1);
-    this.shadowRoot.appendChild(slot2);
-
-    // ✅ 样式建议：用 CSS 控制布局（如横向排列）
-    const style = document.createElement('style');
-    style.textContent = `
-      :host {
-
-      }
-      slot {
-        /* 默认插槽会显示 light DOM 内容 */
-      }
-    `;
-    this.shadowRoot.appendChild(style);
+  $onChildrenChanage(...arg) {
+    super.$onChildrenChanage(...arg);
+    this.$render();
   }
 }

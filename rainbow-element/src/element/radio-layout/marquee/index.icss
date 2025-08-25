@@ -1,0 +1,23 @@
+@keyframes marqueeFlash {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(calc(-50%));
+    }
+}
+
+.r-marquee-list {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    animation: marqueeFlash 10s infinite linear;
+    animation-duration: var(--marquee-animation-duration);
+}
+
+.r-marquee-copy-children {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}

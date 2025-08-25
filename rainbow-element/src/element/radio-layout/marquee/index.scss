@@ -1,9 +1,12 @@
 r-marquee {
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
-  padding: 20px 0;
-  font-size: 14px;
+  flex-wrap: nowrap;
 
-
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 100%;
+  touch-action: pan-x;
+  --marquee-animation-duration: 10s;
 }

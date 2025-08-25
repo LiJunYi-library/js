@@ -1,15 +1,3 @@
-export * from "./radio";
-export * from "./radio2";
-export * from "./radio3";
-export * from "./multiple";
-export * from "./multiple2";
-export * from "./select";
-export * from "./select2";
-export * from "./list";
-export * from "./listLoad";
-export * from "./pagination2";
-export * from "./pagination";
-
 export * from "./list/index";
 export * from "./load/index";
 export * from "./multiple/index";

@@ -1,3 +1,57 @@
 
 
-export declare function useListSelect(props: any): any;
+export declare type ListSelectProps<T = any> = {
+  select?: T,
+  value: any,
+  label: any,
+  index?: number,
+  cancelSame?: boolean, // 是否取消相同的
+  isMultiple?: boolean,
+  formRequired?: boolean,
+  formRequiredErrorMessage?: string,
+  validator?: (item: T, index: number) => Promise<boolean>,
+  formatterValue?: (item?: T) => any,
+  formatterLabel?: (item?: T) => any,
+  formatterDisabled?: (item?: T) => any,
+  formatterList?: (list: T[]) => T[],
+  listRef: (...any) => any,
+  selectRef: (...any) => any,
+  valueRef: (...any) => any,
+  labelRef: (...any) => any,
+  indexRef: (...any) => any,
+  priority?: "valueItem" | "indexItem" | "labelItem",
+  list?: T[],
+}
+
+export declare type ListSelect<T = any> = {
+  index?: number,
+  label?: any,
+  value?: any,
+  select?: T,
+  list: T[],
+  onSelect(item: T, index: number): boolean,
+  same(item: T): boolean,
+  reset(): void,
+  formatterValue(): void,
+  formatterLabel(): any,
+  formatterDisabled(): boolean,
+  updateList(l: T[] = [], values?: { select?: T, value?: any, label?: any, index?: number, }): void,
+  updateValue(v: any): void,
+  updateIndex(v: number): void,
+  updateLabel(v: any): void,
+  updateSelect(v: T): void,
+  updateSelect(v: (value: T, index: number, arr: T[]) => T): void,
+  getSelectOfValue(v: any): T,
+  getLabelOfValue(v: any): any,
+  getIndexOfValue(v: any): number,
+  someValue(v: any): boolean,
+  resolveList(l: T[] = []): void,
+  resolveValue(): void,
+  verifyValueInList(): boolean,
+  updateListAndReset(l: T[] = []): void,
+  updateListToResolveValue(l: T[] = []): void,
+  updateListResolve(l: T[] = []): void,
+  formValidation(): void,
+};
+
+export declare function useListSelect(props: ListSelectProps): ListSelect;

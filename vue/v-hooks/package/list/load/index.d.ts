@@ -1,1 +1,1 @@
-export declare function useVlistLoad(props: any): any;
+export declare function useListLoad(props: any): any;

@@ -1,3 +1,3 @@
 
 
-export declare function useVList(props: any): any;
+export declare function useList(props: any): any;

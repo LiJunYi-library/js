@@ -1,5 +1,4 @@
 import { reactive, customRef, watch } from "vue";
-import { createOverload } from "@rainbow_ljy/rainbow-js";
 
 export function useProxy(hooks = {}) {
   const proxy = reactive(hooks);
@@ -108,13 +107,4 @@ export function createSaveContext(refs, argStores) {
   };
 }
 
-export function createSaveHooks({ refs, methods }) {
-  const contextHooks = createSaveContext(refs);
-  const hooks = useReactive({
-    ...refs,
-    methods,
-    ...methods,
-    ...contextHooks,
-  });
-  return hooks;
-}
+

@@ -1,1 +1,1 @@
-export declare function useVListPagination(props: any): any;
+export declare function useListPagination(props: any): any;

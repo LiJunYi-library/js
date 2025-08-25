@@ -2,7 +2,7 @@ import { listPagination } from "@rainbow_ljy/rainbow-js";
 
 import { ref } from "vue";
 
-export function useVListPagination(props) {
+export function useListPagination(props) {
   return listPagination({
     selectRef: ref,
     valueRef: ref,

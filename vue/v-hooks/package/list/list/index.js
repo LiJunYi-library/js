@@ -1,7 +1,7 @@
 import { list } from "@rainbow_ljy/rainbow-js";
 import { ref } from "vue";
 
-export function useVList(props = {}) {
+export function useList(props = {}) {
   return list({
     currentPageRef: ref,
     pageSizeRef: ref,

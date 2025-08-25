@@ -7,7 +7,7 @@
       props.class,
     ]"
     ref="rElPaginationTable"
-    v-on-resize="onResize"
+    v-on-resize.height="onResize"
     :style="[props.style, innerStyle]"
   >
     <div class="r-el-table-box">

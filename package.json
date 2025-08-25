@@ -129,6 +129,7 @@
     "@rainbow_ljy/rainbow-element": "workspace:^",
     "@rainbow_ljy/rainbow-js": "workspace:^",
     "@rainbow_ljy/v-chart": "workspace:^",
+    "@rainbow_ljy/v-directives": "workspace:^",
     "@rainbow_ljy/v-hooks": "workspace:^",
     "@rainbow_ljy/v-library": "workspace:^",
     "@rainbow_ljy/v-view": "workspace:^",

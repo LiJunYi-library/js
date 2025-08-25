@@ -4,9 +4,8 @@
 
 <script setup>
 import { stringKebabCaseToCamelCase ,stringCamelCaseToKebabCase} from '@rainbow_ljy/rainbow-js';
-
-console.log(stringKebabCaseToCamelCase('age-name-lar'))
-console.log(stringCamelCaseToKebabCase('ageNameLar'))
+// console.log(stringKebabCaseToCamelCase('age-name-lar'))
+// console.log(stringCamelCaseToKebabCase('ageNameLar'))
 </script>
 
 <style lang="scss">

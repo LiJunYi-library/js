@@ -1,6 +1,5 @@
 <template>
   <div class="hooks-pagination">
-    {{ aaa.a }} <button @click="aaa.a++">add</button>
     <div>
       <r-grid style="--r-columns: 2">
         <ElSelect v-model="req.isPass" size="small" clearable>
@@ -26,23 +25,16 @@
       </div>
 
       <div>
-        <div v-on-intersection="intersection">value: {{ pList.value }}</div>
+        <div>value: {{ pList.value }}</div>
         <div>label: {{ pList.label }}</div>
         <div>index: {{ pList.index }}</div>
-        <!-- <div>select: {{ pList.select }}</div>  size="small"-->
+        <div>select: {{ pList.select }}</div>
       </div>
     </div>
 
-    <RPaginationTable
-      :listHook="pList"
-      max-height="flex-auto-height"
-      :class="['44555', 'ccccc']"
-      v-model:sortProp="req.sortProp"
-      v-model:sortOrder="req.sortOrder"
-      border
-      @currentPageChange="changePagin"
-      @sort-change="sortChange"
-    >
+    <RPaginationTable :listHook="pList" max-height="flex-auto-height" :class="['44555', 'ccccc']"
+      v-model:sortProp="req.sortProp" v-model:sortOrder="req.sortOrder" border @currentPageChange="changePagin"
+      @sort-change="sortChange">
       <ElTableColumn width="80">
         <template #header>
           <r-grid style="--r-columns: 3">
@@ -52,11 +44,7 @@
           </r-grid>
         </template>
         <template #default="{ row }">
-          <ElButton
-            size="small"
-            :type="pList.same(row) ? 'primary' : ''"
-            @click="pList.onSelect(row)"
-          />
+          <ElButton size="small" :type="pList.same(row) ? 'primary' : ''" @click="pList.onSelect(row)" />
         </template>
       </ElTableColumn>
       <ElTableColumn prop="id" label="id" sortable="custom"></ElTableColumn>
@@ -70,47 +58,12 @@
   </div>
 </template>
 <script setup>
-import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
-import { useVListPagination } from '@rainbow_ljy/v-hooks'
-import { computed, onMounted, customRef, reactive,ref } from 'vue'
-import {
-  ElTable,
-  ElTableColumn,
-  ElButton,
-  ElSelect,
-  ElOption,
-  ElPagination,
-  ElCheckbox,
-} from 'element-plus'
-import { useSpuFetch, useMFetch } from '@/hooks'
+import { } from '@rainbow_ljy/rainbow-js'
+import { useListPagination } from '@rainbow_ljy/v-hooks'
+import { computed, onMounted, customRef, reactive, ref } from 'vue'
+import { ElTableColumn, ElButton, ElSelect, ElOption } from 'element-plus'
+import { useSpuFetch, } from '@/hooks'
 import RPaginationTable from './r-el-pagination-table.vue'
-
- function useLocalVal(key, defaultValue) {
-  return customRef((track, trigger) => {
-    return {
-      get() {
-        track()
-        const localVal = window.localStorage.getItem(key)
-        if (localVal === null) return defaultValue
-        try {
-          return JSON.parse(localVal)
-        } catch (error) {
-          return localVal
-        }
-      },
-      set(newValue) {
-        // console.log('set');
-
-        window.localStorage.setItem(key, JSON.stringify(newValue))
-        trigger()
-      },
-    }
-  })
-}
-
-const aaa = useLocalVal('aaa', {a:10})
-console.log(ref( {a:10}));
-
 
 const req = reactive({
   isPass: '',
@@ -136,7 +89,7 @@ const pList = (() => {
     body,
   })
 
-  list = useVListPagination({
+  list = useListPagination({
     vaule: ['25993'],
     asyncHook,
     isMultiple: true,
@@ -163,10 +116,6 @@ function errorSend() {
   //afreshNextBeginSend  afreshNextSend  nextSend
   pList.afreshNextSend({ url: '/spu/list2' })
   // pList.loading = true
-}
-
-function intersection(params) {
-  console.log('intersection  ---', params)
 }
 
 onMounted(() => {

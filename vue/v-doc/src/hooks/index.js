@@ -1,6 +1,6 @@
-import { useVFetchHOC } from '@rainbow_ljy/v-hooks'
+import { useFetchHOC } from '@rainbow_ljy/v-hooks'
 
-export const useSpuFetch = useVFetchHOC({
+export const useSpuFetch = useFetchHOC({
   onRequest: (config) => {
     config.toast = { loading: true }
     rainbow?.toast?.open(config.toast)
@@ -35,7 +35,7 @@ export const useSpuFetch = useVFetchHOC({
   baseUrl: 'https://spu-test.manmanbuy.com',
 })
 
-export const useMFetch = useVFetchHOC({
+export const useMFetch = useFetchHOC({
   onRequest: (config) => {
     config.toast = { loading: true }
     rainbow?.toast?.open(config.toast)

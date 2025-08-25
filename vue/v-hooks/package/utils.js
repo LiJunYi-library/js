@@ -1,19 +1,8 @@
 import { reactive, customRef, watch } from "vue";
 
-export function useProxy(hooks = {}) {
-  const proxy = reactive(hooks);
-  proxy.getProto = () => hooks;
-  proxy.proto = hooks;
-  proxy.proxy = proxy; // TODO
-  hooks.proxy = proxy;
-  return hooks;
-}
-
 export function useReactive(hooks = {}) {
   const proxy = reactive(hooks);
   proxy.getProto = () => hooks;
-  // proxy.proto = hooks; // TODO
-  // hooks.proxy = proxy; // TODO
   return proxy;
 }
 
@@ -49,7 +38,7 @@ export function useModelWatch(props, context, key, change) {
       if (mRef.value === newVal) return;
       mRef.value = newVal;
       change?.(newVal);
-    }
+    },
   );
 
   return mRef;
@@ -106,5 +95,3 @@ export function createSaveContext(refs, argStores) {
     restore_changeContextToProxy,
   };
 }
-
-

@@ -1,4 +1,4 @@
-import * as directives from "./packages/index.js";
+import * as directives from "./src/index.js";
 
 export default {
   install: (app) => {

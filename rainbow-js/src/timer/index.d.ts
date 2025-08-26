@@ -9,10 +9,6 @@ export declare function timerDebounced(
   delay?: number
 ): Function;
 
-export declare function animationDebounced(
-  callback: (...arg: any) => any
-): (...arg: any) => any;
-
 /**
  * 定时器节流函数
  * @param {Function} callback - 需要节流的回调函数

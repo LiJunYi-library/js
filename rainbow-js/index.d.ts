@@ -1,3 +1,4 @@
+export * from "./src/animation";
 export * from "./src/array";
 export * from "./src/date";
 export * from "./src/fetch";

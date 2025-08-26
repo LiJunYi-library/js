@@ -14,16 +14,6 @@ export function timerDebounced(callback, delay = 500) {
   };
 }
 
-export function animationDebounced(callback) {
-  let id;
-  return function fun(...arg) {
-    cancelAnimationFrame(id);
-    id = requestAnimationFrame((time) => {
-      callback(...arg);
-    });
-  };
-}
-
 /**
  * 定时器节流函数
  * @param {Function} callback - 需要节流的回调函数

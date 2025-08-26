@@ -29,14 +29,14 @@ function getRequestProps(o1 = {}, o2 = {}) {
     data: undefined,
     errorData: undefined,
     formatterResponse: async (res, config) => {
-      const contentType = res.headers.get("Content-Type");
-      if (contentType.includes("application/json")) return await res.json();
-      if (contentType.includes("application/octet-stream")) {
-        if (config.formatterFile) return await config.formatterFile(res, config);
-        return await res.blob();
-      }
-      if (contentType.includes("text/plain")) return await res.text();
       try {
+        const contentType = res.headers.get("Content-Type");
+        if (contentType.includes("application/json")) return await res.json();
+        if (contentType.includes("application/octet-stream")) {
+          if (config.formatterFile) return await config.formatterFile(res, config);
+          return await res.blob();
+        }
+        if (contentType.includes("text/plain")) return await res.text();
         return await res.json();
       } catch (error) {
         return undefined;
@@ -118,9 +118,9 @@ export function fetchHOC(opt = {}) {
     const error = errorRef(options.error);
     const data = dataRef(options.data);
     const errorData = errorDataRef(options.errorData);
+    const fetchEvents = arrayEvents();
     let controller = new AbortController();
     let timeoutId = undefined;
-    const fetchEvents = arrayEvents();
 
     const hooks = proxy({
       loading,
@@ -141,9 +141,15 @@ export function fetchHOC(opt = {}) {
     function send(opt3 = {}, props = {}) {
       const { throwLoad = false, isBegin = false } = props;
       const config = merge(getRequestProps(), opt, opt2, opt3);
-      controller = new AbortController();
-      timeoutId = setTimeout(() => controller.abort(errTimeout), config.time);
+      let controller = new AbortController();
+      let timeoutId = setTimeout(() => controller.abort(errTimeout), config.time);
+      const timerController = { controller, timeoutId };
       return new Promise(async (resolve, reject) => {
+        function finaled() {
+          clearTimeout(timeoutId);
+          fetchEvents.remove(timerController);
+        }
+
         const success = (d) => {
           loading.value = false;
           data.value = d;
@@ -151,6 +157,7 @@ export function fetchHOC(opt = {}) {
           begin.value = false;
           errorData.value = undefined;
           config.onResponse(config);
+          finaled();
           resolve(d);
         };
 
@@ -160,12 +167,12 @@ export function fetchHOC(opt = {}) {
           error.value = true;
           errorData.value = e;
           config.onResponse(config);
+          finaled();
           reject(e);
         };
 
         try {
           if (loading.value === true && throwLoad) throw errLoading;
-          const timerController = { controller, timeoutId };
           fetchEvents.push(timerController);
           loading.value = true;
           if (isBegin) begin.value = true;
@@ -177,10 +184,7 @@ export function fetchHOC(opt = {}) {
           url = url + objectParseUri(url, await config.formatterUrlParams(config));
           const body = await config.parseBody(config);
           const args = [url, { ...config, signal: controller.signal, body }];
-          const res = await fetchFun(...args).finally(() => {
-            clearTimeout(timeoutId);
-            fetchEvents.remove(timerController);
-          });
+          const res = await fetchFun(...args).finally(finaled);
           if (!res.ok) throw res;
           const _data = await config.formatterResponse(res, config);
           if (config.isDownloadFile) config.downloadFile(res, config, _data);
@@ -240,12 +244,13 @@ export function fetchHOC(opt = {}) {
     }
 
     function abortPrve() {
-      controller.abort(errAbout);
-      clearTimeout(timeoutId);
+      // controller.abort(errAbout);
+      // clearTimeout(timeoutId);
     }
 
     function abort() {
-      fetchEvents.events.forEach((el) => {
+      const eList = [...fetchEvents.events];
+      eList.forEach((el) => {
         el.controller.abort(errAbout);
         clearTimeout(el.timeoutId);
       });

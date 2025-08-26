@@ -1,4 +1,4 @@
-import { numFixed, requestAnimationFramePromise } from "@rainbow_ljy/rainbow-js";
+import { numFixed, promiseRequestAnimationFrame } from "@rainbow_ljy/rainbow-js";
 
 export function createCustomEvent(name, event, eventInitDict = {}) {
   const newEvent = new CustomEvent(name, { bubbles: true, cancelable: true, ...eventInitDict });
@@ -155,7 +155,7 @@ export function transition(props = {}) {
       config.dispatchNode.dispatchEvent(createCustomEvent("beforeEnter"));
       if (args.animateSymbol === args.finishSymbol) {
         args.animateSymbol = Symbol();
-        await requestAnimationFramePromise();
+        await promiseRequestAnimationFrame();
       }
       config.node[config.property].remove(`${config.name}-enter-from`);
       config.node[config.property].add(`${config.name}-enter-active`);
@@ -189,7 +189,7 @@ export function transition(props = {}) {
       config.dispatchNode.dispatchEvent(createCustomEvent("beforeLeave"));
       if (args.animateSymbol === args.finishSymbol) {
         args.animateSymbol = Symbol();
-        await requestAnimationFramePromise();
+        await promiseRequestAnimationFrame();
       }
       config.node[config.property].remove(`${config.name}-leave-from`);
       config.node[config.property].add(`${config.name}-leave-active`);

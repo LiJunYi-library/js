@@ -1,5 +1,5 @@
 import "./index.css";
-import { setTimeoutPromise } from "@rainbow_ljy/rainbow-js";
+import { promiseSetTimeout } from "@rainbow_ljy/rainbow-js";
 import { RainbowElement } from "../../base/index.js";
 import {
   findParentByLocalName,
@@ -124,7 +124,7 @@ export class RScrollRefresh extends RainbowElement {
         this.$$.render();
         this.$$.dispatchEvent();
         this.$$scrollView.$$.disabledScroll();
-        await Promise.allSettled([setTimeoutPromise(rMinTime, true), this.onrefresh()]);
+        await Promise.allSettled([promiseSetTimeout(rMinTime, true), this.onrefresh()]);
         this.$$.height = 0;
         event.refreshHeight = this.$$.height;
         this.$$.loading = false;

@@ -59,6 +59,3 @@ export function promiseAbortController(fn) {
     });
   };
 }
-
-export const setTimeoutPromise = promiseSetTimeout;
-export const requestAnimationFramePromise = promiseRequestAnimationFrame;

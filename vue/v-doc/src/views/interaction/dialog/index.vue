@@ -122,7 +122,7 @@
   </div>
 </template>
 <script setup lang="jsx">
-import { arrayLoopMap, setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
+import { arrayLoopMap, promiseSetTimeout } from '@rainbow_ljy/rainbow-js'
 import { ref, render } from 'vue'
 import { Dialog } from 'vant'
 const visible = ref(false)
@@ -166,7 +166,7 @@ const dialog1 = create(
 )
 
 async function asyncClose() {
-  await setTimeoutPromise(30000)
+  await promiseSetTimeout(30000)
 }
 
 function input(event) {

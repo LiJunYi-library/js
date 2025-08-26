@@ -91,7 +91,7 @@
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
 import { useListRadio, useListMultiple, useVList } from '@rainbow_ljy/v-hooks'
 import { ref, onMounted, renderList, h, defineComponent, cloneVNode } from 'vue'
-import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
+import { promiseSetTimeout } from '@rainbow_ljy/rainbow-js'
 import { VRRenderList } from '@rainbow_ljy/v-views'
 // import TTT from './ttt'
 // console.log(TTT);

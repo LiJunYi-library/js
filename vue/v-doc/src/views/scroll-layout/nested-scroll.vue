@@ -13,7 +13,7 @@
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
 import { useRadio2 } from '@rainbow_ljy/v-hooks'
 import { ref, onMounted } from 'vue'
-import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
+import { promiseSetTimeout } from '@rainbow_ljy/rainbow-js'
 
 const text = arrayLoopMap(6, () => '我').join('')
 const text2 = arrayLoopMap(300, () => '李').join('')

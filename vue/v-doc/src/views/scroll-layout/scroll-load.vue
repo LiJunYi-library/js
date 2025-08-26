@@ -94,7 +94,7 @@
 <script setup lang="jsx">
 import { computed, onMounted, renderList } from 'vue'
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
-import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
+import { promiseSetTimeout } from '@rainbow_ljy/rainbow-js'
 import { useVlistLoad } from '@rainbow_ljy/v-hooks'
 import { useSpuFetch, useMFetch } from '@/hooks'
 import { VRVirtualGridList, VRPaginationLoading, VRScrollLoadStates } from '@rainbow_ljy/v-views'
@@ -132,7 +132,7 @@ const listload = (() => {
 
 async function onrefresh() {
   await listload.afreshNextBeginSend()
-  // return setTimeoutPromise(300000)
+  // return promiseSetTimeout(300000)
 }
 
 async function onrollToBottom() {

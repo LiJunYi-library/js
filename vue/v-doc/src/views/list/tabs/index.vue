@@ -74,7 +74,7 @@
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
 import { useRadio2, useMultiple2 } from '@rainbow_ljy/v-hooks'
 import { ref, onMounted, watch } from 'vue'
-import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
+import { promiseSetTimeout } from '@rainbow_ljy/rainbow-js'
 
 const d = arrayLoopMap(8, (value) => ({
   value,

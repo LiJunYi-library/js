@@ -23,10 +23,10 @@
 </template>
 <script setup>
 import { arrayLoopMap } from '@rainbow_ljy/rainbow-js'
-import { setTimeoutPromise } from '@rainbow_ljy/rainbow-js'
+import { promiseSetTimeout } from '@rainbow_ljy/rainbow-js'
 const text = arrayLoopMap(300, () => '帅').join('')
 async function onrefresh() {
-  return setTimeoutPromise(300000)
+  return promiseSetTimeout(300000)
 }
 
 function scroll(params) {

@@ -6,7 +6,7 @@ export function promiseRequestAnimationFrame(value) {
   return new Promise((resolve) => requestAnimationFrame(() => resolve(value)));
 }
 
-export function promiseAbortController(fn) {
+export function promiseSignalAbort(fn) {
   return function (config, ...args) {
     const signal = config?.signal;
 

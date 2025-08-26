@@ -5,6 +5,7 @@ export * from "./package/fetch";
 // export * from "./package/input";
 export * from "./package/list";
 // export * from "./package/number";
+export * from "./package/promise";
 // export * from "./package/require";
 // export * from "./package/timer";
 // export * from "./package/tree";

@@ -1,4 +1,4 @@
-export function createOverload(overloadCB, verifyObjectType = true) {
+export function functionOverload(overloadCB, verifyObjectType = true) {
   const overloads = {};
 
   function fun(...arg) {
@@ -37,6 +37,8 @@ export function createOverload(overloadCB, verifyObjectType = true) {
   return fun;
 }
 
+export const isFunction = (val) => typeof val === "function";
+
 // 板栗
 // const getUrls = createOverload((overload) => {
 //   overload.addimpl("String", (url) => {
@@ -59,6 +61,3 @@ export function createOverload(overloadCB, verifyObjectType = true) {
 // getUrls(1);
 // getUrls("sssssssssssss");
 // getUrls("sssssssssssss", []);
-
-
-export const isFunction = (val) => typeof val === "function";

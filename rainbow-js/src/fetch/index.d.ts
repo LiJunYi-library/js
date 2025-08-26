@@ -5,15 +5,15 @@ export declare interface FetchConfig<T = ANY, D = ANY> extends RequestInit {
   url?: string;
   urlParams?: ANY;
   body?: ANY;
-  baseUrl?: string ;
-  time?: number ;
-  isDownloadFile?: boolean ;
+  baseUrl?: string;
+  time?: number;
+  isDownloadFile?: boolean;
   fileName?: string;
   isFormBody?: boolean;
   isJsonBody?: boolean;
-  loading?: boolean ;
-  begin?: boolean ;
-  error?: boolean ;
+  loading?: boolean;
+  begin?: boolean;
+  error?: boolean;
   data?: ANY;
   errorData?: ANY;
 
@@ -26,17 +26,38 @@ export declare interface FetchConfig<T = ANY, D = ANY> extends RequestInit {
   formatterUrlParams?: (config: this) => Promise<undefined | object>;
   downloadFile?: (res: Response, config: this, file: File) => void;
   interceptResponseSuccess?: (res: Response, rest: T, config: this) => Promise<D>;
-  interceptResponseError?: (error: ANY, config: this, resolve: (value: any) => void, reject: (value: any) => void) => void;
+  interceptResponseError?: (
+    error: ANY,
+    config: this,
+    resolve: (value: any) => void,
+    reject: (value: any) => void,
+  ) => void;
   interceptRequest?: (config: this) => void;
-  onAbort?: (error: ANY, config: this, resolve: (value: any) => void, reject: (value: any) => void) => void;
-  onTimeoutAbort?: (error: ANY, config: this, resolve: (value: any) => void, reject: (value: any) => void) => void;
-  onLoading?: (error: ANY, config: this, resolve: (value: any) => void, reject: (value: any) => void) => void;
+  onAbort?: (
+    error: ANY,
+    config: this,
+    resolve: (value: any) => void,
+    reject: (value: any) => void,
+  ) => void;
+  onTimeoutAbort?: (
+    error: ANY,
+    config: this,
+    resolve: (value: any) => void,
+    reject: (value: any) => void,
+  ) => void;
+  onLoading?: (
+    error: ANY,
+    config: this,
+    resolve: (value: any) => void,
+    reject: (value: any) => void,
+  ) => void;
   onRequest?: (config: this) => ANY;
   onResponse?: (config: this) => ANY;
+
+  [key: string]: any;
 }
 
-
-export class Fetch<T = any, D = any> {
+export declare type FetchInstance<T = any, D = any> = {
   loading: Boolean;
   begin: Boolean;
   error: Boolean;
@@ -51,7 +72,9 @@ export class Fetch<T = any, D = any> {
   awaitBeginSend: (config: FetchConfig<T, D>) => Promise<D>;
   abortPrve: () => void;
   abort: () => void;
-  constructor(props?: FetchConfig<T, D> )
-}
+  constructor(props?: FetchConfig<T, D>);
+};
 
-export declare function fetchHOC(props:any):any
+export declare function fetchHOC<T = any, D = any>(
+  props: FetchConfig<T, D>,
+): <D>(props: FetchConfig<T, D>) => FetchInstance<T, D>;

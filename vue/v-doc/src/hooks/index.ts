@@ -1,6 +1,14 @@
 import { useFetchHOC } from '@rainbow_ljy/v-hooks'
 
-export const useSpuFetch = useFetchHOC({
+type REST = {
+  code: Number,
+  message: String,
+  data: any
+}
+
+
+
+export const useSpuFetch = useFetchHOC<REST>({
   onRequest: (config) => {
     config.toast = { loading: true }
     rainbow?.toast?.open(config.toast)
@@ -8,7 +16,7 @@ export const useSpuFetch = useFetchHOC({
   onResponse: (config) => {
     rainbow.toast.close(config.toast)
   },
-  onLoading: () => {},
+  onLoading: () => { },
   onTimeoutAbort: (error, config, resolve, reject) => {
     rainbow.toast.show({ text: '请求超时', ms: 1000 })
   },
@@ -33,9 +41,28 @@ export const useSpuFetch = useFetchHOC({
   },
   time: 30000,
   baseUrl: 'https://spu-test.manmanbuy.com',
+  toast: undefined,
 })
 
-export const useMFetch = useFetchHOC({
+// const asyncHook = useSpuFetch<{ list: [] }>({
+//   url: '/spu/list',
+//   method: 'post',
+// })
+// asyncHook.data?.list
+// asyncHook.data.list
+// asyncHook.send({
+//   formatterData(data, rest, res, config) {
+//     data.list=[{}]
+//   },
+// })
+
+// const asyncHook2 = useSpuFetch<{ total: number }>({
+//   url: '/spu/list',
+//   method: 'post',
+// })
+// asyncHook2.data.total
+
+export const useMFetch = useFetchHOC<REST>({
   onRequest: (config) => {
     config.toast = { loading: true }
     rainbow?.toast?.open(config.toast)

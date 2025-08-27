@@ -108,7 +108,7 @@ function getRequestProps(o1 = {}, o2 = {}) {
     },
     downloadFile: (res, config, file) => {
       const elink = document.createElement("a");
-      elink.download = file.name;
+      elink.download = file.name || "download";
       elink.style.display = "none";
       elink.href = URL.createObjectURL(file);
       document.body.appendChild(elink);

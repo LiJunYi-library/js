@@ -1,17 +1,9 @@
 import { proxy, ref } from "../proxy";
 import { arrayEvents } from "../array";
 
-const errLoading = new DOMException("loading", "AbortError");
-errLoading.code = 41;
-errLoading.status = 41;
-
-const errTimeout = new DOMException("Request Timeout", "TimeoutError");
-errTimeout.code = 48;
-errTimeout.status = 48;
-
-const errAbout = new DOMException("Aborted", "AbortError");
-errAbout.code = 20;
-errAbout.status = 20;
+const errLoading = { error: "loading", message: "loading", code: 41, status: 41 };
+const errTimeout = { error: "Request Timeout", message: "Request Timeout", code: 48, status: 48 };
+const errAbout = { error: "about", message: "about", code: 20, status: 20 };
 
 function geProps(props = {}) {
   return {

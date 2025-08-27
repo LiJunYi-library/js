@@ -1,6 +1,6 @@
 import { proxy, ref } from "../proxy";
 import { arrayEvents } from "../array";
-import { objectParseFormData, objectParseUri } from "../object";
+import { objectParseFormData, objectIsEmpty, objectForIn } from "../object";
 
 function mergePropertys(...args) {
   const headersArr = args.map((el) => el?.headers);
@@ -10,6 +10,12 @@ function mergePropertys(...args) {
 
 function merge(...args) {
   return Object.assign({}, ...args, mergePropertys(...args));
+}
+
+function undNull(v) {
+  if (v === undefined) return true;
+  if (v === null) return true;
+  return false;
 }
 
 const errLoading = { error: "loading", message: "loading", code: 41, status: 41 };
@@ -62,8 +68,9 @@ function getRequestProps(o1 = {}, o2 = {}) {
       return undefined;
     },
     parseBody: async (config) => {
+      const body = config.body;
+      if (undNull(body)) return undefined;
       const contentType = config.headers["Content-Type"] || "";
-      const body = await config.formatterBody(config);
       if (config.isFormBody) return objectParseFormData(body, true);
       if (config.isJsonBody) return JSON.stringify(body);
       if (contentType.includes("application/json")) return JSON.stringify(body);
@@ -74,7 +81,30 @@ function getRequestProps(o1 = {}, o2 = {}) {
       const urlParams = config.urlParams;
       if (typeof urlParams === "function") return urlParams();
       if (typeof urlParams === "object") return urlParams;
+      if (typeof urlParams === "string") return urlParams;
       return undefined;
+    },
+    parseUrlParams: async (config) => {
+      const urlParams = config.urlParams;
+      if (undNull(urlParams)) return "";
+      if (typeof urlParams === "string") return urlParams;
+      if (typeof urlParams !== "object") return "";
+      if (!objectIsEmpty(urlParams)) return "";
+      const params = new URLSearchParams();
+      objectForIn(urlParams, (item, key) => {
+        if (item === undefined) return;
+        if (typeof item === "object" && !(item instanceof Array)) item = JSON.stringify(item);
+        params.set(key, item);
+      });
+      return params.toString() || "";
+    },
+    parseUrl: (config) => {
+      const url = new URL(config.url, config.baseUrl);
+      if (!config.urlParams) return url.toString();
+      const arr = [url.href, config.urlParams];
+      if (url.href.endsWith("&") || url.href.endsWith("?")) return arr.join("");
+      if (url.href.includes("?")) return arr.join("&");
+      return arr.join("?");
     },
     downloadFile: (res, config, file) => {
       const elink = document.createElement("a");
@@ -119,8 +149,6 @@ export function fetchHOC(opt = {}) {
     const data = dataRef(options.data);
     const errorData = errorDataRef(options.errorData);
     const fetchEvents = arrayEvents();
-    let controller = new AbortController();
-    let timeoutId = undefined;
 
     const hooks = proxy({
       loading,
@@ -134,22 +162,13 @@ export function fetchHOC(opt = {}) {
       beginSend,
       nextBeginSend,
       awaitBeginSend,
-      abortPrve,
       abort,
     });
 
     function send(opt3 = {}, props = {}) {
       const { throwLoad = false, isBegin = false } = props;
       const config = merge(getRequestProps(), opt, opt2, opt3);
-      let controller = new AbortController();
-      let timeoutId = setTimeout(() => controller.abort(errTimeout), config.time);
-      const timerController = { controller, timeoutId };
       return new Promise(async (resolve, reject) => {
-        function finaled() {
-          clearTimeout(timeoutId);
-          fetchEvents.remove(timerController);
-        }
-
         const success = (d) => {
           loading.value = false;
           data.value = d;
@@ -157,7 +176,6 @@ export function fetchHOC(opt = {}) {
           begin.value = false;
           errorData.value = undefined;
           config.onResponse(config);
-          finaled();
           resolve(d);
         };
 
@@ -167,24 +185,31 @@ export function fetchHOC(opt = {}) {
           error.value = true;
           errorData.value = e;
           config.onResponse(config);
-          finaled();
           reject(e);
         };
 
         try {
           if (loading.value === true && throwLoad) throw errLoading;
+          let controller = new AbortController();
+          let timeoutId = setTimeout(() => controller.abort(errTimeout), config.time);
+          const timerController = { controller, timeoutId };
           fetchEvents.push(timerController);
           loading.value = true;
           if (isBegin) begin.value = true;
           error.value = false;
-          config.interceptRequest(config);
-          config.onRequest(config);
+          config.body = await config.formatterBody(config);
+          config.urlParams = await config.formatterUrlParams(config);
+          await config.interceptRequest(config);
+          config.body = await config.parseBody(config);
+          config.urlParams = await config.parseUrlParams(config);
+          const url = await config.parseUrl(config);
+          const args = [url, { ...config, signal: controller.signal }];
           const fetchFun = config.fetch || fetch;
-          let url = config.baseUrl + config.url;
-          url = url + objectParseUri(url, await config.formatterUrlParams(config));
-          const body = await config.parseBody(config);
-          const args = [url, { ...config, signal: controller.signal, body }];
-          const res = await fetchFun(...args).finally(finaled);
+          config.onRequest(config);
+          const res = await fetchFun(...args).finally(() => {
+            clearTimeout(timeoutId);
+            fetchEvents.remove(timerController);
+          });
           if (!res.ok) throw res;
           const _data = await config.formatterResponse(res, config);
           if (config.isDownloadFile) config.downloadFile(res, config, _data);
@@ -241,11 +266,6 @@ export function fetchHOC(opt = {}) {
 
     function awaitBeginSend(args) {
       return send(args, { throwLoad: true, isBegin: true });
-    }
-
-    function abortPrve() {
-      // controller.abort(errAbout);
-      // clearTimeout(timeoutId);
     }
 
     function abort() {

@@ -1,8 +1,9 @@
 import { fetchHOC } from "@rainbow_ljy/rainbow-js";
-
+import { useMemo } from "react";
+import { useMemoRef } from "../utils";
 
 export function useFetchHOC(props = {}) {
-  return function (config = {}) {
+  return function useFetch(config = {}) {
     const loading = useMemoRef();
     const begin = useMemoRef();
     const error = useMemoRef();

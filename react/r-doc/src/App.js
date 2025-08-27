@@ -1,61 +1,145 @@
-import logo from "./logo.svg";
 import "./App.css";
-import { useState, PureComponent } from "react";
-import { arrayLoopMap } from "@rainbow_ljy/rainbow-js";
+import { useState, useMemo, useRef } from "react";
 import ReactDOM from "react-dom/client";
-import { useMemo } from "react";
-import { RRVirtualFallsList, RRVirtualGridList } from "./r-view";
+import { fetchHOC } from "@rainbow_ljy/rainbow-js";
+import { useEffect } from "react";
 
-const d = arrayLoopMap(50, (value) => ({
-  value,
-  id: Math.random(),
-  title: arrayLoopMap(Math.floor(Math.random() * 50), () => "标题").join(""),
-}));
+export function ref(state) {
+  const [, dispatch] = useState(state);
+  const cacheRef = useRef(state);
+  return useMemo(() => {
+    return {
+      __v_isRef: true,
+      set value(val) {
+        cacheRef.current = val;
+        dispatch(val);
+      },
+      get value() {
+        return cacheRef.current;
+      },
+      toRef(value) {
+        cacheRef.current = value;
+        return {
+          __v_isRef: true,
+          set value(val) {
+            cacheRef.current = val;
+            dispatch(val);
+          },
+          get value() {
+            return cacheRef.current;
+          },
+        };
+      },
+    };
+  }, []);
+}
+
+function useMemoRef() {
+  const [, dispatch] = useState();
+  const cacheRef = useRef();
+  return useMemo(() => {
+    return {
+      get value() {
+        return cacheRef.current;
+      },
+      toRef(value) {
+        cacheRef.current = value;
+        return {
+          __v_isRef: true,
+          set value(val) {
+            cacheRef.current = val;
+            dispatch(val);
+          },
+          get value() {
+            return cacheRef.current;
+          },
+        };
+      },
+    };
+  }, []);
+}
+
+export function useFetchHOC(props = {}) {
+  return function (config = {}) {
+    const loading = useMemoRef();
+    const begin = useMemoRef();
+    const error = useMemoRef();
+    const data = useMemoRef();
+    const errorData = useMemoRef();
+    return useMemo(() => {
+      const hooks = fetchHOC(props)({
+        loadingRef: loading.toRef,
+        beginRef: begin.toRef,
+        errorRef: error.toRef,
+        dataRef: data.toRef,
+        errorDataRef: errorData.toRef,
+        ...config,
+      });
+      return hooks;
+    }, []);
+  };
+}
+
+const useMFetch = useFetchHOC({
+  interceptResponseSuccess: async (res, data, config) => {
+    try {
+      if (data instanceof Blob) return data;
+      if (data.code !== 200) throw data;
+      return data.data;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  },
+  headers: {
+    "content-type": "application/json",
+  },
+  time: 30000,
+  baseUrl: "http://192.168.192.202:5000",
+});
 
 function App() {
-  const [count, setcount] = useState(5);
-  const [list, setList] = useState(d);
+  const ff = useMFetch({
+    url: "/serve/page",
+    method: "post",
+    loading: true,
+  });
 
-  function changeitem(item, index) {
-    item.title = "poiuu";
-  }
+  const div = useRef();
 
-  function remove(item, index) {
-    list.splice(index, 1);
-  }
+  const [bio, setBio] = useState(null);
 
-  const p = { text: "zzzzzz", loading: true };
+  useEffect(() => {
+    console.log("useEffect");
+  }, [bio]);
+
+  useEffect(() => {
+    console.log(div.current);
+  }, [ff.data]);
 
   async function click() {
-    rainbow.toast.open(p);
+    ff.nextSend()
+      .then((res) => {
+        console.log("pList.nextSend  then", res);
+      })
+      .catch((err) => {
+        console.log("pList.nextSend catch", err);
+      });
   }
 
   function close() {
-    rainbow.toast.close(p);
+    console.log(" ff.abort()");
+    ff.abort();
   }
 
   return (
     <div className="App">
-      <button  onClick={click}>
-        click
-      </button>
-      <button  onClick={close}>
-        close
-      </button>
-      {/* <r-scroll-view>
-        <r-scroll-refresh slot="r-scroll-top"></r-scroll-refresh>
-
-        <RRVirtualFallsList value={list}>
-          {({ item, index }) => (
-            <div onClick={() => changeitem(item, index)}>
-              <div  onClick={() => remove(item, index)}>删除</div>
-              <div>{index}</div>
-              <div>{item.id}</div>
-              <div>{item.title}</div>
-            </div>
-          )}
-        </RRVirtualFallsList>
-      </r-scroll-view> */}
+      <div> loading:{ff.loading + ""}</div>
+      <div> begin:{ff.begin + ""}</div>
+      <div> error:{ff.error + ""}</div>
+      <div ref={(el) => (div.current = el)}> data:{ff.data?.total}</div>
+      {/* <div> errorData:{ff.errorData}</div> */}
+      <button onClick={click}>click</button>
+      <button onClick={close}>close</button>
     </div>
   );
 }

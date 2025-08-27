@@ -221,6 +221,8 @@ export function fetchHOC(opt = {}) {
             .catch(fail);
         } catch (_err) {
           if (_err?.status === 20) {
+            loading.value = false;
+            begin.value = false;
             config.onAbort(_err, config, resolve, reject);
             config.onResponse(config);
             return;

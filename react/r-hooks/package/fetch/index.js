@@ -1,1 +1,23 @@
-export * from "./fetch.js";
+import { fetchHOC } from "@rainbow_ljy/rainbow-js";
+
+
+export function useFetchHOC(props = {}) {
+  return function (config = {}) {
+    const loading = useMemoRef();
+    const begin = useMemoRef();
+    const error = useMemoRef();
+    const data = useMemoRef();
+    const errorData = useMemoRef();
+    return useMemo(() => {
+      const hooks = fetchHOC(props)({
+        loadingRef: loading.toRef,
+        beginRef: begin.toRef,
+        errorRef: error.toRef,
+        dataRef: data.toRef,
+        errorDataRef: errorData.toRef,
+        ...config,
+      });
+      return hooks;
+    }, []);
+  };
+}

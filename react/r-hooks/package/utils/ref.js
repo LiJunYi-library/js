@@ -7,8 +7,8 @@ export function ref(state) {
     return {
       __isRef: true,
       set value(val) {
-        dispatch(val);
         cache = val;
+        dispatch(val);
       },
       get value() {
         return cache;

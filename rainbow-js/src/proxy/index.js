@@ -22,6 +22,7 @@ export function proxy(target) {
   const p = new Proxy(target, {
     get(t, p, r) {
       const v = t[p];
+      if (v?.__isRef) return v.value;
       if (v?.__v_isRef) return v.value;
       if (v?.get) return v.get();
       return v;
@@ -29,6 +30,7 @@ export function proxy(target) {
     set(t, p, newV) {
       const v = t[p];
       (() => {
+        if (v?.__isRef) return (v.value = newV);
         if (v?.__v_isRef) return (v.value = newV);
         if (v?.set) return v.set(newV);
         t[p] = newV;

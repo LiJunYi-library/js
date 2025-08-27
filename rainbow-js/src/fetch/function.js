@@ -271,8 +271,8 @@ export function fetchHOC(opt = {}) {
     function abort() {
       const eList = [...fetchEvents.events];
       eList.forEach((el) => {
-        el.controller.abort(errAbout);
         clearTimeout(el.timeoutId);
+        el.controller.abort(errAbout);
       });
     }
 

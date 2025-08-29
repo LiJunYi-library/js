@@ -55,6 +55,10 @@ export function useMemoRef() {
   }, []);
 }
 
+export function useOneceMemo(cb) {
+  return useMemo(cb, []);
+}
+
 export function renderSlot(slots, name, props, defNode) {
   const vNode = slots?.[name];
   if (vNode instanceof Function) return vNode(props);

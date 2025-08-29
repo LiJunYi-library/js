@@ -1,20 +1,5 @@
 import { reactive, customRef, watch } from "vue";
 
-export function useReactive(hooks = {}) {
-  const proxy = reactive(hooks);
-  proxy.getProto = () => hooks;
-  return proxy;
-}
-
-export function mergeSaveContext(...args) {
-  const hooks = args.filter(Boolean);
-  const refs = {};
-  hooks.forEach((hook) => Object.assign(refs, hook?.context?.getRefs?.()));
-  const contextHooks = createSaveContext(refs);
-  hooks.forEach((hook) => Object.assign(hook, contextHooks));
-  return contextHooks;
-}
-
 export function useModelWatch(props, context, key, change) {
   let value = props[key];
 
@@ -42,6 +27,21 @@ export function useModelWatch(props, context, key, change) {
   );
 
   return mRef;
+}
+
+export function useReactive(hooks = {}) {
+  const proxy = reactive(hooks);
+  proxy.getProto = () => hooks;
+  return proxy;
+}
+
+export function mergeSaveContext(...args) {
+  const hooks = args.filter(Boolean);
+  const refs = {};
+  hooks.forEach((hook) => Object.assign(refs, hook?.context?.getRefs?.()));
+  const contextHooks = createSaveContext(refs);
+  hooks.forEach((hook) => Object.assign(hook, contextHooks));
+  return contextHooks;
 }
 
 function assign(target = {}, source = {}) {

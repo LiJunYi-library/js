@@ -45,9 +45,9 @@ async function nextSend(params) {
 
 
 async function awaitSend() {
-  a++
   await pList.awaitSend(a).then((res) => {
-    console.log('pList.awaitSend  then', res)
+    console.log('pList.awaitSend  then', res);
+    a++
   }).catch((err) => {
     console.log('pList.awaitSend catch', err)
   })

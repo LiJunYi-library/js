@@ -70,6 +70,9 @@ export const useMFetch = useFetchHOC<REST>({
   onResponse: (config) => {
     rainbow.toast?.close?.(config.toast)
   },
+  interceptRequest: (config) => {
+    console.log('interceptRequest',config)
+  },
   onLoading: () => {
     // rainbow.toast.show({ text: '正在获取中', ms: 1000 })
   },

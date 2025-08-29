@@ -62,7 +62,7 @@ import { } from '@rainbow_ljy/rainbow-js'
 import { useListPagination } from '@rainbow_ljy/v-hooks'
 import { computed, onMounted, customRef, reactive, ref } from 'vue'
 import { ElTableColumn, ElButton, ElSelect, ElOption } from 'element-plus'
-import { useSpuFetch, } from '@/hooks'
+import { useSpuFetch, useMFetch } from '@/hooks'
 import RPaginationTable from './r-el-pagination-table.vue'
 
 const req = reactive({
@@ -83,8 +83,14 @@ const pList = (() => {
     // list: arrayLoopMap(3, () => ({ id: Math.random(), name: Math.random() }))
   }))
 
-  const asyncHook = useSpuFetch({
-    url: '/spu/list',
+  // const asyncHook = useSpuFetch({
+  //   url: '/spu/list',
+  //   method: 'post',
+  //   body,
+  // })
+
+ const asyncHook =  useMFetch({
+    url: '/serve/page',
     method: 'post',
     body,
   })
@@ -93,9 +99,9 @@ const pList = (() => {
     vaule: ['25993'],
     asyncHook,
     isMultiple: true,
-    formatterList: (res) => res?.records || [],
-    formatterValue: (item) => item?.id,
-    formatterLabel: (item) => item?.name,
+    // formatterList: (res) => res?.records || [],
+    // formatterValue: (item) => item?.id,
+    // formatterLabel: (item) => item?.name,
     updateListArg: 'value',
   })
   return list

@@ -1,6 +1,5 @@
-import "./App.css";
 import { useState, useMemo, useRef, useEffect } from "react";
-import { useMFetch } from "./fetch";
+import { useMFetch } from "../../../fetch";
 
 function App() {
   const ff = useMFetch({

@@ -2,17 +2,6 @@ import { promiseAbortController } from "@rainbow_ljy/rainbow-js";
 import { useMemoRef, useOneceMemo } from "../../utils";
 
 export function usePromise(fn, props = {}) {
-  return promiseAbortController(fn, {
-    loadingRef: ref,
-    beginRef: ref,
-    errorRef: ref,
-    dataRef: ref,
-    errorDataRef: ref,
-    ...props,
-  });
-}
-
-export function usePromise(fn, props = {}) {
   const loading = useMemoRef();
   const begin = useMemoRef();
   const error = useMemoRef();

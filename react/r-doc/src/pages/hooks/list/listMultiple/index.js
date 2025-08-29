@@ -1,17 +1,20 @@
 import { useState, useMemo, useRef, useEffect } from "react";
-import { useListMultiple } from "@rainbow_ljy/r-hooks";
+import { useListSelect } from "@rainbow_ljy/r-hooks";
 import { arrayLoopMap } from "@rainbow_ljy/rainbow-js";
 import "./index.css";
 
 function App() {
-  const listRadio = useListMultiple({ list: arrayLoopMap(10, (i) => ({ value: i, label: i })) });
+  const listRadio = useListSelect({
+    isMultiple: true,
+    list: arrayLoopMap(10, (i) => ({ value: i, label: i })),
+  });
   const [val, setVal] = useState(0);
 
   // console.log(listRadio);
   async function click(item, index) {
     listRadio.onSelect(item, index);
     console.log(listRadio.value);
-    await setVal(listRadio.value);
+    setVal(listRadio.value);
     console.log(val);
   }
 

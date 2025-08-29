@@ -1,18 +1,29 @@
 import { listPagination } from "@rainbow_ljy/rainbow-js";
+import { useMemoRef, useOneceMemo } from "../../utils";
 
-import { ref } from "vue";
+export function useListPagination(props = {}) {
+  const select = useMemoRef();
+  const value = useMemoRef();
+  const label = useMemoRef();
+  const index = useMemoRef();
+  const list = useMemoRef();
+  const empty = useMemoRef();
+  const total = useMemoRef();
+  const currentPage = useMemoRef();
+  const pageSize = useMemoRef();
 
-export function useListPagination(props) {
-  return listPagination({
-    selectRef: ref,
-    valueRef: ref,
-    labelRef: ref,
-    indexRef: ref,
-    listRef: ref,
-    emptyRef: ref,
-    totalRef: ref,
-    currentPageRef: ref,
-    pageSizeRef: ref,
-    ...props,
-  });
+  return useOneceMemo(() =>
+    listPagination({
+      selectRef: select.toRef,
+      valueRef: value.toRef,
+      labelRef: label.toRef,
+      indexRef: index.toRef,
+      listRef: list.toRef,
+      emptyRef: empty.toRef,
+      totalRef: total.toRef,
+      currentPageRef: currentPage.toRef,
+      pageSizeRef: pageSize.toRef,
+      ...props,
+    }),
+  );
 }

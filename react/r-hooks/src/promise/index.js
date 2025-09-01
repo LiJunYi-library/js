@@ -1,5 +1,5 @@
 import { promiseAbortController } from "@rainbow_ljy/rainbow-js";
-import { useMemoRef, useOneceMemo } from "../../utils";
+import { useMemoRef, useOneceMemo } from "../utils";
 
 export function usePromise(fn, props = {}) {
   const loading = useMemoRef();

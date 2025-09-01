@@ -1,4 +1,4 @@
-import { ref, proxy } from "../../proxy";
+import { ref, proxy } from "../proxy";
 
 function useDate(props = {}) {
   const config = { ...props };

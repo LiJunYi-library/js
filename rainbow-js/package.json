@@ -1,6 +1,6 @@
 {
   "name": "@rainbow_ljy/rainbow-js",
-  "version": "1.0.91",
+  "version": "1.1.1",
   "description": "增加js的一些 api",
   "main": "index.js",
   "typings": "index.d.ts",

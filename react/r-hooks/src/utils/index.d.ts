@@ -17,8 +17,8 @@ export function useMemoRef<T>(): MemoRefObject<T>;
 
 export function useOneceMemo<T>(cb: () => T): T;
 
-export function renderSlot(
-    slots: Record<string, ReactNode | ((props: any) => ReactNode)> | undefined,
+export function renderSlot<T=any>(
+    slots: T,
     name: string,
     props?: any,
     defNode?: ReactNode | ((props: any) => ReactNode)

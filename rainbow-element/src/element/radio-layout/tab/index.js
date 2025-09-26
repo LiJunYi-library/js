@@ -138,8 +138,8 @@ export class RTab extends RainbowElement {
     this.$$.active.style.height = activeOffset.height + "px";
     this.$$.active.style.left = `${activeChild.offsetLeft}px`;
     this.$$.active.style.top = `${activeChild.offsetTop}px`;
-    // if (isScroll) this.scrollTo({ left: scrollLeft, behavior, top: scrollTop });
-    activeChild.scrollIntoView({ behavior, block: "center", inline: "center" });
+    if (isScroll) this.scrollTo({ left: scrollLeft, behavior, top: scrollTop });
+    // activeChild.scrollIntoView({ behavior, block: "center", inline: "center" });
     this.$$.resizeObserver.observe(activeChild);
     this.$$.active.removeEventListener("transitionend", this.$$.onActiveTransitionend);
     this.$$.active.addEventListener("transitionend", this.$$.onActiveTransitionend);

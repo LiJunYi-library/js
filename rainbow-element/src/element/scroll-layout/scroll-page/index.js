@@ -50,7 +50,7 @@ export class RScrollPage extends RainbowElement {
             const offsetBottom = offsetTop + child.offsetHeight;
             const top = Math.max(0, offsetTop - scrollOffsetTop);
             min = Math.min(...[min, top].filter((el) => el !== undefined));
-            const bottom = top + child.offsetHeight;
+            const bottom = top + child.offsetHeight + scrollOffsetTop;
             max = Math.max(...[max, bottom].filter((el) => el !== undefined));
             const bool = (() => {
               if (top <= scrollTop && scrollTop <= bottom) return true;
@@ -126,7 +126,9 @@ export class RScrollPage extends RainbowElement {
     const { activeChild, scrollView } = this.$$;
     const offsetTop = getOffsetTop(activeChild, scrollView);
     const scrollOffsetTop = activeChild.$.DATA.rScrollOffsetTop || 0;
+    const itemScrollTop = activeChild.$.DATA.rScrollTop;
     let scrollTop = (() => {
+      if (typeof itemScrollTop === "number") return itemScrollTop || 0;
       if (activeChild.offsetHeight < scrollView.offsetHeight - scrollOffsetTop) {
         return offsetTop - (scrollView.offsetHeight - activeChild.offsetHeight);
       }
@@ -141,6 +143,7 @@ export class RScrollPage extends RainbowElement {
 export class RScrollPageItem extends RainbowElement {
   static observedAttributes = this.$registerProps({
     "r-scroll-offset-top": String,
+    "r-scroll-top": String,
   });
 
   $value = undefined;

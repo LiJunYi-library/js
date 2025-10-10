@@ -112,6 +112,7 @@ export class RCircle extends RainbowElement {
     this.shadowRoot.append(this.$$.layerDiv);
     this.shadowRoot.append(this.$$.borderDiv);
     this.shadowRoot.append(this.$$.default);
+    this.$render();
   }
 
   $onResize(...arg){

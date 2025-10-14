@@ -105,6 +105,7 @@ export function wipePX(str = "") {
 }
 
 export function toggleClass(node, bool, addClass = "", removeClass = "") {
+  if (!node?.classList) return;
   if (bool) {
     if (addClass) node.classList.add(addClass);
     if (removeClass) node.classList.remove(removeClass);

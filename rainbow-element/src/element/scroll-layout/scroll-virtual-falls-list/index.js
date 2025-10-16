@@ -358,8 +358,8 @@ function getMaxHeightItem(list) {
 
 function createBackstage(callback, stopFmt) {
   let timer = null;
-  const requestTimer = requestIdleCallback || requestAnimationFrame;
-  const cancelRequestTimer = requestIdleCallback ? cancelIdleCallback : cancelAnimationFrame;
+  const requestTimer = window.requestIdleCallback || window.requestAnimationFrame;
+  const cancelRequestTimer = window.requestIdleCallback ? window.cancelIdleCallback : window.cancelAnimationFrame;
 
   function idleCallback(deadline) {
     if (stopFmt()) {

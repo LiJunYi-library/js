@@ -140,16 +140,6 @@ export class RScrollRefresh extends RainbowElement {
     super(...arg);
   }
 
-  get $$eventView() {
-    if (this.$$.scrollView) return this.$$.scrollView;
-    return this.$$.eventView;
-  }
-
-  get $$scrollView() {
-    if (this.$$.scrollView) return this.$$.scrollView;
-    return this.$$.eventView?.$$?.scrollView;
-  }
-
   connectedCallback(...arg) {
     super.connectedCallback(...arg);
     const pName = ["r-scroll", "r-scroll-view", "r-nested-scroll"];
@@ -163,6 +153,16 @@ export class RScrollRefresh extends RainbowElement {
     addEventListenerOnce(this.$$eventView, "touchend", this.$$.touchend);
     this.$$.render = this.$$renderRefresh();
     this.$$.render();
+  }
+
+  get $$eventView() {
+    if (this.$$.scrollView) return this.$$.scrollView;
+    return this.$$.eventView;
+  }
+
+  get $$scrollView() {
+    if (this.$$.scrollView) return this.$$.scrollView;
+    return this.$$.eventView?.$$?.scrollView;
   }
 
   disconnectedCallback(...arg) {

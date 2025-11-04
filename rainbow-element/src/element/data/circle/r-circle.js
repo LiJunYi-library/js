@@ -1,5 +1,5 @@
-import { RainbowElement} from "../../base/index.js";
-import {  createSlot, createElement } from "../../../utils/index.js";
+import { RainbowElement } from "../../base/index.js";
+import { createSlot, createElement } from "../../../utils/index.js";
 
 export class RCircle extends RainbowElement {
   static observedAttributes = this.$registerProps({
@@ -105,17 +105,21 @@ export class RCircle extends RainbowElement {
     this.$render();
   }
 
-  connectedCallback(...arg) {
-    super.connectedCallback(...arg);
+  constructor(...arg) {
+    super(...arg);
     this.attachShadow({ mode: "open" });
     this.$$.default.appendChild(this.$$.defaultSlot);
     this.shadowRoot.append(this.$$.layerDiv);
     this.shadowRoot.append(this.$$.borderDiv);
     this.shadowRoot.append(this.$$.default);
+  }
+
+  connectedCallback(...arg) {
+    super.connectedCallback(...arg);
     this.$render();
   }
 
-  $onResize(...arg){
+  $onResize(...arg) {
     super.$onResize(...arg);
     this.$render();
   }

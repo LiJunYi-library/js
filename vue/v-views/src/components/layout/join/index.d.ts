@@ -1,3 +1,3 @@
 import {DefineComponent} from 'vue';
-export const Join: DefineComponent<any>;
+export const VRJoin: DefineComponent<any>;
 

@@ -1,6 +1,6 @@
 import { defineComponent, cloneVNode, Comment } from 'vue'
 
-export const Join = defineComponent({
+export const VRJoin = defineComponent({
   props: {},
   setup(props, context) {
     return () => {

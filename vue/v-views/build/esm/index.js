@@ -1,18 +1,33 @@
-import { defineComponent as I, ref as M, watch as oe, onMounted as G, onUnmounted as ne, renderList as W, createVNode as c, Comment as ge, h as me, renderSlot as C, useSlots as le, computed as _, toRaw as N, withDirectives as ie, createElementBlock as se, openBlock as ae, vModelText as ue, render as ce } from "vue";
-import { objectForIn as ke } from "@rainbow_ljy/rainbow-js";
-import { resizeObserver as ye, findParentByLocalName as be } from "@rainbow_ljy/rainbow-element";
-function re(e, i, a) {
-  if (e.type === ge) return e;
-  let d = a;
-  typeof e.type != "string" && (d = () => a);
-  let r = me(e.type, i, d);
-  ke(e, (s, b) => {
-    ["props", "type", "children", "el", "patchFlag", "shapeFlag", "ref"].includes(b) || (r[b] = s);
+import { defineComponent as B, cloneVNode as me, Comment as oe, ref as x, watch as ne, onMounted as G, onUnmounted as le, renderList as J, createVNode as d, h as ke, renderSlot as C, useSlots as ie, computed as N, toRaw as _, withDirectives as se, createElementBlock as ae, openBlock as ue, vModelText as ce, render as de } from "vue";
+import { objectForIn as ye } from "@rainbow_ljy/rainbow-js";
+import { resizeObserver as be, findParentByLocalName as ve } from "@rainbow_ljy/rainbow-element";
+const Ie = B({
+  props: {},
+  setup(e, l) {
+    return () => {
+      var n, s;
+      const a = (f) => f.type !== oe, u = (((s = (n = l.slots) == null ? void 0 : n.default) == null ? void 0 : s.call(n)) || []).filter(a), r = (f) => {
+        var y, t;
+        return (((t = (y = l.slots) == null ? void 0 : y.symbol) == null ? void 0 : t.call(y, f)) || []).filter(a);
+      };
+      return u.map(
+        (f, y) => y === 0 ? f : [r(y).map((t) => me(t)), f]
+      ).flat(1 / 0);
+    };
+  }
+});
+function re(e, l, a) {
+  if (e.type === oe) return e;
+  let u = a;
+  typeof e.type != "string" && (u = () => a);
+  let r = ke(e.type, l, u);
+  ye(e, (s, f) => {
+    ["props", "type", "children", "el", "patchFlag", "shapeFlag", "ref"].includes(f) || (r[f] = s);
   });
-  const l = [e.ref, r.ref].filter(Boolean);
-  return r.ref = l.length ? l : null, r;
+  const n = [e.ref, r.ref].filter(Boolean);
+  return r.ref = n.length ? n : null, r;
 }
-const Be = /* @__PURE__ */ I({
+const Te = /* @__PURE__ */ B({
   props: {
     listHook: {
       type: Object,
@@ -37,65 +52,65 @@ const Be = /* @__PURE__ */ I({
     unScrollIntoView: Boolean
   },
   emits: ["change", "disabledTrigger", "sameTrigger"],
-  setup(e, i) {
-    const a = M(document.createElement("div")), d = M();
+  setup(e, l) {
+    const a = x(document.createElement("div")), u = x();
     let r;
-    const l = M(), s = ye(f);
-    oe(l, U), G(x), ne(z);
-    function b(o) {
-      d.value = o;
+    const n = x(), s = be(g);
+    ne(n, P), G(z), le(M);
+    function f(o) {
+      u.value = o;
     }
-    function D(o) {
+    function y(o) {
       a.value = o;
     }
-    function t(o, u, n) {
-      var H, h;
-      (h = (H = e.listHook) == null ? void 0 : H.same) != null && h.call(H, u, n) && (l.value = o);
+    function t(o, c, i) {
+      var h, p;
+      (p = (h = e.listHook) == null ? void 0 : h.same) != null && p.call(h, c, i) && (n.value = o);
     }
-    async function g(o, u, n) {
-      var h, V, p, m;
-      if (e.stopPropagation && o.stopPropagation(), e.preventDefault && o.preventDefault(), e.beforeTrigger && await e.beforeTrigger(u, n, o), (V = (h = e.listHook) == null ? void 0 : h.formatterDisabled) != null && V.call(h, u, n)) {
-        i.emit("disabledTrigger", u, n, o);
+    async function m(o, c, i) {
+      var p, V, D, k;
+      if (e.stopPropagation && o.stopPropagation(), e.preventDefault && o.preventDefault(), e.beforeTrigger && await e.beforeTrigger(c, i, o), (V = (p = e.listHook) == null ? void 0 : p.formatterDisabled) != null && V.call(p, c, i)) {
+        l.emit("disabledTrigger", c, i, o);
         return;
       }
-      if (await ((m = (p = e.listHook) == null ? void 0 : p.onSelect) == null ? void 0 : m.call(p, u, n))) {
-        i.emit("sameTrigger", u, n, o);
+      if (await ((k = (D = e.listHook) == null ? void 0 : D.onSelect) == null ? void 0 : k.call(D, c, i))) {
+        l.emit("sameTrigger", c, i, o);
         return;
       }
-      i.emit("change", u, n, o), l.value = o.currentTarget;
+      l.emit("change", c, i, o), n.value = o.currentTarget;
     }
-    function y(o, u = "smooth") {
-      const n = a.value;
+    function v(o, c = "smooth") {
+      const i = a.value;
       if (!o) {
-        n.style.position = "absolute", n.style.width = "0px", n.style.height = "0px", n.style.left = "0px", n.style.top = "0px";
+        i.style.position = "absolute", i.style.width = "0px", i.style.height = "0px", i.style.left = "0px", i.style.top = "0px";
         return;
       }
       e.unScrollIntoView || o.scrollIntoView({
-        behavior: u,
+        behavior: c,
         block: "center",
         inline: "center"
-      }), u === "smooth" && n.classList.add("select-active-transition"), n.style.position = "absolute", n.style.width = o.offsetWidth + "px", n.style.height = o.offsetHeight + "px", n.style.left = `${o.offsetLeft}px`, n.style.top = `${o.offsetTop}px`;
+      }), c === "smooth" && i.classList.add("select-active-transition"), i.style.position = "absolute", i.style.width = o.offsetWidth + "px", i.style.height = o.offsetHeight + "px", i.style.left = `${o.offsetLeft}px`, i.style.top = `${o.offsetTop}px`;
     }
-    function P() {
+    function U() {
       a.value.classList.remove("select-active-transition");
     }
-    function U(o, u) {
-      u && s.unobserve(u), y(l.value), o && s.observe(o);
-    }
-    function x() {
+    function P(o, c) {
+      c && s.unobserve(c), v(n.value), o && s.observe(o);
     }
     function z() {
+    }
+    function M() {
       s.disconnect();
     }
-    function f() {
-      y(l.value, "instant");
+    function g() {
+      v(n.value, "instant");
     }
-    function E() {
+    function H() {
     }
-    function L(o, u, n) {
-      r = n;
+    function L(o, c, i) {
+      r = i;
     }
-    function B() {
+    function I() {
     }
     function T(o) {
       o.preventDefault();
@@ -104,54 +119,54 @@ const Be = /* @__PURE__ */ I({
     }
     function Ce(o) {
     }
-    function de(o, u, n) {
-      o.preventDefault(), e.listHook.changeIndex(r, n);
+    function fe(o, c, i) {
+      o.preventDefault(), e.listHook.changeIndex(r, i);
     }
     return () => {
-      var H, h, V, p;
-      const o = W(e.listHook.list, (m, v) => {
+      var h, p, V, D;
+      const o = J(e.listHook.list, (k, E) => {
         var w, K;
-        const q = (K = (w = i.slots) == null ? void 0 : w.item) == null ? void 0 : K.call(w, {
-          item: m,
-          index: v
+        const W = (K = (w = l.slots) == null ? void 0 : w.item) == null ? void 0 : K.call(w, {
+          item: k,
+          index: E
         });
-        let J = q;
-        return J = q.map((S) => {
-          var A, Q, F, X, $, Y, O, Z, j, ee, R, te;
-          l.value = void 0;
-          const fe = e.draggable ? {
+        let q = W;
+        return q = W.map((S) => {
+          var A, Q, F, X, $, Y, O, Z, R, ee, j, te;
+          n.value = void 0;
+          const ge = e.draggable ? {
             draggable: !0,
-            onDrag: (k) => void 0,
-            onDragstart: (k) => L(k, m, v),
-            onDragend: (k) => void 0,
-            onDragover: (k) => T(k),
-            onDragenter: (k) => void 0,
-            onDragleave: (k) => void 0,
-            onDrop: (k) => de(k, m, v)
+            onDrag: (b) => void 0,
+            onDragstart: (b) => L(b, k, E),
+            onDragend: (b) => void 0,
+            onDragover: (b) => T(b),
+            onDragenter: (b) => void 0,
+            onDragleave: (b) => void 0,
+            onDrop: (b) => fe(b, k, E)
           } : {
-            [e.eventName]: (k) => g(k, m, v)
+            [e.eventName]: (b) => m(b, k, E)
           };
           return re(S, {
-            disabled: (Q = (A = e.listHook) == null ? void 0 : A.formatterDisabled) == null ? void 0 : Q.call(A, m, v),
-            ...fe,
+            disabled: (Q = (A = e.listHook) == null ? void 0 : A.formatterDisabled) == null ? void 0 : Q.call(A, k, E),
+            ...ge,
             ...S.props,
-            ref: (k) => t(k, m, v),
-            class: [S.props.class, "select-item", ((X = (F = e.listHook) == null ? void 0 : F.same) == null ? void 0 : X.call(F, e.listHook.list[v + 1], v + 1)) && "select-item-prve-checked", ((Y = ($ = e.listHook) == null ? void 0 : $.same) == null ? void 0 : Y.call($, m, v)) && "select-item-checked", ((Z = (O = e.listHook) == null ? void 0 : O.same) == null ? void 0 : Z.call(O, e.listHook.list[v - 1], v - 1)) && "select-item-next-checked", ((ee = (j = e.listHook) == null ? void 0 : j.formatterDisabled) == null ? void 0 : ee.call(j, m, v)) && "select-item-disabled"]
-          }, [S.children ?? (e.hideItemDefaultChildren || (te = (R = e.listHook) == null ? void 0 : R.formatterLabel) == null ? void 0 : te.call(R, m, v))].filter((k) => k !== void 0));
-        }), J;
-      }), u = (h = (H = i.slots) == null ? void 0 : H.default) == null ? void 0 : h.call(H), n = [...o, c("div", {
-        ref: D,
+            ref: (b) => t(b, k, E),
+            class: [S.props.class, "select-item", ((X = (F = e.listHook) == null ? void 0 : F.same) == null ? void 0 : X.call(F, e.listHook.list[E + 1], E + 1)) && "select-item-prve-checked", ((Y = ($ = e.listHook) == null ? void 0 : $.same) == null ? void 0 : Y.call($, k, E)) && "select-item-checked", ((Z = (O = e.listHook) == null ? void 0 : O.same) == null ? void 0 : Z.call(O, e.listHook.list[E - 1], E - 1)) && "select-item-next-checked", ((ee = (R = e.listHook) == null ? void 0 : R.formatterDisabled) == null ? void 0 : ee.call(R, k, E)) && "select-item-disabled"]
+          }, [S.children ?? (e.hideItemDefaultChildren || (te = (j = e.listHook) == null ? void 0 : j.formatterLabel) == null ? void 0 : te.call(j, k, E))].filter((b) => b !== void 0));
+        }), q;
+      }), c = (p = (h = l.slots) == null ? void 0 : h.default) == null ? void 0 : p.call(h), i = [...o, d("div", {
+        ref: y,
         class: ["select-active"],
-        onTransitionend: P
-      }, null), (p = (V = i.slots) == null ? void 0 : V.children) == null ? void 0 : p.call(V)];
-      return u != null && u.length ? u.map((m) => re(m, {
-        ...m.props,
-        ref: b,
-        class: [m.props.class, "select-list"]
-      }, n)) : n;
+        onTransitionend: U
+      }, null), (D = (V = l.slots) == null ? void 0 : V.children) == null ? void 0 : D.call(V)];
+      return c != null && c.length ? c.map((k) => re(k, {
+        ...k.props,
+        ref: f,
+        class: [k.props.class, "select-list"]
+      }, i)) : i;
     };
   }
-}), Ie = /* @__PURE__ */ I({
+}), we = /* @__PURE__ */ B({
   props: {
     triggerBottomDistance: {
       type: Number,
@@ -173,81 +188,81 @@ const Be = /* @__PURE__ */ I({
     }
   },
   emits: ["rollToBottom", "scrollArriveBottom"],
-  setup(e, i) {
-    let a, d = document.createElement("div");
-    G(r), ne(l);
+  setup(e, l) {
+    let a, u = document.createElement("div");
+    G(r), le(n);
     function r() {
-      d = be(["r-scroll", "r-scroll-view", "r-nested-scroll"], a.$el), d && d.addEventListener("scrollUp", s);
+      u = ve(["r-scroll", "r-scroll-view", "r-nested-scroll"], a.$el), u && u.addEventListener("scrollUp", s);
     }
-    function l() {
-      d && d.removeEventListener("scrollUp", s);
+    function n() {
+      u && u.removeEventListener("scrollUp", s);
     }
-    function s(f) {
-      if (!d) return;
-      const E = d.scrollHeight - d.offsetHeight - e.triggerBottomDistance;
-      d.scrollTop >= E && (i.emit("rollToBottom", f), i.emit("scrollArriveBottom", f));
+    function s(g) {
+      if (!u) return;
+      const H = u.scrollHeight - u.offsetHeight - e.triggerBottomDistance;
+      u.scrollTop >= H && (l.emit("rollToBottom", g), l.emit("scrollArriveBottom", g));
     }
-    function b() {
-      var f, E;
-      e.onBeginErrorClick ? e.onBeginErrorClick(...arg) : (E = (f = e.loadingHook) == null ? void 0 : f.nextBeginSend) == null || E.call(f);
+    function f() {
+      var g, H;
+      e.onBeginErrorClick ? e.onBeginErrorClick(...arg) : (H = (g = e.loadingHook) == null ? void 0 : g.nextBeginSend) == null || H.call(g);
     }
-    function D(...f) {
-      var E, L;
-      e.onErrorLoadClick ? e.onErrorLoadClick(...f) : (L = (E = e.loadingHook) == null ? void 0 : E.awaitSend) == null || L.call(E);
+    function y(...g) {
+      var H, L;
+      e.onErrorLoadClick ? e.onErrorLoadClick(...g) : (L = (H = e.loadingHook) == null ? void 0 : H.awaitSend) == null || L.call(H);
     }
     function t() {
-      return C(i.slots, "loading", {}, () => [c("r-result", {
+      return C(l.slots, "loading", {}, () => [d("r-result", {
         class: "r-result-loading"
       }, null)]);
     }
-    function g() {
-      return C(i.slots, "finished", {}, () => [c("r-result", {
+    function m() {
+      return C(l.slots, "finished", {}, () => [d("r-result", {
         class: "r-result-finished"
       }, null)]);
     }
-    function y() {
-      return C(i.slots, "empty", {}, () => [c("r-result", {
+    function v() {
+      return C(l.slots, "empty", {}, () => [d("r-result", {
         class: "r-result-empty"
       }, null)]);
     }
-    function P() {
-      return C(i.slots, "begin", {}, () => [c("div", null, [c("r-result", {
+    function U() {
+      return C(l.slots, "begin", {}, () => [d("div", null, [d("r-result", {
         class: "r-result-loading"
-      }, null), c("div", {
+      }, null), d("div", {
         class: "r-skeleton-grid"
-      }, [W(e.skeletonCount, () => c("div", {
+      }, [J(e.skeletonCount, () => d("div", {
         class: "r-skeleton-animation"
       }, null))])])]);
     }
-    function U() {
-      return C(i.slots, "error", {}, () => [c("r-result", {
-        onClick: b,
+    function P() {
+      return C(l.slots, "error", {}, () => [d("r-result", {
+        onClick: f,
         class: "r-result-begin-error"
       }, null)]);
     }
-    function x() {
-      return C(i.slots, "errorLoad", {}, () => [c("r-result", {
-        onClick: D,
+    function z() {
+      return C(l.slots, "errorLoad", {}, () => [d("r-result", {
+        onClick: y,
         class: "r-result-error"
       }, null)]);
     }
-    function z() {
-      const f = e.loadingHook;
-      if (f.error === !0) return x();
-      if (f.empty === !0 && f.finished === !0) return y();
-      if (f.finished === !0) return g();
-      if (f.loading === !0) return t();
+    function M() {
+      const g = e.loadingHook;
+      if (g.error === !0) return z();
+      if (g.empty === !0 && g.finished === !0) return v();
+      if (g.finished === !0) return m();
+      if (g.loading === !0) return t();
     }
-    return oe(() => e.loadingHook.begin, async () => {
+    return ne(() => e.loadingHook.begin, async () => {
       console.log("console--", [a.$el]);
-    }), (f, E) => {
-      var B, T;
-      a = f;
+    }), (g, H) => {
+      var I, T;
+      a = g;
       const L = e.loadingHook;
-      return L.begin === !0 && L.error === !0 ? U() : L.begin === !0 ? P() : [(T = (B = i.slots) == null ? void 0 : B.default) == null ? void 0 : T.call(B), z()];
+      return L.begin === !0 && L.error === !0 ? P() : L.begin === !0 ? U() : [(T = (I = l.slots) == null ? void 0 : I.default) == null ? void 0 : T.call(I), M()];
     };
   }
-}), Te = /* @__PURE__ */ I({
+}), Se = /* @__PURE__ */ B({
   props: {
     loadingHook: {
       type: Object,
@@ -264,47 +279,47 @@ const Be = /* @__PURE__ */ I({
       default: 10
     }
   },
-  setup(e, i) {
-    function a(l, s) {
-      return C(i.slots, l, {}, () => [s]);
+  setup(e, l) {
+    function a(n, s) {
+      return C(l.slots, n, {}, () => [s]);
     }
-    function d() {
-      var l, s;
-      e.onBeginErrorClick ? e.onBeginErrorClick(...arg) : (s = (l = e.loadingHook) == null ? void 0 : l.afreshNextBeginSend) == null || s.call(l);
+    function u() {
+      var n, s;
+      e.onBeginErrorClick ? e.onBeginErrorClick(...arg) : (s = (n = e.loadingHook) == null ? void 0 : n.afreshNextBeginSend) == null || s.call(n);
     }
-    function r(...l) {
-      var s, b;
-      e.onErrorLoadClick ? e.onErrorLoadClick(...l) : (b = (s = e.loadingHook) == null ? void 0 : s.continueAwaitSend) == null || b.call(s);
+    function r(...n) {
+      var s, f;
+      e.onErrorLoadClick ? e.onErrorLoadClick(...n) : (f = (s = e.loadingHook) == null ? void 0 : s.continueAwaitSend) == null || f.call(s);
     }
-    return () => [a("begin", c("div", {
+    return () => [a("begin", d("div", {
       slot: "begin"
-    }, [c("r-result", {
+    }, [d("r-result", {
       slot: "loading",
       class: "r-result-loading"
-    }, null), c("div", {
+    }, null), d("div", {
       class: "r-skeleton-grid"
-    }, [W(e.skeletonCount ?? 10, () => c("div", {
+    }, [J(e.skeletonCount ?? 10, () => d("div", {
       class: "r-skeleton-animation"
-    }, null))])])), a("loading", c("r-result", {
+    }, null))])])), a("loading", d("r-result", {
       slot: "loading",
       class: "r-result-loading"
-    }, null)), a("finished", c("r-result", {
+    }, null)), a("finished", d("r-result", {
       slot: "finished",
       class: "r-result-finished"
-    }, null)), a("empty", c("r-result", {
+    }, null)), a("empty", d("r-result", {
       slot: "empty",
       class: "r-result-empty"
-    }, null)), a("error", c("r-result", {
+    }, null)), a("error", d("r-result", {
       slot: "error",
       class: "r-result-error",
       onClick: r
-    }, null)), a("begin-error", c("r-result", {
+    }, null)), a("begin-error", d("r-result", {
       slot: "begin-error",
       class: "r-result-begin-error",
-      onClick: d
+      onClick: u
     }, null))];
   }
-}), ve = ["keyExtractor"], Ee = {
+}), Ee = ["keyExtractor"], He = {
   __name: "index",
   props: {
     modelValue: {
@@ -322,17 +337,17 @@ const Be = /* @__PURE__ */ I({
   },
   emits: ["update:modelValue"],
   setup(e, {
-    emit: i
+    emit: l
   }) {
-    const a = le(), d = i, r = e, l = _({
+    const a = ie(), u = l, r = e, n = N({
       set(t) {
         if (r.listHook.list) return r.listHook.list = t;
-        d("update:modelValue", t);
+        u("update:modelValue", t);
       },
       get() {
-        return r.listHook.list ? N(r.listHook.list) : N(r.modelValue);
+        return r.listHook.list ? _(r.listHook.list) : _(r.modelValue);
       }
-    }), s = _(() => r.listHook.list ? r.listHook.list : r.modelValue), b = /* @__PURE__ */ I({
+    }), s = N(() => r.listHook.list ? r.listHook.list : r.modelValue), f = /* @__PURE__ */ B({
       inheritAttrs: !1,
       props: {
         event: Object,
@@ -340,26 +355,26 @@ const Be = /* @__PURE__ */ I({
       },
       setup(t) {
         return () => {
-          var g, y;
-          return (y = (g = t == null ? void 0 : t.slots) == null ? void 0 : g.item) == null ? void 0 : y.call(g, t.event);
+          var m, v;
+          return (v = (m = t == null ? void 0 : t.slots) == null ? void 0 : m.item) == null ? void 0 : v.call(m, t.event);
         };
       }
     });
-    function D(t) {
-      t.item = s.value[t.index], ce(c(b, {
+    function y(t) {
+      t.item = s.value[t.index], de(d(f, {
         event: t,
         slots: a,
         key: r.keyExtractor(t),
         "data-key": r.keyExtractor(t)
       }, null), t.ele);
     }
-    return (t, g) => ie((ae(), se("r-scroll-virtual-grid-list", {
-      "onUpdate:modelValue": g[0] || (g[0] = (y) => l.value = y),
-      onrenderItems: D,
+    return (t, m) => se((ue(), ae("r-scroll-virtual-grid-list", {
+      "onUpdate:modelValue": m[0] || (m[0] = (v) => n.value = v),
+      onrenderItems: y,
       keyExtractor: r.keyExtractor
-    }, [C(t.$slots, "default")], 8, ve)), [[ue, l.value]]);
+    }, [C(t.$slots, "default")], 8, Ee)), [[ce, n.value]]);
   }
-}, we = Ee, He = ["keyExtractor"], he = {
+}, Ae = He, he = ["keyExtractor"], pe = {
   __name: "index",
   props: {
     modelValue: {
@@ -377,17 +392,17 @@ const Be = /* @__PURE__ */ I({
   },
   emits: ["update:modelValue"],
   setup(e, {
-    emit: i
+    emit: l
   }) {
-    const a = le(), d = i, r = e, l = _({
+    const a = ie(), u = l, r = e, n = N({
       set(t) {
         if (r.listHook.list) return r.listHook.list = t;
-        d("update:modelValue", t);
+        u("update:modelValue", t);
       },
       get() {
-        return r.listHook.list ? N(r.listHook.list) : N(r.modelValue);
+        return r.listHook.list ? _(r.listHook.list) : _(r.modelValue);
       }
-    }), s = _(() => r.listHook.list ? r.listHook.list : r.modelValue), b = /* @__PURE__ */ I({
+    }), s = N(() => r.listHook.list ? r.listHook.list : r.modelValue), f = /* @__PURE__ */ B({
       inheritAttrs: !1,
       props: {
         event: Object,
@@ -396,31 +411,32 @@ const Be = /* @__PURE__ */ I({
       setup(t) {
         return G(() => {
         }), () => {
-          var g, y;
-          return (y = (g = t == null ? void 0 : t.slots) == null ? void 0 : g.item) == null ? void 0 : y.call(g, t.event);
+          var m, v;
+          return (v = (m = t == null ? void 0 : t.slots) == null ? void 0 : m.item) == null ? void 0 : v.call(m, t.event);
         };
       }
     });
-    function D(t) {
-      t.item = s.value[t.index], ce(c(b, {
+    function y(t) {
+      t.item = s.value[t.index], de(d(f, {
         event: t,
         slots: a,
         key: r.keyExtractor(t),
         "data-key": r.keyExtractor(t)
       }, null), t.ele);
     }
-    return (t, g) => ie((ae(), se("r-scroll-virtual-falls-list", {
-      "onUpdate:modelValue": g[0] || (g[0] = (y) => l.value = y),
-      onrenderItems: D,
+    return (t, m) => se((ue(), ae("r-scroll-virtual-falls-list", {
+      "onUpdate:modelValue": m[0] || (m[0] = (v) => n.value = v),
+      onrenderItems: y,
       keyExtractor: r.keyExtractor
-    }, [C(t.$slots, "default")], 8, He)), [[ue, l.value]]);
+    }, [C(t.$slots, "default")], 8, he)), [[ce, n.value]]);
   }
-}, Se = he;
+}, Fe = pe;
 export {
-  Ie as VRPaginationLoading,
-  Be as VRRenderList,
-  Te as VRScrollLoadStates,
-  Se as VRVirtualFallsList,
-  we as VRVirtualGridList
+  Ie as VRJoin,
+  we as VRPaginationLoading,
+  Te as VRRenderList,
+  Se as VRScrollLoadStates,
+  Fe as VRVirtualFallsList,
+  Ae as VRVirtualGridList
 };
 //# sourceMappingURL=index.js.map

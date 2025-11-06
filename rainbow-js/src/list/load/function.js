@@ -85,16 +85,17 @@ export function listLoad(props = {}) {
     currentPage,
     pageSize,
     begin,
+    unshiftAwaitSend,
     continueAwaitSend,
     afreshNextBeginSend,
     afreshNextSend,
   });
 
-  function onSuccess(res, callBack) {
+  function onSuccess(res, callBack, invoke = 'push') {
     total.value = formatterTotal(res, hooks);
     const arr = arrayForcedTransform(formatterList(res, hooks));
     if (callBack) callBack(arr);
-    list.value.push(...arr);
+    list.value?.[invoke](...arr);
     finished.value = formatterFinished(res, hooks);
     empty.value = formatterEmpty(res, hooks);
     begin.value = false;
@@ -120,6 +121,25 @@ export function listLoad(props = {}) {
     } finally {
       loading = false;
     }
+  }
+
+  async function unshiftAwaitSend(...arg) {
+    if (finished.value === true) return Promise.reject("list load is finished");
+    if (loading === true) return Promise.reject("list load is loadinged");
+    loading = true;
+    try {
+      let res = await unshiftPatch(list.value.length, {}, ...arg);
+      return res;
+    } finally {
+      loading = false;
+    }
+  }
+
+  async function unshiftPatch(length = 0, res, ...arg) {
+    if (finished.value === true) return res;
+    if (list.value.length - length >= pageSize.value) return res;
+    res = await asyncHook.awaitSend(...arg).then((d) => onSuccess(d, undefined, 'unshift'));
+    return unshiftPatch(length, res, ...arg);
   }
 
   async function afreshPatch(res, ...arg) {

@@ -220,7 +220,8 @@ export function fetchHOC(opt = {}) {
             .then(async (d) => success(await config.formatterData(d, _data, res, config)))
             .catch(fail);
         } catch (_err) {
-          if (_err?.status === 20) {
+          const errCode = _err?.status || _err?.code;
+          if (errCode === 20) {
             loading.value = false;
             begin.value = false;
             config.onAbort(_err, config, resolve, reject);
@@ -228,7 +229,7 @@ export function fetchHOC(opt = {}) {
             return;
           }
 
-          if (_err?.status === 41) {
+          if (errCode === 41) {
             config.onLoading(_err, config, resolve, reject);
             return;
           }
@@ -236,7 +237,7 @@ export function fetchHOC(opt = {}) {
           if (config.errorLog) console.log("请求出错了*****", _err);
 
           (() => {
-            if (_err?.status === 48) {
+            if (errCode === 48) {
               config.onTimeoutAbort(_err, config, resolve, reject);
               return;
             }

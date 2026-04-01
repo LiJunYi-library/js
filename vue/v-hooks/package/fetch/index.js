@@ -12,15 +12,13 @@ export function useFetchHOC(props = {}) {
       const { urlParams } = config;
       if (isRef(urlParams)) return urlParams.value;
       if (typeof urlParams === "function") return urlParams();
-      if (typeof urlParams === "object") return urlParams;
-      return undefined;
+      return urlParams;
     },
     formatterBody: async (config) => {
       const body = config.body;
       if (isRef(body)) return body.value;
       if (typeof body === "function") return body();
-      if (typeof body === "object") return body;
-      return undefined;
+      return body;
     },
     ...props,
   });

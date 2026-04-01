@@ -37,6 +37,7 @@ function getRequestProps(o1 = {}, o2 = {}) {
     error: false,
     data: undefined,
     errorData: undefined,
+    throwResponse: async (res, config) => !res.ok,
     formatterResponse: async (res, config) => {
       try {
         const contentType = res.headers.get("Content-Type");
@@ -210,7 +211,7 @@ export function fetchHOC(opt = {}) {
             clearTimeout(timeoutId);
             fetchEvents.remove(timerController);
           });
-          if (!res.ok) throw res;
+          if (await config.throwResponse(res, config)) throw res;
           const _data = await config.formatterResponse(res, config);
           if (config.isDownloadFile) config.downloadFile(res, config, _data);
           if (!config.interceptResponseSuccess) return success(_data);

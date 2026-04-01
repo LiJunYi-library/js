@@ -124,7 +124,7 @@ function getRequestProps(o1 = {}, o2 = {}) {
     onLoading: (error, config, resolve, reject) => undefined,
     onRequest: (config) => undefined,
     onResponse: (config) => undefined,
-    time: 30000,
+    timeout: 30000,
     isDownloadFile: false,
     fileName: "",
     url: "",
@@ -191,7 +191,7 @@ export function fetchHOC(opt = {}) {
         try {
           if (loading.value === true && throwLoad) throw errLoading;
           let controller = new AbortController();
-          let timeoutId = setTimeout(() => controller.abort(errTimeout), config.time);
+          let timeoutId = setTimeout(() => controller.abort(errTimeout), config.timeout);
           const timerController = { controller, timeoutId };
           fetchEvents.push(timerController);
           loading.value = true;

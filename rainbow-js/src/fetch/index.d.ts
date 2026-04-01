@@ -6,7 +6,7 @@ export declare interface FetchConfig<T = ANY, D = ANY> extends RequestInit {
   urlParams?: ANY;
   body?: ANY;
   baseUrl?: string;
-  time?: number;
+  timeout?: number;
   isDownloadFile?: boolean;
   fileName?: string;
   isFormBody?: boolean;

@@ -16,7 +16,7 @@ export declare interface FetchConfig<T = ANY, D = ANY> extends RequestInit {
   error?: boolean;
   data?: ANY;
   errorData?: ANY;
-  throwResponse?: (res: Response, config: this) => Promise<boolean>;
+  throwResponse?: (res: Response, config: this) => Promise<boolean> | boolean;
   formatterResponse?: (res: Response, config: this) => Promise<ANY>;
   formatterData?: (data: D, rawData: T, res: Response, config: this) => ANY;
   formatterFile?: (res: Response, config: this) => Promise<File>;

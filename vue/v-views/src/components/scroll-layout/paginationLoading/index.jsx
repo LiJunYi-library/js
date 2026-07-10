@@ -133,7 +133,7 @@ export const VRScrollLoadStates = defineComponent({
       return [
         rs(
           "begin",
-          <div slot="begin">
+          <div slot="begin" class="r-result-begin-loading">
             <r-result slot="loading" class="r-result-loading" />
             <div class="r-skeleton-grid">
               {renderList(props.skeletonCount ?? 10, () => (

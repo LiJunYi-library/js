@@ -1,11 +1,16 @@
 <template>
-  <r-scroll-virtual-falls-list v-model="list" :onrenderItems="onRenderItems" :keyExtractor="props.keyExtractor">
+  <r-scroll-virtual-falls-list
+    v-model="list"
+    :onrenderItems="onRenderItems"
+    :keyExtractor="props.keyExtractor"
+    rewrite-array-function="true"
+  >
     <slot></slot>
   </r-scroll-virtual-falls-list>
 </template>
 
 <script setup lang="jsx">
-import { render, defineComponent, computed, toRaw, onMounted } from "vue";
+import { render, defineComponent, computed, toRaw } from "vue";
 
 const slots = defineSlots();
 const emit = defineEmits(["update:modelValue"]);
@@ -38,7 +43,6 @@ const Item = defineComponent({
     slots: Object,
   },
   setup(props) {
-    onMounted(() => { });
     return () => {
       return props?.slots?.item?.(props.event);
     };

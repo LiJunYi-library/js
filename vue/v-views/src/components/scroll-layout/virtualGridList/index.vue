@@ -1,5 +1,10 @@
 <template>
-  <r-scroll-virtual-grid-list v-model="list" :onrenderItems="onRenderItems" :keyExtractor="props.keyExtractor">
+  <r-scroll-virtual-grid-list
+    v-model="list"
+    :onrenderItems="onRenderItems"
+    :keyExtractor="props.keyExtractor"
+    rewrite-array-function="true"
+  >
     <slot></slot>
   </r-scroll-virtual-grid-list>
 </template>

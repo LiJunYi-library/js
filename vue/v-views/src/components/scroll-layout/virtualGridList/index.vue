@@ -1,18 +1,13 @@
 <template>
-  <r-scroll-virtual-grid-list
-    ref="listEle"
-    v-model="list"
-    :onrenderItems="onRenderItems"
-    :keyExtractor="props.keyExtractor"
-  >
+  <r-scroll-virtual-grid-list v-model="list" :onrenderItems="onRenderItems" :keyExtractor="props.keyExtractor">
     <slot></slot>
   </r-scroll-virtual-grid-list>
 </template>
+
 <script setup lang="jsx">
-import { render, defineComponent, computed, toRaw, ref, watch } from "vue";
+import { render, defineComponent, computed, toRaw } from "vue";
 
 const slots = defineSlots();
-const listEle = ref(null);
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
   modelValue: { type: Array, default: () => [] },
@@ -20,18 +15,20 @@ const props = defineProps({
   listHook: { type: Object, default: () => ({}) },
 });
 
-const list = computed(() => {
-  if (props.listHook.list) return toRaw(props.listHook.list);
-  return toRaw(props.modelValue);
+const list = computed({
+  set(val) {
+    if (props.listHook.list) return (props.listHook.list = val);
+    emit("update:modelValue", val);
+  },
+  get() {
+    if (props.listHook.list) return toRaw(props.listHook.list);
+    return toRaw(props.modelValue);
+  },
 });
 
 const refList = computed(() => {
   if (props.listHook.list) return props.listHook.list;
   return props.modelValue;
-});
-
-watch(refList, () => {
-  listEle.value?.$$?.layout?.();
 });
 
 const Item = defineComponent({
@@ -55,7 +52,7 @@ function onRenderItems(event) {
       slots={slots}
       key={props.keyExtractor(event)}
       data-key={props.keyExtractor(event)}
-    />,
+    ></Item>,
     event.ele,
   );
 }

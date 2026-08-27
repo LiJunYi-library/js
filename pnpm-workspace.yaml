@@ -13,5 +13,9 @@ packages:
   - "vue/v-chart/**"
   - "vue/v-library/**"
   - "vue/v-cli/**"
-
-  
+allowBuilds:
+  core-js: set this to true or false
+  core-js-pure: set this to true or false
+  esbuild: set this to true or false
+  vue-demi: set this to true or false
+  yorkie: set this to true or false
